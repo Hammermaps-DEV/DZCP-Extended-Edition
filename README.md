@@ -1,4 +1,4 @@
-DZCP---Extended-Edition
+DZCP - Extended Edition
 =======================
 
 DZCP - Extended Edition
