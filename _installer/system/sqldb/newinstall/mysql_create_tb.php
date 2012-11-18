@@ -26,22 +26,6 @@ function install_mysql_create()
       `editby` text NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-    
-
-    //===============================================================
-    //-> Addons =====================================================
-    //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['addons']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['addons']."` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`author` varchar(249) NOT NULL DEFAULT '',
-	`name` varchar(249) NOT NULL DEFAULT '',
-	`version` varchar(30) NOT NULL DEFAULT '',
-	`updater` int(1) NOT NULL DEFAULT '1',
-	`last_checked` int(20) NOT NULL DEFAULT '0',
-	`new_version` int(1) NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id`)
-	) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
   
     //===============================================================
     //-> Artikel ====================================================
@@ -96,6 +80,19 @@ function install_mysql_create()
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 		
+    //===============================================================
+    //-> Cache ======================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['cache']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['cache']."` (
+    `qry` varchar(32) NOT NULL DEFAULT '',
+    `data` mediumblob,
+    `timestamp` varchar(16) DEFAULT NULL,
+    `cacheTime` varchar(16) DEFAULT NULL,
+    `array` varchar(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`qry`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    
     //===============================================================
     //-> Clankasse ==================================================
     //===============================================================
@@ -267,6 +264,7 @@ function install_mysql_create()
       `l_team` int(5) NOT NULL DEFAULT '7',
       `m_events` int(5) NOT NULL DEFAULT '5',
       `m_away` int(5) NOT NULL DEFAULT '10',
+      `cache_engine` int(1) NOT NULL DEFAULT '1',
       `cache_teamspeak` int(10) NOT NULL DEFAULT '30',
       `cache_server` int(10) NOT NULL DEFAULT '30',
       `direct_refresh` int(1) NOT NULL DEFAULT '0',
@@ -827,6 +825,8 @@ function install_mysql_create()
       `eml_fabo_tedit` text NOT NULL,
       `eml_fabo_pedit` text NOT NULL,
       `eml_pn` text NOT NULL,
+      `memcache_host` VARCHAR(50) NOT NULL DEFAULT ''
+      `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211'
       `k_vwz` varchar(200) NOT NULL,
       `double_post` int(1) NOT NULL DEFAULT '1',
       `forum_vote` int(1) NOT NULL DEFAULT '1',

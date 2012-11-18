@@ -139,6 +139,9 @@ function php_sapi_type()
  **/
 function fileExists($url)
 {
+	if(!fsockopen_support())
+		return false;
+	
     $url_p = @parse_url($url);
     $host = $url_p['host'];
     $port = isset($url_p['port']) ? $url_p['port'] : 80;
@@ -156,26 +159,44 @@ function fileExists($url)
 }
 
 /**
+ * Funktion um notige Erweiterungen zu prufen
+ *
+ * @return boolean
+ **/
+function fsockopen_support()
+{
+	if(!function_exists('fsockopen'))
+		return false;
+	
+	if(!function_exists("fopen"))
+		return false;
+
+	if(ini_get('allow_url_fopen') != 1)
+		return false;
+		
+	if(strpos(ini_get('disable_functions'),'fsockopen') || strpos(ini_get('disable_functions'),'file_get_contents') || strpos(ini_get('disable_functions'),'fopen'))
+		return false;
+	
+	return true;
+}
+
+/**
  * Pingt einen Server Port
  * 
  * @return boolean
  **/
 function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
 {
-	if(function_exists('fsockopen'))
+	if(!fsockopen_support())
+		return false;
+
+	if(($fp = @fsockopen($ip, $port, $errno, $errstr, $timeout)))
 	{
-		$fp = fsockopen($ip, $port, $errno, $errstr, $timeout);
-		if($fp)
-		{
-		    unset($ip,$port,$errno,$errstr,$timeout);
-			@fclose($fp);
-			return true;
-		}
-		
-		unset($ip,$port,$errno,$errstr,$timeout);
+	    unset($ip,$port,$errno,$errstr,$timeout);
+		@fclose($fp);
+		return true;
 	}
-	
-	unset($ip,$port,$timeout);
+
 	return false;
 }
 
@@ -611,60 +632,6 @@ function array_to_string($arr,$counter=1)
 }
 
 /**
- * Cache Verwaltung des CMS
- * Mode: (r)Read,(w)Wire,(c)Check
- *
- * @return mixed/boolean
- */
-function cache($file='', $data='', $mode='w')
-{
-    $file_hash = md5($file);
-    switch(strtolower($mode)) 
-    {
-        case 'w':
-            if(!is_debug || cache_in_debug)
-            {
-                $is_array = 'n';
-                if(is_array($data))
-                { $is_array = 'y'; $data = array_to_string($data); }
-                $cache_data = (function_exists('gzcompress') && function_exists('gzuncompress') && cache_gzip_compress ? gzcompress(base64_encode($data)) : base64_encode($data));
-                $cache_data = "<?php /* +".$is_array."+ *** ".$cache_data." */ ?>";
-                @file_put_contents(basePath.'/inc/_cache/'.$file_hash.'.cache.php', $cache_data);
-                return (file_exists(basePath.'/inc/_cache/'.$file_hash.'.cache.php') && is_file(basePath.'/inc/_cache/'.$file_hash.'.cache.php') ? true : false);
-            }
-        break;
-        case 'r':
-            if(file_exists(basePath.'/inc/_cache/'.$file_hash.'.cache.php') && is_file(basePath.'/inc/_cache/'.$file_hash.'.cache.php'))
-            {
-                $stream = @file_get_contents(basePath.'/inc/_cache/'.$file_hash.'.cache.php');
-                if(!$stream) return false;
-                $stream = @explode('<?php /* +',$stream); $stream = @explode('+ *** ',$stream[1]);
-                $is_array = ($stream[0] == 'y' ? true : false); $stream = @explode(' */ ?>',$stream[1]); $stream = @$stream[0];
-                if(!$stream || empty($stream)) return false;
-                
-                if(function_exists('gzcompress') && function_exists('gzuncompress') && cache_gzip_compress)
-                   if(!$stream = @gzuncompress($stream)) return false;
-                    
-                if(!$stream = @base64_decode($stream)) return false;
-                if(empty($stream)) return false;
-                return ($is_array ? string_to_array($stream) : $stream);
-            }
-            else
-               return false;
-        break;
-        case 'c':
-            if(is_debug && !cache_in_debug)
-                return true;
-            
-            if(!file_exists(basePath.'/inc/_cache/'.$file_hash.'.cache.php') or !is_file(basePath.'/inc/_cache/'.$file_hash.'.cache.php'))
-                return true;
-            
-            return (time()-@filemtime(basePath.'/inc/_cache/'.$file_hash.'.cache.php') > $data);
-        break;
-    }
-}
-
-/**
  * Wird verwendet um die Ladezeit der Seite zu errechnen.
  *
  * @return float
@@ -703,5 +670,148 @@ function spChars($txt)
     $search = array("Ä", "Ö", "Ü", "ä", "ö", "ü", "ß", "€");
     $replace = array("&Auml;", "&Ouml;", "&Uuml;", "&auml;", "&ouml;", "&uuml;", "&szlig;", "&euro;");
     return str_replace($search, $replace, $txt);
+}
+
+#############################################
+#################### XML ####################
+#############################################
+class xml
+{
+	private static $xmlobj = array(array()); //XML
+	
+	/**
+	* XML Datei Laden
+	*/
+	public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
+	{
+		if(!array_key_exists($XMLTag,self::$xmlobj))
+		{
+			self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
+		
+			if(!$oneModule)
+			{
+				if(!file_exists(basePath . '/' . $XMLFile))
+					file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
+			}
+
+			self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
+		
+			if(self::$xmlobj[$XMLTag]['objekt'] != false)
+				return true;
+		}
+
+		return false;
+	}
+
+	/**
+	* XML Wert auslesen
+	*
+	* @return XMLObj / boolean
+	*/
+	public static function getXMLvalue($XMLTag, $xmlpath)
+	{
+		if(array_key_exists($XMLTag,self::$xmlobj))
+		{
+			$xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
+			return ($xmlobj) ? $xmlobj[0] : false;
+		}
+		else
+			return false;
+	}
+
+	/**
+	* XML Werte ändern
+	*
+	* @return boolean
+	 */
+	public static function changeXMLvalue($XMLTag, $xmlpath, $xmlnode, $xmlvalue='')
+	{
+		if(array_key_exists($XMLTag,self::$xmlobj))
+		{
+			$xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
+			$xmlobj[0]->{$xmlnode} = htmlspecialchars($xmlvalue);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	/**
+	* Einen neuen XML Knoten hinzufügen
+	*
+	* @return boolean
+	*/
+	public static function createXMLnode($XMLTag, $xmlpath, $xmlnode, $attributes=array(), $text='')
+	{
+		if(array_key_exists($XMLTag,self::$xmlobj))
+		{
+			 $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
+			 $xmlobj2 = $xmlobj[0]->addChild($xmlnode, htmlspecialchars($text));
+			 foreach($attributes as $attr => $value)
+			 	$xmlobj2->addAttribute($attr, htmlspecialchars($value));
+			 return true;
+		}
+		else
+			return false;
+	}
+
+	/**
+	*  XML-Datei speichern
+	*
+	* @return boolean
+	*/
+	public static function saveXMLfile($XMLTag)
+	{
+		if(!array_key_exists($XMLTag,self::$xmlobj))
+		{
+			trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geöffnet.');
+			return false;
+		}
+
+		$xmlFileValue = self::$xmlobj[$XMLTag]['objekt']->asXML();
+		file_put_contents(basePath . '/' . self::$xmlobj[$XMLTag]['xmlFile'], $xmlFileValue);
+		return true;
+	}
+
+	/**
+	* Einen XML Knoten löschen
+	*
+	* @return boolean
+	*/
+	public static function deleteXMLnode($XMLTag, $xmlpath, $xmlnode)
+	{
+		if(array_key_exists($XMLTag,self::$xmlobj))
+		{
+			$parent = self::getXMLvalue($XMLTag, $xmlpath);
+			unset($parent->$xmlnode);
+			return true;
+		}
+		else
+			return false;
+	}
+
+	/**
+	* Einen XML Knoten Attribut löschen
+	*
+	* @return boolean
+	*/
+	public static function deleteXMLattribut($XMLTag, $xmlpath, $key, $value )
+	{
+		if(array_key_exists($XMLTag,self::$xmlobj))
+		{
+			$nodes = self::getXMLvalue($XMLTag, $xmlpath);
+			foreach($nodes as $node)
+			{
+				if((string)$node->attributes()->$key==$value)
+			 	{
+			    	unset($node[0]);
+			    	break;
+			 	}
+			}
+			return true;
+		}
+		else
+			return false;
+	}
 }
 ?>

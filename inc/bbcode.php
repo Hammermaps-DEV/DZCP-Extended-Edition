@@ -13,6 +13,7 @@ require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/sendmail.php');
 require_once(basePath.'/inc/kernel.php');
+require_once(basePath."/inc/cache.php");
 require_once(basePath.'/inc/server_query/_functions.php');
 require_once(basePath."/inc/teamspeak_query.php");
 
@@ -29,6 +30,7 @@ $rootAdmin = 1;
 //-> Settingstabelle auslesen
 $settings = db("SELECT * FROM ".$db['settings'],false,true);
 $prev = $settings['prev'].'_';
+$cacheTag = 'dzcp_cache_'.$prev;
 
 //-> Language auslesen
 $language = (isset($_COOKIE[$prev.'language']) ? (file_exists(basePath.'/inc/lang/languages/'.$_COOKIE[$prev.'language'].'.php') ? $_COOKIE[$prev.'language'] : $settings["language"]) : $settings["language"]);
@@ -122,8 +124,15 @@ $l_team = $config['l_team'];
 $lforumtopic = $config['l_forumtopic'];
 $lforumsubtopic = $config['l_forumsubtopic'];
 $maxawards = $config['m_awards'];
+$cache_engine = $config['cache_engine'];
 unset($config);
 
+//-> Cache 
+Cache::loadClasses();
+Cache::setType($cacheTag,$cache_engine);
+Cache::init($cacheTag);
+
+//-> Auslesen der Cookies und automatisch anmelden
 if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pwd']) && empty($_SESSION['id']))
 {
     $_SESSION['id']  = intval($_COOKIE[$prev.'id']);
@@ -1841,7 +1850,7 @@ function getBoardPermissions($checkID = 0, $pos = 0)
     {
         unset($kats, $fkats, $break);
         $kats = (empty($katbreak) ? '' : '<div style="clear:both">&nbsp;</div>').'<table class="hperc" cellspacing="1"><tr><td class="contentMainTop"><b>'.re($get["name"]).'</b></td></tr></table>';
-        $katbreak = 1;
+        $katbreak = 1; $break = 1;
 
         $qry2 = db("SELECT kattopic,id FROM ".$db['f_skats']." WHERE `sid` = '".$get['id']."' ORDER BY `kattopic` ASC"); $fkats = '';
         while($get2 = _fetch($qry2))
@@ -1860,6 +1869,8 @@ function getBoardPermissions($checkID = 0, $pos = 0)
 //-> Show Xfire Status
 function xfire($username='')
 {
+	global $cacheTag;
+	
     if(empty($username))
         return '-';
     
@@ -1875,16 +1886,16 @@ function xfire($username='')
     
     if(xfire_preloader)
     {
-        if(cache('xfire_'.$username, xfire_refresh, 'c'))
+        if(Cache::check($cacheTag,'xfire_'.$username))
         {
             if(!$img_stream = fileExists('http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'))
                 return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
             
-            cache('xfire_'.$username, $img_stream, 'w');
+            Cache::set($cacheTag,'xfire_'.$username, $img_stream, xfire_refresh);
             return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_stream)));
         }
         else
-            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(cache('xfire_'.$username, null, 'r'))));
+            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get($cacheTag,'xfire_'.$username))));
     }
        
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
@@ -1947,11 +1958,30 @@ function count_clicks($side_tag='',$clickedID=0)
     return false;
 }
 
-//-> Mods und Api Laden
-include_once(basePath.'/inc/mod_api.php');
+/**
+ *  Neue Languages & Neue Funktionen einbinden
+ */
+if(($add_languages = get_files(basePath.'/inc/additional-languages/'.$language.'/',false,true,array('php'))))
+{
+	if(count($add_languages) >= 1)
+	{
+		foreach($add_languages AS $languages)
+		{ if(file_exists(basePath.'/inc/additional-languages/'.$language.'/'.$languages)) include(basePath.'/inc/additional-languages/'.$language.'/'.$languages); }
+	}
+}
+
+if(($add_functions = get_files(basePath.'/inc/additional-functions/',false,true,array('php'))))
+{
+	if(count($add_functions) >= 1)
+	{
+		foreach($add_functions AS $func)
+		{ if(file_exists(basePath.'/inc/additional-functions/'.$func)) include(basePath.'/inc/additional-functions/'.$func); }
+	}
+}
 
 //-> Navigation einbinden
-include_once(basePath.'/inc/menu-functions/navi.php');
+if(file_exists(basePath.'/inc/menu-functions/navi.php'))
+	include_once(basePath.'/inc/menu-functions/navi.php');
 
 //-> Ausgabe des Indextemplates
 function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)

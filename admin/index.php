@@ -13,6 +13,7 @@ lang($language);
 $where = _site_config;
 $dir = "admin";
 $show = "";
+$cache_cleanup = false;
 
 ## SECTIONS ##
 $check = db("SELECT s1.user FROM ".$db['permissions']." s1, ".$db['users']." s2
@@ -84,7 +85,6 @@ else
                                         "dbase" => _stats_mysql,
                                         "einst" => _config_einst,
                                         "content" => _content,
-                                        "newsticker" => show_dzcp_news(),
                                         "rootadmin" => _rootadmin,
                                         "rootmenu" => $rootmenu,
                                         "settingsmenu" => $settingsmenu,
@@ -101,6 +101,9 @@ $time_end = generatetime();
 $time = round($time_end - $time_start,4);
 $title = $pagetitle." - ".$where."";
 page($index, $title, $where ,$time,$wysiwyg);
+
+if($cache_cleanup)
+	Cache::clean($cacheTag);
 
 ## OUTPUT BUFFER END ##
 gz_output();

@@ -2,10 +2,9 @@
 //zuletzt registrierte User
 function l_reg()
 {
-  global $db,$llreg,$maxlreg;
-    $qry = db("SELECT id,nick,country,regdatum FROM ".$db['users']."
-               ORDER BY regdatum DESC
-               LIMIT ".$maxlreg."");
+	global $db,$llreg,$maxlreg;
+    $qry = db("SELECT id,nick,country,regdatum FROM ".$db['users']." ORDER BY regdatum DESC LIMIT ".$maxlreg."");
+	$lreg = '';
     while($get = _fetch($qry))
     {
       $lreg .= show("menu/last_reg", array("nick" => re(cut($get['nick'], $llreg)),

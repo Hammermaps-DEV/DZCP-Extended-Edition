@@ -17,6 +17,7 @@ if(_adminMenu != 'true') exit;
     $support .= "DZCP Version: "._version."\r\n";
     $support .= "DZCP Release: "._release."\r\n";
     $support .= "DZCP Build: "._build."\r\n";
+    $support .= "DZCP Edition: "._edition."\r\n";
     $support .= "\r\n";
      
     $support .= "#####################\r\n";
@@ -48,6 +49,17 @@ if(_adminMenu != 'true') exit;
     $support .= "PHP allow_url_fopen: ".($PhpInfo['Core']['allow_url_fopen'][0] == 'On' && $PhpInfo['Core']['allow_url_fopen'][1] == 'On' ? $PhpInfo['Core']['allow_url_fopen'][0] : 'Off')."\r\n";
     $support .= "PHP Sockets: ".(function_exists("socket_create") && $PhpInfo['sockets']['Sockets Support'] == "enabled" ? 'On' : 'Off')."\r\n";
     $support .= "\r\n";
+    
+    $support .= "#####################\r\n";
+    $support .= "Cache Support \r\n";
+    $support .= "#####################\r\n";
+    $caches = Cache::get_caches();
+    $support .= "Memcache-Erweiterung: ".(function_exists("memcache_connect") ? 'On' : 'Off')."\r\n";
+    $support .= "Memcache: ".(array_key_exists('cache_memcache', $caches) ? 'On' : 'Off')."\r\n";
+    $support .= "File: ".(array_key_exists('cache_file', $caches) ? 'On' : 'Off')."\r\n";
+    $support .= "MySQL: ".(array_key_exists('cache_mysql', $caches) ? 'On' : 'Off')."\r\n";
+    $support .= "Verwendet: ".(Cache::getType($cacheTag))."\r\n";
+    $support .= "\r\n";  
     
     $support .= "#####################\r\n";
     $support .= "Servereinstellungen\r\n";

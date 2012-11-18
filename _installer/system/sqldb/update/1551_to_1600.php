@@ -25,6 +25,9 @@ function install_155x_1600_update()
 	db("ALTER TABLE `".$db['serverliste']."` CHANGE `clanname` `clanname` VARCHAR( 50 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
 	db("ALTER TABLE `".$db['serverliste']."` CHANGE `datum` `datum` INT( 11 ) NOT NULL DEFAULT '0'",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` ADD `db_version` VARCHAR( 5 ) NOT NULL DEFAULT '00000'");
+	db("ALTER TABLE `".$db['config']."` ADD `cache_engine` INT(1) NOT NULL DEFAULT '1'",false,false,true);
+	db("ALTER TABLE `".$db['settings']."` ADD `memcache_host` VARCHAR( 50 ) NOT NULL DEFAULT '';",false,false,true);
+	db("ALTER TABLE `".$db['settings']."` ADD `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211';",false,false,true);
 	
 	// Add UNIQUE INDEX
 	if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
@@ -82,20 +85,18 @@ function install_155x_1600_update()
 	if(_rows($qry) >= 1)
 	{  while($get = _fetch($qry)) { db("UPDATE ".$db['f_skats']." SET `pos` = '".$get['id']."' WHERE `id` = '".$get['id']."';",false,false,true); } }
 	
-    //===============================================================
-    //-> Addons =====================================================
-    //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['addons']."`;");
-    db("CREATE TABLE IF NOT EXISTS `".$db['addons']."` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`author` varchar(249) NOT NULL DEFAULT '',
-	`name` varchar(249) NOT NULL DEFAULT '',
-	`version` varchar(30) NOT NULL DEFAULT '',
-	`updater` int(1) NOT NULL DEFAULT '1',
-	`last_checked` int(20) NOT NULL DEFAULT '0',
-	`new_version` int(1) NOT NULL DEFAULT '0',
-	PRIMARY KEY (`id`)
-	) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+	//===============================================================
+	//-> Cache ======================================================
+	//===============================================================
+	db("DROP TABLE IF EXISTS `".$db['cache']."`;",false,false,true);
+	db("CREATE TABLE IF NOT EXISTS `".$db['cache']."` (
+    `qry` varchar(32) NOT NULL DEFAULT '',
+    `data` mediumblob,
+    `timestamp` varchar(16) DEFAULT NULL,
+    `cacheTime` varchar(16) DEFAULT NULL,
+    `array` varchar(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`qry`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 	
     //===============================================================
     //-> Click IP Counter ===========================================

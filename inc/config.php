@@ -8,14 +8,8 @@ define('cache_in_debug', false); // Entscheidet ob im Debug Modus Seiten gecache
 define('buffer_gzip_compress', true); // Soll die Seite mit Hilfe der GZIP-Komprimierung übertragen werden
 define('buffer_gzip_compress_level', 4); // Level der Kompression 1 - 9 *Optimal Level 4
 
-define('dzcp_newsticker', true); // DZCP.de Newsticker in der Administration anzeigen
-define('dzcp_newsticker_refresh', (15*60)); // Wie lange soll gewartet werden um den Newsticker zu aktualisieren
-
 define('dzcp_version_checker', true); // Version auf DZCP.de abgleichen und benachrichtigen ob eine neue Version zur verfügung steht
 define('dzcp_version_checker_refresh', (30*60)); // Wie lange soll gewartet werden um einen Versionsabgleich durchzuführen
-
-define('cache_gzip_compress', true); // Soll der Cache als GZIP komprimiert werden
-define('cache_gzip_compress_level', 2); // Level der Kompression 1 - 9 *Optimal Level 2
 
 define('xfire_preloader', true); // XFire Profil per AJAX vorausladen
 define('xfire_skin', 'shadow'); // Skin von XFire: shadow,kampf,scifi,fantasy,wow,default
@@ -58,7 +52,6 @@ $db = array("host" =>           $sql_host,
             "db" =>             $sql_db,
             "artikel" =>        $prefix."artikel",
             "acomments" =>      $prefix."acomments",
-            "addons" =>         $prefix."addons",
             "awards" =>         $prefix."awards",
       		"away" =>           $prefix."away",
             "buddys" =>         $prefix."userbuddys",
@@ -108,12 +101,13 @@ $db = array("host" =>           $sql_host,
             "squaduser" =>      $prefix."squaduser",
             "sponsoren" =>      $prefix."sponsoren",
             "taktik" =>         $prefix."taktiken",
-            "users" =>          $prefix."users", 
+            "users" =>          $prefix."users",
             "usergallery" =>    $prefix."usergallery",
             "usergb" =>         $prefix."usergb",
-            "userpos" =>        $prefix."userposis",    
+            "userpos" =>        $prefix."userposis",
             "userstats" =>      $prefix."userstats",
             "votes" =>          $prefix."votes",
             "vote_results" =>   $prefix."vote_results",
-            "clicks_ips" =>     $prefix."clicks_ips");
+            "clicks_ips" =>     $prefix."clicks_ips",
+			"cache" =>          $prefix."cache");
 ?>

@@ -1011,12 +1011,10 @@ function getTSVersion($ip,$tPort,$port)
 ### TS 3 Viewer###
 ######################################
 
-function teamspeak3($settings) {
-  $tsstatus = new TSStatus($settings['ts_ip'], $settings['ts_port'], $settings['ts_sport'],$settings['ts_customicon'],$settings['ts_showchannel']);
-
-  return  show("menu/teamspeak", array("hostname" => '',
-                                       "channels" => $tsstatus->render()
-                                     ));
+function teamspeak3($settings) 
+{
+  	$tsstatus = new TSStatus($settings['ts_ip'], $settings['ts_port'], $settings['ts_sport'],$settings['ts_customicon'],$settings['ts_showchannel']);
+  	return show("menu/teamspeak", array("hostname" => '',"channels" => $tsstatus->render()));
 }
 
 class TSStatus

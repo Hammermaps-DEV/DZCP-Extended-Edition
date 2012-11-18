@@ -1,3 +1,4 @@
+
 <tr>
   <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(1)" style="cursor:pointer" onmouseover="DZCP.showInfo('[main_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="0">
@@ -235,6 +236,33 @@
 </tr>
 <tr id="more8" style="display:none">
   <td>
+    <table class="hperc" cellspacing="0">
+      <tr>
+        <td class="contentMainTop" width="180"><span class="fontBold">Cache Provider:</span></td>
+        <td class="contentMainFirst" align="center">
+          <select name="cache_engine" id="cache_engine">
+			[cache_select]
+          </select>
+        </td>
+      </tr>
+    </table>  
+	<table class="hperc" cellspacing="0">
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">Memcache Host:</span></td>
+        <td class="contentMainFirst" align="center"><input type="text" name="memcache_host" value="[memcache_host]" class="inputField_dis"
+          onfocus="this.className='inputField_en';"
+          onblur="this.className='inputField_dis';" id="memcache_host" /></td>
+      </tr>
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">Memcache Port:</span></td>
+        <td class="contentMainFirst" align="center"><input type="text" name="memcache_port" value="[memcache_port]" class="inputField_dis_mid"
+          onfocus="this.className='inputField_en_mid';"
+          onblur="this.className='inputField_dis_mid';" id="memcache_port" /></td>
+      </tr>
+	  <tr>
+        <td colspan="2" class="contentMainTop"><hr /></td>
+      </tr>
+    </table>
     <table class="hperc" cellspacing="0">
       <tr>
         <td class="contentMainTop" width="180"><span class="fontBold">Teamspeak:</span></td>

@@ -11,9 +11,9 @@ $where = _site_teamspeak;
 $title = $pagetitle." - ".$where."";
 $dir = "teamspeak";
 ## SECTIONS ##
-  if(function_exists(fopen))
+  if(fsockopen_support())
   {
-    if(cache('teamspeak_'.$language, config('cache_teamspeak'), 'c') || isset($_GET['cID']))
+    if(Cache::check($cacheTag,'teamspeak_'.$language) || isset($_GET['cID']))
     {    
     switch($settings['ts_version']):
     default; case '2';
@@ -287,9 +287,9 @@ $dir = "teamspeak";
     break;
     endswitch;
 	
-	cache('teamspeak_'.$language, $index, 'w');
+	Cache::set($cacheTag,'teamspeak_'.$language, $index, config('cache_teamspeak'));
     } else {
-      $index = cache('teamspeak_'.$language, null, 'r');
+      $index = Cache::get($cacheTag,'teamspeak_'.$language);
     }
   } else {
     $index = error(_fopen,1);

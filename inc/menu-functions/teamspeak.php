@@ -2,8 +2,8 @@
 //-> Teamspeak statusscript
 function teamspeak()
 {
-    global $db, $ajaxJob, $language;
-
+    global $db, $ajaxJob, $language, $cacheTag;
+    
     header('Content-Type: text/html; charset=iso-8859-1');
     if(!$ajaxJob)
     {
@@ -16,14 +16,17 @@ function teamspeak()
         $settings = settings(array('ts_ip','ts_sport','ts_port','ts_version'));
         if(!empty($settings['ts_ip']) && !empty($settings['ts_sport']) && !empty($settings['ts_port'])) 
         {
-            if(cache('nav_teamspeak_'.$language, config('cache_teamspeak'), 'c'))
+        	if(!fsockopen_support())
+        		return error2(_fopen);
+        	
+            if(Cache::check($cacheTag,'nav_teamspeak_'.$language))
             {
                 $teamspeak = teamspeakViewer($settings);
-                cache('nav_teamspeak_'.$language, $teamspeak, 'w');
+                Cache::set($cacheTag,'nav_teamspeak_'.$language, $teamspeak, config('cache_teamspeak'));
                 return $teamspeak;
             } 
             else
-                return cache('nav_teamspeak_'.$language, null, 'r');
+                return Cache::get($cacheTag,'nav_teamspeak_'.$language);
         } 
         else 
             return '<br /><center>'._no_ts.'</center><br />';
