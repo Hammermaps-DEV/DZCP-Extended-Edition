@@ -92,70 +92,84 @@ default:
                                                         "autor" => autor($get['autor'])));
     }
 
-    $qry = db("SELECT * FROM ".$db['news']." 
-               WHERE sticky < ".time()." 
-               AND datum <= ".time()." 
-               AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
-               ORDER BY datum DESC LIMIT ".($page - 1)*$maxnews.",".$maxnews."");
-  
-    $show = "";
-    while($get = _fetch($qry))
+    if(Cache::check($cacheTag,'news_page'))
     {
-        $klapp = ""; $links = ""; $links1 = ""; $links2 = ""; $links3 = "";
-        $getkat = _fetch(db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".$get['kat']."'"));
-        $c = cnt($db['newscomments'], " WHERE news = '".$get['id']."'");
+	    $qry = db("SELECT * FROM ".$db['news']." 
+	               WHERE sticky < ".time()." 
+	               AND datum <= ".time()." 
+	               AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
+	               ORDER BY datum DESC LIMIT ".($page - 1)*$maxnews.",".$maxnews."");
+	  
+	    $show = "";
+	    while($get = _fetch($qry))
+	    {
+	        $klapp = ""; $links = ""; $links1 = ""; $links2 = ""; $links3 = "";
+	        $getkat = _fetch(db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".$get['kat']."'"));
+	        $c = cnt($db['newscomments'], " WHERE news = '".$get['id']."'");
+	
+	        if($c == 1)
+	            $comments = show(_news_comment, array("comments" => "1", "id" => $get['id']));
+	        else
+	            $comments = show(_news_comments, array("comments" => $c, "id" => $get['id']));
+	
+	        if($get['klapptext'])
+	          $klapp = show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "expand", "id" => $get['id']));
+	
+	        $viewed = show(_news_viewed, array("viewed" => $get['viewed']));
+	    
+	        if(!empty($get['url1']))
+	            $links1 = show(_news_link, array("link" => re($get['link1']), "url" => $get['url1']));
+	        
+	        if(!empty($get['url2']))
+	            $links2 = show(_news_link, array("link" => re($get['link2']), "url" => $get['url2']));
+	        
+	        if(!empty($get['url3']))
+	            $links3 = show(_news_link, array("link" => re($get['link3']), "url" => $get['url3']));
+	    
+	        if(!empty($links1) || !empty($links2) || !empty($links3))
+	            $links = show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links));
+	    
+	        $intern = ($get['intern'] ? _votes_intern : '');
+	        $show .= show($dir."/news_show", array("titel" => re($get['titel']),
+	                                               "kat" => re($getkat['katimg']),
+	                                               "id" => $get['id'],
+	                                               "comments" => $comments,
+	                                               "showmore" => "",
+	                                               "dp" => "none",
+	                                               "nautor" => _autor,
+	                                               "dir" => $designpath,
+	    			                               "intern" => $intern,
+	                                               "sticky" => "",
+	                                               "ndatum" => _datum,
+	                                               "ncomments" => _news_kommentare.":",
+	                                               "klapp" => $klapp,
+	                                               "more" => bbcode($get['klapptext']),
+	                                               "viewed" => $viewed,
+	                                               "text" => bbcode($get['text']),
+	                                               "datum" => date("d.m.y H:i", $get['datum'])._uhr,
+	                                               "links" => $links,
+	                                               "autor" => autor($get['autor'])));
+	    }
 
-        if($c == 1)
-            $comments = show(_news_comment, array("comments" => "1", "id" => $get['id']));
-        else
-            $comments = show(_news_comments, array("comments" => $c, "id" => $get['id']));
-
-        if($get['klapptext'])
-          $klapp = show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "expand", "id" => $get['id']));
-
-        $viewed = show(_news_viewed, array("viewed" => $get['viewed']));
-    
-        if(!empty($get['url1']))
-            $links1 = show(_news_link, array("link" => re($get['link1']), "url" => $get['url1']));
-        
-        if(!empty($get['url2']))
-            $links2 = show(_news_link, array("link" => re($get['link2']), "url" => $get['url2']));
-        
-        if(!empty($get['url3']))
-            $links3 = show(_news_link, array("link" => re($get['link3']), "url" => $get['url3']));
-    
-        if(!empty($links1) || !empty($links2) || !empty($links3))
-            $links = show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links));
-    
-        $intern = ($get['intern'] ? _votes_intern : '');
-        $show .= show($dir."/news_show", array("titel" => re($get['titel']),
-                                               "kat" => re($getkat['katimg']),
-                                               "id" => $get['id'],
-                                               "comments" => $comments,
-                                               "showmore" => "",
-                                               "dp" => "none",
-                                               "nautor" => _autor,
-                                               "dir" => $designpath,
-    			                               "intern" => $intern,
-                                               "sticky" => "",
-                                               "ndatum" => _datum,
-                                               "ncomments" => _news_kommentare.":",
-                                               "klapp" => $klapp,
-                                               "more" => bbcode($get['klapptext']),
-                                               "viewed" => $viewed,
-                                               "text" => bbcode($get['text']),
-                                               "datum" => date("d.m.y H:i", $get['datum'])._uhr,
-                                               "links" => $links,
-                                               "autor" => autor($get['autor'])));
+	    Cache::set($cacheTag,'news_page', $show, 5);
     }
+    else
+    	$show = Cache::get($cacheTag,'news_page');
 
-    $qrykat = db("SELECT * FROM ".$db['newskat']."");
-    $kategorien = "";
-    while($getkat = _fetch($qrykat))
+    if(Cache::check($cacheTag,'news_kat') || isset($_GET['kat']))
     {
-        $sel = (isset($_GET['kat']) && $_GET['kat'] == $getkat['id'] ? 'selected' : '');
-        $kategorien .= "<option value='".$getkat['id']."' ".$sel.">".$getkat['kategorie']."</option>";
+	    $qrykat = db("SELECT * FROM ".$db['newskat']."");
+	    $kategorien = "";
+	    while($getkat = _fetch($qrykat))
+	    {
+	        $sel = (isset($_GET['kat']) && $_GET['kat'] == $getkat['id'] ? 'selected' : '');
+	        $kategorien .= "<option value='".$getkat['id']."' ".$sel.">".$getkat['kategorie']."</option>";
+	    }
+	    
+	    Cache::set($cacheTag,'news_kat', $kategorien, 10);
     }
+    else
+    	$kategorien = Cache::get($cacheTag,'news_kat');
       
     $index = show($dir."/news", array(  "show" => $show,
                                         "show_sticky" => $show_sticky,
