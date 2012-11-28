@@ -12,11 +12,11 @@ Geplant sind weitere Überarbeitungen bei Geschwindigkeit und Zuverlässigkeit, 
 Änderungsübersicht
 =======================
 
-Viele der Kernfunktionen wurde in die kernel.php exportiert um später eine reine BBCode.php zu erhalten die sich wirklich nur um die Darstellung kümmert. #
+Viele der Kernfunktionen wurde in die kernel.php exportiert um später eine reine BBCode.php zu erhalten die sich wirklich nur um die Darstellung kümmert.
 Viele der Kernfunktionen die in die kernel.php exportiert wurden, haben eine überarbeitung erfahren und wurde auf einer php 5.4 Laufzeit mit voll eingeschalteten Error Reporting getestet.
 
 Es wurde eine richtige Cache Klasse eingefügt, die standardmäßig auf 'File'  eingestellt ist. 
-Der Cache speichert Seiten und Server antworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen zu müssen.
+Der Cache speichert Seiten und Serverantworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen muss.
 Dabei wird auch zbs. die News Seite in den Cache geladen und alle paar Sekunden aktualisiert, dieses Verfahren ermöglicht eine Entlastung der Datenbank und des Servers bei vielen gleichzeitigen Besuchern.
 Der Cache kann als Files, Memcache oder SQL Erweiterung betrieben werden. 
 
