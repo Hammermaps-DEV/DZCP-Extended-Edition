@@ -35,9 +35,11 @@ Das einbinden neuer Statischer Texte wurde somit erleichtert.
 
 Beispiel:
 deutsch.php / englisch.php
+
 define('_test_text', 'Nur ein Test Text^^');
 
 HTML File Platzhalter:
+
 [lang_test_text]
 
 Senden von News *News einsenden* wurde in die index.php der News Seite intrigiert.
