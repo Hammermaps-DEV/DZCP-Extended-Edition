@@ -21,6 +21,7 @@ Dabei wird auch zbs. die News Seite in den Cache geladen und alle paar Sekunden 
 Der Cache kann als Files, Memcache oder SQL Erweiterung betrieben werden. 
 
 Der Installer / Updater wurde komplett überarbeitet und wird nachfolgende Updates selbständig erkennen und die nötigen Aktualisierungen vornehmen. *Sie müssen nur noch auf 'Weiter' drücken.
+
 Unterstützung für FreeWebspaces wurde überarbeitet, so dass es keine PHP Warnungen oder Verzögerungen mehr geben wird, Wenn zbs. der Webspace kein fsockopen unterstützt.
 Alle fsockopen abhängigen Funktionen werden dann vollständig abgeschaltet.
 
