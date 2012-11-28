@@ -22,7 +22,7 @@ Der Cache kann als Files, Memcache oder SQL Erweiterung betrieben werden.
 
 Der Installer / Updater wurde komplett überarbeitet und wird nachfolgende Updates selbständig erkennen und die nötigen Aktualisierungen vornehmen. *Sie müssen nur noch auf 'Weiter' drücken.
 
-Unterstützung für FreeWebspaces wurde überarbeitet, so dass es keine PHP Warnungen oder Verzögerungen mehr geben wird, Wenn zbs. der Webspace kein fsockopen unterstützt.
+Unterstützung für FreeWebspaces wurde überarbeitet, so dass es keine PHP Warnungen oder Verzögerungen mehr geben wird, wenn zbs. der Webspace kein fsockopen unterstützt.
 Alle fsockopen abhängigen Funktionen werden dann vollständig abgeschaltet.
 
 Viele der Seiten haben eine Code Optimierung erfahren, überflüssiger Code oder Code der deutlich sparender geschrieben werden kann wurde überarbeitet.
