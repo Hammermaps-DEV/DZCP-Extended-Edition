@@ -12,8 +12,8 @@ Geplant sind weitere Überarbeitungen bei Geschwindigkeit und Zuverlässigkeit, 
 Änderungsübersicht
 =======================
 
-Viele der Kernfunktionen wurde in die kernel.php exportiert um später eine reine BBCode.php zu erhalten die sich wirklich nur um die Darstellung kümmert.
-Viele der Kernfunktionen die in die kernel.php exportiert wurden, wurden überarbeitet und auf einer php 5.4 Laufzeit mit voll eingeschalteten Error Reporting getestet.
+Viele der Kernfunktionen wurde in die kernel.php exportiert um später eine reine BBCode.php zu erhalten die sich wirklich nur um die Darstellung kümmert. #
+Viele der Kernfunktionen die in die kernel.php exportiert wurden, haben eine überarbeitung erfahren und wurde auf einer php 5.4 Laufzeit mit voll eingeschalteten Error Reporting getestet.
 
 Es wurde eine richtige Cache Klasse eingefügt, die standardmäßig auf 'File'  eingestellt ist. 
 Der Cache speichert Seiten und Server antworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen zu müssen.
