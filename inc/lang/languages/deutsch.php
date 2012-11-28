@@ -2,25 +2,13 @@
 ## Charset ##
 define('_charset', 'iso-8859-1');
 
-## ADDED FOR 1.6 Final
-define('_config_version', 'Mod/AddOns verwalten');
-define('_v_head', 'Mod/AddOn Versionen verwalten');
-define('_v_name', 'Mod/AddOn Name');
-define('_v_own', 'eigene Version');
-define('_v_server', 'aktuelle Version');
-define('_config_v_add', 'Mod/AddOn hinzuf&uuml;gen');
-define('_v_server_hover', 'Versionspr&uuml;fung auf');
-define('_v_unknown', 'unbekannt');
-define('_v_fsockopen_not_allowed', 'fsockopen nicht erlaubt');
-define('_v_no_data', 'Daten nicht abgerufen');
-define('_v_get_data', 'Daten abrufen');
-define('_v_server_id', 'Mod/AddOn ID auf Server');
-define('_v_download_link', 'Mod/AddOn Download Link');
-define('_v_added', 'Mod/AddOn hinzugef&uuml;gt');
-define('_v_edited', 'Mod/AddOn erfolgreich bearbeitet');
-define('_confirm_del_version', 'Es wird nur der Eintrag aus dieser Liste gel&ouml;scht, wirklich l&ouml;schen?');
-define('_v_no_server', 'Kein Kontrollserver');
+## ADDED FOR 1.0 EXT EDITION
+define('_feeds', 'News Feeds *rss');
+define('_feeds_info', 'Schaltet das automatische generieren von RSS Feeds an oder aus');
+define('_ip_only_for_admins', ' (IP ist nur Admins sichtbar)');
+define('_version_for_page_outofdate', '<tr><th scope="row"><div align="center">Diese Seite ist mit der CMS Kern Version nicht kompatibel!</div></th></tr><tr><th scope="row"><div align="center">Bitte Aktualisiere deine DZCP Extended-Edition</div></th></tr>');
 
+## ADDED FOR 1.6 Final
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');
 define('_search_con_and', 'absolute &Uuml;bereinstimmung');
 define('_search_con_andb', 'alle W&ouml;rter m&uuml;ssen vorhanden sein');

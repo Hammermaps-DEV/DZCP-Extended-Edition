@@ -5,8 +5,6 @@ include("../inc/buffer.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 ## SETTINGS ##
-$time_start = generatetime();
-lang($language);
 $dir = "impressum";
 $where = _site_impressum;
 ## SECTIONS ##

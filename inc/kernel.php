@@ -278,8 +278,9 @@ function show($tpl="", $array=array())
 	        
 	        if(!strstr($pholder[$i], 'lang_'))
 	            continue;
-	        
-	        $array[$pholder[$i]] = constant(substr($pholder[$i], 4));
+
+	        if(defined(substr($pholder[$i], 4)))
+	        	$array[$pholder[$i]] = constant(substr($pholder[$i], 4));
 	    }
 	    
 	    unset($pholder);

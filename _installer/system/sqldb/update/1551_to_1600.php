@@ -28,6 +28,8 @@ function install_155x_1600_update()
 	db("ALTER TABLE `".$db['config']."` ADD `cache_engine` INT(1) NOT NULL DEFAULT '1'",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` ADD `memcache_host` VARCHAR( 50 ) NOT NULL DEFAULT '';",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` ADD `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211';",false,false,true);
+	db("ALTER TABLE `".$db['config']."` ADD `news_feed` INT( 1 ) NOT NULL DEFAULT '1'",false,false,true);
+	db("ALTER TABLE `".$db['newscomments']."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
 	
 	// Add UNIQUE INDEX
 	if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
@@ -77,13 +79,18 @@ function install_155x_1600_update()
 	// Lösche dzcp_banned Tabelle
 	db("DROP TABLE `".$prefix."banned"."`",false,false,true);
 	
-	//-> Forum Sortieren
+	// Forum Sortieren
 	db("ALTER TABLE ".$db['f_skats']." ADD `pos` int(5) NOT NULL",false,false,true);
 	
-	//-> Forum Sortieren funktion: schreibe id von spalte in pos feld um konflikte zu vermeiden!
+	// Forum Sortieren funktion: schreibe id von spalte in pos feld um konflikte zu vermeiden!
 	$qry = db("SELECT id FROM `".$db['f_skats']."`");
 	if(_rows($qry) >= 1)
 	{  while($get = _fetch($qry)) { db("UPDATE ".$db['f_skats']." SET `pos` = '".$get['id']."' WHERE `id` = '".$get['id']."';",false,false,true); } }
+	
+	// Update News einsenden Link * wenn vorhanden
+	$qry = db("SELECT id,url FROM `".$db['navi']."` WHERE `name` = '_news_send_'");
+	if(_rows($qry) >= 1)
+	{  while($get = _fetch($qry)) { if($get['url'] == '../news/send.php') db("UPDATE ".$db['navi']." SET `url` = '../news/?action=send' WHERE `id` = '".$get['id']."';",false,false,true); } }
 	
 	//===============================================================
 	//-> Cache ======================================================

@@ -7,8 +7,6 @@ include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 
 ## SETTINGS ##
-$time_start = generatetime();
-lang($language);
 $dir = "shout";
 
 ## SECTIONS ##

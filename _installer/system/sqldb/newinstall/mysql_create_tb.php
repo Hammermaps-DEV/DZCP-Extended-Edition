@@ -23,7 +23,7 @@ function install_mysql_create()
       `reg` int(5) NOT NULL DEFAULT '0',
       `comment` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
-      `editby` text NOT NULL,
+      `editby` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
   
@@ -268,6 +268,7 @@ function install_mysql_create()
       `cache_teamspeak` int(10) NOT NULL DEFAULT '30',
       `cache_server` int(10) NOT NULL DEFAULT '30',
       `direct_refresh` int(1) NOT NULL DEFAULT '0',
+      `news_feed` int(1) NOT NULL DEFAULT '1',
       UNIQUE KEY `id` (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 		

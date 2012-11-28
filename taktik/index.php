@@ -7,8 +7,6 @@ include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 
 ## SETTINGS ##
-$time_start = generatetime();
-lang($language);
 $where = _site_taktiken;
 $title = $pagetitle." - ".$where."";
 $dir = "taktik";

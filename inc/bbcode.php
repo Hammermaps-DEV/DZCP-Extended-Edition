@@ -201,6 +201,9 @@ function lang($lng,$pfad='')
 	header("Content-type: text/html; charset="._charset);
 }
 
+//-> Languagefiles einlesen *Run
+lang($language);
+
 //-> Sprachdateien auflisten
 function languages()
 {
@@ -678,12 +681,12 @@ function wrap($str, $width = 75, $break = "\n", $cut = true)
 }
 
 //-> Funktion um sauber in die DB einzutragen
-function up($txt, $bbcode=0, $charset=_charset)
+function up($txt, $bbcode=false, $charset=_charset)
 {
     $txt = str_replace("& ","&amp; ",$txt);
     $txt = str_replace("\"","&#34;",$txt);
 
-    if(empty($bbcode))
+    if($bbcode)
         $txt = nl2br(htmlentities(html_entity_decode($txt), ENT_QUOTES, $charset));
 
     return trim(spChars($txt));
@@ -984,7 +987,7 @@ function links($hp)
     	if(strpos($hp, 'http://') === true || strpos($hp, 'https://') === true || strpos($hp, 'ftp://') === true)
     		return $hp;
 
-        return 'http://'.$hp;
+        return "http://".$hp;
     }
     
     return $hp;
@@ -1652,7 +1655,11 @@ function convert_feed($txt)
 
 function feed()
 {
-  global $db,$pagetitle,$clanname;
+  	global $db,$pagetitle,$clanname;
+
+  	if(!config('news_feed') && file_exists(basePath . '/rss.xml'))
+  		@unlink(basePath . '/rss.xml');
+  	
     $host = $_SERVER['HTTP_HOST'];
     $pfad = preg_replace("#^(.*?)\/(.*?)#Uis","$1",dirname($_SERVER['PHP_SELF']));
 

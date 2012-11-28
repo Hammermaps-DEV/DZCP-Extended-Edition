@@ -5,8 +5,6 @@ include("../inc/buffer.php");
 include("../inc/config.php");
 include("../inc/bbcode.php");
 ## SETTINGS ##
-$time_start = generatetime();
-lang($language);
 $dir = "search";
 $where = _search_head;
 $title = $pagetitle." - ".$where."";

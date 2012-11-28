@@ -8,8 +8,6 @@ include(basePath."/inc/bbcode.php");
 include(basePath."/admin/helper.php");
 
 ## SETTINGS ##
-$time_start = generatetime();
-lang($language);
 $where = _site_config;
 $dir = "admin";
 $show = "";
