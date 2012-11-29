@@ -1,9 +1,9 @@
 <?php
-/////////// ADMINNAVI \\\\\\\\\
-// Typ:       contentmenu
-// Rechte:    permission('links')
-///////////////////////////////
-if(_adminMenu != 'true') exit;
+#####################
+## Admin Menu-File ##
+#####################
+if(_adminMenu != 'true') 
+	exit();
 
     if(permission('links'))
     {

@@ -1,9 +1,9 @@
 <?php
-/////////// ADMINNAVI \\\\\\\\\
-// Typ:       contentmenu
-// Rechte:    permission('artikel')
-///////////////////////////////
-if(_adminMenu != 'true') exit;
+#####################
+## Admin Menu-File ##
+#####################
+if(_adminMenu != 'true') 
+	exit();
 
     $where = $where.': '._artikel;
     if(permission("artikel"))

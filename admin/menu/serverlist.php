@@ -1,9 +1,9 @@
 <?php
-/////////// ADMINNAVI \\\\\\\\\
-// Typ:       contentmenu
-// Rechte:    permission('serverliste')
-///////////////////////////////
-if(_adminMenu != 'true') exit;
+#####################
+## Admin Menu-File ##
+#####################
+if(_adminMenu != 'true') 
+	exit();
 
     $where = $where.': '._slist_head_admin;
     if(!permission("serverliste"))

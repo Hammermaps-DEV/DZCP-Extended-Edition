@@ -1,10 +1,9 @@
 <?php
-/////////// ADMINNAVI \\\\\\\\\
-// Typ:       rootmenu
-// Rechte:    $chkMe == 4
-///////////////////////////////
+#####################
+## Admin Menu-File ##
+#####################
 if(_adminMenu != 'true') 
-    exit();
+	exit();
 
 $where = $where.': '._protocol;
 if($chkMe == 4)

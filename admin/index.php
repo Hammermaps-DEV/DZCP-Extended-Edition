@@ -8,90 +8,132 @@ include(basePath."/inc/bbcode.php");
 include(basePath."/admin/helper.php");
 
 ## SETTINGS ##
+$time_start = generatetime();
 $where = _site_config;
 $dir = "admin";
 $show = "";
 $cache_cleanup = false;
+$wysiwyg = "";
+$rootmenu = "";
+$settingsmenu = "";
+$contentmenu = "";
 
 ## SECTIONS ##
-$check = db("SELECT s1.user FROM ".$db['permissions']." s1, ".$db['users']." s2
-             WHERE s1.user = '".$userid."'
-             AND s2.id = '".intval($userid)."'
-             AND s2.pwd = '".$_SESSION['pwd']."'");
-
 if(!admin_perms($_SESSION['id']))
-    $index = error(_error_wrong_permissions, 1);
-else 
+	$index = error(_error_wrong_permissions, 1); //Keine Rechte
+else
 {
-    define('_adminMenu', true);
-    $settingsmenu = ""; $contentmenu = ""; $rootmenu = ""; $wysiwyg = false;
-    $radmin1 = ''; $radmin2 = ''; $adminc1 = ''; $adminc2 = '';
-    
-    if(isset($_GET['admin']))
-    {
-        if(file_exists(basePath.'/admin/menu/'.strtolower($_GET['admin']).'.php'))
-            include(basePath.'/admin/menu/'.strtolower($_GET['admin']).'.php');
-    }
-    
-    //Site Permissions
-    $check = db("SELECT * FROM ".$db['permissions']." WHERE user = '".intval($userid)."'",false,true);
-    
-    $amenu = array();
-    $files = get_files(basePath.'/admin/menu/',false,true,array('php'));
-    foreach($files AS $file)
-    {
-        $nav = file(basePath.'/admin/menu/'.$file);
-        $navType = trim(str_replace('// Typ:', '', $nav[2]));
-        $navPerm = trim(str_replace('// Rechte:', '', $nav[3]));
-        
-        $file = str_replace('.php', '', $file);
-        @eval("\$link = _config_".$file.";");
-        @eval("\$permission = ".$navPerm.";");
-            
-        foreach($picformat AS $end)
-        {
-            if(file_exists(basePath.'/admin/menu/'.$file.'.'.$end))
-                break;
-        }
-    
-        if(!empty($navType) && !empty($navPerm) && $permission)
-            $amenu[$navType][$link] = show("['[link]','?admin=[name]','background-image:url(menu/[name].".$end.");'],\n", array("link" => $link, 'name' => $file));
-        
-        $file = null;
-    }
-    
-    foreach($amenu AS $m => $k)
-    {
-        natcasesort($k);
-        foreach($k AS $l) $$m .= $l;
-    }
-    
-    if(empty($rootmenu))
-    {
-        $radmin1 = '/*'; $radmin2 = '*/';
-    }
-    
-    if(empty($settingsmenu))
-    {
-        $adminc1 = '/*'; $adminc2 = '*/';
-    }
-    
-    $dzcp_version = show_dzcp_version();
-    $index = show($dir."/admin", array( "head" => _config_head,
-                                        "version" => $dzcp_version['version'],
-                                        "old" => $dzcp_version['old'],
-                                        "dbase" => _stats_mysql,
-                                        "einst" => _config_einst,
-                                        "content" => _content,
-                                        "rootadmin" => _rootadmin,
-                                        "rootmenu" => $rootmenu,
-                                        "settingsmenu" => $settingsmenu,
-                                        "contentmenu" => $contentmenu,
-                                        "radmin1" => $radmin1,
-                                        "radmin2" => $radmin2,
-                                        "adminc1" => $adminc1,
-                                        "adminc2" => $adminc2,
-                                        "show" => $show));
+	define('_adminMenu', true);
+
+	//Lade XML Daten
+	$amenu = array();
+	$files = get_files(basePath.'/admin/menu/',false,true,array('xml'));
+	foreach($files AS $file)
+	{
+		## XML Auslesen ##
+		$XMLTag = 'admin_'.str_ireplace('.xml', '', $file);
+		if(xml::openXMLfile($XMLTag,"admin/menu/".$file))
+		{
+			$settings = array();
+			$settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
+			$settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
+			$settings['Only_Admin'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Admin'));
+			$settings['Only_Root'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Root'));
+			$settings['file_name'] = str_replace('.xml', '', $file);
+			$settings['file_name_php'] = str_replace('.xml', '.php', $file);
+		
+			if(file_exists(basePath."/admin/menu/".$settings['file_name_php']))
+			{
+				## Menu ##
+				@eval("\$link = _config_".$settings['file_name'].";");
+			
+				if($settings['Rights'] != 'done')
+					$permission = permission($settings['Rights']);
+				else
+					$permission = true;
+		
+				foreach($picformat AS $end)
+				{
+					if(file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
+						break;
+				}
+		
+				if(!empty($settings['Typ']) && $permission && !$settings['Only_Admin'] && !$settings['Only_Root'] or ($chkMe == 4 && $settings['Only_Admin']) && !$settings['Only_Root'] or ($settings['Only_Root'] && $userid == $rootAdmin))
+					$amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $settings['file_name'], "end" => $end));
+		
+				unset($settings); unset($XMLTag);
+			}
+		}
+	}
+
+	## Sortieren ##
+	foreach($amenu AS $m => $k)
+	{
+		natcasesort($k);
+		foreach($k AS $l) $$m .= $l;
+	}
+	
+	## Root Menu deaktivieren ##
+	if(empty($rootmenu))
+	{
+		$radmin1 = '/*';
+		$radmin2 = '*/';
+	}
+	else
+		$radmin2 = ($radmin1 = '');
+	
+	## Settings Menu deaktivieren ##
+	if(empty($settingsmenu))
+	{
+		$adminc1 = '/*';
+		$adminc2 = '*/';
+	}
+	else
+		$adminc2 = ($adminc1 = '');
+	
+	## Content Menu deaktivieren ##
+	if(empty($contentmenu))
+	{
+		$contentadmin1 = '/*';
+		$contentadmin2 = '*/';
+	}
+	else
+		$contentadmin2 = ($contentadmin1 = '');
+	
+	if(isset($_GET['admin']))
+	{
+		if(file_exists(basePath."/admin/menu/".($inc_file=((string)$_GET['admin']).".php")))
+		{
+			unset($settings); $settings = array();
+			$XMLTag = 'admin_'.((string)$_GET['admin']);
+			$settings['Only_Admin'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Admin'));
+			$settings['Only_Root'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Root'));
+			$permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
+					
+			if($permission && !$settings['Only_Admin'] && !$settings['Only_Root'] or ($chkMe == 4 && $settings['Only_Admin']) && !$settings['Only_Root'] or ($settings['Only_Root'] && $userid == $rootAdmin))
+				require_once(basePath."/admin/menu/".$inc_file);
+			else
+				$show = error(_error_wrong_permissions, 1);
+		}
+	}
+	
+	$dzcp_version = show_dzcp_version();
+	$index = show($dir."/admin", array("head" => _config_head,
+            "version" => $dzcp_version['version'],
+            "old" => $dzcp_version['old'],
+			"einst" => _config_einst,
+			"content" => _content,
+			"rootadmin" => _rootadmin,
+			"rootmenu" => $rootmenu,
+			"settingsmenu" => $settingsmenu,
+			"contentmenu" => $contentmenu,
+			"radmin1" => $radmin1,
+			"radmin2" => $radmin2,
+			"adminc1" => $adminc1,
+			"adminc2" => $adminc2,
+			"content1" => $contentadmin1,
+			"content2" => $contentadmin2,
+			"show" => $show));
 }
 
 ## SETTINGS ##

@@ -1,9 +1,9 @@
 <?php
-/////////// ADMINNAVI \\\\\\\\\
-// Typ:       settingsmenu
-// Rechte:    permission('news') || permission('artikel')
-///////////////////////////////
-if(_adminMenu != 'true') exit;
+#####################
+## Admin Menu-File ##
+#####################
+if(_adminMenu != 'true') 
+	exit();
 
     $where = $where.': '._config_newskats_edit_head;
     if(!permission("news") && !permission('artikel'))

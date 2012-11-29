@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<settings>
+	<Menu>settingsmenu</Menu>
+	<Rights>forum</Rights>
+	<Only_Admin>true</Only_Admin>
+	<Only_Root>false</Only_Root>
+</settings>
