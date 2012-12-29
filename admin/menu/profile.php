@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
 	exit();
 
     $where = $where.': '._profile_head;
-    if($chkMe != 4)
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       if($_GET['do'] == "add")
       {
         $show = show($dir."/form_profil", array("head" => _profile_add_head,
@@ -266,5 +262,4 @@ if(_adminMenu != 'true')
                                            "del" => _deleteicon_blank,
 									                         "shown" => _profile_shown));
       }
-    }
 ?>

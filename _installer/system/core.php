@@ -299,10 +299,10 @@ function set_chmod_ftp($array,$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd,$connect_te
 	{
 		if(@fsockopen($ftp_host, 21, $errno, $errstr, 1))
 		{
-			if(!@ftp_connect($ftp_host))
-			return false;
+			if(!$conn=@ftp_connect($ftp_host))
+				return false;
 			else
-			return true;
+				return true;
 		}
 		else
 		return false;
@@ -358,10 +358,10 @@ function is_writable_array($array)
 }
 
 //-> Funktion um sauber in die DB einzutragen
-function up($txt)
+function up($txt, $bbcode=false, $charset=_charset)
 {
-    $txt = str_replace("& ","&amp; ",$txt);
-    $txt = str_replace("\"","&#34;",$txt);
-    return trim(spChars(nl2br(htmlentities(html_entity_decode($txt), ENT_QUOTES, 'iso-8859-1'))));
+	$txt = str_replace("& ","&amp; ",$txt);
+	$txt = spChars($txt);
+	return trim($txt);
 }
 ?>

@@ -1,7 +1,7 @@
 <?php 
   define('_version', '1.0');
-  define('_release', '28.11.2012');
-  define('_build', 'repo:dev:git:0028');
+  define('_release', '29.12.2012');
+  define('_build', 'repo:dev:git:0033');
   define('_edition', 'Extended Edition');
 
   $cp_color = '#FFFFFF';  ###########################################################################

@@ -8,7 +8,6 @@ include(basePath."/inc/bbcode.php");
 include(basePath."/admin/helper.php");
 
 ## SETTINGS ##
-$time_start = generatetime();
 $where = _site_config;
 $dir = "admin";
 $show = "";
@@ -50,7 +49,7 @@ else
 				if($settings['Rights'] != 'done')
 					$permission = permission($settings['Rights']);
 				else
-					$permission = true;
+					$permission = false;
 		
 				foreach($picformat AS $end)
 				{
@@ -61,7 +60,7 @@ else
 				if(!empty($settings['Typ']) && $permission && !$settings['Only_Admin'] && !$settings['Only_Root'] or ($chkMe == 4 && $settings['Only_Admin']) && !$settings['Only_Root'] or ($settings['Only_Root'] && $userid == $rootAdmin))
 					$amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $settings['file_name'], "end" => $end));
 		
-				unset($settings); unset($XMLTag);
+				unset($settings,$XMLTag);
 			}
 		}
 	}

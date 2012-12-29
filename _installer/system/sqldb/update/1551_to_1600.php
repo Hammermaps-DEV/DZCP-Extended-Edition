@@ -12,7 +12,6 @@ function install_155x_1600_update()
 	db("ALTER TABLE `".$db['downloads']."` ADD `last_dl` INT( 20 ) NOT NULL DEFAULT '0' AFTER `date`",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` CHANGE `i_autor` `i_autor` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
 	db("ALTER TABLE `".$db['gb']."` CHANGE `hp` `hp` VARCHAR(130) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-	db("ALTER TABLE `".$db['permissions']."` ADD `gs_showpw` INT(1) NOT NULL DEFAULT '0'",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` ADD `urls_linked` INT(1) NOT NULL DEFAULT '1', ADD `ts_customicon` INT(1) NOT NULL DEFAULT '1' AFTER `ts_version`, ADD `ts_showchannel` INT(1) NOT NULL DEFAULT '0' AFTER `ts_customicon`",false,false,true);
 	db("ALTER TABLE `".$db['msg']."` CHANGE `see_u` `see_u` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
 	db("ALTER TABLE `".$db['msg']."` CHANGE `page` `page` INT( 11 ) NOT NULL DEFAULT '0'",false,false,true);
@@ -28,9 +27,13 @@ function install_155x_1600_update()
 	db("ALTER TABLE `".$db['config']."` ADD `cache_engine` INT(1) NOT NULL DEFAULT '1'",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` ADD `memcache_host` VARCHAR( 50 ) NOT NULL DEFAULT '';",false,false,true);
 	db("ALTER TABLE `".$db['settings']."` ADD `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211';",false,false,true);
+	db("ALTER TABLE `".$db['config']."` ADD `cache_news` INT( 10 ) NOT NULL DEFAULT '5' AFTER `cache_server`;",false,false,true);
 	db("ALTER TABLE `".$db['config']."` ADD `news_feed` INT( 1 ) NOT NULL DEFAULT '1'",false,false,true);
 	db("ALTER TABLE `".$db['newscomments']."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-	
+	db("ALTER TABLE `".$db['settings']."` DROP `gmaps_key`",false,false,true);
+	db("ALTER TABLE `".$db['users']."` ADD `pkey` VARCHAR( 50 ) NOT NULL DEFAULT '' AFTER `sessid`;",false,false,true);
+	db("ALTER TABLE `".$db['navi']."` ADD `extended_perm` varchar(50) DEFAULT NULL AFTER `editor`;",false,false,true);
+
 	// Add UNIQUE INDEX
 	if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
 	{
@@ -118,6 +121,119 @@ function install_155x_1600_update()
 	PRIMARY KEY (`id`),
 	KEY `ip` (`ip`)
 	) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    
+    // Ersetze Permissions Tabelle
+    $qry = db("SELECT * FROM `".$db['permissions']."`");
+    if(_rows($qry) >= 1)
+    {  
+    	$cache_array_sql = array();
+    	while($get = _fetch($qry)) 
+    	{
+    		$cache_array_sql[] = "INSERT INTO `".$db['permissions']."` SET 
+    		`user` = ".$get['user'].", 
+    		`pos` = ".$get['pos'].",
+		    `intforum` = ".$get['intforum'].",
+		    `clankasse` = ".$get['clankasse'].",
+		    `clanwars` = ".$get['clanwars'].",
+		    `shoutbox` = ".$get['shoutbox'].",
+		    `serverliste` = ".$get['serverliste'].",
+		    `editusers` = ".$get['editusers'].",
+		    `edittactics` = ".$get['edittactics'].",
+		    `editsquads` = ".$get['editsquads'].",
+		    `editserver` = ".$get['editserver'].",
+		    `editkalender` = ".$get['editkalender'].",
+		    `news` = ".$get['news'].",
+		    `gb` = ".$get['gb'].",
+		    `forum` = ".$get['forum'].",
+		    `votes` = ".$get['votes'].",
+		    `gallery` = ".$get['gallery'].",
+		    `votesadmin` = ".$get['votesadmin'].",
+		    `links` = ".$get['links'].",
+		    `downloads` = ".$get['downloads'].",
+		    `newsletter` = ".$get['newsletter'].",
+		    `intnews` = ".$get['intnews'].",
+		    `rankings` = ".$get['rankings'].",
+		    `contact` = ".$get['contact'].",
+		    `joinus` = ".$get['joinus'].",
+		    `awards` = ".$get['awards'].",
+		    `artikel` = ".$get['artikel'].",
+		    `receivecws` = ".$get['receivecws'].",
+		    `editor` = ".$get['editor'].",
+		    `glossar` = ".$get['glossar'].",
+		    `gs_showpw` = ".$get['gs_showpw'].";";
+    	}
+    	
+    	unset($qry,$get);
+    }
+    
+    //===============================================================
+    //-> Rechte =====================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['permissions']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['permissions']."` (
+	  `id` int(11) NOT NULL AUTO_INCREMENT,
+	  `user` int(11) NOT NULL DEFAULT '0',
+	  `pos` int(1) NOT NULL,
+	  `artikel` int(1) NOT NULL DEFAULT '0',
+	  `awards` int(1) NOT NULL DEFAULT '0',
+	  `backup` int(1) NOT NULL DEFAULT '0',
+	  `clear` int(1) NOT NULL DEFAULT '0',
+	  `config` int(1) NOT NULL DEFAULT '0',
+	  `contact` int(1) NOT NULL DEFAULT '0',
+	  `clanwars` int(1) NOT NULL DEFAULT '0',
+	  `clankasse` int(1) NOT NULL DEFAULT '0',
+	  `downloads` int(1) NOT NULL DEFAULT '0',
+	  `editkalender` int(1) NOT NULL DEFAULT '0',
+	  `editserver` int(1) NOT NULL DEFAULT '0',
+	  `edittactics` int(1) NOT NULL DEFAULT '0',
+	  `editsquads` int(1) NOT NULL DEFAULT '0',
+	  `editusers` int(1) NOT NULL DEFAULT '0',
+	  `editor` int(1) NOT NULL DEFAULT '0',
+	  `forum` int(1) NOT NULL DEFAULT '0',
+	  `gallery` int(1) NOT NULL DEFAULT '0',
+	  `gb` int(1) NOT NULL DEFAULT '0',
+	  `gs_showpw` int(1) NOT NULL DEFAULT '0',
+	  `glossar` int(1) NOT NULL DEFAULT '0',
+	  `impressum` int(1) NOT NULL DEFAULT '0',
+	  `intforum` int(1) NOT NULL DEFAULT '0',
+	  `intnews` int(1) NOT NULL DEFAULT '0',
+	  `joinus` int(1) NOT NULL DEFAULT '0',
+	  `links` int(1) NOT NULL DEFAULT '0',
+	  `news` int(1) NOT NULL DEFAULT '0',
+	  `newsletter` int(1) NOT NULL DEFAULT '0',
+	  `partners` int(1) NOT NULL DEFAULT '0',
+	  `profile` int(1) NOT NULL DEFAULT '0',
+	  `protocol` int(1) NOT NULL DEFAULT '0',
+	  `rankings` int(1) NOT NULL DEFAULT '0',
+	  `receivecws` int(1) NOT NULL DEFAULT '0',
+	  `serverliste` int(1) NOT NULL DEFAULT '0',
+	  `smileys` int(1) NOT NULL DEFAULT '0',
+	  `sponsors` int(1) NOT NULL DEFAULT '0',
+	  `shoutbox` int(1) NOT NULL DEFAULT '0',
+	  `support` int(1) NOT NULL DEFAULT '0',
+	  `votes` int(1) NOT NULL DEFAULT '0',
+	  `votesadmin` int(1) NOT NULL DEFAULT '0',
+	  PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    
+    // Permissions Datensatz einspielen
+    foreach ($cache_array_sql as $sql)
+    { db($sql); }
+    
+    // Navigation aktualisieren
+    $qry = db("SELECT id FROM `".$db['navi']."` WHERE `name` = '_taktiken_'");
+    if(_rows($qry))
+    {
+    	while($get = _fetch($qry))
+    	{ db("UPDATE `".$db['navi']."` SET `extended_perm` = 'edittactics' WHERE `id` = ".$get['id'].";"); }
+    }
+    
+    $qry = db("SELECT id FROM `".$db['navi']."` WHERE `name` = '_clankasse_'");
+    if(_rows($qry))
+    {
+    	while($get = _fetch($qry))
+    	{ db("UPDATE `".$db['navi']."` SET `extended_perm` = 'clankasse' WHERE `id` = ".$get['id'].";"); }
+    }
 
 	return true;
 }

@@ -7,6 +7,21 @@ define('_feeds', 'News Feeds *rss');
 define('_feeds_info', 'Switches the automatically RSS feeds to on or off');
 define('_ip_only_for_admins' , ' (IP is only visible for Admins)');
 define('_version_for_page_outofdate', '<tr><th scope="row"><div align="center">This site is not compatible with the CMS core version!</div></th></tr><tr><th scope="row"><div align="center">Please update your DZCP Extended Edition</div></th></tr>');
+define('_users', 'Users');
+define('_userlist_counts', '[ Show [cnt] from [cnt_full] ]');
+define('_no_lobby_mymessages' , 'You have <u>no</u> new messages');
+define('_error_invalid_login_mail', 'Login name or e-mail address is missing!');
+define('_perm_support', 'Can See Support Information');
+define('_perm_smileys', 'Manage Smileys');
+define('_perm_protocol', 'See Admin Protocol');
+define('_perm_partners', 'Managing partner');
+define('_perm_impressum', 'Manage Contacts');
+define('_perm_config', 'CMS configuration management');
+define('_perm_backup', 'create SQL backups');
+define('_perm_sponsors', 'Manage sponsors');
+define('_perm_profile', 'Manage Profile-Fields');
+define('_perm_clear', 'Database Cleanup');
+define('_no_comments', 'No comments');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
@@ -23,7 +38,7 @@ define('_no_entrys_yet_all' , '
   <td class="contentMainFirst" colspan="[colspan]" align="center">No entries!</td>
 </tr>');
 
-define('_include_action_error','<br>File: "[file]" is missing or corrupted!<br/>The module functions are not available!');
+define('_include_action_error','<tr><td class="contentHead" align="center" colspan="3"><span class="fontBold"><br>File: "[file]" is missing or corrupted!<br/>The module functions are not available!<br></br></span></td></tr>');
 
 ## Navigation / Server ##
 define('_navi_gsv_players_online', 'Online');
@@ -335,9 +350,6 @@ define('_admin_gmaps_who' , 'Membermap');
 define('_gmaps_who_all' , 'Show all user');
 define('_gmaps_who_mem' , 'Show members only');
 define('_urls_linked_info', 'Convert text links into clickable hyperlinks');
-define('_config_gmaps_key' , 'Google Maps Key');
-define('_gmaps_key_info' , 'Needed for the membermap.<br />The key can be registered for free <a href="http://www.google.com/apis/maps/signup.html" target="_blank">here</a>!');
-define('_gmaps_no_key' , 'The membermap isn`t activated yet!');
 define('_membermap' , 'Membermap');
 define('_sponsoren' , 'Sponsors');
 define('_downloads' , 'Downloads');
@@ -1817,7 +1829,9 @@ define('_smileys_error_bbcode' , 'You have to indicate a bbcode!');
 define('_smileys_error_type' , 'Only gif files are allowed!');
 define('_smileys_added' , 'The smiley was successfully registered!');
 define('_smileys_edited' , 'The smiley was successfully edited!');
+define('_smileys_edited_not_exist', 'This Smiley does not exist!');
 define('_smileys_deleted' , 'The smiley was successfully deleted!');
+define('_smileys_delete_error', 'The Smiley could not be deleted!');
 define('_smileys_head' , 'Smiley editor');
 define('_smileys_smiley' , 'Smiley');
 define('_smileys_bbcode' , 'BBCode');

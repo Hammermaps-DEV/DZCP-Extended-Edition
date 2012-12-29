@@ -71,6 +71,7 @@ else
                                        ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : '')."
                                        ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : '')."
                                        ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : '')."
+                                       `editby`   = '',
                                        `reg`      = '".((int)$userid)."',
                                        `comment`  = '".up($_POST['comment'])."',
                                        `ip`       = '".visitorIp()."'");
@@ -92,7 +93,7 @@ else
         			}
         			else
         				$index = error(_error_wrong_permissions, 1);
-        			break;
+        		break;
         		case 'editcom':
         			if(isset($userid))
         				$toCheck = empty($_POST['comment']);
@@ -154,7 +155,7 @@ else
 	                            ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : "")."
 	                            ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : "")."
 	                            ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : "")."
-	                            `comment`  = '".up($_POST['comment'],true)."',
+	                            `comment`  = '".up($_POST['comment'])."',
 	                            `editby`   = '".addslashes($editedby)."'
 	                            WHERE id = '".intval($_GET['cid'])."'");
 	        	
@@ -163,7 +164,7 @@ else
 	        			else
 	        				$index = error(_error_edit_post,1);
         			}
-        			break;
+        		break;
         		case 'edit':
         			$get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
         			if($get['reg'] == $userid || permission('news'))
@@ -192,7 +193,7 @@ else
         			}
         			else
         				$index = error(_error_edit_post,1);
-        			break;
+        		break;
         	}
         	
         	#################################### SHOW ####################################
@@ -250,6 +251,9 @@ else
 	                                                                "ip" => $posted_ip));
 	                $i--;
 	            }
+	            
+	            if(empty($comments))
+	            	$comments = show("page/comments_no_show", array());
 	
 	            if(settings("reg_newscomments") == "1" && $chkMe == "unlogged")
 	                $add = _error_unregistered_nc;

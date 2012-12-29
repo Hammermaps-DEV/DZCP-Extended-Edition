@@ -1,5 +1,5 @@
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(1)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_main_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(1)" style="cursor:pointer" onmouseover="DZCP.showInfo('[main_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="0">
       <tr>
         <td style="width:1%"><img id="img1" src="../inc/images/expand.gif" alt="" /></td>
@@ -172,7 +172,7 @@
           </select>
         </td>
       </tr>
-			<tr>
+	  <tr>
         <td class="contentMainTop"><span class="fontBold">[lang_config_double_post]:</span></td>
         <td class="contentMainFirst" align="center">
           <select name="double_post" class="dropdown">
@@ -189,6 +189,16 @@
             <option value="1" [sel_fv]>[lang_on]</option>
           </select>
 					<br />[lang_config_fotum_vote_info]
+        </td>
+      </tr>
+      <tr>
+        <td class="contentMainTop"><span class="fontBold">[lang_config_gb_activ]:</span></td>
+        <td class="contentMainFirst" align="center">
+          <select name="gb_activ" class="dropdown">
+            <option value="0">[lang_no]</option>
+            <option value="1" [sel_gba]>[lang_yes]</option>
+          </select>
+          <br />[lang_config_gb_activ_info]
         </td>
       </tr>
       <tr>		
@@ -234,7 +244,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(8)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_config_cache_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(8)" style="cursor:pointer" onmouseover="DZCP.showInfo('[cache_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="0">
       <tr>
         <td style="width:1%"><img id="img8" src="../inc/images/expand.gif" alt="" /></td>
@@ -282,9 +292,17 @@
         </td>
       </tr>
       <tr>
-        <td class="contentMainTop"><span class="fontBold">Gameserver Refresh:</span></td>
+        <td class="contentMainTop"><span class="fontBold">Gameserver:</span></td>
         <td class="contentMainFirst" align="center">
           <input type="text"  name="cache_server" value="[cache_server]" class="inputField_dis_mid"
+          onfocus="this.className='inputField_en_mid';"
+          onblur="this.className='inputField_dis_mid';" style="width:50" /> [lang_seconds]
+        </td>
+      </tr>
+      <tr>
+        <td class="contentMainTop"><span class="fontBold">News:</span></td>
+        <td class="contentMainFirst" align="center">
+          <input type="text"  name="cache_news" value="[cache_news]" class="inputField_dis_mid"
           onfocus="this.className='inputField_en_mid';"
           onblur="this.className='inputField_dis_mid';" style="width:50" /> [lang_seconds]
         </td>
@@ -293,7 +311,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(2)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_admin_config_badword_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(2)" style="cursor:pointer" onmouseover="DZCP.showInfo('[badword_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>
         <td style="width:1%"><img id="img2" src="../inc/images/expand.gif" alt="" /></td>
@@ -316,7 +334,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(7)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_admin_eml_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(7)" style="cursor:pointer" onmouseover="DZCP.showInfo('[eml_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>
         <td style="width:1%"><img id="img7" src="../inc/images/expand.gif" alt="" /></td>
@@ -444,7 +462,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(3)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_admin_reg_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(3)" style="cursor:pointer" onmouseover="DZCP.showInfo('[reg_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>
         <td style="width:1%"><img id="img3" src="../inc/images/expand.gif" alt="" /></td>
@@ -515,7 +533,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(4)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_config_c_limits_what]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(4)" style="cursor:pointer" onmouseover="DZCP.showInfo('[c_limits_what]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>
         <td style="width:1%"><img id="img4" src="../inc/images/expand.gif" alt="" /></td>
@@ -755,7 +773,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(5)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_config_c_floods_what]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(5)" style="cursor:pointer" onmouseover="DZCP.showInfo('[c_floods_what]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>
         <td style="width:1%"><img id="img5" src="../inc/images/expand.gif" alt="" /></td>
@@ -827,7 +845,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(6)" style="cursor:pointer" onmouseover="DZCP.showInfo('[lang_config_c_length_what]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(6)" style="cursor:pointer" onmouseover="DZCP.showInfo('[c_length_what]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>
         <td style="width:1%"><img id="img6" src="../inc/images/expand.gif" alt="" /></td>

@@ -12,7 +12,7 @@ $dir = "clankasse";
 $w = settings("k_waehrung");
 switch(isset($_GET['action']) ? $_GET['action'] : ''):
 default:
-    if($chkMe == "unlogged" || $chkMe < "2")
+    if($chkMe == "unlogged" || $chkMe < 2 && !permission('clankasse'))
         $index = error(_error_wrong_permissions, 1);
     else 
     {

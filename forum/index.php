@@ -62,7 +62,7 @@ default:
         $showt .= show($dir."/kats_show", array("topic" => re($gets['kattopic']),
                                                 "subtopic" => re($gets['subtopic']),
                                                 "lpost" => $lpost,
-                                                "new" => check_new($lpdate),
+                                                "new" => check_new_old($lpdate),
                                                 "threads" => $threads,
                                                 "posts" => $posts+$threads,
                                                 "class" => $class,
@@ -237,7 +237,7 @@ case 'show';
       }
 
       $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-      $threads .= show($dir."/forum_show_threads", array("new" => check_new($get['lp']),
+      $threads .= show($dir."/forum_show_threads", array("new" => check_new_old($get['lp']),
                                                          "topic" => $threadlink,
                                                          "subtopic" => re(cut($get['subtopic'],$lforumsubtopic)),
                                                          "hits" => $get['hits'],

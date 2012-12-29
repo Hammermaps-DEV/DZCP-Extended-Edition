@@ -237,7 +237,7 @@ if($_GET['where'] == 'forum') {
                                                                 
 			$class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;	
     
-			$results .= show($dir."/forum_search_results", array("new" => check_new($get['lp']),
+			$results .= show($dir."/forum_search_results", array("new" => check_new_old($get['lp']),
                                                                  "topic" => $threadlink,
                                                                  "subtopic" => cut(re($get['subtopic']),$lforumsubtopic),
                                                                  "hits" => $get['hits'],

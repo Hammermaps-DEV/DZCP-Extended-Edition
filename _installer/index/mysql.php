@@ -10,9 +10,9 @@ else
     $use_mysql_config = (file_exists(basePath."/inc/mysql.php") && $_SESSION['type'] == 1 && !empty($db['host']) && !empty($db['user']) && !empty($db['pass']) && !empty($db['db'])) ? true : false;
     //End
 	
-    $mysql_host = isset($_POST['host']) ? $_POST['host'] : ($use_mysql_config ? $sql_host : '');
+    $mysql_host = isset($_POST['host']) ? $_POST['host'] : ($use_mysql_config ? $sql_host : 'localhost');
 	$mysql_database = isset($_POST['database']) ? $_POST['database'] : ($use_mysql_config ? $sql_db : '');
-	$mysql_prefix = isset($_POST['prefix']) ? $_POST['prefix'] : ($use_mysql_config ? $sql_prefix : '');
+	$mysql_prefix = isset($_POST['prefix']) ? $_POST['prefix'] : ($use_mysql_config ? $sql_prefix : 'dzcp_');
 	$mysql_user = isset($_POST['user']) ? $_POST['user'] : ($use_mysql_config ? $sql_user : '');
 	$mysql_pwd = isset($_POST['pwd']) ? $_POST['pwd'] : ($use_mysql_config ? $sql_pass : '');
 	$mysql_dbengine = isset($_POST['dbEngine']) ? $_POST['dbEngine'] : 0;

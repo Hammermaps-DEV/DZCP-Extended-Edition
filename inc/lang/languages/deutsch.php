@@ -7,6 +7,21 @@ define('_feeds', 'News Feeds *rss');
 define('_feeds_info', 'Schaltet das automatische generieren von RSS Feeds an oder aus');
 define('_ip_only_for_admins', ' (IP ist nur Admins sichtbar)');
 define('_version_for_page_outofdate', '<tr><th scope="row"><div align="center">Diese Seite ist mit der CMS Kern Version nicht kompatibel!</div></th></tr><tr><th scope="row"><div align="center">Bitte Aktualisiere deine DZCP Extended-Edition</div></th></tr>');
+define('_users', 'Usern');
+define('_userlist_counts', '[ Zeige [cnt] von [cnt_full] ]');
+define('_no_lobby_mymessages', 'Du hast <u>keine</u> neuen Nachrichten');
+define('_error_invalid_login_mail', 'Login-Name oder E-Mail Adresse fehlt!');
+define('_perm_support', 'Support-Informationen anzeigen');
+define('_perm_smileys', 'Smileys verwalten');
+define('_perm_protocol', 'Adminprotokoll einsehen');
+define('_perm_partners', 'Partner verwalten');
+define('_perm_impressum', 'Impressum verwalten');
+define('_perm_config', 'CMS Konfiguration verwalten');
+define('_perm_backup', 'SQL-Backups anlegen');
+define('_perm_sponsors', 'Sponsoren verwalten');
+define('_perm_profile', 'Profilfelder verwalten');
+define('_perm_clear', 'Datenbank aufr&auml;umen');
+define('_no_comments', 'Keine Kommentare vorhanden');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');
@@ -23,7 +38,7 @@ define('_no_entrys_yet_all', '
   <td class="contentMainFirst" colspan="[colspan]" align="center">keine Eintr&auml;ge vorhanden!</td>
 </tr>');
 
-define('_include_action_error','<br>Die Datei: "[file]" fehlt oder ist besch&auml;digt!<br/>Die Funktion steht nicht zur Verf&uuml;gung!');
+define('_include_action_error','<tr><td class="contentHead" align="center" colspan="3"><span class="fontBold"><br>Die Datei: "[file]" fehlt oder ist besch&auml;digt!</br>Die Funktion steht nicht zur Verf&uuml;gung!<br></br></span></td></tr>');
 
 ## Navigation / Server ##
 define('_navi_gsv_players_online', 'Online');
@@ -138,7 +153,7 @@ define('_perm_glossar', 'Glossar verwalten');
 define('_perm_intnews', 'interne News lesen');
 define('_perm_joinus', 'JoinUs Formular empfangen');
 define('_perm_receivecws', 'FightUs Formular empfangen');
-define('_perm_news', 'Newsverwaltung');
+define('_perm_news', 'News verwaltung');
 define('_perm_shoutbox', 'Shoutbox Admin');
 define('_perm_votes', 'interne Umfragen einsehen');
 define('_perm_gs_showpw', 'Gameserver Passwort einsehen');
@@ -332,9 +347,6 @@ define('_admin_gmaps_who', 'Memberkarte');
 define('_gmaps_who_all', 'Alle User anzeigen');
 define('_gmaps_who_mem', 'Nur Mitglieder anzeigen');
 define('_urls_linked_info', 'Textlinks werden automatisch in anklickbare Links konvertiert');
-define('_config_gmaps_key', 'Google Maps Key');
-define('_gmaps_key_info', 'Wird f&uuml;r die Membermap ben&ouml;tigt.<br />Der Key kann <a href="http://www.google.com/apis/maps/signup.html" target="_blank">hier</a> kostenlos erstellt werden!');
-define('_gmaps_no_key', 'Die Membermap wurde noch nicht aktiviert!');
 define('_membermap', 'Membermap');
 define('_sponsoren', 'Sponsoren');
 define('_downloads', 'Downloads');
@@ -1831,9 +1843,9 @@ define('_smileys_error_bbcode', 'Du musst ein BB-Code angeben!');
 define('_smileys_error_type', 'Es sind nur GIF-Dateien erlaubt!');
 define('_smileys_added', 'Das Smiley wurde erfolgreich hinzugef&uuml;gt!');
 define('_smileys_edited', 'Das Smiley wurde erfolgreich editiert!');
+define('_smileys_edited_not_exist', 'Dieses Smiley existiert nicht!');
 define('_smileys_deleted', 'Das Smiley wurde erfolgreich gel&ouml;scht!');
-define('_smileys_normals', 'Standardsmileys (k&ouml;nnen nicht gel&ouml;scht werden!)');
-define('_smileys_customs', 'Neue Smileys');
+define('_smileys_delete_error', 'Das Smiley konnte nicht gel&ouml;scht werden!');
 define('_smileys_head', 'Smiley-Editor');
 define('_smileys_smiley', 'Smiley');
 define('_smileys_bbcode', 'BBCode');

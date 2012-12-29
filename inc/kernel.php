@@ -208,7 +208,7 @@ function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
 function visitorIp()
 {
 	$TheIp=$_SERVER['REMOTE_ADDR'];
-	if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+	if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
 	{
 		## IP auf Gültigkeit prüfen ##
 		$TheIp_XF=$_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -435,6 +435,7 @@ function _fetch($fetch)
 function cnt($count, $where = "", $what = "id")
 {
     $cnt = db("SELECT COUNT(".$what.") AS num FROM ".$count." ".$where,false,true);
+    $cnt = (!$cnt || empty($cnt) || !is_array($cnt) ? array('num' => 0) : $cnt);
     return ((int)$cnt['num']);
 }
 

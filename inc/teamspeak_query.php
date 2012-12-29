@@ -1399,7 +1399,7 @@ function secure_dzcp($replace) {
     $replace=str_replace("\"", "&quot;", $replace);
     /* Only do the slow convert if there are 8-bit characters */
     /* avoid using 0xA0 (\240) in ereg ranges. RH73 does not like that */
-		if(!ereg("[\200-\237]", $replace) and !ereg("[\241-\377]", $replace)) {
+		if(!preg_match("[\200-\237]", $replace) and !preg_match("[\241-\377]", $replace)) {
 			return $replace;
 		}
     // decode three byte unicode characters

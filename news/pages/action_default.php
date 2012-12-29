@@ -46,7 +46,7 @@ else
             $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
 		    $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 		    
-		    $show_sticky .= show($dir."/news_show", array("titel" => re($get['titel']),
+		    $sticky_news = show($dir."/news_show", array("titel" => re($get['titel']),
 		                                                  "kat" => re($getkat['katimg']),
 		                                                  "id" => $get['id'],
 		                                                  "comments" => $comments,
@@ -59,8 +59,8 @@ else
 		                                                  "datum" => date("d.m.y H:i", $get['datum'])._uhr,
 		                                                  "links" => $links,
 		                                                  "autor" => autor($get['autor'])));
-		    
-		    Cache::set($cacheTag,'news_sticky_id_'.$get['id'], $show_sticky, 10);
+		    $show_sticky .= $sticky_news;
+		    Cache::set($cacheTag,'news_sticky_id_'.$get['id'], $sticky_news, config('cache_news'));
 		}
 		else
 			$show_sticky .= Cache::get($cacheTag,'news_sticky_id_'.$get['id']);
@@ -87,7 +87,7 @@ else
 		        $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
 		        $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
 		        $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
-	
+
 			    $show .= show($dir."/news_show", array("titel" => re($get['titel']),
 			                                                  "kat" => re($getkat['katimg']),
 			                                                  "id" => $get['id'],
@@ -102,6 +102,8 @@ else
 			                                                  "links" => $links,
 			                                                  "autor" => autor($get['autor'])));
 		}
+		
+		Cache::set($cacheTag,'news_page', $show, config('cache_news'));
 	}
 	else
 		$show = Cache::get($cacheTag,'news_page');

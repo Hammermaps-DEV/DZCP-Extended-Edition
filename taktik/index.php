@@ -15,7 +15,7 @@ $wysiwyg = '';
 ## SECTIONS ##
 switch(isset($_GET['action']) ? $_GET['action'] : ''):
     default:
-        if($chkMe == "unlogged" || $chkMe < 2)
+        if($chkMe == "unlogged" || $chkMe < 2 && !permission('edittactics'))
             $index = error(_error_wrong_permissions, 1);
         else 
         {

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <settings>
 	<Menu>rootmenu</Menu>
-	<Rights>done</Rights>
+	<Rights>support</Rights>
 	<Only_Admin>true</Only_Admin>
 	<Only_Root>false</Only_Root>
 </settings>

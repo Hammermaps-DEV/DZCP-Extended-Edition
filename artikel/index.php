@@ -178,6 +178,9 @@ case 'show';
                                                     "ip" => $posted_ip));
 		  $i--;
 	  }
+	  
+	  if(empty($comments))
+	  	$comments = show("page/comments_no_show", array());
 
     if(settings("reg_artikel") == "1" && $chkMe == "unlogged")
     {
@@ -311,6 +314,7 @@ case 'show';
 													 `hp`       = '".links($_POST['hp'])."',
 													 `reg`      = '".((int)$userid)."',
 													 `comment`  = '".up($_POST['comment'],1)."',
+													 `editby`   = '',
 													 `ip`       = '".visitorIp()."'");
 		
 		

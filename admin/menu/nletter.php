@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
 	exit();
 
     $where = $where.': '._nletter;
-   if(!permission("newsletter"))
-   {
-     $show = error(_error_wrong_permissions, 1);
-   } else {
 		if($_GET['do'] == 'preview')
     {
       $show = show($dir."/nletter_prev", array("head" => _nletter_prev_head,
@@ -167,5 +163,4 @@ if(_adminMenu != 'true')
 										  "error" => "",
 										  "posteintrag" => ""));
       }
-    }
 ?>

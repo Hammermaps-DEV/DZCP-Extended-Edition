@@ -19,7 +19,7 @@ default:
 	$qry = db("SELECT id,kat,beschreibung FROM ".$db['gallery']." ORDER BY id DESC");
 	if(_rows($qry))
 	{
-		$color = 0;
+		$color = 1;
 		while($get = _fetch($qry))
 		{
 			$files = get_files(basePath."/gallery/images/",false,true,$img_format);
@@ -49,7 +49,7 @@ default:
 break;
 case 'show';
 	$files = get_files(basePath."/gallery/images/",false,true,$img_format);
-	$t = 1; $cnt = 0; $color = 0;
+	$t = 1; $cnt = 0; $color = 1;
 	for($i=0; $i<count($files); $i++)
 	{
 		if(preg_match("#^".$_GET['id']."_(.*?)#",strtolower($files[$i]))!=FALSE)

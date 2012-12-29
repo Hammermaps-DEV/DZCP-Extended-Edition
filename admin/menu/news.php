@@ -5,41 +5,21 @@
 if(_adminMenu != 'true') 
 	exit();
 
-    $where = $where.': '._config_newskats_edit_head;
-    if(!permission("news") && !permission('artikel'))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
-      $qry = db("SELECT * FROM ".$db['newskat']."
-                 ORDER BY `kategorie`");
-      while($get = _fetch($qry))
-      {
-        $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                      "action" => "admin=news&amp;do=edit",
-                                                      "title" => _button_title_edit));
-        $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                          "action" => "admin=news&amp;do=delete",
-                                                          "title" => _button_title_del,
-                                                          "del" => convSpace(_confirm_del_kat)));
-        $img = show(_config_newskats_img, array("img" => re($get['katimg'])));
+$where = $where.': '._config_newskats_edit_head;
+$qry = db("SELECT * FROM ".$db['newskat']." ORDER BY `kategorie`");
+$kats = ''; $color = 1;
+while($get = _fetch($qry))
+{
+	$edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=news&amp;do=edit", "title" => _button_title_edit));
+    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=news&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_kat)));
+    $img = show(_config_newskats_img, array("img" => re($get['katimg'])));
+    $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+    $kats .= show($dir."/newskats_show", array("mainkat" => re($get['kategorie']), "class" => $class, "img" => $img, "delete" => $delete, "edit" => $edit));
+}
 
-        $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-        $kats .= show($dir."/newskats_show", array("mainkat" => re($get['kategorie']),
-                                                   "class" => $class,
-                                                   "img" => $img,
-                                                   "delete" => $delete,
-                                                   "edit" => $edit));
-      }
-
-      $show = show($dir."/newskats", array("head" => _config_newskats_head,
-                                           "kats" => $kats,
-                                           "add" => _config_newskats_add_head,
-                                           "img" => _config_newskats_katbild,
-                                           "delete" => _deleteicon_blank,
-                                           "edit" => _editicon_blank,
-                                           "mainkat" => _config_newskats_kat));
-      if($_GET['do'] == "delete")
-      {
+$show = show($dir."/newskats", array("head" => _config_newskats_head, "kats" => $kats, "add" => _config_newskats_add_head, "img" => _config_newskats_katbild, "delete" => _deleteicon_blank, "edit" => _editicon_blank, "mainkat" => _config_newskats_kat));
+if($_GET['do'] == "delete")
+{
         $qry = db("SELECT katimg FROM ".$db['newskat']."
                    WHERE id = '".intval($_GET['id'])."'");
         $get = _fetch($qry);
@@ -124,5 +104,4 @@ if(_adminMenu != 'true')
           $show = info(_config_newskats_edited, "?admin=news");
         }
       }
-    }
 ?>

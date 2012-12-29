@@ -205,9 +205,9 @@ case 'do';
                                        "lang" => $language,
                                        "reg" => "",
                                        "ip" => _iplog_info,
-								  										 "id" => $_GET['id'],
-									  									 "postemail" => $_POST['email'],
-										  								 "posthp" => links($_POST['hp']),
+								  	   "id" => $_GET['id'],
+									   "postemail" => $_POST['email'],
+									   "posthp" => links($_POST['hp']),
 											  							 "postnick" => $_POST['nick'],
 												  						 "posteintrag" => re_bbcode($_POST["eintrag"]),
 													  					 "error" => $error,
@@ -215,6 +215,8 @@ case 'do';
 	  } else {
 		  $qry = db("INSERT INTO ".$db['gb']."
                  SET `datum`      = '".((int)time())."',
+		  			 `editby`     = '',
+		  			 `public`     = 0,
                      `nick`       = '".up($_POST['nick'])."',
                      `email`      = '".up($_POST['email'])."',
                      `hp`         = '".links($_POST['hp'])."',
@@ -227,7 +229,6 @@ case 'do';
 	    $index = info(_gb_entry_successful, "../gb/");
 	  }
   } 
-  //FIX START
   elseif($_GET['what'] == 'set') 
   {
 	  	if(permission('gb'))
@@ -268,7 +269,6 @@ case 'do';
     $get = _fetch($qry);
       
     if($get['reg'] == $userid && $chkMe != "unlogged" or permission('gb'))
-	//FIX END
     {
       if($get['reg'] != 0)
   	  {

@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
 	exit();
 
     $where = $where.': '._partners_head;
-    if($chkMe != 4)
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       if($_GET['do'] == "add")
       {
         $files = get_files('../banner/partners/',false,true);
@@ -97,6 +93,7 @@ if(_adminMenu != 'true')
                                                             "title" => _button_title_del,
                                                             "del" => convSpace(_confirm_del_entry)));
 
+          $color = 1;
           $rlink = str_replace('http://', '', re($get['link']));
           $button = '<img src="../banner/partners/'.re($get['banner']).'" alt="'.$rlink.'" title="'.$rlink.'" />';
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -116,5 +113,4 @@ if(_adminMenu != 'true')
                                              "link" => _link,
                                              "button" => _partners_button));
       }
-    }
 ?>
