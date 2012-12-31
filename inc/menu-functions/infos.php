@@ -4,7 +4,7 @@ function infos()
 {
     // Debug Mode is enabled, infobox
     $dg = (is_debug ? '<tr><td><table width="100%" class="subPersInfos"><tr class="persInfosContent"><td width="100%"><span class="fontBoldPersInfos">'._debug_on.'</td></tr><tr class="persInfosContent"><td width="100%"><span class="fontBoldPersInfos">[time]</td></tr></table></td></tr>' : '');
-    
+
     if(settings("persinfo") == 1)
     {
       $data = $_SERVER['HTTP_USER_AGENT'];
@@ -21,7 +21,7 @@ function infos()
       elseif(preg_match("/NT 4.0/i",$data))       			$system = "Windows NT 4";
       elseif(preg_match("/NT 6.0/i",$data))       			$system = "Windows Vista";
       elseif(preg_match("/NT 6.1/i",$data))       			$system = "Windows 7";
-	  elseif(preg_match("/NT 6.2/i",$data))       			$system = "Windows 8";
+      elseif(preg_match("/NT 6.2/i",$data))       			$system = "Windows 8";
       elseif(preg_match("/Windows ME/i",$data))   			$system = "Windows 9x + ME";
       elseif(preg_match("/Windows 98/i",$data))   			$system = "Windows 9x + ME";
       elseif(preg_match("/Windows 95/i",$data))   			$system = "Windows 9x + ME";
@@ -34,14 +34,14 @@ function infos()
       if(preg_match("/Opera/i",$data))          $browser = "Opera";
       elseif(preg_match("/Konqueror/i",$data))  $browser = "Konqueror";
       elseif(preg_match("/Firefox/i",$data))    $browser = "Mozilla Firefox";
-	  elseif(preg_match("/chrome/i",$data))     $browser = "Google Chrome";
-	  elseif(preg_match("/Safari/i",$data))     $browser = "Safari";
+      elseif(preg_match("/chrome/i",$data))     $browser = "Google Chrome";
+      elseif(preg_match("/Safari/i",$data))     $browser = "Safari";
       elseif(preg_match("/MSIE 5/i",$data))     $browser = "Internet Explorer 5";
       elseif(preg_match("/MSIE 6/i",$data))     $browser = "Internet Explorer 6";
       elseif(preg_match("/MSIE 7/i",$data))     $browser = "Internet Explorer 7";
       elseif(preg_match("/MSIE 8/i",$data))     $browser = "Internet Explorer 8";
-	  elseif(preg_match("/MSIE 9/i",$data))     $browser = "Internet Explorer 9";
-	  elseif(preg_match("/MSIE 10/i",$data))     $browser = "Internet Explorer 10";
+      elseif(preg_match("/MSIE 9/i",$data))     $browser = "Internet Explorer 9";
+      elseif(preg_match("/MSIE 10/i",$data))     $browser = "Internet Explorer 10";
       else                                      $browser = _unknown_browser;
 
       $res = "<script language=\"javascript\" type=\"text/javascript\">
@@ -59,6 +59,6 @@ function infos()
                                               "sys" => $system));
     }
 
-	return $dg;
+    return $dg;
 }
 ?>

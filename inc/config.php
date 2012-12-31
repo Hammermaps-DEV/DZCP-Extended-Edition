@@ -45,7 +45,7 @@ if(empty($sql_user) && empty($sql_pass) && empty($sql_db) && !$_SESSION['install
     header('Location: ../_installer/index.php');
 
 //-> MySQL-Datenbankangaben
-$prefix = $sql_prefix;                      
+$prefix = $sql_prefix;
 $db = array("host" =>           $sql_host,
             "user" =>           $sql_user,
             "pass" =>           $sql_pass,
@@ -53,7 +53,7 @@ $db = array("host" =>           $sql_host,
             "artikel" =>        $prefix."artikel",
             "acomments" =>      $prefix."acomments",
             "awards" =>         $prefix."awards",
-      		"away" =>           $prefix."away",
+            "away" =>           $prefix."away",
             "buddys" =>         $prefix."userbuddys",
             "ipcheck" =>        $prefix."ipcheck",
             "clankasse" =>      $prefix."clankasse",
@@ -70,7 +70,7 @@ $db = array("host" =>           $sql_host,
             "dl_kat" =>         $prefix."download_kat",
             "events" =>         $prefix."events",
             "f_access" =>       $prefix."f_access",
-      		"f_abo" =>          $prefix."f_abo",
+            "f_abo" =>          $prefix."f_abo",
             "f_kats" =>         $prefix."forumkats",
             "f_posts" =>        $prefix."forumposts",
             "f_skats" =>        $prefix."forumsubkats",
@@ -109,5 +109,5 @@ $db = array("host" =>           $sql_host,
             "votes" =>          $prefix."votes",
             "vote_results" =>   $prefix."vote_results",
             "clicks_ips" =>     $prefix."clicks_ips",
-			"cache" =>          $prefix."cache");
+            "cache" =>          $prefix."cache");
 ?>

@@ -228,7 +228,7 @@ define('_news_send_source', 'Quelle');
 define('_news_send_titel', 'Newsvorschlag von [nick]');
 define('_news_send_note', 'Mitteilung o. Hinweis f&uuml;r die Redaktion');
 define('_news_send_done', 'Vielen Dank! Die News wurde erfolgreich an die Redaktion weitergeleitet');
-define('_news_send_description', 'Liebe Besucher,<br /><br />mit dem folgenden Formular ist es m&ouml;glich im Netz gefundene, oder selbst erstellte News an uns zu senden. Der von Dir ausgef&uuml;llte Formularinhalt wird dann mittels eines Verteilers an unsere Redakteure weitergeleitet. Bitte bedenke, dass wir jede Einsendung aufbereiten und evtl. genauere Details recherchieren m&uuml;ssen, um die gewohnte Qualit&Auml;t unserer News beizubehalten. Dies f&Auml;llt uns nat&uuml;rlich leichter, wenn Deine Einsendung bereits viele Einzelheiten aufweist und selbst formulierte Texte beinhaltet. Meldungen die lediglich 1:1 von anderen Seiten kopiert wurden, erschweren unsere Arbeit und verhindern nicht selten eine Ver&ouml;ffentlichung der Einsendung auf unserer Hauptseite.<br /><br />Nat&uuml;rlich sind wir &uuml;ber jede von Dir eingesendete News dankbar und freuen uns &uuml;ber das Engagement unserer Besucher.<br /><br />Vielen Dank im Voraus.<br /><br />Dein Redaktions-Team');
+define('_news_send_description', 'Liebe Besucher,<br /><br />mit dem folgenden Formular ist es m&ouml;glich im Netz gefundene, oder selbst erstellte News an uns zu senden. Der von Dir ausgef&uuml;llte Formularinhalt wird dann mittels eines Verteilers an unsere Redakteure weitergeleitet. Bitte bedenke, dass wir jede Einsendung aufbereiten und evtl. genauere Details recherchieren m&uuml;ssen, um die gewohnte Qualit&auml;t unserer News beizubehalten. Dies f&auml;llt uns nat&uuml;rlich leichter, wenn Deine Einsendung bereits viele Einzelheiten aufweist und selbst formulierte Texte beinhaltet. Meldungen die lediglich 1:1 von anderen Seiten kopiert wurden, erschweren unsere Arbeit und verhindern nicht selten eine Ver&ouml;ffentlichung der Einsendung auf unserer Hauptseite.<br /><br />Nat&uuml;rlich sind wir &uuml;ber jede von Dir eingesendete News dankbar und freuen uns &uuml;ber das Engagement unserer Besucher.<br /><br />Vielen Dank im Voraus.<br /><br />Dein Redaktions-Team');
 define('_contact_text_sendnews', '
 [nick] hat uns ein Newsvorschlag eingesendet!<p>&nbsp;</p><p>&nbsp;</p>
 <span class="fontBold">Nick:</span> [nick]<p>&nbsp;</p>
@@ -1275,7 +1275,6 @@ define('_inaktiv', '<span class=fontRed>inaktiv</span>');
 define('_male', 'm&auml;nnlich');
 define('_female', 'weiblich');
 define('_profil_ppic', 'Profilfoto');
-define('_profil_gamestuff', 'Gamestuff');
 define('_profil_userstats', 'Userstats');
 define('_profil_navi_profil', '<a href="?action=user&amp;id=[id]">Profil</a>');
 define('_profil_navi_gb', '<a href="?action=user&amp;id=[id]&amp;show=gb">G&auml;stebuch</a>');

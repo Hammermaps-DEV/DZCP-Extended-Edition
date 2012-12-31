@@ -55,7 +55,7 @@ Unterstützung mehrere Bildformate zbs. für Server Pics, Adminmenü Icons, usw.
 
 Infos wie der XFire Status wird per Ajax nachgeladen um lange Ladezeiten der gesamten DZCP Seite zu verhindern.
 Eine Auswahl des Skins der bei XFire verwendet wird ist über die config.php möglich.
-Es wird ein zufälliger MD5 Code verwendet um ein Login zu Speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
+Er wird ein zufälliger MD5 Code verwendet um ein Login zu Speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
 Es wurden einzelne neue Smileys eingefügt.
 
 Es wurde 11 weitere User-Rechte eingefügt alles bezogen auf die Administration.

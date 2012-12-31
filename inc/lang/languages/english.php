@@ -1282,7 +1282,6 @@ define('_inaktiv' , '<span class=fontRed>inactive</span>');
 define('_male' , 'male');
 define('_female' , 'female');
 define('_profil_ppic' , 'Profile picture');
-define('_profil_gamestuff' , 'Gamestuff');
 define('_profil_userstats' , 'Userstats');
 define('_profil_navi_profil' , '<a href="?action=user&amp;id=[id]">Profile</a>');
 define('_profil_navi_gb' , '<a href="?action=user&amp;id=[id]&amp;show=gb">Guestbook</a>');

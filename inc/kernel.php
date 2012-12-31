@@ -6,67 +6,67 @@
 */
 function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array())
 {
-	$files = array();
-	if($handle = @opendir($dir))
-	{
-		if($only_dir) ## Ordner ##
-		{
-			while(false !== ($file = readdir($handle)))
-			{
-				if($file != '.' && $file != '..' && !is_file($dir.'/'.$file))
-					$files[] = $file;
-			}
-		}
-		else if($only_files) ## Dateien ##
-		{
-			while(false !== ($file = readdir($handle)))
-			{
-				if($file != '.' && $file != '..' && is_file($dir.'/'.$file))
-				{
-					if(count($file_ext) == 0)
-						$files[] = $file;
-					else
-					{
-						## Extension Filter ##
-						$exp_string = explode(".", $file);
-						if(in_array(strtolower($exp_string[1]), $file_ext))
-							$files[] = $file;
-					}
-				}
-			}
-		}
-		else ## Ordner & Dateien ##
-		{
-			while(false !== ($file = readdir($handle)))
-			{
-				if($file != '.' && $file != '..' && is_file($dir.'/'.$file))
-				{
-					if(count($file_ext) == 0)
-						$files[] = $file;
-					else
-					{
-						## Extension Filter ##
-						$exp_string = explode(".", $file);
-						if(in_array(strtolower($exp_string[1]), $file_ext))
-							$files[] = $file;
-					}
-				}
-				else
-				{
-					if($file != '.' && $file != '..')
-						$files[] = $file;
-				}
-			}
-		}
-			
-		if(!count($files))
-			return false;
-			
-		@closedir($handle);
-		return $files;
-	}
-	else
-		return false;
+    $files = array();
+    if($handle = @opendir($dir))
+    {
+        if($only_dir) ## Ordner ##
+        {
+            while(false !== ($file = readdir($handle)))
+            {
+                if($file != '.' && $file != '..' && !is_file($dir.'/'.$file))
+                    $files[] = $file;
+            }
+        }
+        else if($only_files) ## Dateien ##
+        {
+            while(false !== ($file = readdir($handle)))
+            {
+                if($file != '.' && $file != '..' && is_file($dir.'/'.$file))
+                {
+                    if(count($file_ext) == 0)
+                        $files[] = $file;
+                    else
+                    {
+                        ## Extension Filter ##
+                        $exp_string = explode(".", $file);
+                        if(in_array(strtolower($exp_string[1]), $file_ext))
+                            $files[] = $file;
+                    }
+                }
+            }
+        }
+        else ## Ordner & Dateien ##
+        {
+            while(false !== ($file = readdir($handle)))
+            {
+                if($file != '.' && $file != '..' && is_file($dir.'/'.$file))
+                {
+                    if(count($file_ext) == 0)
+                        $files[] = $file;
+                    else
+                    {
+                        ## Extension Filter ##
+                        $exp_string = explode(".", $file);
+                        if(in_array(strtolower($exp_string[1]), $file_ext))
+                            $files[] = $file;
+                    }
+                }
+                else
+                {
+                    if($file != '.' && $file != '..')
+                        $files[] = $file;
+                }
+            }
+        }
+
+        if(!count($files))
+            return false;
+
+        @closedir($handle);
+        return $files;
+    }
+    else
+        return false;
 }
 
 /**
@@ -79,7 +79,7 @@ function is_php($version='5.0.0')
 
 /**
  * PHPInfo in ein Array lesen und zurückgeben
- * 
+ *
  * @return array
  **/
 function parsePHPInfo()
@@ -93,7 +93,7 @@ function parsePHPInfo()
    $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/',"<info>\\1</info>",$s);
    $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/',"<info>\\1</info>",$s);
    $vTmp = preg_split('/(<h2[^>]*>[^<]+<\/h2>)/',$s,-1,PREG_SPLIT_DELIM_CAPTURE);
-   
+
    $vModules = array();
    for ($i=1;$i<count($vTmp);$i++)
    {
@@ -106,7 +106,7 @@ function parsePHPInfo()
                 $vPat = '<info>([^<]+)<\/info>';
                 $vPat3 = "/$vPat\s*$vPat\s*$vPat/";
                 $vPat2 = "/$vPat\s*$vPat/";
-               
+
                 if(preg_match($vPat3,$vOne,$vMat))
                     $vModules[$vName][trim($vMat[1])] = array(trim($vMat[2]),trim($vMat[3]));
                 else if(preg_match($vPat2,$vOne,$vMat))
@@ -114,7 +114,7 @@ function parsePHPInfo()
             }
         }
   }
-  
+
   return $vModules;
 }
 
@@ -134,14 +134,14 @@ function php_sapi_type()
 
 /**
  * Funktion um eine Datei im Web auf Existenz zu prüfen
- * 
+ *
  * @return mixed
  **/
 function fileExists($url)
 {
-	if(!fsockopen_support())
-		return false;
-	
+    if(!fsockopen_support())
+        return false;
+
     $url_p = @parse_url($url);
     $host = $url_p['host'];
     $port = isset($url_p['port']) ? $url_p['port'] : 80;
@@ -149,11 +149,11 @@ function fileExists($url)
 
     if(!ping_port($host,$port,2))
         return false;
-    
+
     unset($host,$port);
 
     if(!$content = @file_get_contents($url))
-		return false;
+        return false;
 
     return trim($content);
 }
@@ -165,39 +165,39 @@ function fileExists($url)
  **/
 function fsockopen_support()
 {
-	if(!function_exists('fsockopen'))
-		return false;
-	
-	if(!function_exists("fopen"))
-		return false;
+    if(!function_exists('fsockopen'))
+        return false;
 
-	if(ini_get('allow_url_fopen') != 1)
-		return false;
-		
-	if(strpos(ini_get('disable_functions'),'fsockopen') || strpos(ini_get('disable_functions'),'file_get_contents') || strpos(ini_get('disable_functions'),'fopen'))
-		return false;
-	
-	return true;
+    if(!function_exists("fopen"))
+        return false;
+
+    if(ini_get('allow_url_fopen') != 1)
+        return false;
+
+    if(strpos(ini_get('disable_functions'),'fsockopen') || strpos(ini_get('disable_functions'),'file_get_contents') || strpos(ini_get('disable_functions'),'fopen'))
+        return false;
+
+    return true;
 }
 
 /**
  * Pingt einen Server Port
- * 
+ *
  * @return boolean
  **/
 function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
 {
-	if(!fsockopen_support())
-		return false;
+    if(!fsockopen_support())
+        return false;
 
-	if(($fp = @fsockopen($ip, $port, $errno, $errstr, $timeout)))
-	{
-	    unset($ip,$port,$errno,$errstr,$timeout);
-		@fclose($fp);
-		return true;
-	}
+    if(($fp = @fsockopen($ip, $port, $errno, $errstr, $timeout)))
+    {
+        unset($ip,$port,$errno,$errstr,$timeout);
+        @fclose($fp);
+        return true;
+    }
 
-	return false;
+    return false;
 }
 
 /**
@@ -207,21 +207,21 @@ function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
  */
 function visitorIp()
 {
-	$TheIp=$_SERVER['REMOTE_ADDR'];
-	if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-	{
-		## IP auf Gültigkeit prüfen ##
-		$TheIp_XF=$_SERVER['HTTP_X_FORWARDED_FOR'];
-		$TheIp_X = explode('.',$TheIp_XF);
-		if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp_XF))
-			$TheIp = $TheIp_XF;
-	}
-	
-	$TheIp_X = explode('.',$TheIp);
-	if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp))
-	    return trim($TheIp);
+    $TheIp=$_SERVER['REMOTE_ADDR'];
+    if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+    {
+        ## IP auf Gültigkeit prüfen ##
+        $TheIp_XF=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $TheIp_X = explode('.',$TheIp_XF);
+        if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp_XF))
+            $TheIp = $TheIp_XF;
+    }
 
-	return '0.0.0.0';
+    $TheIp_X = explode('.',$TheIp);
+    if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp))
+        return trim($TheIp);
+
+    return '0.0.0.0';
 }
 
 /**
@@ -259,42 +259,42 @@ function pholderreplace($pholder)
 */
 function show($tpl="", $array=array())
 {
-	global $tmpdir;
-	
-	if(!empty($tpl) && $tpl != null)
-	{
-	    $template = $_SESSION['installer'] ? basePath."/_installer/html/".$tpl : basePath."/inc/_templates_/".$tmpdir."/".$tpl;
-	    $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;;
-	  
-	    if(file_exists($template.".html"))
-			$tpl = file_get_contents($template.".html");
-	    
-	    //put placeholders in array
-	    $pholder = explode("^",pholderreplace($tpl));
-	    for($i=0;$i<=count($pholder)-1;$i++)
-	    {
-	        if(array_key_exists($pholder[$i],$array))
-	            continue;
-	        
-	        if(!strstr($pholder[$i], 'lang_'))
-	            continue;
+    global $tmpdir;
 
-	        if(defined(substr($pholder[$i], 4)))
-	        	$array[$pholder[$i]] = constant(substr($pholder[$i], 4));
-	    }
-	    
-	    unset($pholder);
+    if(!empty($tpl) && $tpl != null)
+    {
+        $template = $_SESSION['installer'] ? basePath."/_installer/html/".$tpl : basePath."/inc/_templates_/".$tmpdir."/".$tpl;
+        $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;;
 
-	    if(count($array) >= 1)
-	    {
-		    foreach($array as $value => $code)
-		    {
-				$tpl = str_replace('['.$value.']', $code, $tpl);
-		    }
-	    }
-	}
-	
-	return $tpl;
+        if(file_exists($template.".html"))
+            $tpl = file_get_contents($template.".html");
+
+        //put placeholders in array
+        $pholder = explode("^",pholderreplace($tpl));
+        for($i=0;$i<=count($pholder)-1;$i++)
+        {
+            if(array_key_exists($pholder[$i],$array))
+                continue;
+
+            if(!strstr($pholder[$i], 'lang_'))
+                continue;
+
+            if(defined(substr($pholder[$i], 4)))
+                $array[$pholder[$i]] = constant(substr($pholder[$i], 4));
+        }
+
+        unset($pholder);
+
+        if(count($array) >= 1)
+        {
+            foreach($array as $value => $code)
+            {
+                $tpl = str_replace('['.$value.']', $code, $tpl);
+            }
+        }
+    }
+
+    return $tpl;
 }
 
 /**
@@ -305,7 +305,7 @@ if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
 {
     if(!isset($db)) //tinymce fix
         require_once(basePath."/inc/config.php");
-    
+
     if(!empty($db['host']) && !empty($db['user']) && !empty($db['pass']) && !empty($db['db']))
     {
         if(!$msql = @mysql_connect($db['host'], $db['user'], $db['pass']))
@@ -313,7 +313,7 @@ if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
             echo "<b>Fehler beim Zugriff auf die Datenbank!<p>";
             print_db_error(false);
         }
-    
+
         if(!@mysql_select_db($db['db'],$msql))
         {
             echo "<b>Die angegebene Datenbank <i>".$db['db']."</i> existiert nicht!<p>";
@@ -325,22 +325,22 @@ if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
         echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /></head><body><b>';
         if(empty($db['host']))
             echo "Das MySQL-Hostname fehlt in der Configuration!<p>";
-        
+
         if(empty($db['user']))
             echo "Der MySQL-Username fehlt in der Configuration!<p>";
-        
+
         if(empty($db['pass']))
             echo "Das MySQL-Passwort fehlt in der Configuration!<p>";
-        
+
         if(empty($db['db']))
             echo "Der MySQL-Datenbankname fehlt in der Configuration!<p>";
-        
-        die("Bitte überprüfe deine mysql.php!</b></body></html>");    
+
+        die("Bitte überprüfe deine mysql.php!</b></body></html>");
     }
 }
 
 /**
- * Gibt Datenbank Fehler aus und stoppt die Ausführung des CMS 
+ * Gibt Datenbank Fehler aus und stoppt die Ausführung des CMS
  **/
 function print_db_error($query=false)
 {
@@ -509,13 +509,13 @@ function mkpwd($passwordLength=8,$specialcars=true)
 {
     global $passwordComponents;
     $componentsCount = count($passwordComponents);
-    
+
     if(!$specialcars && $componentsCount == 4) //Keine Sonderzeichen
     {
         unset($passwordComponents[3]);
         $componentsCount = count($passwordComponents);
     }
-    
+
     shuffle($passwordComponents); $password = '';
     for ($pos = 0; $pos < $passwordLength; $pos++)
     {
@@ -524,9 +524,9 @@ function mkpwd($passwordLength=8,$specialcars=true)
         $random = rand(0, $componentLength-1);
         $password .= $passwordComponents[$componentIndex]{ $random };
     }
-    
+
     unset($random,$componentLength,$componentIndex);
-	return $password;
+    return $password;
 }
 
 /**
@@ -540,23 +540,23 @@ function wire_ipcheck($what='')
 
 /**
  * Checkt versch. Dinge anhand der Hostmaske eines Users
- * 
+ *
 * @return boolean
  */
 function ipcheck($what,$time = "")
 {
     global $db;
     $get = db("SELECT time,what FROM ".$db['ipcheck']." WHERE what = '".$what."' AND ip = '".visitorIp()."' ORDER BY time DESC",false,true);
-    if(preg_match("#vid#", $get['what'])) 
+    if(preg_match("#vid#", $get['what']))
         return true;
-    else 
+    else
     {
         if($get['time']+$time<time())
             db("DELETE FROM ".$db['ipcheck']." WHERE what = '".$what."' AND ip = '".visitorIp()."' AND time+'".$time."'<'".time()."'");
 
-        if($get['time']+$time>time()) 
+        if($get['time']+$time>time())
             return true;
-        else 
+        else
             return false;
     }
 }
@@ -594,7 +594,7 @@ function string_to_array($str,$counter=1)
     {
         $t1=explode("=$counter>",$value);
         $kk=$t1[0];
-        	
+
         if($t1[1] == "+#bool#+" or $t1[1] == "-#bool#-")
             $vv=String_to_boolConverter($t1[1]);
         else
@@ -625,11 +625,11 @@ function array_to_string($arr,$counter=1)
         {
             if(is_bool($value))
                 $value = Bool_to_StringConverter($value);
-            
+
             $str.=$key."=$counter>".utf8_encode($value)."|$counter|";
         }
     }
-    	
+
     return rtrim($str,"|$counter|");
 }
 
@@ -658,7 +658,7 @@ function isSpider()
         if(stristr($uagent, trim($ex[$i])))
             return true;
     }
-    
+
     return false;
 }
 
@@ -679,141 +679,141 @@ function spChars($txt)
 #############################################
 class xml
 {
-	private static $xmlobj = array(array()); //XML
-	
-	/**
-	* XML Datei Laden
-	*/
-	public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
-	{
-		if(!array_key_exists($XMLTag,self::$xmlobj))
-		{
-			self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
-		
-			if(!$oneModule)
-			{
-				if(!file_exists(basePath . '/' . $XMLFile))
-					file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
-			}
+    private static $xmlobj = array(array()); //XML
 
-			self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
-		
-			if(self::$xmlobj[$XMLTag]['objekt'] != false)
-				return true;
-		}
+    /**
+    * XML Datei Laden
+    */
+    public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
+    {
+        if(!array_key_exists($XMLTag,self::$xmlobj))
+        {
+            self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
 
-		return false;
-	}
+            if(!$oneModule)
+            {
+                if(!file_exists(basePath . '/' . $XMLFile))
+                    file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
+            }
 
-	/**
-	* XML Wert auslesen
-	*
-	* @return XMLObj / boolean
-	*/
-	public static function getXMLvalue($XMLTag, $xmlpath)
-	{
-		if(array_key_exists($XMLTag,self::$xmlobj))
-		{
-			$xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
-			return ($xmlobj) ? $xmlobj[0] : false;
-		}
-		else
-			return false;
-	}
+            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
 
-	/**
-	* XML Werte ändern
-	*
-	* @return boolean
-	 */
-	public static function changeXMLvalue($XMLTag, $xmlpath, $xmlnode, $xmlvalue='')
-	{
-		if(array_key_exists($XMLTag,self::$xmlobj))
-		{
-			$xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
-			$xmlobj[0]->{$xmlnode} = htmlspecialchars($xmlvalue);
-			return true;
-		}
-		else
-			return false;
-	}
+            if(self::$xmlobj[$XMLTag]['objekt'] != false)
+                return true;
+        }
 
-	/**
-	* Einen neuen XML Knoten hinzufügen
-	*
-	* @return boolean
-	*/
-	public static function createXMLnode($XMLTag, $xmlpath, $xmlnode, $attributes=array(), $text='')
-	{
-		if(array_key_exists($XMLTag,self::$xmlobj))
-		{
-			 $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
-			 $xmlobj2 = $xmlobj[0]->addChild($xmlnode, htmlspecialchars($text));
-			 foreach($attributes as $attr => $value)
-			 	$xmlobj2->addAttribute($attr, htmlspecialchars($value));
-			 return true;
-		}
-		else
-			return false;
-	}
+        return false;
+    }
 
-	/**
-	*  XML-Datei speichern
-	*
-	* @return boolean
-	*/
-	public static function saveXMLfile($XMLTag)
-	{
-		if(!array_key_exists($XMLTag,self::$xmlobj))
-		{
-			trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geöffnet.');
-			return false;
-		}
+    /**
+    * XML Wert auslesen
+    *
+    * @return XMLObj / boolean
+    */
+    public static function getXMLvalue($XMLTag, $xmlpath)
+    {
+        if(array_key_exists($XMLTag,self::$xmlobj))
+        {
+            $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
+            return ($xmlobj) ? $xmlobj[0] : false;
+        }
+        else
+            return false;
+    }
 
-		$xmlFileValue = self::$xmlobj[$XMLTag]['objekt']->asXML();
-		file_put_contents(basePath . '/' . self::$xmlobj[$XMLTag]['xmlFile'], $xmlFileValue);
-		return true;
-	}
+    /**
+    * XML Werte ändern
+    *
+    * @return boolean
+     */
+    public static function changeXMLvalue($XMLTag, $xmlpath, $xmlnode, $xmlvalue='')
+    {
+        if(array_key_exists($XMLTag,self::$xmlobj))
+        {
+            $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
+            $xmlobj[0]->{$xmlnode} = htmlspecialchars($xmlvalue);
+            return true;
+        }
+        else
+            return false;
+    }
 
-	/**
-	* Einen XML Knoten löschen
-	*
-	* @return boolean
-	*/
-	public static function deleteXMLnode($XMLTag, $xmlpath, $xmlnode)
-	{
-		if(array_key_exists($XMLTag,self::$xmlobj))
-		{
-			$parent = self::getXMLvalue($XMLTag, $xmlpath);
-			unset($parent->$xmlnode);
-			return true;
-		}
-		else
-			return false;
-	}
+    /**
+    * Einen neuen XML Knoten hinzufügen
+    *
+    * @return boolean
+    */
+    public static function createXMLnode($XMLTag, $xmlpath, $xmlnode, $attributes=array(), $text='')
+    {
+        if(array_key_exists($XMLTag,self::$xmlobj))
+        {
+             $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
+             $xmlobj2 = $xmlobj[0]->addChild($xmlnode, htmlspecialchars($text));
+             foreach($attributes as $attr => $value)
+                 $xmlobj2->addAttribute($attr, htmlspecialchars($value));
+             return true;
+        }
+        else
+            return false;
+    }
 
-	/**
-	* Einen XML Knoten Attribut löschen
-	*
-	* @return boolean
-	*/
-	public static function deleteXMLattribut($XMLTag, $xmlpath, $key, $value )
-	{
-		if(array_key_exists($XMLTag,self::$xmlobj))
-		{
-			$nodes = self::getXMLvalue($XMLTag, $xmlpath);
-			foreach($nodes as $node)
-			{
-				if((string)$node->attributes()->$key==$value)
-			 	{
-			    	unset($node[0]);
-			    	break;
-			 	}
-			}
-			return true;
-		}
-		else
-			return false;
-	}
+    /**
+    *  XML-Datei speichern
+    *
+    * @return boolean
+    */
+    public static function saveXMLfile($XMLTag)
+    {
+        if(!array_key_exists($XMLTag,self::$xmlobj))
+        {
+            trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geöffnet.');
+            return false;
+        }
+
+        $xmlFileValue = self::$xmlobj[$XMLTag]['objekt']->asXML();
+        file_put_contents(basePath . '/' . self::$xmlobj[$XMLTag]['xmlFile'], $xmlFileValue);
+        return true;
+    }
+
+    /**
+    * Einen XML Knoten löschen
+    *
+    * @return boolean
+    */
+    public static function deleteXMLnode($XMLTag, $xmlpath, $xmlnode)
+    {
+        if(array_key_exists($XMLTag,self::$xmlobj))
+        {
+            $parent = self::getXMLvalue($XMLTag, $xmlpath);
+            unset($parent->$xmlnode);
+            return true;
+        }
+        else
+            return false;
+    }
+
+    /**
+    * Einen XML Knoten Attribut löschen
+    *
+    * @return boolean
+    */
+    public static function deleteXMLattribut($XMLTag, $xmlpath, $key, $value )
+    {
+        if(array_key_exists($XMLTag,self::$xmlobj))
+        {
+            $nodes = self::getXMLvalue($XMLTag, $xmlpath);
+            foreach($nodes as $node)
+            {
+                if((string)$node->attributes()->$key==$value)
+                 {
+                    unset($node[0]);
+                    break;
+                 }
+            }
+            return true;
+        }
+        else
+            return false;
+    }
 }
 ?>
