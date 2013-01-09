@@ -6,9 +6,9 @@
 //Neuinstallation
 function install_mysql_create()
 {
-	global $db;
-	@ignore_user_abort(true);
-  
+    global $db;
+    @ignore_user_abort(true);
+
     //===============================================================
     //-> Artikelkommentare ==========================================
     //===============================================================
@@ -26,7 +26,7 @@ function install_mysql_create()
       `editby` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-  
+
     //===============================================================
     //-> Artikel ====================================================
     //===============================================================
@@ -47,7 +47,7 @@ function install_mysql_create()
       `public` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-  
+
     //===============================================================
     //-> Awards =====================================================
     //===============================================================
@@ -63,7 +63,7 @@ function install_mysql_create()
       `url` text NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Away =======================================================
     //===============================================================
@@ -79,7 +79,7 @@ function install_mysql_create()
       `lastedit` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Cache ======================================================
     //===============================================================
@@ -92,7 +92,7 @@ function install_mysql_create()
     `array` varchar(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`qry`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
-    
+
     //===============================================================
     //-> Clankasse ==================================================
     //===============================================================
@@ -106,7 +106,7 @@ function install_mysql_create()
       `betrag` varchar(10) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Clankassenkategorien =======================================
     //===============================================================
@@ -116,10 +116,10 @@ function install_mysql_create()
       `kat` varchar(30) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Clankassenzahlungen ========================================
-    //===============================================================	
+    //===============================================================
     db("DROP TABLE IF EXISTS `".$db['c_payed']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['c_payed']."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
@@ -127,11 +127,11 @@ function install_mysql_create()
       `payed` varchar(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Clanwars ===================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['cw']."`;",false,false,true);	
+    db("DROP TABLE IF EXISTS `".$db['cw']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['cw']."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `squad_id` int(19) NOT NULL,
@@ -156,7 +156,7 @@ function install_mysql_create()
       `top` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-			
+
     //===============================================================
     //-> Clanwarplayers =============================================
     //===============================================================
@@ -167,21 +167,21 @@ function install_mysql_create()
       `status` int(5) NOT NULL DEFAULT '0',
       KEY `cwid` (`cwid`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
-	
+
     //===============================================================
     //-> Click IP Counter ===========================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['clicks_ips']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['clicks_ips']."` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`ip` varchar(15) NOT NULL DEFAULT '000.000.000.000',
-	`uid` int(11) NOT NULL DEFAULT '0',
-	`ids` int(11) NOT NULL DEFAULT '0',
-	`side` varchar(30) NOT NULL DEFAULT '',
-	PRIMARY KEY (`id`),
-	KEY `ip` (`ip`)
-	) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-			
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `ip` varchar(15) NOT NULL DEFAULT '000.000.000.000',
+    `uid` int(11) NOT NULL DEFAULT '0',
+    `ids` int(11) NOT NULL DEFAULT '0',
+    `side` varchar(30) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`),
+    KEY `ip` (`ip`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
     //===============================================================
     //-> Clanwarkommentare ==========================================
     //===============================================================
@@ -196,14 +196,14 @@ function install_mysql_create()
       `reg` int(5) NOT NULL DEFAULT '0',
       `comment` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
-      `editby` text NOT NULL,
+      `editby` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-			
+
     //===============================================================
     //-> Config =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['config']."`;",false,false,true);	
+    db("DROP TABLE IF EXISTS `".$db['config']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['config']."` (
       `id` int(1) NOT NULL AUTO_INCREMENT,
       `upicsize` int(5) NOT NULL DEFAULT '100',
@@ -267,12 +267,12 @@ function install_mysql_create()
       `cache_engine` int(1) NOT NULL DEFAULT '1',
       `cache_teamspeak` int(10) NOT NULL DEFAULT '30',
       `cache_server` int(10) NOT NULL DEFAULT '30',
-      `cache_news` int(10) NOT NULL DEFAULT '5',		
+      `cache_news` int(10) NOT NULL DEFAULT '5',
       `direct_refresh` int(1) NOT NULL DEFAULT '0',
       `news_feed` int(1) NOT NULL DEFAULT '1',
       UNIQUE KEY `id` (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Counter ====================================================
     //===============================================================
@@ -284,10 +284,10 @@ function install_mysql_create()
       `maxonline` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Counter IPs ================================================
-    //===============================================================	 
+    //===============================================================
     db("DROP TABLE IF EXISTS `".$db['c_ips']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['c_ips']."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -295,7 +295,7 @@ function install_mysql_create()
       `datum` int(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Counter whoison ============================================
     //===============================================================
@@ -309,7 +309,7 @@ function install_mysql_create()
       PRIMARY KEY (`id`),
       UNIQUE KEY `ip` (`ip`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-			
+
     //===============================================================
     //-> Downloads ==================================================
     //===============================================================
@@ -325,7 +325,7 @@ function install_mysql_create()
       `last_dl` int(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Downloadkategorien =========================================
     //===============================================================
@@ -335,7 +335,7 @@ function install_mysql_create()
       `name` varchar(249) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Events (Kalender) ==========================================
     //===============================================================
@@ -347,7 +347,7 @@ function install_mysql_create()
       `event` text NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Forum: Access ==============================================
     //===============================================================
@@ -358,8 +358,8 @@ function install_mysql_create()
       `forum` int(10) NOT NULL DEFAULT '0',
       PRIMARY KEY `user` (`user`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
-					
-    //=============================================================== 
+
+    //===============================================================
     //-> Forum: Kategorien ==========================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['f_kats']."`;",false,false,true);
@@ -370,7 +370,7 @@ function install_mysql_create()
       `intern` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Forumposts =================================================
     //===============================================================
@@ -391,7 +391,7 @@ function install_mysql_create()
       KEY `sid` (`sid`),
       KEY `date` (`date`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-				 
+
     //===============================================================
     //-> Forumthreads ===============================================
     //===============================================================
@@ -422,8 +422,8 @@ function install_mysql_create()
       KEY `topic` (`topic`),
       KEY `first` (`first`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;",false,false,true);
-				 
-    //===============================================================	 
+
+    //===============================================================
     //-> Forum Unterkategorien ======================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['f_skats']."`;",false,false,true);
@@ -435,7 +435,7 @@ function install_mysql_create()
       `pos` int(5) NOT NULL DEFAULT 1,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Forum ABO ==================================================
     //===============================================================
@@ -447,7 +447,7 @@ function install_mysql_create()
       `user` int(5) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Galerie ====================================================
     //===============================================================
@@ -459,7 +459,7 @@ function install_mysql_create()
       `beschreibung` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Gaestebuch =================================================
     //===============================================================
@@ -473,11 +473,11 @@ function install_mysql_create()
       `reg` int(1) NOT NULL DEFAULT '0',
       `nachricht` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
-      `editby` text NOT NULL,
+      `editby` text,
       `public` int(1) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Glossar ====================================================
     //===============================================================
@@ -488,7 +488,7 @@ function install_mysql_create()
       `glossar` text NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Ipcheck & Admin Log ========================================
     //===============================================================
@@ -500,7 +500,7 @@ function install_mysql_create()
       `time` int(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Links ======================================================
     //===============================================================
@@ -514,7 +514,7 @@ function install_mysql_create()
       `hits` int(50) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> LinkUs =====================================================
     //===============================================================
@@ -527,8 +527,8 @@ function install_mysql_create()
       `beschreibung` varchar(249) DEFAULT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-				
-    //===============================================================		
+
+    //===============================================================
     //-> Nachrichten ================================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['msg']."`;",false,false,true);
@@ -549,7 +549,7 @@ function install_mysql_create()
       `sendnewsuser` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Navigation =================================================
     //===============================================================
@@ -569,7 +569,7 @@ function install_mysql_create()
       `extended_perm` varchar(50) DEFAULT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Navigation Kategorien ======================================
     //===============================================================
@@ -581,7 +581,7 @@ function install_mysql_create()
       `level` int(2) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> News =======================================================
     //===============================================================
@@ -608,7 +608,7 @@ function install_mysql_create()
       `timeshift` int(14) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Newskategorien =============================================
     //===============================================================
@@ -619,7 +619,7 @@ function install_mysql_create()
       `kategorie` varchar(60) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Newskommentare =============================================
     //===============================================================
@@ -634,10 +634,10 @@ function install_mysql_create()
       `reg` int(5) NOT NULL DEFAULT '0',
       `comment` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
-      `editby` text NOT NULL,
+      `editby` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Partnerbuttons =============================================
     //===============================================================
@@ -649,57 +649,57 @@ function install_mysql_create()
       `textlink` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-					
+
     //===============================================================
     //-> Rechte =====================================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['permissions']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['permissions']."` (
-	  `id` int(11) NOT NULL AUTO_INCREMENT,
-	  `user` int(11) NOT NULL DEFAULT '0',
-	  `pos` int(1) NOT NULL,
-	  `artikel` int(1) NOT NULL DEFAULT '0',
-	  `awards` int(1) NOT NULL DEFAULT '0',
-	  `backup` int(1) NOT NULL DEFAULT '0',
-	  `clear` int(1) NOT NULL DEFAULT '0',
-	  `config` int(1) NOT NULL DEFAULT '0',
-	  `contact` int(1) NOT NULL DEFAULT '0',
-	  `clanwars` int(1) NOT NULL DEFAULT '0',
-	  `clankasse` int(1) NOT NULL DEFAULT '0',
-	  `downloads` int(1) NOT NULL DEFAULT '0',
-	  `editkalender` int(1) NOT NULL DEFAULT '0',
-	  `editserver` int(1) NOT NULL DEFAULT '0',
-	  `edittactics` int(1) NOT NULL DEFAULT '0',
-	  `editsquads` int(1) NOT NULL DEFAULT '0',
-	  `editusers` int(1) NOT NULL DEFAULT '0',
-	  `editor` int(1) NOT NULL DEFAULT '0',
-	  `forum` int(1) NOT NULL DEFAULT '0',
-	  `gallery` int(1) NOT NULL DEFAULT '0',
-	  `gb` int(1) NOT NULL DEFAULT '0',
-	  `gs_showpw` int(1) NOT NULL DEFAULT '0',
-	  `glossar` int(1) NOT NULL DEFAULT '0',
-	  `impressum` int(1) NOT NULL DEFAULT '0',
-	  `intforum` int(1) NOT NULL DEFAULT '0',
-	  `intnews` int(1) NOT NULL DEFAULT '0',
-	  `joinus` int(1) NOT NULL DEFAULT '0',
-	  `links` int(1) NOT NULL DEFAULT '0',
-	  `news` int(1) NOT NULL DEFAULT '0',
-	  `newsletter` int(1) NOT NULL DEFAULT '0',
-	  `partners` int(1) NOT NULL DEFAULT '0',
-	  `profile` int(1) NOT NULL DEFAULT '0',
-	  `protocol` int(1) NOT NULL DEFAULT '0',
-	  `rankings` int(1) NOT NULL DEFAULT '0',
-	  `receivecws` int(1) NOT NULL DEFAULT '0',
-	  `serverliste` int(1) NOT NULL DEFAULT '0',
-	  `smileys` int(1) NOT NULL DEFAULT '0',
-	  `sponsors` int(1) NOT NULL DEFAULT '0',
-	  `shoutbox` int(1) NOT NULL DEFAULT '0',
-	  `support` int(1) NOT NULL DEFAULT '0',
-	  `votes` int(1) NOT NULL DEFAULT '0',
-	  `votesadmin` int(1) NOT NULL DEFAULT '0',
-	  PRIMARY KEY (`id`)
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `user` int(11) NOT NULL DEFAULT '0',
+      `pos` int(1) NOT NULL,
+      `artikel` int(1) NOT NULL DEFAULT '0',
+      `awards` int(1) NOT NULL DEFAULT '0',
+      `backup` int(1) NOT NULL DEFAULT '0',
+      `clear` int(1) NOT NULL DEFAULT '0',
+      `config` int(1) NOT NULL DEFAULT '0',
+      `contact` int(1) NOT NULL DEFAULT '0',
+      `clanwars` int(1) NOT NULL DEFAULT '0',
+      `clankasse` int(1) NOT NULL DEFAULT '0',
+      `downloads` int(1) NOT NULL DEFAULT '0',
+      `editkalender` int(1) NOT NULL DEFAULT '0',
+      `editserver` int(1) NOT NULL DEFAULT '0',
+      `edittactics` int(1) NOT NULL DEFAULT '0',
+      `editsquads` int(1) NOT NULL DEFAULT '0',
+      `editusers` int(1) NOT NULL DEFAULT '0',
+      `editor` int(1) NOT NULL DEFAULT '0',
+      `forum` int(1) NOT NULL DEFAULT '0',
+      `gallery` int(1) NOT NULL DEFAULT '0',
+      `gb` int(1) NOT NULL DEFAULT '0',
+      `gs_showpw` int(1) NOT NULL DEFAULT '0',
+      `glossar` int(1) NOT NULL DEFAULT '0',
+      `impressum` int(1) NOT NULL DEFAULT '0',
+      `intforum` int(1) NOT NULL DEFAULT '0',
+      `intnews` int(1) NOT NULL DEFAULT '0',
+      `joinus` int(1) NOT NULL DEFAULT '0',
+      `links` int(1) NOT NULL DEFAULT '0',
+      `news` int(1) NOT NULL DEFAULT '0',
+      `newsletter` int(1) NOT NULL DEFAULT '0',
+      `partners` int(1) NOT NULL DEFAULT '0',
+      `profile` int(1) NOT NULL DEFAULT '0',
+      `protocol` int(1) NOT NULL DEFAULT '0',
+      `rankings` int(1) NOT NULL DEFAULT '0',
+      `receivecws` int(1) NOT NULL DEFAULT '0',
+      `serverliste` int(1) NOT NULL DEFAULT '0',
+      `smileys` int(1) NOT NULL DEFAULT '0',
+      `sponsors` int(1) NOT NULL DEFAULT '0',
+      `shoutbox` int(1) NOT NULL DEFAULT '0',
+      `support` int(1) NOT NULL DEFAULT '0',
+      `votes` int(1) NOT NULL DEFAULT '0',
+      `votesadmin` int(1) NOT NULL DEFAULT '0',
+      PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Positionen =================================================
     //===============================================================
@@ -711,7 +711,7 @@ function install_mysql_create()
       `nletter` int(1) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Profilfelder ===============================================
     //===============================================================
@@ -725,7 +725,7 @@ function install_mysql_create()
       `shown` int(5) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Rankings ===================================================
     //===============================================================
@@ -740,7 +740,7 @@ function install_mysql_create()
       `postdate` int(20) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Server =====================================================
     //===============================================================
@@ -758,12 +758,12 @@ function install_mysql_create()
       `qport` varchar(10) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Serverliste ================================================
     //===============================================================
-    	db("DROP TABLE IF EXISTS `".$db['serverliste']."`;",false,false,true);
-    	db("CREATE TABLE IF NOT EXISTS `".$db['serverliste']."` (
+        db("DROP TABLE IF EXISTS `".$db['serverliste']."`;",false,false,true);
+        db("CREATE TABLE IF NOT EXISTS `".$db['serverliste']."` (
       `id` int(20) NOT NULL AUTO_INCREMENT,
       `datum` int(11) NOT NULL DEFAULT '0',
       `clanname` varchar(50) NOT NULL DEFAULT '',
@@ -775,7 +775,7 @@ function install_mysql_create()
       `slots` char(2) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Settings ===================================================
     //===============================================================
@@ -783,12 +783,9 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['settings']."` (
       `id` int(1) NOT NULL AUTO_INCREMENT,
       `clanname` varchar(50) NOT NULL DEFAULT 'Dein Clanname hier!',
-      `balken_vote` varchar(3) NOT NULL DEFAULT '2',
       `reg_forum` int(1) NOT NULL DEFAULT '1',
       `reg_cwcomments` int(1) NOT NULL DEFAULT '1',
       `counter_start` int(10) NOT NULL DEFAULT '0',
-      `balken_vote_menu` varchar(3) NOT NULL DEFAULT '0.9',
-      `balken_cw` varchar(3) NOT NULL DEFAULT '2.4',
       `reg_dl` int(1) NOT NULL DEFAULT '1',
       `reg_artikel` int(1) NOT NULL DEFAULT '1',
       `reg_newscomments` int(1) NOT NULL DEFAULT '1',
@@ -800,7 +797,6 @@ function install_mysql_create()
       `badwords` text NOT NULL,
       `pagetitel` varchar(50) NOT NULL DEFAULT 'Dein Seitentitel hier!',
       `last_backup` int(20) NOT NULL DEFAULT '0',
-      `squadtmpl` int(1) NOT NULL DEFAULT '1',
       `i_domain` varchar(50) NOT NULL DEFAULT 'www.deineUrl.de',
       `i_autor` text,
       `k_nr` varchar(100) NOT NULL DEFAULT '123456789',
@@ -810,7 +806,6 @@ function install_mysql_create()
       `k_waehrung` varchar(15) NOT NULL DEFAULT '&euro;',
       `language` varchar(50) NOT NULL DEFAULT 'deutsch',
       `domain` varchar(200) NOT NULL DEFAULT '127.0.0.1',
-      `gametiger` varchar(20) NOT NULL DEFAULT 'cstrike',
       `regcode` int(1) NOT NULL DEFAULT '1',
       `mailfrom` varchar(200) NOT NULL DEFAULT 'info@127.0.0.1',
       `ts_ip` varchar(200) NOT NULL DEFAULT '',
@@ -845,9 +840,9 @@ function install_mysql_create()
       `gb_activ` int(1) NOT NULL DEFAULT '1',
       `urls_linked` int(1) NOT NULL DEFAULT '1',
       `db_version` varchar(4) NOT NULL DEFAULT '0000',
-	  PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Shoutbox ===================================================
     //===============================================================
@@ -861,7 +856,7 @@ function install_mysql_create()
       `ip` varchar(50) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Seiten =====================================================
     //===============================================================
@@ -873,7 +868,7 @@ function install_mysql_create()
       `html` int(1) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Sponsoren ==================================================
     //===============================================================
@@ -896,7 +891,7 @@ function install_mysql_create()
       `hits` int(50) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Squads =====================================================
     //===============================================================
@@ -914,7 +909,7 @@ function install_mysql_create()
       `team_show` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Squadusers =================================================
     //===============================================================
@@ -925,7 +920,7 @@ function install_mysql_create()
       `squad` int(2) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-			
+
     //===============================================================
     //-> Taktiken ===================================================
     //===============================================================
@@ -941,7 +936,7 @@ function install_mysql_create()
       `autor` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
+
     //===============================================================
     //-> Buddys =====================================================
     //===============================================================
@@ -952,7 +947,7 @@ function install_mysql_create()
       `buddy` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-				 
+
     //===============================================================
     //-> Usergallery ================================================
     //===============================================================
@@ -964,7 +959,7 @@ function install_mysql_create()
       `pic` varchar(200) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-					 
+
     //===============================================================
     //-> UserGB =====================================================
     //===============================================================
@@ -979,10 +974,11 @@ function install_mysql_create()
       `reg` int(1) NOT NULL DEFAULT '0',
       `nachricht` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
-      `editby` text NOT NULL,
-      PRIMARY KEY (`id`)
+      `editby` text,
+      PRIMARY KEY (`id`),
+      KEY `user` (`user`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-				
+
     //===============================================================
     //-> Userposis ==================================================
     //===============================================================
@@ -994,8 +990,8 @@ function install_mysql_create()
       `squad` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
-    //===============================================================				
+
+    //===============================================================
     //-> Users ======================================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['users']."`;",false,false,true);
@@ -1066,8 +1062,8 @@ function install_mysql_create()
       `pnmail` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-		
-    //===============================================================		
+
+    //===============================================================
     //-> Userstats ==================================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['userstats']."`;",false,false,true);
@@ -1084,7 +1080,7 @@ function install_mysql_create()
       `cws` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-	
+
     //===============================================================
     //-> Votes ======================================================
     //===============================================================
@@ -1100,7 +1096,7 @@ function install_mysql_create()
       `forum` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-					
+
     //===============================================================
     //-> Vote Möglichkeit ==========================================
     //===============================================================

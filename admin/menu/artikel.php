@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._artikel;
     if(permission("artikel"))
@@ -26,7 +26,6 @@ if(_adminMenu != 'true')
                                                  "kat" => $kat,
                                                  "preview" => _preview,
                                                  "ntitel" => _titel,
-                                                 "lang" => $language,
                                                  "do" => "insert",
                                                  "ntext" => _eintrag,
                                                  "error" => "",
@@ -41,13 +40,13 @@ if(_adminMenu != 'true')
                                                  "button" => _button_value_add,
                                                  "nmore" => _news_admin_more,
                                                  "linkname" => _linkname,
-											                           "interna" => _news_admin_intern,
+                                                                       "interna" => _news_admin_intern,
                                                  "nurl" => _url));
       } elseif($_GET['do'] == "insert") {
-  	    if(empty($_POST['titel']) || empty($_POST['artikel']))
-		    {
-		      if(empty($_POST['titel'])) $error = _empty_artikel_title;
-		      elseif(empty($_POST['artikel'])) $error = _empty_artikel;
+          if(empty($_POST['titel']) || empty($_POST['artikel']))
+            {
+              if(empty($_POST['titel'])) $error = _empty_artikel_title;
+              elseif(empty($_POST['artikel'])) $error = _empty_artikel;
 
           $qryk = db("SELECT * FROM ".$db['newskat']."");
           while($getk = _fetch($qryk))
@@ -60,7 +59,7 @@ if(_adminMenu != 'true')
                                               "what" => $getk['kategorie']));
           }
 
-  		    $error = show("errors/errortable", array("error" => $error));
+              $error = show("errors/errortable", array("error" => $error));
 
           $show = show($dir."/artikel_form", array("head" => _artikel_add,
                                                    "nautor" => _autor,
@@ -80,12 +79,11 @@ if(_adminMenu != 'true')
                                                    "url3" => $_POST['url3'],
                                                    "ntext" => _eintrag,
                                                    "button" => _button_value_add,
-                                                   "lang" => $language,
                                                    "error" => $error,
                                                    "nmore" => _news_admin_more,
                                                    "linkname" => _linkname,
                                                    "nurl" => _url));
-	      } else {
+          } else {
           if($_POST)
           {
             $qry = db("INSERT INTO ".$db['artikel']."
@@ -138,7 +136,6 @@ if(_adminMenu != 'true')
                                                  "url3" => $get['url3'],
                                                  "ntext" => _eintrag,
                                                  "error" => "",
-                                                 "lang" => $language,
                                                  "button" => _button_value_edit,
                                                  "linkname" => _linkname,
                                                  "nurl" => _url));
@@ -167,7 +164,7 @@ if(_adminMenu != 'true')
         {
           $upd = db("UPDATE ".$db['artikel']."
                      SET `public` = '1',
-          					     `datum`  = '".time()."'
+                                   `datum`  = '".time()."'
                      WHERE id = '".intval($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
           $upd = db("UPDATE ".$db['artikel']."
@@ -179,11 +176,11 @@ if(_adminMenu != 'true')
       } else {
         if(isset($_GET['page']))  $page = $_GET['page'];
         else $page = 1;
-  
+
         $entrys = cnt($db['artikel']);
         $qry = db("SELECT * FROM ".$db['artikel']."
-                   ORDER BY `public` ASC, `datum` DESC 
-									 LIMIT ".($page - 1)*$maxadminartikel.",".$maxadminartikel."");
+                   ORDER BY `public` ASC, `datum` DESC
+                                     LIMIT ".($page - 1)*$maxadminartikel.",".$maxadminartikel."");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -195,23 +192,23 @@ if(_adminMenu != 'true')
                                                             "del" => convSpace(_confirm_del_artikel)));
           $titel = show(_artikel_show_link, array("titel" => re(cut($get['titel'],$lnewsadmin)),
                                                   "id" => $get['id']));
-  
+
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
           $public = ($get['public'] == 1)
                ? '<a href="?admin=artikel&amp;do=public&amp;id='.$get['id'].'&amp;what=unset"><img src="../inc/images/public.gif" alt="" title="'._non_public.'" /></a>'
                : '<a href="?admin=artikel&amp;do=public&amp;id='.$get['id'].'&amp;what=set"><img src="../inc/images/nonpublic.gif" alt="" title="'._public.'" /></a>';
 
-		  if(empty($get['datum'])) $datum = _no_public;
-	      else $datum = date("d.m.y H:i", $get['datum'])._uhr;
-		  
+          if(empty($get['datum'])) $datum = _no_public;
+          else $datum = date("d.m.y H:i", $get['datum'])._uhr;
+
           $show_ .= show($dir."/admin_show", array("date" => $datum,
                                                    "titel" => $titel,
                                                    "class" => $class,
                                                    "autor" => autor($get['autor']),
-  							  				       "intnews" => "",
+                                                       "intnews" => "",
                                                    "sticky" => "",
-												   "public" => $public,
+                                                   "public" => $public,
                                                    "edit" => $edit,
                                                    "delete" => $delete));
         }

@@ -86,14 +86,12 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
                 `badwords`            = '".up($_POST['badwords'])."',
                 `gmaps_who`           = '".((int)$_POST['gmaps_who'])."',
                 `language`            = '".$_POST['language']."',
-                `gametiger`           = '".$_POST['gametiger']."',
                 `regcode`             = '".((int)$_POST['regcode'])."',
                 `forum_vote`          = '".((int)$_POST['forum_vote'])."',
                 `reg_forum`           = '".((int)$_POST['reg_forum'])."',
                 `reg_artikel`         = '".((int)$_POST['reg_artikel'])."',
                 `reg_shout`           = '".((int)$_POST['reg_shout'])."',
                 `reg_cwcomments`      = '".((int)$_POST['reg_cwcomments'])."',
-                `squadtmpl`           = '".((int)$_POST['squadtmpl'])."',
                 `counter_start`       = '".((int)$_POST['counter_start'])."',
                 `reg_newscomments`    = '".((int)$_POST['reg_nc'])."',
                 `reg_dl`              = '".((int)$_POST['reg_dl'])."',
@@ -117,11 +115,8 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
                 `tmpdir`              = '".up($_POST['tmpdir'])."',
                 `persinfo`            = '".((int)$_POST['persinfo'])."',
                 `wmodus`              = '".((int)$_POST['wmodus'])."',
-                `balken_cw`           = '".up($_POST['balken_cw'])."',
-                `balken_vote`         = '".up($_POST['balken_vote'])."',
-                `balken_vote_menu`    = '".up($_POST['balken_vote_menu'])."',
                 `memcache_host`       = '".$_POST['memcache_host']."',
-                  `memcache_port`       = '".((int)$_POST['memcache_port'])."',
+                `memcache_port`       = '".((int)$_POST['memcache_port'])."',
                 `urls_linked`   	  = '".up($_POST['urls_linked'])."'
             WHERE id = 1");
 
@@ -167,7 +162,6 @@ if(empty($show))
     $selr_cwc = ($gets['reg_cwcomments'] ? 'selected="selected"' : '');
     $selr_shout = ($gets['reg_shout'] ? 'selected="selected"' : '');
     $selwm = ($gets['wmodus'] ? 'selected="selected"' : '');
-    $selsq = ($gets['squadtmpl'] ? 'selected="selected"' : '');
     $selr_pi = (!$gets['persinfo'] ? 'selected="selected"' : '');
     $sel_sl = ($get['securelogin'] ? 'selected="selected"' : '');
     $selh_all = ($get['allowhover'] == 1 ? 'selected="selected"' : '');
@@ -255,7 +249,6 @@ if(empty($show))
                                              "m_upicsize" => $get['upicsize'],
                                              "counter_start" => _counter_start,
                                              "c_start" => $gets['counter_start'],
-                                             "selsq" => $selsq,
                                              "f_forum" => $get['f_forum'],
                                              "f_gb" => $get['f_gb'],
                                              "f_membergb" => $get['f_membergb'],

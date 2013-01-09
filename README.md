@@ -26,7 +26,7 @@ Unterstützung für FreeWebspaces wurde überarbeitet, so dass es keine PHP Warn
 Alle fsockopen abhängigen Funktionen werden dann vollständig abgeschaltet.
 
 Viele der Seiten haben eine Code Optimierung erfahren, überflüssiger Code oder Code der deutlich sparender geschrieben werden kann wurde überarbeitet.
-Teils ist der Code von über 200 Zeilen auf 50 Zeilen geschupft ohne die Quellcode Übersicht zu stark zu verändern.
+Teils ist der Code von über 200 Zeilen auf 50 Zeilen geschupft ohne die Quellcodeübersicht zu stark zu verändern.
 
 Die Datenbank wurde von unnötigen Ballst befreit, nicht mehr verwendete Tabellen Zeilen wurden entfernt.
 Fehlende Tabellen Zeilen oder Standartwerte die Probleme auf machen Seiten verursacht haben, SQL Error - xxxx ... wurden beseitigt.
@@ -46,18 +46,46 @@ HTML File Platzhalter:
 Senden von News *News einsenden* wurde in die index.php der News Seite intrigiert.
 Die meisten Seiten wurden ausgelagert und in ihre Unterfunktionen zerlegt.
 So muss man nur eine Datei ändern zbs. um Änderungen an dem Newsarchiv vorzunehmen, ohne die gesamte Newsseite zu ändern.
-*Sollte man einen Fehler machen, funktioniert nur das Newsarchiv nicht mehr aber der Rest der News Seite ist weiterhin betriebsbereit. 
+*Sollte man einen Fehler machen, funktioniert nur das Newsarchiv nicht mehr aber der Rest der News Seite ist weiterhin unberührt. 
 
 Die Unterstützung von Multi-Indexes ist standartmassig vorhanden.
 
 Unterstützung mehrere Bildformate zbs. für Server Pics, Adminmenü Icons, usw.
 *.png / .jpg / .gif
+* "In der "inc/config.php" einstellbar."
 
 Infos wie der XFire Status wird per Ajax nachgeladen um lange Ladezeiten der gesamten DZCP Seite zu verhindern.
 Eine Auswahl des Skins der bei XFire verwendet wird ist über die config.php möglich.
+
 Er wird ein zufälliger MD5 Code verwendet um ein Login zu Speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
 Es wurden einzelne neue Smileys eingefügt.
+
+Die Administrationsseiten können über eine XML Datei zusätzlich konfiguriert werden.
+* "Menu" Verändern der Menüzugehörigkeit. "rootmenu,settingsmenu,contentmenu"
+* "Rights" Nötigen Rechte für einen Zugriff und Anzeige im Menü.
+* "Only_Admin" Ist nur für Admins mit Level 4 Rechten zugänglich.
+* "Only_Root" Ist nur für den Rootadmin zugänglich.
 
 Es wurde 11 weitere User-Rechte eingefügt alles bezogen auf die Administration.
 *Der Administrator kann jeden User einen oder mehrere beliebige Bereiche zugänglich machen zbs. 'Datenbank aufräumen' oder die 'Support Informationen' einsehen.
 *Der Zugang zu jedem beliebigen Bereich war vorher nur eingeschränkt möglich.
+
+Neue HTML Tags zum ein HTML Code ausblenden basierend auf dem Loginstatus des Users.
+* Der HTML Code der zwischen dem Tag steht, wird vollständig angezeigt oder komplett entfernt.
+* Verwendung:
+
+<logged_in>
+	HTML Code der nur angezeigt wird wenn der aktuelle User angemeldet ist...
+</logged_in>
+
+<logged_out>
+	HTML Code der nur angezeigt wird wenn der aktuelle User abgemeldet ist...
+</logged_out>
+
+Optional* Zusätzliche XML-Config für die DZCP Menufunktionen kann angelegt werden.
+* Es kann eingestellt werden ob die Menufunktion über Ajax Loader nachgeladen werden sollen.
+* Welches Bild für jede Menufunktion die per Ajax Loader nachgeladen wird, verwendet werden soll.
+* Welches Level der Benutzer haben muss um das Menu zu sehen. Sehen ab: Gast,User,Admin,Root
+* Der zusätzliche Ajax Loader kann generell in der "inc/config.php" abgeschaltet werden.
+
+Gametiger wurde entfernt.

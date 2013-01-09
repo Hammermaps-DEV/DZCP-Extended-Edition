@@ -134,8 +134,6 @@ else
                                 "ip" => '',
                                 "preview" => _preview,
                                 "sec" => $dir,
-                                "b1" => $u_b1,
-                                "b2" => $u_b2,
                                 "security" => _register_confirm,
                                 "prevurl" => '../news/?action=compreview&do=edit&id='.$news_id.'&cid='.$_GET['cid'].'&postid='.$_GET['postid'],
                                 "action" => '?action=show&amp;do=editcom&amp;id='.$news_id.'&amp;cid='.$_GET['cid'],
@@ -178,8 +176,6 @@ else
                                 "nickhead" => _nick,
                                 "security" => _register_confirm,
                                 "emailhead" => _email,
-                                "b1" => $u_b1,
-                                "b2" => $u_b2,
                                 "form" => $form,
                                 "sec" => $dir,
                                 "preview" => _preview,
@@ -253,7 +249,7 @@ else
                 }
 
                 if(empty($comments))
-                    $comments = show("page/comments_no_show", array());
+                    $comments = show("page/comments_no_entry", array());
 
                 if(settings("reg_newscomments") == "1" && $chkMe == "unlogged")
                     $add = _error_unregistered_nc;
@@ -273,8 +269,6 @@ else
                                                                 "ip" => _iplog_info,
                                                                 "preview" => _preview,
                                                                 "sec" => $dir,
-                                                                "b1" => $u_b1,
-                                                                "b2" => $u_b2,
                                                                 "security" => _register_confirm,
                                                                 "action" => '?action=show&amp;do=add&amp;id='.$news_id,
                                                                 "prevurl" => '../news/?action=compreview&id='.$news_id,

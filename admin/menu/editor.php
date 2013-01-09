@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._editor_head;
     if(!permission("editor"))
@@ -23,13 +23,13 @@ if(_adminMenu != 'true')
               <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
               <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
             ';
-          }          
+          }
           $thiskat = $get['kat'];
           $sel = ($get['editor'] == $_GET['id']) ? 'selected="selected"' : '';
-     
+
           $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
         }
-        
+
         $show = show($dir."/form_editor", array("head" => _editor_add_head,
                                                 "what" => _button_value_add,
                                                 "bbcode" => _bbcode,
@@ -39,7 +39,6 @@ if(_adminMenu != 'true')
                                                 "e_inhalt" => "",
                                                 "checked" => "",
                                                 "pos" => _position,
-                                                "lang" => $language,
                                                 "name" => _editor_linkname,
                                                 "n_name" => "",
                                                 "position" => $position,
@@ -63,7 +62,7 @@ if(_adminMenu != 'true')
 
           $kat_ = preg_replace('/-(\d+)/','',$_POST['pos']);
           $pos_ = preg_replace("=nav_(.*?)-=","",$_POST['pos']);
-            
+
           $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
                      ORDER BY s1.name, s2.pos");
           $thiskat = '';
@@ -74,17 +73,16 @@ if(_adminMenu != 'true')
                 <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
                 <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
               ';
-            }          
-            
+            }
+
             $thiskat = $get['kat'];
             $sel = ($get['kat'] == $kat_ && ($get['pos']+1) == $pos_) ? 'selected="selected"' : '';
-       
+
             $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
           }
 
           $show = show($dir."/form_editor", array("head" => _editor_add_head,
                                                   "what" => _button_value_add,
-                                                  "lang" => $language,
                                                   "preview" => _preview,
                                                   "bbcode" => _bbcode,
                                                   "error" => $error,
@@ -148,13 +146,13 @@ if(_adminMenu != 'true')
               <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
               <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
             ';
-          }          
+          }
           $thiskat = $get['kat'];
           $sel = ($get['editor'] == $_GET['id']) ? 'selected="selected"' : '';
-     
+
           $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
         }
-        
+
         $qryn = db("SELECT * FROM ".$db['navi']."
                     WHERE editor = '".intval($_GET['id'])."'");
         $getn = _fetch($qryn);
@@ -163,7 +161,6 @@ if(_adminMenu != 'true')
 
         $show = show($dir."/form_editor", array("head" => _editor_edit_head,
                                                 "what" => _button_value_edit,
-                                                "lang" => $language,
                                                 "bbcode" => _bbcode,
                                                 "preview" => _preview,
                                                 "titel" => _titel,
@@ -202,16 +199,15 @@ if(_adminMenu != 'true')
                 <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
                 <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
               ';
-            }          
+            }
             $thiskat = $get['kat'];
             $sel = ($get['editor'] == $_GET['id']) ? 'selected="selected"' : '';
-       
+
             $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
           }
-          
+
           $show = show($dir."/form_editor", array("head" => _editor_edit_head,
                                                   "what" => _button_value_edit,
-                                                  "lang" => $language,
                                                   "bbcode" => _bbcode,
                                                   "preview" => _preview,
                                                   "error" => $error,

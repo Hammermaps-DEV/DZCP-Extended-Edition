@@ -3,7 +3,7 @@
 //-> DZCP Settings Start
 #########################################
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle fehler und Notices etc.
-define('cache_in_debug', false); // Entscheidet ob im Debug Modus Seiten gecached werden können
+define('cache_in_debug', true); // Entscheidet ob im Debug Modus Seiten gecached werden können
 
 define('buffer_gzip_compress', true); // Soll die Seite mit Hilfe der GZIP-Komprimierung übertragen werden
 define('buffer_gzip_compress_level', 4); // Level der Kompression 1 - 9 *Optimal Level 4
@@ -16,7 +16,9 @@ define('xfire_skin', 'shadow'); // Skin von XFire: shadow,kampf,scifi,fantasy,wo
 define('xfire_refresh', (10*60)); // Wann soll das Profilbild aktualisiert werden
 
 define('glossar_enabled', true); // Schaltet die Glossar Funktion bei Wörtern an oder aus
+define('AjaxLoad', true); // Ajax Loads erlauben
 
+$AjaxLoad_blacklist = array('welcome','server','teamspeak','infos'); // Ajax Preload gesperrte Menüs *Nur ändern wenn nötig!
 $picformat = array("jpg", "gif", "png"); // Unterstützte Bildformate
 
 // Zeichen für den Passwort Generator:

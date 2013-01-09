@@ -22,6 +22,8 @@ define('_perm_sponsors', 'Sponsoren verwalten');
 define('_perm_profile', 'Profilfelder verwalten');
 define('_perm_clear', 'Datenbank aufr&auml;umen');
 define('_no_comments', 'Keine Kommentare vorhanden');
+define('_no_pm', 'Keine Nachrichten vorhanden');
+define('_user_dont_exist', 'Der von dir angegebene User existiert nicht!');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');
@@ -45,7 +47,7 @@ define('_navi_gsv_players_online', 'Online');
 define('_navi_gsv_on_the_game', 'Spieler');
 define('_navi_gsv_view_players', 'Spieler anzeigen');
 define('_navi_gsv_game', 'Spiel');
-define('_navi_gsv_no_name_available', 'Server name nicht vorhanden');        
+define('_navi_gsv_no_name_available', 'Server name nicht vorhanden');
 define('_navi_gsv_no_players_available', 'Keine Spieler online');
 define('_navi_gsv_password', 'Passwort');
 
@@ -248,7 +250,7 @@ define('_msg_sendnews_user', '
       <input type="hidden" name="action" value="msg" />
       <input type="hidden" name="do" value="sendnewsdone" />
       <input type="hidden" name="id" value="[id]" />
-	  <input type="hidden" name="datum" value="[datum]" />
+      <input type="hidden" name="datum" value="[datum]" />
       <input id="contentSubmit" type="submit" class="submit" value="Best&auml;tigen" />
     </form>
   </td>
@@ -1419,7 +1421,7 @@ define('_user_delete_verify', '
 <tr>
   <td class="contentMainFirst" align="center">
     Bist du dir sicher das du den User [user] l&ouml;schen willst?<br />
-    <span class="fontUnder">Alle</span> Aktivit&auml;ten dieses Users auf dieser Seite werden damit gel&ouml;scht!<br /><br /> 
+    <span class="fontUnder">Alle</span> Aktivit&auml;ten dieses Users auf dieser Seite werden damit gel&ouml;scht!<br /><br />
     <a href="?action=admin&amp;do=delete&verify=yes&amp;id=[id]">Ja, l&ouml;schen!</a>
   </td>
 </tr>');
@@ -1589,11 +1591,11 @@ Gestaltung, die Inhalte oder die Urheberschaft der verlinkten/verkn&uuml;pften S
 <br /><h2><span class="fontBold">3. Urheber- und Kennzeichenrecht</span></h2>
 <br />
 Der Autor ist bestrebt, in allen Publikationen die Urheberrechte der verwendeten Bilder, Grafiken, Tondokumente, Videosequenzen und Texte
-zu beachten, von ihm selbst erstellte Bilder, Grafiken, Tondokumente, Videosequenzen und Texte zu nutzen oder auf lizenzfreie Grafiken, Tondokumente, Videosequenzen und Texte zur&uuml;ckzugreifen. 
+zu beachten, von ihm selbst erstellte Bilder, Grafiken, Tondokumente, Videosequenzen und Texte zu nutzen oder auf lizenzfreie Grafiken, Tondokumente, Videosequenzen und Texte zur&uuml;ckzugreifen.
 <br />
 Alle innerhalb des Internetangebotes genannten und ggf. durch Dritte gesch&uuml;tzten Marken- und Warenzeichen unterliegen uneingeschr&auml;nkt den Bestimmungen des jeweils g&uuml;ltigen Kennzeichenrechts und den Besitzrechten der jeweiligen eingetragenen Eigent&uuml;mer. Allein aufgrund der blo&szlig;en Nennung ist nicht der Schluss zu ziehen, dass Markenzeichen nicht durch Rechte Dritter gesch&uuml;tzt sind!
 <br />
-Das Copyright f&uuml;r ver&ouml;ffentlichte, vom Autor selbst erstellte Objekte bleibt allein beim Autor der Seiten. 
+Das Copyright f&uuml;r ver&ouml;ffentlichte, vom Autor selbst erstellte Objekte bleibt allein beim Autor der Seiten.
 Eine Vervielf&auml;ltigung oder Verwendung solcher Grafiken, Tondokumente, Videosequenzen und Texte in anderen elektronischen oder gedruckten Publikationen ist ohne ausdr&uuml;ckliche Zustimmung des Autors nicht gestattet.
 <br />
 <br /><h2><span class="fontBold">4. Datenschutz</span></h2>
@@ -1740,7 +1742,6 @@ define('_config_c_clanname', 'Clanname');
 define('_config_c_pagetitel', 'Seitentitel');
 define('_config_c_pfad', 'Script-Pfad');
 define('_config_c_language', 'Default-Sprache');
-define('_config_c_gametiger', 'Gametiger Suchoption');
 define('_config_c_upicsize', 'Global: Uploadgr&ouml;sse Bilder');
 define('_config_c_gallerypics', 'User: Usergalerie');
 define('_config_c_upicsize_what', 'erlaubte Gr&ouml;&szlig;e der Bilder in KB (Newsbilder, Userprofilbilder usw.)');
@@ -1770,9 +1771,6 @@ define('_counter_start', 'Counter');
 define('_counter_start_info', 'Hier kannst du eine Zahl eintragen, die zum Counter dazuaddiert wird.');
 define('_config_head_balken', 'Balkenl&auml;ngen');
 define('_config_balken_info', 'Hier kannst du den Faktor der L&auml;nge der Statistikbalken einstellen');
-define('_config_balken_cw', 'Clanwar Statistik');
-define('_config_balken_vote_head', 'Vote Statistik');
-define('_config_balken_vote_menu_head', 'Men&uuml;: Vote Statistik');
 define('_admin_nc', 'Newskommentare');
 define('_admin_reg_head', 'Registrierungspflicht');
 define('_config_shoutarchiv', 'Shoutbox: Archiv');
@@ -1968,7 +1966,6 @@ define('_error_buddy_self', 'Du kannst dich nicht selbst als Buddy eintragen!');
 define('_error_buddy_already_in', 'Der User steht schon in deiner Buddyliste!');
 define('_error_msg_self', 'Du kannst dir nicht selber eine Nachricht schreiben!');
 define('_error_back', 'zur&uuml;ck');
-define('_user_dont_exist', 'Der von dir angegebene User existiert nicht!');
 define('_error_fwd', 'weiter');
 define('_error_wrong_permissions', 'Du hast nicht die erforderlichen Rechte um diese Aktion durchzuf&uuml;hren!');
 define('_error_flood_post', 'Du kannst nur alle [sek] Sekunden einen neuen Eintrag schreiben!');
@@ -1986,7 +1983,6 @@ define('_index_headtitle', '[clanname]');
 define('_site_sponsor', 'Sponsoren');
 define('_site_user', 'User');
 define('_site_online', 'Besucher online');
-define('_site_gametiger', 'Gametiger');
 define('_site_member', 'Member');
 define('_site_serverlist', 'Serverliste');
 define('_site_rankings', 'Rankings');
@@ -2026,7 +2022,6 @@ define('_rankings', 'Rankings');
 define('_gallery', 'Galerie');
 define('_news', 'News');
 define('_newsarchiv', 'Newsarchiv');
-define('_gametiger', 'Gametiger');
 define('_serverliste', 'Serverliste');
 define('_banned', 'Bannliste');
 define('_links', 'Links');

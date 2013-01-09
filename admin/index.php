@@ -31,37 +31,35 @@ else
     {
         ## XML Auslesen ##
         $XMLTag = 'admin_'.str_ireplace('.xml', '', $file);
-        if(xml::openXMLfile($XMLTag,"admin/menu/".$file))
+        xml::openXMLfile($XMLTag,"admin/menu/".$file);
+        $settings = array();
+        $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
+        $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
+        $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
+        $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
+        $settings['file_name'] = str_replace('.xml', '', $file);
+        $settings['file_name_php'] = str_replace('.xml', '.php', $file);
+
+        if(file_exists(basePath."/admin/menu/".$settings['file_name_php']))
         {
-            $settings = array();
-            $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
-            $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
-            $settings['Only_Admin'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Admin'));
-            $settings['Only_Root'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Root'));
-            $settings['file_name'] = str_replace('.xml', '', $file);
-            $settings['file_name_php'] = str_replace('.xml', '.php', $file);
+            ## Menu ##
+            eval("\$link = _config_".$settings['file_name'].";");
 
-            if(file_exists(basePath."/admin/menu/".$settings['file_name_php']))
+            if($settings['Rights'] != 'done')
+                $permission = permission($settings['Rights']);
+            else
+                $permission = false;
+
+            foreach($picformat AS $end)
             {
-                ## Menu ##
-                @eval("\$link = _config_".$settings['file_name'].";");
-
-                if($settings['Rights'] != 'done')
-                    $permission = permission($settings['Rights']);
-                else
-                    $permission = false;
-
-                foreach($picformat AS $end)
-                {
-                    if(file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
-                        break;
-                }
-
-                if(!empty($settings['Typ']) && $permission && !$settings['Only_Admin'] && !$settings['Only_Root'] or ($chkMe == 4 && $settings['Only_Admin']) && !$settings['Only_Root'] or ($settings['Only_Root'] && $userid == $rootAdmin))
-                    $amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $settings['file_name'], "end" => $end));
-
-                unset($settings,$XMLTag);
+                if(file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
+                    break;
             }
+
+            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && $userid == $rootAdmin))
+                $amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $settings['file_name'], "end" => $end));
+
+            unset($settings,$XMLTag,$link,$permission);
         }
     }
 
@@ -105,11 +103,11 @@ else
         {
             unset($settings); $settings = array();
             $XMLTag = 'admin_'.((string)$_GET['admin']);
-            $settings['Only_Admin'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Admin'));
-            $settings['Only_Root'] = ((bool)xml::getXMLvalue($XMLTag, 'Only_Root'));
+            $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
+            $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
 
-            if($permission && !$settings['Only_Admin'] && !$settings['Only_Root'] or ($chkMe == 4 && $settings['Only_Admin']) && !$settings['Only_Root'] or ($settings['Only_Root'] && $userid == $rootAdmin))
+            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && $userid == $rootAdmin))
                 require_once(basePath."/admin/menu/".$inc_file);
             else
                 $show = error(_error_wrong_permissions, 1);

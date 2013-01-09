@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._news_admin_head;
     if(permission("news"))
@@ -19,24 +19,24 @@ if(_adminMenu != 'true')
                                             "what" => re($getk['kategorie'])));
         }
         $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
-				      	                                    "month" => dropdown("month",date("m",time())),
-                                      	            "year" => dropdown("year",date("Y",time()))));
+                                                              "month" => dropdown("month",date("m",time())),
+                                                      "year" => dropdown("year",date("Y",time()))));
 
         $dropdown_time = show(_dropdown_time, array("hour" => dropdown("hour",date("H",time())),
-                                        	          "minute" => dropdown("minute",date("i",time())),
+                                                      "minute" => dropdown("minute",date("i",time())),
                                                     "uhr" => _uhr));
-  
+
         $timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
-																												"day" => dropdown("day",date("d",time())),
-																												"month" => dropdown("month",date("m",time())),
-																												"year" => dropdown("year",date("Y",time()))));
-                        
-				$timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
-																												"hour" => dropdown("hour",date("H",time())),
-																												"minute" => dropdown("minute",date("i",time())),
-																												"uhr" => _uhr));
-				
-				$show = show($dir."/news_form", array("head" => _admin_news_head,
+                                                                                                                "day" => dropdown("day",date("d",time())),
+                                                                                                                "month" => dropdown("month",date("m",time())),
+                                                                                                                "year" => dropdown("year",date("Y",time()))));
+
+                $timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
+                                                                                                                "hour" => dropdown("hour",date("H",time())),
+                                                                                                                "minute" => dropdown("minute",date("i",time())),
+                                                                                                                "uhr" => _uhr));
+
+                $show = show($dir."/news_form", array("head" => _admin_news_head,
                                               "nautor" => _autor,
                                               "autor" => autor($userid),
                                               "nkat" => _news_admin_kat,
@@ -59,26 +59,25 @@ if(_adminMenu != 'true')
                                               "sticky" => "",
                                               "getsticky" => _news_get_sticky,
                                               "button" =>  _button_value_add,
-                                              "lang" => $language,
                                               "nklapptitel" => _news_admin_klapptitel,
                                               "nmore" => _news_admin_more,
                                               "linkname" => _linkname,
-						  					                      "interna" => _news_admin_intern,
-							  				                      "intern" => "",
+                                                                    "interna" => _news_admin_intern,
+                                                                    "intern" => "",
                                               "till" => _news_sticky_till,
                                               "dropdown_time" => $dropdown_time,
                                               "dropdown_date" => $dropdown_date,
-																							"gettimeshift" => _news_get_timeshift,  	
-																							"from" => _news_timeshift_from,
-																							"timeshift_date" => $timeshift_date,
+                                                                                            "gettimeshift" => _news_get_timeshift,
+                                                                                            "from" => _news_timeshift_from,
+                                                                                            "timeshift_date" => $timeshift_date,
                                               "timeshift_time" => $timeshift_time,
-																							"timeshift" => "",	 
+                                                                                            "timeshift" => "",
                                               "nurl" => _url));
       } elseif($_GET['do'] == "insert") {
-  	    if(empty($_POST['titel']) || empty($_POST['newstext']))
-		    {
-		      if(empty($_POST['titel'])) $error = _empty_news_title;
-		      elseif(empty($_POST['newstext'])) $error = _empty_news;
+          if(empty($_POST['titel']) || empty($_POST['newstext']))
+            {
+              if(empty($_POST['titel'])) $error = _empty_news_title;
+              elseif(empty($_POST['newstext'])) $error = _empty_news;
 
           $qryk = db("SELECT * FROM ".$db['newskat']."");
           while($getk = _fetch($qryk))
@@ -91,37 +90,36 @@ if(_adminMenu != 'true')
                                               "what" => re($getk['kategorie'])));
           }
 
-  		    $error = show("errors/errortable", array("error" => $error));
-	  	    if($_POST['intern']) $int = "checked=\"checked\"";
+              $error = show("errors/errortable", array("error" => $error));
+              if($_POST['intern']) $int = "checked=\"checked\"";
           if($_POST['sticky']) $sticky = "checked=\"checked\"";
-					if($_POST['timeshift']) $timeshift = "checked=\"checked\"";
+                    if($_POST['timeshift']) $timeshift = "checked=\"checked\"";
 
 
           $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",$_POST['t']),
-				        	                                    "month" => dropdown("month",$_POST['m']),
-                                        	            "year" => dropdown("year",$_POST['j'])));
+                                                                "month" => dropdown("month",$_POST['m']),
+                                                        "year" => dropdown("year",$_POST['j'])));
 
           $dropdown_time = show(_dropdown_time, array("hour" => dropdown("hour",$_POST['h']),
-                                          	          "minute" => dropdown("minute",$_POST['min']),
+                                                        "minute" => dropdown("minute",$_POST['min']),
                                                       "uhr" => _uhr));
 
-					$timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
-																													"day" => dropdown("day",$_POST['t_ts']),
-																													"month" => dropdown("month",$_POST['m_ts']),
-																													"year" => dropdown("year",$_POST['j_ts'])));
-													
-					$timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
-																													"hour" => dropdown("hour",$_POST['h_ts']),
-																													"minute" => dropdown("minute",$_POST['min_ts']),
-																													"uhr" => _uhr));
-					
-					$show = show($dir."/news_form", array("head" => _admin_news_head,
+                    $timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
+                                                                                                                    "day" => dropdown("day",$_POST['t_ts']),
+                                                                                                                    "month" => dropdown("month",$_POST['m_ts']),
+                                                                                                                    "year" => dropdown("year",$_POST['j_ts'])));
+
+                    $timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
+                                                                                                                    "hour" => dropdown("hour",$_POST['h_ts']),
+                                                                                                                    "minute" => dropdown("minute",$_POST['min_ts']),
+                                                                                                                    "uhr" => _uhr));
+
+                    $show = show($dir."/news_form", array("head" => _admin_news_head,
                                                 "nautor" => _autor,
                                                 "autor" => autor($userid),
                                                 "nkat" => _news_admin_kat,
                                                 "kat" => $kat,
                                                 "preview" => _preview,
-                                                "lang" => $language,
                                                 "do" => "insert",
                                                 "ntitel" => _titel,
                                                 "titel" => re($_POST['titel']),
@@ -140,35 +138,35 @@ if(_adminMenu != 'true')
                                                 "nklapptitel" => _news_admin_klapptitel,
                                                 "nmore" => _news_admin_more,
                                                 "linkname" => _linkname,
-				  							                        "intern" => $int,
+                                                                      "intern" => $int,
                                                 "sticky" => $sticky,
                                                 "getsticky" => _news_get_sticky,
                                                 "till" => _news_sticky_till,
                                                 "dropdown_date" => $dropdown_date,
                                                 "dropdown_time" => $dropdown_time,
-										  	                        "interna" => _news_admin_intern,
-																								"timeshift_date" => $timeshift_date,
-                                              	"timeshift_time" => $timeshift_time,
-																								"timeshift" => $timeshift,
-																								"gettimeshift" => _news_get_timeshift,  	
-																							  "from" => _news_timeshift_from,
+                                                                      "interna" => _news_admin_intern,
+                                                                                                "timeshift_date" => $timeshift_date,
+                                                  "timeshift_time" => $timeshift_time,
+                                                                                                "timeshift" => $timeshift,
+                                                                                                "gettimeshift" => _news_get_timeshift,
+                                                                                              "from" => _news_timeshift_from,
                                                 "nurl" => _url));
-	      } else {
+          } else {
           if($_POST['sticky']) $stickytime = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-					if($_POST['timeshift']){
-						$timeshifttime = mktime($_POST['h_ts'],$_POST['min_ts'],0,$_POST['m_ts'],$_POST['t_ts'],$_POST['j_ts']);
-						$timeshift = "`timeshift` = '1',";
-						$public = "`public` = '1',";
-						$datum = "`datum` = '".((int)$timeshifttime)."',";
-					} else {
-					  $timeshift = "";
-						$public = '';
-						$datum = '';
-					}
+                    if($_POST['timeshift']){
+                        $timeshifttime = mktime($_POST['h_ts'],$_POST['min_ts'],0,$_POST['m_ts'],$_POST['t_ts'],$_POST['j_ts']);
+                        $timeshift = "`timeshift` = '1',";
+                        $public = "`public` = '1',";
+                        $datum = "`datum` = '".((int)$timeshifttime)."',";
+                    } else {
+                      $timeshift = "";
+                        $public = '';
+                        $datum = '';
+                    }
 
-    
-				$qry = db("INSERT INTO ".$db['news']."
+
+                $qry = db("INSERT INTO ".$db['news']."
                      SET `autor`      = '".((int)$userid)."',
                          `kat`        = '".((int)$_POST['kat'])."',
                          `titel`      = '".up($_POST['titel'])."',
@@ -183,9 +181,9 @@ if(_adminMenu != 'true')
                          `url3`       = '".links($_POST['url3'])."',
                          `intern`     = '".((int)$_POST['intern'])."',
                          ".$timeshift."
-												 ".$public."
-												 ".$datum."
-												 `sticky`     = '".((int)$stickytime)."'");
+                                                 ".$public."
+                                                 ".$datum."
+                                                 `sticky`     = '".((int)$stickytime)."'");
 
           $show = info(_news_sended, "?admin=newsadmin");
         }
@@ -207,52 +205,52 @@ if(_adminMenu != 'true')
         $do = show(_news_edit_link, array("id" => $_GET['id']));
 
         if($get['intern'] == 1) $int = "checked=\"checked\"";
-				if($get['timeshift'] == 1) $timeshift = "checked=\"checked\"";
+                if($get['timeshift'] == 1) $timeshift = "checked=\"checked\"";
         if($get['sticky'] != 0)
         {
           $sticky = 'checked="checked"';
           $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",$get['sticky'])),
-				        	                                    "month" => dropdown("month",date("m",$get['sticky'])),
-                                        	            "year" => dropdown("year",date("Y",$get['sticky']))));
+                                                                "month" => dropdown("month",date("m",$get['sticky'])),
+                                                        "year" => dropdown("year",date("Y",$get['sticky']))));
 
           $dropdown_time = show(_dropdown_time, array("hour" => dropdown("hour",date("H",$get['sticky'])),
-                                          	          "minute" => dropdown("minute",date("i",$get['sticky'])),
+                                                        "minute" => dropdown("minute",date("i",$get['sticky'])),
                                                       "uhr" => _uhr));
         } else {
           $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
-				        	                                    "month" => dropdown("month",date("m",time())),
-                                        	            "year" => dropdown("year",date("Y",time()))));
+                                                                "month" => dropdown("month",date("m",time())),
+                                                        "year" => dropdown("year",date("Y",time()))));
 
           $dropdown_time = show(_dropdown_time, array("hour" => dropdown("hour",date("H",time())),
-                                          	          "minute" => dropdown("minute",date("i",time())),
+                                                        "minute" => dropdown("minute",date("i",time())),
                                                       "uhr" => _uhr));
         }
 
-				if($get['timeshift'] != 0)
+                if($get['timeshift'] != 0)
         {
           $timeshift = 'checked="checked"';
-					$timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
-																													"day" => dropdown("day",date("d",$get['datum'])),
-																													"month" => dropdown("month",date("m",$get['datum'])),
-																													"year" => dropdown("year",date("Y",$get['datum']))));
-													
-					$timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
-																													"hour" => dropdown("hour",date("H",$get['datum'])),
-																													"minute" => dropdown("minute",date("i",$get['datum'])),
-																													"uhr" => _uhr));
-				} else {
+                    $timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
+                                                                                                                    "day" => dropdown("day",date("d",$get['datum'])),
+                                                                                                                    "month" => dropdown("month",date("m",$get['datum'])),
+                                                                                                                    "year" => dropdown("year",date("Y",$get['datum']))));
+
+                    $timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
+                                                                                                                    "hour" => dropdown("hour",date("H",$get['datum'])),
+                                                                                                                    "minute" => dropdown("minute",date("i",$get['datum'])),
+                                                                                                                    "uhr" => _uhr));
+                } else {
           $timeshift = '';
-					$timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
-																													"day" => dropdown("day",date("d",time())),
-																													"month" => dropdown("month",date("m",time())),
-																													"year" => dropdown("year",date("Y",time()))));
-													
-					$timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
-																													"hour" => dropdown("hour",date("H",time())),
-																													"minute" => dropdown("minute",date("i",time())),
-																													"uhr" => _uhr));
-				}
-				
+                    $timeshift_date = show(_dropdown_date_ts, array("nr" => "ts",
+                                                                                                                    "day" => dropdown("day",date("d",time())),
+                                                                                                                    "month" => dropdown("month",date("m",time())),
+                                                                                                                    "year" => dropdown("year",date("Y",time()))));
+
+                    $timeshift_time = show(_dropdown_time_ts, array("nr" => "ts",
+                                                                                                                    "hour" => dropdown("hour",date("H",time())),
+                                                                                                                    "minute" => dropdown("minute",date("i",time())),
+                                                                                                                    "uhr" => _uhr));
+                }
+
 
         $show = show($dir."/news_form", array("head" => _admin_news_edit_head,
                                               "nautor" => _autor,
@@ -274,45 +272,44 @@ if(_adminMenu != 'true')
                                               "klapplink" => re($get['klapplink']),
                                               "dropdown_date" => $dropdown_date,
                                               "dropdown_time" => $dropdown_time,
-																							"timeshift_date" => $timeshift_date,
+                                                                                            "timeshift_date" => $timeshift_date,
                                               "timeshift_time" => $timeshift_time,
-																							"timeshift" => $timeshift,
+                                                                                            "timeshift" => $timeshift,
                                               "ntext" => _eintrag,
                                               "error" => "",
                                               "button" => _button_value_edit,
-                                              "lang" => $language,
                                               "nklapptitel" => _news_admin_klapptitel,
                                               "nmore" => _news_admin_more,
                                               "linkname" => _linkname,
-										  	 										  "intern" => $int,
+                                                                                         "intern" => $int,
                                               "sticky" => $sticky,
                                               "getsticky" => _news_get_sticky,
                                               "till" => _news_sticky_till,
-																							"gettimeshift" => _news_get_timeshift,  	
-																							"from" => _news_timeshift_from,
+                                                                                            "gettimeshift" => _news_get_timeshift,
+                                                                                            "from" => _news_timeshift_from,
                                               "day" => $day,
                                               "month" => $month,
                                               "year" => $year,
                                               "hour" => $hour,
                                               "minute" => $minute,
-											                        "interna" => _news_admin_intern,
+                                                                    "interna" => _news_admin_intern,
                                               "nurl" => _url));
       } elseif($_GET['do'] == "editnews") {
         if($_POST)
         {
           if($_POST['sticky']) $stickytime = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-					if($_POST['timeshift']){
-						$timeshifttime = mktime($_POST['h_ts'],$_POST['min_ts'],0,$_POST['m_ts'],$_POST['t_ts'],$_POST['j_ts']);
-						$timeshift = "`timeshift` = '1',";
-						$public = "`public` = '1',";
-						$datum = "`datum` = '".((int)$timeshifttime)."',";
-					} else {
-					  $timeshift = "";
-						$public = '';
-						$datum = '';
-					}
-					
+                    if($_POST['timeshift']){
+                        $timeshifttime = mktime($_POST['h_ts'],$_POST['min_ts'],0,$_POST['m_ts'],$_POST['t_ts'],$_POST['j_ts']);
+                        $timeshift = "`timeshift` = '1',";
+                        $public = "`public` = '1',";
+                        $datum = "`datum` = '".((int)$timeshifttime)."',";
+                    } else {
+                      $timeshift = "";
+                        $public = '';
+                        $datum = '';
+                    }
+
           $qry = db("UPDATE ".$db['news']."
                      SET `kat`        = '".((int)$_POST['kat'])."',
                          `titel`      = '".up($_POST['titel'])."',
@@ -324,11 +321,11 @@ if(_adminMenu != 'true')
                          `link2`      = '".up($_POST['link2'])."',
                          `url2`       = '".links($_POST['url2'])."',
                          `link3`      = '".up($_POST['link3'])."',
-          					     `intern`     = '".((int)$_POST['intern'])."',
+                                   `intern`     = '".((int)$_POST['intern'])."',
                          `url3`       = '".links($_POST['url3'])."',
-												 ".$timeshift."
-												 ".$public."
-												 ".$datum."
+                                                 ".$timeshift."
+                                                 ".$public."
+                                                 ".$datum."
                          `sticky`     = '".((int)$stickytime)."'
                      WHERE id = '".intval($_GET['id'])."'");
         }
@@ -338,7 +335,7 @@ if(_adminMenu != 'true')
         {
           $upd = db("UPDATE ".$db['news']."
                      SET `public` = '1',
-            					 	 `datum`  = '".time()."'
+                                      `datum`  = '".time()."'
                      WHERE id = '".intval($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
           $upd = db("UPDATE ".$db['news']."
@@ -357,7 +354,7 @@ if(_adminMenu != 'true')
       } else {
         if(isset($_GET['page'])) $page = $_GET['page'];
         else $page = 1;
-  
+
         $entrys = cnt($db['news']);
         $qry = db("SELECT * FROM ".$db['news']." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*$maxadminnews.",".$maxadminnews."");
         while($get = _fetch($qry))
@@ -371,28 +368,28 @@ if(_adminMenu != 'true')
                                                             "del" => convSpace(_confirm_del_news)));
           $titel = show(_news_show_link, array("titel" => re(cut($get['titel'],$lnewsadmin)),
                                                "id" => $get['id']));
-  
+
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-  
+
           if($get['intern'] == "1") $intern = _votes_intern;
           else $intern = "";
           if($get['sticky'] == "0") $sticky = "";
           else $sticky = _news_sticky;
-         
-		  $public = ($get['public'] == 1)
+
+          $public = ($get['public'] == 1)
                ? '<a href="?admin=newsadmin&amp;do=public&amp;id='.$get['id'].'&amp;what=unset"><img src="../inc/images/public.gif" alt="" title="'._non_public.'" /></a>'
                : '<a href="?admin=newsadmin&amp;do=public&amp;id='.$get['id'].'&amp;what=set"><img src="../inc/images/nonpublic.gif" alt="" title="'._public.'" /></a>';
           if(empty($get['datum'])) $datum = _no_public;
-	      else $datum = date("d.m.y H:i", $get['datum'])._uhr;
-		  
-		  $show_ .= show($dir."/admin_show", array("date" => $datum,
+          else $datum = date("d.m.y H:i", $get['datum'])._uhr;
+
+          $show_ .= show($dir."/admin_show", array("date" => $datum,
                                                    "titel" => $titel,
                                                    "class" => $class,
                                                    "autor" => autor($get['autor']),
-  				  							       "intnews" => $intern,
+                                                       "intnews" => $intern,
                                                    "sticky" => $sticky,
                                                    "public" => $public,
-												   "edit" => $edit,
+                                                   "edit" => $edit,
                                                    "delete" => $delete));
         }
         $nav = nav($entrys,$maxadminnews,"?admin=newsadmin");

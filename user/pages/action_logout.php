@@ -8,19 +8,24 @@
 ## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
-	exit();
-	
-#######################
-## User Logout Seite ##
-#######################
-$where = _site_user_logout;
+    exit();
 
-## Ereignis in den Adminlog schreiben ##
-wire_ipcheck("logout(".$userid.")");
+if (_version < 1.0) //Mindest Version pruefen
+    $index = _version_for_page_outofdate;
+else
+{
+    #######################
+    ## User Logout Seite ##
+    #######################
+    $where = _site_user_logout;
 
-## User Abmelden ##
-logout(); //Find in BBCode
+    ## Ereignis in den Adminlog schreiben ##
+    wire_ipcheck("logout(".$userid.")");
 
-## Zur News Seite weiterleiten ##
-header("Location: ../news/");
+    ## User Abmelden ##
+    logout(); //Find in BBCode
+
+    ## Zur News Seite weiterleiten ##
+    header("Location: ../news/");
+}
 ?>

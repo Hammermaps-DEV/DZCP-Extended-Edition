@@ -46,12 +46,8 @@ $mailfrom = $settings["mailfrom"];
 $double_post = $settings["double_post"];
 $forum_vote = $settings["forum_vote"];
 $gb_activ = $settings["gb_activ"];
-$gametiger_game = $settings["gametiger"];
 $ts_ip = $settings["ts_ip"];
 $ts_port = $settings["ts_port"];
-$balken_cw = $settings["balken_cw"];
-$balken_vote = $settings["balken_vote"];
-$balken_vote_menu = $settings["balken_vote_menu"];
 $i_domain = $settings["i_domain"];
 $i_autor = $settings["i_autor"];
 $counter_start = $settings["counter_start"];
@@ -311,13 +307,8 @@ function languages()
 }
 
 //-> Userspezifiesche Dinge
-$u_b1 = ""; $u_b2 = "";
 if(isset($userid) && $ajaxJob != true && $userid != false)
-{
     db("UPDATE ".$db['userstats']." SET `hits` = hits+1, `lastvisit` = '".((int)$_SESSION['lastvisit'])."'  WHERE user = ".$userid);
-    $u_b1 = "<!--";
-    $u_b2 = "-->";
-}
 
 //-> PHP-Code farbig anzeigen
 function highlight_text($txt)
@@ -858,6 +849,8 @@ function paycheck($tocheck)
 //-> Prueft, ob User eingeloggt ist und wenn ja welches Level er besitzt
 function checkme()
 {
+    //banned
+
     global $db,$userid;
 
     if(!$userid)
@@ -1319,20 +1312,52 @@ function fintern($id)
     return false;
 }
 
-//-> einzelne Userdaten ermitteln
+/**
+ * Funktion um User-Daten aus der Datenbank zu ermitteln
+ * Input: UserID , String/Array
+ *
+ * @return mixed/array
+ **/
 function data($tid, $what)
 {
     global $db;
-    $get = db("SELECT ".$what." FROM ".$db['users']." WHERE id = '".intval($tid)."'",false,true);
-    return stripslashes($get[$what]);
+    if(is_array($what))
+    {
+        $sql='';
+        foreach($what as $qy)
+        { $sql .= $qy.", "; }
+        $sql = substr($sql, 0, -2);
+        return db("SELECT ".$sql." FROM `".$db['users']."` WHERE id = '".intval($tid)."'",false,true);
+    }
+    else
+    {
+        $get = db("SELECT ".$what." FROM `".$db['users']."` WHERE id = '".intval($tid)."'",false,true);
+        return $get[$what];
+    }
 }
 
-//-> einzelne Userstatistiken ermitteln
+/**
+ * Funktion um User-Statistiken aus der Datenbank zu ermitteln
+ * Input: UserID , String/Array
+ *
+ * @return mixed/array
+ **/
 function userstats($tid, $what)
 {
     global $db;
-    $get = db("SELECT ".$what." FROM ".$db['userstats']." WHERE user = '".intval($tid)."'",false,true);
-    return $get[$what];
+    if(is_array($what))
+    {
+        $sql='';
+        foreach($what as $qy)
+        { $sql .= $qy.", "; }
+        $sql = substr($sql, 0, -2);
+        return db("SELECT ".$sql." FROM `".$db['userstats']."` WHERE user = '".intval($tid)."'",false,true);
+    }
+    else
+    {
+        $get = db("SELECT ".$what." FROM `".$db['userstats']."` WHERE user = '".intval($tid)."'",false,true);
+        return $get[$what];
+    }
 }
 
 //- Funktion zum versenden von Emails
@@ -1350,7 +1375,6 @@ function sendMail($mailto,$subject,$content)
     return $mail->Send();
 }
 
-check_msg_email();
 function check_msg_email()
 {
     global $db,$clanname,$httphost;
@@ -1366,6 +1390,7 @@ function check_msg_email()
         }
     }
 }
+check_msg_email();
 
 function perm_sendnews($uID)
 {
@@ -1678,9 +1703,9 @@ function onlinecheck($tid)
 {
     global $db,$useronline;
     if(db("SELECT id FROM ".$db['users']." WHERE id = '".intval($tid)."' AND time+'".$useronline."'>'".time()."' AND online = 1",true))
-        return '<img src="../inc/images/online.gif" alt="" class="icon" />';
+        return '<img src="../inc/images/online.png" alt="" class="icon" />';
     else
-        return '<img src="../inc/images/offline.gif" alt="" class="icon" />';
+        return '<img src="../inc/images/offline.png" alt="" class="icon" />';
 }
 
 //Funktion fuer die Sprachdefinierung der Profilfelder
@@ -1884,9 +1909,12 @@ function hoveruserpic($userid, $width=170,$height=210)
 // Adminberechtigungen ueberpruefen
 function admin_perms($userid)
 {
-    global $db,$chkMe;
+    global $db,$chkMe,$rootAdmin;
 
     if(empty($userid))
+        return false;
+
+    if($chkMe == "unlogged" || $chkMe == "banned")
         return false;
 
     // no need for these admin areas
@@ -1896,12 +1924,30 @@ function admin_perms($userid)
     $c = db("SELECT * FROM ".$db['permissions']." WHERE user = '".intval($userid)."'",false,true);
     if(!empty($c))
     {
+        $admin_settings = array();
+        $files = get_files(basePath.'/admin/menu/',false,true,array('xml'));
+        foreach($files AS $file)
+        {
+            ## XML Auslesen ##
+            $XMLTag = 'admin_'.str_ireplace('.xml', '', $file);
+            if(xml::openXMLfile($XMLTag,"admin/menu/".$file))
+                $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
+        }
+
         foreach($c AS $v => $k)
         {
             if($v != 'id' && $v != 'user' && $v != 'pos' && !in_array($v, $e))
             {
                 if($k == 1)
-                    return true;
+                {
+                    $admin_config = (array_key_exists($v, $admin_settings) ? $admin_settings[$v] : array('Only_Root' => false, 'Only_Admin' => false));
+                    if(!$admin_config['Only_Root'] && !$admin_config['Only_Admin'])
+                        return true;
+                    else if($admin_config['Only_Root'] && $userid == $rootAdmin)
+                        return true;
+                    else if($admin_config['Only_Admin'] && $chkMe == 4)
+                        return true;
+                }
             }
         }
     }
@@ -2096,8 +2142,8 @@ if(file_exists(basePath.'/inc/menu-functions/navi.php'))
 //-> Ausgabe des Indextemplates
 function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
 {
-    global $db,$userid,$userip,$tmpdir,$chkMe;
-    global $u_b1,$u_b2,$designpath,$language,$cp_color;
+    global $db,$userid,$userip,$tmpdir,$chkMe,$AjaxLoad_blacklist;
+    global $designpath,$language,$cp_color,$rootAdmin;
 
     // installer vorhanden?
     if(file_exists(basePath."/_installer") && $chkMe == 4)
@@ -2196,10 +2242,59 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
             else
             {
                 if(@file_exists(basePath.'/inc/menu-functions/'.$phold.'.php'))
-                    include_once(basePath.'/inc/menu-functions/'.$phold.'.php');
+                {
+                    ## DZCP-Extended Edition START ##
+                    $xml_config=false;
+                    if(@file_exists(basePath.'/inc/menu-functions/'.$phold.'.xml')) //XML Extension
+                    {
+                        // Load XML Config file
+                        $MenuConfig = array();
+                        xml::openXMLfile('menu_'.$phold,'inc/menu-functions/'.$phold.'.xml');
+                        $MenuConfig['AjaxLoad'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad'));
+                        $MenuConfig['Only_Users'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Users'));
+                        $MenuConfig['Only_Admin'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Admin'));
+                        $MenuConfig['Only_Root'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Root'));
+                        $MenuConfig['AjaxLoad_Img'] = xml::getXMLvalue('menu_'.$phold, 'AjaxLoad_Img');
+                        $MenuConfig['AjaxLoad_Img_Use'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad_Img_Use'));
+                        $xml_config=true;
+                    }
 
-                if(function_exists($phold))
+                    if($xml_config)
+                    {
+                        $arr[$phold] = '';
+                        if(!$MenuConfig['AjaxLoad'] || array_key_exists($phold, $AjaxLoad_blacklist) || !AjaxLoad)
+                        {
+                            if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
+                            (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  $chkMe != "unlogged" && $chkMe != "banned") ||
+                            (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
+                            ($MenuConfig['Only_Root'] && $chkMe == 4 && $userid == $rootAdmin))
+                            {
+                                include_once(basePath.'/inc/menu-functions/'.$phold.'.php');
+                                $arr[$phold] = call_user_func($phold);
+                            }
+                        }
+                        else
+                        {
+                            if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
+                            (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  $chkMe != "unlogged" && $chkMe != "banned") ||
+                            (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
+                            ($MenuConfig['Only_Root'] && $chkMe == 4 && $userid == $rootAdmin))
+                            {
+                                $menu_index_hash = md5_file(basePath.'/inc/menu-functions/'.$phold.'.php');
+                                $Ajax_img = ($MenuConfig['AjaxLoad_Img_Use'] ? "<div style=\"width:100%;padding:10px 0;text-align:center\"><img src=\"../inc/images/".$MenuConfig['AjaxLoad_Img']."\" alt=\"\" /></div>" : "");
+                                $arr[$phold] = "<div id=\"menu_".$phold."\">".$Ajax_img."<script language=\"javascript\" type=\"text/javascript\">DZCP.initDynLoader('menu_".$phold."','menu','&hash=".$menu_index_hash."');</script></div>";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        include_once(basePath.'/inc/menu-functions/'.$phold.'.php');
+                        $arr[$phold] = call_user_func($phold);
+                    }
+                }
+                else if(function_exists($phold))
                     $arr[$phold] = call_user_func($phold);
+                ## DZCP-Extended Edition END ##
             }
         }
 

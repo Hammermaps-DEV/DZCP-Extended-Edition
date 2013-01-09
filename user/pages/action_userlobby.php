@@ -14,11 +14,12 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    #####################
-    ## Userlobby Seite ##
-    #####################
-      $where = _site_user_lobby;
-      if($chkMe == "unlogged")
+    ###############
+    ## Userlobby ##
+    ###############
+    $where = _site_user_lobby;
+
+    if($chkMe == "unlogged")
         $index = error(_error_have_to_be_logged, 1);
     else
     {
@@ -30,66 +31,61 @@ else
         ##################################
         ## Neue Foreneintraege anzeigen ##
         ##################################
-           $qrykat = db("SELECT s1.id,s2.kattopic,s1.intern,s2.id FROM ".$db['f_kats']." AS s1 LEFT JOIN ".$db['f_skats']." AS s2 ON s1.id = s2.sid ".((!permission("intforum")) ? "AND s1.intern = '0'" : "")." ORDER BY s1.kid,s2.kattopic"); $forumposts = '';
-           if(_rows($qrykat) >= 1)
-           {
+        $qrykat = db("SELECT s1.id,s2.kattopic,s1.intern,s2.id FROM ".$db['f_kats']." AS s1 LEFT JOIN ".$db['f_skats']." AS s2 ON s1.id = s2.sid ".((!permission("intforum")) ? "AND s1.intern = '0'" : "")." ORDER BY s1.kid,s2.kattopic"); $forumposts = '';
+        if(_rows($qrykat) >= 1)
+        {
             while($getkat = _fetch($qrykat))
             {
-                  if(fintern($getkat['id']))
-                  {
-                    $qrytopic = db("SELECT lp,id,topic,first,sticky FROM ".$db['f_threads']."
-                                       WHERE kid = '".$getkat['id']."'
-                                       AND lp > ".$get['lastvisit']."
-                                    ORDER BY lp DESC
-                                    LIMIT 150");
-
+                if(fintern($getkat['id']))
+                {
+                    $qrytopic = db("SELECT lp,id,topic,first,sticky FROM ".$db['f_threads']." WHERE kid = '".$getkat['id']."' AND lp > ".$get['lastvisit']." ORDER BY lp DESC LIMIT 150");
                     $forumposts_show = '';
                     if(_rows($qrytopic) >= 1)
                     {
-                           while($gettopic = _fetch($qrytopic))
+                        while($gettopic = _fetch($qrytopic))
                         {
                             $lp = cnt($db['f_posts'], " WHERE sid = '".$gettopic['id']."'");
-                              switch(($count=cnt($db['f_posts'], " WHERE date > ".$get['lastvisit']." AND sid = '".$gettopic['id']."'")))
-                              {
-                                  case 0:
-                                      $pagenr = 1;
-                                      $post = '';
-                                  break;
-                                  case 1:
-                                      $pagenr = ceil($lp/$maxfposts);
-                                      $post = _new_post_1;
-                                  break;
-                                  default:
-                                      $pagenr = ceil($lp/$maxfposts);
-                                      $post = _new_post_2;
-                                  break;
-                              }
+                            switch(($count=cnt($db['f_posts'], " WHERE date > ".$get['lastvisit']." AND sid = '".$gettopic['id']."'")))
+                            {
+                                case 0:
+                                    $pagenr = 1;
+                                    $post = '';
+                                break;
+                                case 1:
+                                    $pagenr = ceil($lp/$maxfposts);
+                                    $post = _new_post_1;
+                                break;
+                                default:
+                                    $pagenr = ceil($lp/$maxfposts);
+                                    $post = _new_post_2;
+                                break;
+                            }
 
-                              if(check_is_new($gettopic['lp']))
-                              {
+                            if(check_is_new($gettopic['lp']))
+                            {
                                 $intern = ($getkat['intern'] ? '<span class="fontWichtig">'._internal.':</span>&nbsp;&nbsp;&nbsp;' : '');
                                 $wichtig = ($gettopic['sticky'] ? '<span class="fontWichtig">'._sticky.':</span> ' : '');
                                 $date = (date("d.m.")==date("d.m.",$gettopic['lp'])) ? '['.date("H:i",$gettopic['lp']).']' : date("d.m.",$gettopic['lp']).' ['.date("H:i",$gettopic['lp']).']';
 
                                 $can_erase = true;
                                 $forumposts_show .= '&nbsp;&nbsp;'.$date.show(_user_new_forum, array("cnt" => $count,
-                                                                                "tid" => $gettopic['id'],
-                                                                                "thread" => re($gettopic['topic']),
-                                                                                "intern" => $intern,
-                                                                                "wichtig" => $wichtig,
-                                                                                "post" => $post,
-                                                                                "page" => $pagenr,
-                                                                                "nthread" => ($gettopic['first'] ? _no_new_thread : _new_thread),
-                                                                                "lp" => $lp +1));
+                                                                                                     "tid" => $gettopic['id'],
+                                                                                                     "thread" => re($gettopic['topic']),
+                                                                                                     "intern" => $intern,
+                                                                                                     "wichtig" => $wichtig,
+                                                                                                     "post" => $post,
+                                                                                                     "page" => $pagenr,
+                                                                                                     "nthread" => ($gettopic['first'] ? _no_new_thread : _new_thread),
+                                                                                                     "lp" => $lp +1));
                             }
                         } //while end
                     }
 
-                      if(!empty($forumposts_show))
+                    if(!empty($forumposts_show))
                         $forumposts .= '<div style="padding:4px;padding-left:0"><span class="fontBold">'.$getkat['kattopic'].'</span></div>'.$forumposts_show; //Output
-                  }
+                }
             } //while end
-           }
+        }
 
         unset($getkat,$qrykat,$qrytopic,$gettopic,$intern,$wichtig,$post,$pagenr,$lp,$forumposts_show,$count); //Unset unused vars
 
@@ -138,10 +134,10 @@ else
             $getgb = _fetch($qrygb);
             if(check_is_new($getgb['datum']))
             {
-                  $can_erase = true;
-                  $cntgb = ((!permission("gb") && $gb_activ) ? "AND public = '1'" : '');
-                  $eintrag = ((($check = cnt($db['gb'], " WHERE datum > ".$get['lastvisit']." ".$cntgb)) == 1) ? _new_eintrag_1 : _new_eintrag_2);
-                  $gb = show(_user_new_gb, array("cnt" => $check, "eintrag" => $eintrag)); //Output
+                $can_erase = true;
+                $cntgb = ((!permission("gb") && $gb_activ) ? "AND public = '1'" : '');
+                $eintrag = ((($check = cnt($db['gb'], " WHERE datum > ".$get['lastvisit']." ".$cntgb)) == 1) ? _new_eintrag_1 : _new_eintrag_2);
+                $gb = show(_user_new_gb, array("cnt" => $check, "eintrag" => $eintrag)); //Output
             }
         }
 
@@ -156,9 +152,9 @@ else
             $getmember = _fetch($qrymember);
             if(check_is_new($getmember['datum']))
             {
-                  $can_erase = true;
-                  $eintrag = ((($check = cnt($db['usergb'], " WHERE datum > ".$get['lastvisit']." AND user = '".$userid."'")) == 1) ? _new_eintrag_1 : _new_eintrag_2);
-                  $membergb = show(_user_new_membergb, array("cnt" => $check, "id" => $userid, "eintrag" => $eintrag)); //Output
+                $can_erase = true;
+                $eintrag = ((($check = cnt($db['usergb'], " WHERE datum > ".$get['lastvisit']." AND user = '".$userid."'")) == 1) ? _new_eintrag_1 : _new_eintrag_2);
+                $membergb = show(_user_new_membergb, array("cnt" => $check, "id" => $userid, "eintrag" => $eintrag)); //Output
             }
         }
 
@@ -223,13 +219,13 @@ else
         {
             while($getcheckcw = _fetch($qrycheckcw))
             {
-                  $getcwc = db("SELECT id,cw,datum FROM ".$db['cw_comments']." WHERE cw = '".$getcheckcw['id']."' ORDER BY datum DESC",false,true);
-                  if(check_is_new($getcwc['datum']))
-                  {
+                $getcwc = db("SELECT id,cw,datum FROM ".$db['cw_comments']." WHERE cw = '".$getcheckcw['id']."' ORDER BY datum DESC",false,true);
+                if(check_is_new($getcwc['datum']))
+                {
                     $can_erase = true;
                     $eintrag = ($check = cnt($db['cw_comments'], " WHERE datum > ".$get['lastvisit']." AND cw = '".$getcwc['cw']."'") == 1 ? _lobby_new_cwc_1 : _lobby_new_cwc_2);
                     $cwcom .= show(_user_new_clanwar, array("cnt" => $check, "id" => $getcwc['cw'], "eintrag" => $eintrag)); //Output
-                  }
+                }
             } //while end
         }
 
@@ -299,7 +295,7 @@ else
                 $can_erase = true;
                 $eintrag = (($check = cnt($db['rankings'], " WHERE postdate > ".$get['lastvisit']."")) == 1 ? _new_rankings_1 : _new_rankings_2);
                 $rankings = show(_user_new_rankings, array("cnt" => $check, "eintrag" => $eintrag)); //Output
-               }
+            }
         }
 
         unset($qryra,$getra,$eintrag,$check); //Unset unused vars
@@ -332,8 +328,8 @@ else
             while($getchecka = _fetch($qrychecka))
             {
                 $getartc = db("SELECT id,artikel,datum FROM ".$db['acomments']." WHERE artikel = '".$getchecka['id']."' ORDER BY datum DESC",false,true);
-                  if(check_is_new($getartc['datum']))
-                  {
+                if(check_is_new($getartc['datum']))
+                {
                     $can_erase = true;
                     $eintrag = (($check = cnt($db['acomments'], " WHERE datum > ".$get['lastvisit']." AND artikel = '".$getartc['artikel']."'")) == 1 ? _lobby_new_artc_1 : _lobby_new_artc_2);
                     $artc .= show(_user_new_artc, array("cnt" => $check, "id" => $getartc['artikel'], "eintrag" => $eintrag)); //Output
@@ -372,13 +368,13 @@ else
                 if(check_is_new($getawayn['date']) && $getchklevel['level'] >= 2)
                 {
                     $can_erase = true;
-                      $awayn .= show(_user_away_new, array("id" => $getawayn['id'], "user" => autor($getawayn['userid']), "ab" => date("d.m.y",$getawayn['start']), "wieder" => date("d.m.y",$getawayn['end']), "what" => $getawayn['titel']));
-                      $show_awayn	= true;
-                    }
+                    $awayn .= show(_user_away_new, array("id" => $getawayn['id'], "user" => autor($getawayn['userid']), "ab" => date("d.m.y",$getawayn['start']), "wieder" => date("d.m.y",$getawayn['end']), "what" => $getawayn['titel']));
+                    $show_awayn	= true;
+                }
             } //while end
 
             if($show_awayn)
-                   $away_new = show(_user_away, array("naway" => _lobby_away_new, "away" => $awayn)); //Output
+                $away_new = show(_user_away, array("naway" => _lobby_away_new, "away" => $awayn)); //Output
         }
 
         unset($qryawayn,$getchklevel,$getawayn,$awayn,$show_awayn); //Unset unused vars
@@ -416,7 +412,7 @@ else
             while($getft = _fetch($qryft))
             {
                 if(fintern($getft['kid']))
-                  {
+                {
                     $lp = cnt($db['f_posts'], " WHERE sid = '".$getft['id']."'");
                     $qryp = db("SELECT text FROM ".$db['f_posts']." WHERE kid = '".$getft['kid']."' AND sid = '".$getft['id']."' ORDER BY date DESC LIMIT 1");
                     if(_rows($qryp)) { $getp = _fetch($qryp); $text = strip_tags($getp['text']); } else $text = strip_tags($getft['t_text']);

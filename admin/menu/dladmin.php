@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._dl;
     if(!permission("downloads"))
@@ -32,7 +32,6 @@ if(_adminMenu != 'true')
                                             "ddownload" => "",
                                              "durl" => "",
                                              "oder" => _or,
-                                             "lang" => $language,
                                              "file" => $dl,
                                              "nothing" => "",
                                              "nofile" => _downloads_nofile,
@@ -52,7 +51,7 @@ if(_adminMenu != 'true')
           if(empty($_POST['download'])) $show = error(_downloads_empty_download, 1);
           elseif(empty($_POST['url']))  $show = error(_downloads_empty_url, 1);
         } else {
-          
+
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
           else                                    $dl = up($_POST['url']);
 

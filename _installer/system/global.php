@@ -34,8 +34,8 @@ define('_error', 'Fehler');
 define('_successful', 'Erfolgreich');
 define('_warn', 'Hinweis');
 define('prepare_no_ftp', 'Ihr Webserver unterst&uuml;tz eine der Funktionen <i>ftp_connect()</i>, <i>ftp_login()</i> oder <i>ftp_site()</i> nicht!
-                               Diese sind jedoch notwendig um eine automatische Rechtevergabe der Dateien durchzuf&uuml;hren. Bitte aktiviere Sie diese oder setzen Sie manuell mittels
-                               FTP-Client die notwendigen Rechte und aktualisieren Sie die Seite.');
+Diese sind jedoch notwendig um eine automatische Rechtevergabe der Dateien durchzuf&uuml;hren. Bitte aktiviere Sie diese oder setzen Sie manuell mittels
+FTP-Client die notwendigen Rechte und aktualisieren Sie die Seite.');
 define('prepare_no_ftp_connect', 'Der angegeben FTP-Host ist nicht erreichbar! Bitte &uuml;berpr&uuml;fen Sie ihre Eingaben oder setzen die Dateirechte manuell per FTP-Client.');
 define('prepare_no_ftp_login', 'Der angegeben Login-Daten wurden zur&uuml;ckgewiesen! Bitte &uuml;berpr&uuml;fen Sie ihre Eingaben oder setzen die Dateirechte manuell per FTP-Client.');
 define('prepare_files_error', 'Nicht alle notwendigen Dateirechte sind gesetzt, bitte verwenden Sie unsere "Automatische Rechtevergabe" oder setzen Sie manuell mittels FTP-Client die notwendigen Rechte und aktualisieren Sie die Seite');

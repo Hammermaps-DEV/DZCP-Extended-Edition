@@ -12,7 +12,6 @@ $get = db("SELECT i_domain,i_autor FROM ".$db['settings'],false,true);
 $show = show($dir."/form_impressum", array(
         "domain" => re($get['i_domain']),
         "bbcode" => bbcode("seitenautor"),
-        "lang" => $language,
         "postautor" => re_bbcode($get['i_autor'])));
 
 $show = show($dir."/imp", array("what" => "impressum", "value" => _button_value_edit, "show" => $show));

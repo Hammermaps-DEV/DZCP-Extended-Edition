@@ -259,7 +259,7 @@ function pholderreplace($pholder)
 */
 function show($tpl="", $array=array())
 {
-    global $tmpdir;
+    global $tmpdir,$chkMe;
 
     if(!empty($tpl) && $tpl != null)
     {
@@ -284,6 +284,9 @@ function show($tpl="", $array=array())
         }
 
         unset($pholder);
+
+        $tpl = ($chkMe == 'unlogged' ? preg_replace("|<logged_in>.*?</logged_in>|is", "", $tpl) : preg_replace("|<logged_out>.*?</logged_out>|is", "", $tpl));
+        $tpl = str_ireplace(array("<logged_in>","</logged_in>","<logged_out>","</logged_out>"), '', $tpl);
 
         if(count($array) >= 1)
         {
@@ -452,7 +455,7 @@ function sum($db, $where = "", $what)
 }
 
 /**
- * Funktion um Settings aus der Datenbank auslesen
+ * Funktion um CMS Settings aus der Datenbank auszulesen
  * Todo: Code überarbeiten, Update auf MySQLi
  *
  * @return mixed/array
@@ -473,11 +476,10 @@ function settings($what)
         $get = db("SELECT ".$what." FROM `".$db['settings']."`",false,true);
         return $get[$what];
     }
-
 }
 
 /**
- * Funktion um Config aus der Datenbank auslesen
+ * Funktion um die CMS Config aus der Datenbank auszulesen
  * Todo: Code überarbeiten, Update auf MySQLi
  *
  * @return mixed/array
@@ -700,9 +702,11 @@ class xml
 
             if(self::$xmlobj[$XMLTag]['objekt'] != false)
                 return true;
+            else
+                return false;
         }
-
-        return false;
+        else
+            return true;
     }
 
     /**
@@ -815,5 +819,13 @@ class xml
         else
             return false;
     }
+
+    /**
+     * Einen XML Boolean umwandeln
+     *
+     * @return boolean
+     */
+    public static function bool($value)
+    { return ($value == 'true' ? true : false); }
 }
 ?>

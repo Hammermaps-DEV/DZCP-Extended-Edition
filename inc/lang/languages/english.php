@@ -22,6 +22,8 @@ define('_perm_sponsors', 'Manage sponsors');
 define('_perm_profile', 'Manage Profile-Fields');
 define('_perm_clear', 'Database Cleanup');
 define('_no_comments', 'No comments');
+define('_no_pm', 'No messages');
+define('_user_dont_exist' , 'The requested user does not exist!');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
@@ -45,7 +47,7 @@ define('_navi_gsv_players_online', 'Online');
 define('_navi_gsv_on_the_game', 'Players');
 define('_navi_gsv_view_players', 'View Players');
 define('_navi_gsv_game', 'Game');
-define('_navi_gsv_no_name_available', 'no Name available');      
+define('_navi_gsv_no_name_available', 'no Name available');
 define('_navi_gsv_no_players_available', 'no Players online');
 define('_navi_gsv_password', 'Password');
 
@@ -250,14 +252,14 @@ define('_msg_sendnews_user' , '
       <input type="hidden" name="action" value="msg" />
       <input type="hidden" name="do" value="sendnewsdone" />
       <input type="hidden" name="id" value="[id]" />
-	  <input type="hidden" name="datum" value="[datum]" />
+      <input type="hidden" name="datum" value="[datum]" />
       <input id="contentSubmit" type="submit" class="submit" value="Submit" />
     </form>
   </td>
 </tr>');
 define('_msg_sendnews_done' , '
 <tr>
-  <td align="center" class="contentMainTop"><span class="fontRed">	
+  <td align="center" class="contentMainTop"><span class="fontRed">
 This news is / was made from the [user] edited!!!</span></td>
 </tr>');
 define('_send_news_done' , 'Thank you for your news!');
@@ -564,7 +566,7 @@ define('_welcome_guest' , ' <img src="../inc/images/flaggen/nocountry.gif" alt="
 define('_online_head' , 'User online');
 define('_online_whereami' , 'Area');
 define('_back' , '<a href="javascript: history.go(-1)" class="files">back</a>');
-define('_contact_text_fightus' , '	
+define('_contact_text_fightus' , '
 Someone filled out the fightus contactform!<br />
 Each clanwar admin received this message!<br /><br />
 <span class="fontBold">Team:</span> [squad]<br /><br />
@@ -1426,7 +1428,7 @@ define('_user_delete_verify' , '
 <tr>
   <td class="contentMainFirst" align="center">
     Are you sure to delete the user [user]?<br />
-    <span class="fontUnder">Every</span> activities from this user will be deleted, too!<br /><br /> 
+    <span class="fontUnder">Every</span> activities from this user will be deleted, too!<br /><br />
     <a href="?action=admin&amp;do=delete&verify=yes&amp;id=[id]">Yes, delete [user]!</a>
   </td>
 </tr>');
@@ -1584,7 +1586,7 @@ or partly or completely deleted by the author without separate announcement.
 <br /><br />
 <h2><span class="fontBold">2. Referrals and links</span></h2>
 <br />
-The author is not responsible for any contents linked or referred to from his pages - unless he has full knowledge of illegal contents and would be able to prevent the visitors of his site fromviewing those pages. 
+The author is not responsible for any contents linked or referred to from his pages - unless he has full knowledge of illegal contents and would be able to prevent the visitors of his site fromviewing those pages.
 If any damage occurs by the use of information presented there, only the author of the respective pages might be liable, not the one who has linked to these pages. Furthermore the author is not liable for any postings or messages published by users of discussion boards, guestbooks or mailinglists provided on his page.
 <br /><br />
 <h2><span class="fontBold">3. Copyright</span></h2>
@@ -1592,7 +1594,7 @@ If any damage occurs by the use of information presented there, only the author 
 The author intended not to use any copyrighted material for the publication or, if not possible, to indicate the copyright of the respective object.
 <br />
 The copyright for any material created by the author is reserved. Any duplication or use of objects such as images, diagrams, sounds or texts in other
-electronic or printed publications is not permitted without the author\'s agreement. 
+electronic or printed publications is not permitted without the author\'s agreement.
 <br /><br />
 <h2><span class="fontBold">4. Privacy policy<</span></h2>
 <br />
@@ -1733,7 +1735,6 @@ define('_config_c_main' , 'General configuration');
 define('_config_c_clanname' , 'Clan`s name');
 define('_config_c_pagetitel' , 'Site title');
 define('_config_c_language' , 'Default language');
-define('_config_c_gametiger' , 'Gametiger Search option');
 define('_config_c_upicsize' , 'Global: Pictureupload Size');
 define('_config_c_gallerypics' , 'User: Usergallery');
 define('_config_c_upicsize_what' , 'allowed filesize of the pictures in KB (Newspicture, Userpicture etc.)');
@@ -1760,9 +1761,6 @@ define('_server_admin_ftp_path' , 'Path to banned.cfg');
 define('_config_c_awards' , 'Awards');
 define('_counter_start' , 'Counter');
 define('_counter_start_info' , 'Here you can enter a number which will be added to the counter.');
-define('_config_balken_cw' , 'Clanwar statistic');
-define('_config_balken_vote_head' , 'Vote statistic');
-define('_config_balken_vote_menu_head' , 'Menu: Vote statistic');
 define('_admin_nc' , 'Newscomments');
 define('_admin_reg_info' , 'Here you can djust, if users have to be registered to do stuff (write comments, download things, etc)');
 define('_admin_reg_head' , 'Registration required');
@@ -1954,7 +1952,6 @@ define('_error_buddy_self' , 'You can`t add yourself as a buddy!');
 define('_error_buddy_already_in' , 'You already added this user to your buddies list!');
 define('_error_msg_self' , 'You can`t write yourself a message!');
 define('_error_back' , 'back');
-define('_user_dont_exist' , 'The requested user does not exist!');
 define('_error_fwd' , 'forward');
 define('_error_wrong_permissions' , 'You don`t have the right permissions to do this!');
 define('_error_flood_post' , 'You just can write a new entry every [sek] seconds!');
@@ -1972,7 +1969,6 @@ define('_index_headtitle' , '[clanname]');
 define('_site_sponsor' , 'Sponsors');
 define('_site_user' , 'User');
 define('_site_online' , 'Visitors online');
-define('_site_gametiger' , 'Gametiger');
 define('_site_member' , 'Member');
 define('_site_serverlist' , 'Serverlist');
 define('_site_rankings' , 'Rankings');
@@ -2012,7 +2008,6 @@ define('_rankings' , 'Rankings');
 define('_gallery' , 'Gallery');
 define('_news' , 'News');
 define('_newsarchiv' , 'Newsarchive');
-define('_gametiger' , 'Gametiger');
 define('_serverliste' , 'Serverlist');
 define('_banned' , 'Banlist');
 define('_links' , 'Links');
