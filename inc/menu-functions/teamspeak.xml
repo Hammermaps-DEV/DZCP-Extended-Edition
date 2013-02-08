@@ -2,7 +2,7 @@
 <settings>
 	<AjaxLoad>true</AjaxLoad>
 	<AjaxLoad_Img>ajax_loading.gif</AjaxLoad_Img>
-	<AjaxLoad_Img_Use>false</AjaxLoad_Img_Use>
+	<AjaxLoad_Img_Use>true</AjaxLoad_Img_Use>
 	<Only_Users>false</Only_Users>
 	<Only_Admin>false</Only_Admin>
 	<Only_Root>false</Only_Root>

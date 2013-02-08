@@ -21,6 +21,9 @@ function teamspeak()
 
             if(Cache::check($cacheTag,'nav_teamspeak_'.$language))
             {
+                if(!ping_port($settings['ts_ip'],$settings['ts_sport'],0.3))
+                    return '<br /><center>'._no_connect_to_ts.'</center><br />';
+
                 $teamspeak = teamspeakViewer($settings);
                 Cache::set($cacheTag,'nav_teamspeak_'.$language, $teamspeak, config('cache_teamspeak'));
                 return $teamspeak;
