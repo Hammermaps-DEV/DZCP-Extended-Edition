@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 define('basePath', dirname(__FILE__));
 if(file_exists(basePath."/inc/mysql.php"))
     require_once(basePath."/inc/mysql.php");

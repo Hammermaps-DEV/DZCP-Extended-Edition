@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 #############################################
 ##### Code for 'DZCP - Extended Edition #####
 ###### DZCP - Extended Edition >= 1.0 #######
@@ -79,7 +86,7 @@ else
                                                 "rank" => getrank($get_userid),
                                                 "ip" => visitorIp()._ip_only_for_admins));
 
-    echo '<table class="mainContent" cellspacing="1">'.$index.'</table>';
-    exit();
+    update_user_status_preview();
+    exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
 }
 ?>

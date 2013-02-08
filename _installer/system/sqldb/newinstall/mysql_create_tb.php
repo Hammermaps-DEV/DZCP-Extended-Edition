@@ -353,10 +353,13 @@ function install_mysql_create()
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['f_access']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['f_access']."` (
-      `user` int(10) NOT NULL DEFAULT '0',
-      `pos` int(1) NOT NULL,
-      `forum` int(10) NOT NULL DEFAULT '0',
-      PRIMARY KEY `user` (`user`)
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `user` int(11) NOT NULL DEFAULT '0',
+      `pos` int(5) NOT NULL DEFAULT '0',
+      `forum` int(11) NOT NULL DEFAULT '0',
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `id` (`id`),
+      KEY `user` (`user`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 
     //===============================================================
@@ -839,6 +842,7 @@ function install_mysql_create()
       `forum_vote` int(1) NOT NULL DEFAULT '1',
       `gb_activ` int(1) NOT NULL DEFAULT '1',
       `urls_linked` int(1) NOT NULL DEFAULT '1',
+      `default_pwd_encoder` int(1) NOT NULL DEFAULT '2',
       `db_version` varchar(4) NOT NULL DEFAULT '0000',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
@@ -1000,6 +1004,7 @@ function install_mysql_create()
       `user` varchar(200) NOT NULL DEFAULT '',
       `nick` varchar(200) NOT NULL DEFAULT '',
       `pwd` varchar(255) NOT NULL DEFAULT '',
+      `pwd_encoder` int(1) NOT NULL DEFAULT '2',
       `sessid` varchar(32) DEFAULT NULL,
       `pkey` varchar(50) NOT NULL DEFAULT '',
       `country` varchar(20) NOT NULL DEFAULT 'de',
@@ -1058,7 +1063,7 @@ function install_mysql_create()
       `url2` varchar(249) NOT NULL DEFAULT '',
       `url3` varchar(249) NOT NULL DEFAULT '',
       `beschreibung` text,
-      `gmaps_koord` varchar(249) NOT NULL,
+      `gmaps_koord` varchar(255) NOT NULL DEFAULT '',
       `pnmail` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);

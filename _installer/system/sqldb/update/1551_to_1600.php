@@ -1,7 +1,7 @@
 <?php
 $versions[3] = array('update_id' => 3, 3 => '1.5.5.x', "version_list" => 'v1.5.5.x', 'call' => '155x_1600', 'dbv' => false); //Update Info
 
-//Update von V1.5.5.x auf V1.6.0.0
+//Update von V1.5.5.x auf V1.6.0.0 DZCP-Extended Edition
 function install_155x_1600_update()
 {
     global $db, $prefix;
@@ -39,6 +39,9 @@ function install_155x_1600_update()
     db("ALTER TABLE `".$db['gb']."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".$db['usergb']."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".$db['usergb']."` ADD INDEX ( `user` );",false,false,true);
+    db("ALTER TABLE `".$db['users']."` CHANGE `gmaps_koord` `gmaps_koord` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
+    db("ALTER TABLE `".$db['users']."` ADD `pwd_encoder` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pwd`;",false,false,true);
+    db("ALTER TABLE `".$db['settings']."` ADD `default_pwd_encoder` INT( 1 ) NOT NULL DEFAULT '2' AFTER `urls_linked`;",false,false,true);
 
     // Add UNIQUE INDEX
     if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
@@ -100,6 +103,11 @@ function install_155x_1600_update()
     $qry = db("SELECT id,url FROM `".$db['navi']."` WHERE `name` = '_news_send_'");
     if(_rows($qry) >= 1)
     {  while($get = _fetch($qry)) { if($get['url'] == '../news/send.php') db("UPDATE ".$db['navi']." SET `url` = '../news/?action=send' WHERE `id` = '".$get['id']."';",false,false,true); } }
+
+    // Update setze MD5 Encoder für alte User
+    $qry = db("SELECT id FROM `".$db['users']."`");
+    if(_rows($qry) >= 1)
+    {  while($get = _fetch($qry)) { db("UPDATE ".$db['users']." SET `pwd_encoder` = 0 WHERE `id` = '".$get['id']."';",false,false,true); } }
 
     //===============================================================
     //-> Cache ======================================================
@@ -179,7 +187,7 @@ function install_155x_1600_update()
     db("CREATE TABLE IF NOT EXISTS `".$db['permissions']."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(11) NOT NULL DEFAULT '0',
-      `pos` int(1) NOT NULL,
+      `pos` int(1) NOT NULL DEFAULT '0',
       `artikel` int(1) NOT NULL DEFAULT '0',
       `awards` int(1) NOT NULL DEFAULT '0',
       `backup` int(1) NOT NULL DEFAULT '0',
@@ -223,8 +231,53 @@ function install_155x_1600_update()
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     // Permissions Datensatz einspielen
-    foreach ($cache_array_sql as $sql)
-    { db($sql); }
+    if(count($cache_array_sql) >= 1)
+    {
+        foreach ($cache_array_sql as $sql)
+        { db($sql); }
+    }
+    unset($cache_array_sql);
+
+    //Permissions Tabelle prüfen
+    $qry = db("SELECT id FROM `".$db['users']."`");
+    if(_rows($qry))
+    {
+        while($get = _fetch($qry))
+        { if(!db("SELECT id FROM `".$db['permissions']."` WHERE `user` = ".$get['id'],true)) db("INSERT INTO ".$db['permissions']." SET `user` = ".$get['id']); }
+    }
+
+    // Ersetze Forum Access Tabelle
+    $qry = db("SELECT * FROM `".$db['f_access']."`");
+    if(_rows($qry) >= 1)
+    {
+        $cache_array_sql = array();
+        while($get = _fetch($qry))
+        { $cache_array_sql[] = "INSERT INTO `".$db['f_access']."` SET `user` = ".$get['user']." , `pos` =  ".(empty($get['pos']) ? '0' : $get['pos']).", `forum` = ".$get['forum']; }
+
+        unset($qry,$get);
+    }
+
+    //===============================================================
+    //-> Forum: Access ==============================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['f_access']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['f_access']."` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `user` int(11) NOT NULL DEFAULT '0',
+      `pos` int(5) NOT NULL DEFAULT '0',
+      `forum` int(11) NOT NULL DEFAULT '0',
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `id` (`id`),
+      KEY `user` (`user`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+
+    // Furm Access Datensatz einspielen
+    if(count($cache_array_sql) >= 1)
+    {
+        foreach ($cache_array_sql as $sql)
+        { db($sql); }
+    }
+    unset($cache_array_sql);
 
     // Navigation aktualisieren
     $qry = db("SELECT id FROM `".$db['navi']."` WHERE `name` = '_taktiken_'");

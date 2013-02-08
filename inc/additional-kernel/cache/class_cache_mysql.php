@@ -19,7 +19,7 @@ class cache_mysql extends Cache
             $is_array = '1';
         }
 
-        $data = base64_encode(utf8_encode($data));
+        $data = base64_encode(convert::UTF8($data));
         if(db("SELECT qry FROM `".$db['cache']."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
         {
             if(db("UPDATE `".$db['cache']."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '".$is_array."' WHERE `qry` = '".md5($key)."'"))
@@ -49,7 +49,7 @@ class cache_mysql extends Cache
 
         if ($GetCache['data']!='')
         {
-            $data = utf8_decode(base64_decode($GetCache['data']));
+            $data = convert::UTF8_Reverse(base64_decode($GetCache['data']));
 
             if($GetCache['array'])
                 $data = string_to_array($data);

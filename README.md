@@ -88,4 +88,15 @@ Optional* Zusätzliche XML-Config für die DZCP Menufunktionen kann angelegt wer
 * Welches Level der Benutzer haben muss um das Menu zu sehen. Sehen ab: Gast,User,Admin,Root
 * Der zusätzliche Ajax Loader kann generell in der "inc/config.php" abgeschaltet werden.
 
-Gametiger wurde entfernt.
+Eine Auswahl des Passwort-Hash Algorithmus ist nun möglich. *Extended Security*
+* MD5,SHA1,SHA256,SHA512 stehen zur Verfügung.
+* Standartmassig ist SHA256 in der Extended Edition aktiviert.
+* Die User die alte MD5 Hashs verwenden, werden automatisch beim nächsten ändern ihres Passwortes in SHA1, SHA256 oder SHA512 gespeichert.
+
+Neue Addons Schnittstelle für einfaches einfügen und löschen von Addons/Mods.
+* Es müssen fast keine Original CMS Daten überschrieben werden.
+* Änderungen am Template *HTML Files* oder neue HTML Daten befinden sich mit im Addon Ordner und nicht mehr umbedingt im 'inc\_templates_\*.*' Ordner.
+* Anpassungen für einzelne Templates über Ordnernamen im Addon Ordner möglich.
+* Include und automatisches laden von Funktionen oder Classen möglich.
+* Frei zu bearbeitende Addon-XML Dateien für Statische Einstellungen aller Art.
+* Eine einfache PHP-API Schnittstelle für alle Addons. *In DEV*

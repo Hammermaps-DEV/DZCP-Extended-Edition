@@ -1,8 +1,10 @@
 <?php
-#############################################
-##### Code for 'DZCP - Extended Edition #####
-###### DZCP - Extended Edition >= 1.0 #######
-#############################################
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
 
 ####################################
 ## Wird in einer Index ausgeführt ##
@@ -14,9 +16,9 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    ##############################
-    ## Passwort vergessen Seite ##
-    ##############################
+    ########################
+    ## Passwort vergessen ##
+    ########################
     $where = _site_user_lostpwd;
     if($chkMe == "unlogged")
     {
@@ -40,7 +42,7 @@ else
                     $pwd = mkpwd();
 
                     ## Neues Passwort MD5 verschlüsseln und Speichern ##
-                    db("UPDATE ".$db['users']." SET `pwd` = '".md5($pwd)."' WHERE user = '".$_POST['user']."' AND email = '".$_POST['email']."'");
+                    db("UPDATE ".$db['users']." SET `pwd` = '".pass_hash($pwd,settings('default_pwd_encoder'))."', `pwd_encoder` = 2 WHERE user = '".$_POST['user']."' AND email = '".$_POST['email']."'");
 
                     ## Ereignis in den Adminlog schreiben ##
                     wire_ipcheck("pwd(".$get['id'].")");

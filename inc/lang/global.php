@@ -8,19 +8,6 @@ define('_dropdown_time_ts', '<select id="h_[nr]" name="h_[nr]" class="dropdown">
 define('_cw_details_gegner', '<a href="[url]" title="[gegner]">[gegner]</a>');
 define('_cw_details_gegner_blank', '<a href="[url]" title="[gegner]" target="_blank">[gegner]</a>');
 
-## ADDED / REDEFINED FOR 1.5.1
-define('_elevel_admin_select', '
-<option value="banned">[banned]</option>
-<option value="1" [selu]>[ruser]</option>
-<option value="2" [selt]>[trial]</option>
-<option value="3" [selm]>[member]</option>
-<option value="4" [sela]>[admin]</option>');
-define('_elevel_perm_select', '
-<option value="banned">[banned]</option>
-<option value="1" [selu]>[ruser]</option>
-<option value="2" [selt]>[trial]</option>
-<option value="3" [selm]>[member]</option>');
-
 ## ADDED / REDEFINED FOR 1.5
 define('_profil_edit_custom', '
 <tr>
@@ -199,7 +186,7 @@ define('_checkfield_squads', '
   <td><input class="checkbox" type="checkbox" id="squad_[id]" name="squad[id]" value="[id]" [check] /><label for="squad_[id]"> [squad]</label></td>
   <td align="center">
     <select name="sqpos[id]" class="dropdown">
-      [noposi]
+      [lang_user_noposi]
       [eposi]
     </select>
   </td>

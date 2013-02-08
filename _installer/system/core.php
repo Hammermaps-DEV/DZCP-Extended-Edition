@@ -120,13 +120,16 @@ function get_db_engine($db_engine=0,$reverse=false)
         switch ($db_engine)
         {
             case 1:
-                return 'TYPE=MyISAM'; //MySQL MyISAM
+                return 'ENGINE=MyISAM'; //MySQL MyISAM
             break;
             case 2:
-                return 'TYPE=InnoDB'; //MySQL InnoDB
+                return 'ENGINE=InnoDB'; //MySQL InnoDB
             break;
             case 3:
-                return 'TYPE=ndbcluster'; //MySQL NDB Cluster
+                return 'ENGINE=ndbcluster'; //MySQL NDB Cluster
+            break;
+            case 4:
+                return 'ENGINE=Aria'; //MariaDB Aria
             break;
             default:
                 return ''; //Server Default
@@ -139,13 +142,16 @@ function get_db_engine($db_engine=0,$reverse=false)
         {
             case 'MyISAM':
                 return 1; //MySQL MyISAM
-                break;
+            break;
             case 'InnoDB':
                 return 2; //MySQL InnoDB
-                break;
+            break;
             case 'ndbcluster':
                 return 3; //MySQL NDB Cluster
-                break;
+            break;
+            case 'Aria':
+                return 4; //MariaDB Aria
+            break;
             default:
                 return 0; //Server Default
             break;
@@ -337,9 +343,9 @@ function is_writable_array($array)
     foreach($array as $file)
     {
         if(is_dir('../'.$file))
-            $what = "Dir:&nbsp;";
+            $what = "Ordner:&nbsp;";
         else
-            $what = "File:";
+            $what = "Datei:";
 
         $_file = preg_replace("#\.\.#Uis", "", '../'.$file);
 

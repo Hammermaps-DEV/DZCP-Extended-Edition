@@ -1,9 +1,16 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 #########################################
 //-> DZCP Settings Start
 #########################################
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle fehler und Notices etc.
-define('cache_in_debug', true); // Entscheidet ob im Debug Modus Seiten gecached werden können
+define('cache_in_debug', false); // Entscheidet ob im Debug Modus Seiten gecached werden können
 
 define('buffer_gzip_compress', true); // Soll die Seite mit Hilfe der GZIP-Komprimierung übertragen werden
 define('buffer_gzip_compress_level', 4); // Level der Kompression 1 - 9 *Optimal Level 4
@@ -17,6 +24,16 @@ define('xfire_refresh', (10*60)); // Wann soll das Profilbild aktualisiert werde
 
 define('glossar_enabled', true); // Schaltet die Glossar Funktion bei Wörtern an oder aus
 define('AjaxLoad', true); // Ajax Loads erlauben
+
+define('modapi_enabled', true); // DZCP ModAPI erlauben
+define('allow_additional', true); // additional functions,etc erlauben
+
+## Colors Antispam ##
+$backgroundColor  = '#444444';
+$textColor        = '#000000';
+$noiseColor       = '#AAAAAA';
+$lineColor        = '#555555';
+## Colors Antispam ##
 
 $AjaxLoad_blacklist = array('welcome','server','teamspeak','infos'); // Ajax Preload gesperrte Menüs *Nur ändern wenn nötig!
 $picformat = array("jpg", "gif", "png"); // Unterstützte Bildformate
@@ -80,6 +97,7 @@ $db = array("host" =>           $sql_host,
             "gallery" =>        $prefix."gallery",
             "gb" =>             $prefix."gb",
             "glossar" =>        $prefix."glossar",
+            "geometry" =>       $prefix."geometry",
             "links" =>          $prefix."links",
             "linkus" =>         $prefix."linkus",
             "msg" =>            $prefix."messages",

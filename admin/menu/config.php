@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 #####################
 ## Admin Menu-File ##
 #####################
@@ -149,9 +156,14 @@ if(empty($show))
 
     unset($tmps,$selt);
 
-       $cache = array(0 => 'Keinen', 1 => 'File', 2 => 'MySQL', 3 => 'Memcache'); $cache_select = '';
+    $cache = array(0 => 'Keinen', 1 => 'File', 2 => 'MySQL', 3 => 'Memcache'); $cache_select = '';
     foreach ($cache as $key => $value)
     { $cache_select .= show(_select_field, array("value" => $key, "what" => $value, "sel" => ($cache_engine == $key ? 'selected="selected"' : ''))); }
+
+    $pwde_options = show('<option '.(!$gets['default_pwd_encoder'] ? 'selected="selected"' : '').' value="0">MD5 [lang_pwd_encoder_algorithm]</option>
+    <option '.($gets['default_pwd_encoder'] == 1 ? 'selected="selected"' : '').' value="1">SHA1 [lang_pwd_encoder_algorithm]</option>
+    <option '.($gets['default_pwd_encoder'] == 2 ? 'selected="selected"' : '').' value="2">SHA256 [lang_pwd_encoder_algorithm]</option>
+    <option '.($gets['default_pwd_encoder'] == 3 ? 'selected="selected"' : '').' value="3">SHA512 [lang_pwd_encoder_algorithm]</option>');
 
     $selyes = ($gets['regcode'] ? 'selected="selected"' : '');
     $selno = (!$gets['regcode'] ? 'selected="selected"' : '');
@@ -286,7 +298,8 @@ if(empty($show))
                                              "selr_artikel" => $selr_artikel,
                                              "c_teamrow" => $get['teamrow'],
                                              "f_artikelcom" => $get['f_artikelcom'],
-                                             "sel_url" => $sel_url));
+                                             "sel_url" => $sel_url,
+                                             "pwde_options" => $pwde_options));
 
     $show = show($dir."/form", array("head" => _config_global_head, "what" => "config", "value" => _button_value_config, "show" => $show_));
 }

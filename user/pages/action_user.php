@@ -1,8 +1,10 @@
 <?php
-#############################################
-##### Code for 'DZCP - Extended Edition #####
-###### DZCP - Extended Edition >= 1.0 #######
-#############################################
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
 
 ####################################
 ## Wird in einer Index ausgeführt ##
@@ -26,7 +28,7 @@ else
     function custom_fields($userid,$kid,$get_array)
     {
         global $db;
-        $qry = db("SELECT * FROM ".$db['profile']." WHERE kid = '".$kid."' AND shown = '1' ORDER BY id ASC"); $custom = ''; $count=0;
+        $qry = db("SELECT * FROM ".$db['profile']." WHERE kid = ".convert::ToInt($kid)." AND shown = '1' ORDER BY id ASC"); $custom = ''; $count=0;
         if(_rows($qry))
         {
             while($getcustom = _fetch($qry))
@@ -62,9 +64,9 @@ else
         $where = _user_profile_of.'autor_'.$view_userID;
 
         if(count_clicks('userprofil',$view_userID))
-            db("UPDATE ".$db['userstats']." SET `profilhits` = profilhits+1 WHERE user = '".$view_userID."'"); //Update Userstats
+            db("UPDATE ".$db['userstats']." SET `profilhits` = profilhits+1 WHERE user = '".convert::ToInt($view_userID)."'"); //Update Userstats
 
-        $get = db("SELECT * FROM ".$db['users']." WHERE id = '".$view_userID."'",false,true); // Get User
+        $get = db("SELECT * FROM ".$db['users']." WHERE id = '".convert::ToInt($view_userID)."'",false,true); // Get User
 
         ######### DO ##########
 
@@ -73,14 +75,14 @@ else
             case 'delete':
                 if($chkMe == 4 || $view_userID == $userid)
                 {
-                    db("DELETE FROM ".$db['usergb']." WHERE user = '".$view_userID."' AND id = '".intval($_GET['gbid'])."'");
+                    db("DELETE FROM ".$db['usergb']." WHERE user = '".convert::ToInt($view_userID)."' AND id = '".convert::ToInt($_GET['gbid'])."'");
                     $index = info(_gb_delete_successful, "?action=user&amp;id=".$view_userID."&show=gb");
                 }
                 else
                     $index = error(_error_wrong_permissions, 1);
             break;
             case 'edit':
-                $get = db("SELECT * FROM ".$db['usergb']." WHERE id = '".intval($_GET['gbid'])."'",false,true);
+                $get = db("SELECT * FROM ".$db['usergb']." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
                 if($get['reg'] == $userid || permission('editusers'))
                 {
                     if($get['reg'] != 0)
@@ -101,7 +103,7 @@ else
                             "emailhead" => _email,
                             "preview" => _preview,
                             "whaturl" => "edit&gbid=".$_GET['gbid'],
-                            "ed" => "&amp;do=edit&amp;uid=".$_GET['id']."&amp;gbid=".$_GET['gbid'],
+                            "ed" => "&do=edit&uid=".$_GET['id']."&gbid=".$_GET['gbid'],
                             "security" => _register_confirm,
                             "what" => _button_value_edit,
                             "reg" => $get['reg'],
@@ -128,7 +130,7 @@ else
             switch(isset($_GET['show']) ? $_GET['show'] : false)
             {
                 case 'gallery':
-                    $qrygl = db("SELECT * FROM ".$db['usergallery']." WHERE user = '".$view_userID."' ORDER BY id DESC"); $color = 1; $gal = '';
+                    $qrygl = db("SELECT * FROM ".$db['usergallery']." WHERE user = '".convert::ToInt($view_userID)."' ORDER BY id DESC"); $color = 1; $gal = '';
                     if(_rows($qrygl) >= 1)
                     {
                         while($getgl = _fetch($qrygl))
@@ -143,7 +145,7 @@ else
 
                 case 'gb':
                     $addgb = show(_usergb_eintragen, array("id" => $view_userID));
-                    $qrygb = db("SELECT * FROM ".$db['usergb']." WHERE user = ".$view_userID." ORDER BY datum DESC LIMIT ".($page - 1)*$maxusergb.",".$maxusergb."");
+                    $qrygb = db("SELECT * FROM ".$db['usergb']." WHERE user = ".convert::ToInt($view_userID)." ORDER BY datum DESC LIMIT ".($page - 1)*$maxusergb.",".$maxusergb."");
                     $entrys = cnt($db['usergb'], " WHERE user = ".$view_userID);
                     $i = $entrys-($page - 1)*$maxusergb; $membergb = '';
 
@@ -215,7 +217,7 @@ else
                                                               "form" => $form,
                                                               "security" => _register_confirm,
                                                               "preview" => _preview,
-                                                              "ed" => "&amp;uid=".$_GET['id'],
+                                                              "ed" => "&uid=".$_GET['id'],
                                                               "whaturl" => "add",
                                                               "reg" => "",
                                                               "id" => $_GET['id'],
@@ -248,7 +250,7 @@ else
                     $clan = "";
                     if($get['level'] != 1 || isset($_GET['sq']))
                     {
-                        $sq = db("SELECT * FROM ".$db['userpos']." WHERE user = '".$view_userID."'");
+                        $sq = db("SELECT * FROM ".$db['userpos']." WHERE user = '".convert::ToInt($view_userID)."'");
                         $cnt = cnt($db['userpos'], " WHERE user = '".$get['id']."'"); $i=1;
                         if(_rows($sq) && !isset($_GET['sq']))
                         {

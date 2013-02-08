@@ -37,6 +37,8 @@ else
                 $dbe_selected1 = 'selected="selected"';
             else if($_SESSION['mysql_dbengine'] == 2)
                 $dbe_selected2 = 'selected="selected"';
+            else if($_SESSION['mysql_dbengine'] == 3)
+                $dbe_selected4 = 'selected="selected"';
             else
                 $dbe_selected3 = 'selected="selected"';
 
@@ -61,6 +63,7 @@ else
                                     $dbe_selected1 = '';
                                     $dbe_selected2 = '';
                                     $dbe_selected3 = '';
+                                    $dbe_selected4 = '';
                                 }
                                 else if($_SESSION['mysql_dbengine'] == 1)
                                 {
@@ -68,6 +71,7 @@ else
                                     $dbe_selected1 = 'selected="selected"';
                                     $dbe_selected2 = '';
                                     $dbe_selected3 = '';
+                                    $dbe_selected4 = '';
                                 }
                                 else if($_SESSION['mysql_dbengine'] == 2)
                                 {
@@ -75,6 +79,15 @@ else
                                     $dbe_selected1 = '';
                                     $dbe_selected2 = 'selected="selected"';
                                     $dbe_selected3 = '';
+                                    $dbe_selected4 = '';
+                                }
+                                else if($_SESSION['mysql_dbengine'] == 3)
+                                {
+                                    $dbe_selected0 = '';
+                                    $dbe_selected1 = '';
+                                    $dbe_selected2 = '';
+                                    $dbe_selected3 = '';
+                                    $dbe_selected4 = 'selected="selected"';
                                 }
                                 else
                                 {
@@ -82,6 +95,7 @@ else
                                     $dbe_selected1 = '';
                                     $dbe_selected2 = '';
                                     $dbe_selected3 = 'selected="selected"';
+                                    $dbe_selected4 = '';
                                 }
                             }
                             //End

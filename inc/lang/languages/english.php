@@ -24,6 +24,10 @@ define('_perm_clear', 'Database Cleanup');
 define('_no_comments', 'No comments');
 define('_no_pm', 'No messages');
 define('_user_dont_exist' , 'The requested user does not exist!');
+define('_pwd_encoder_algorithm', 'Algorithm');
+define('_pwd_encoder', 'Password-Hash Algorithm');
+define('_pwd_encoder_info', 'Which password hash algorithm to use, default is * SHA256');
+define('_user_cant_delete_radmin', 'Root admins can not be deleted!');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
@@ -31,15 +35,12 @@ define('_search_con_and', 'character by character');
 define('_search_con_andb', 'every word');
 define('_search_website','remaining website');
 define('_search_for_area_forum','board-searcharea');
-
 define("_dzcp_vcheck", 'The DZCP Version Checker will inform about new DZCP updates and shows you whether DZCP.de is online to compare your version with the current.<br><br><span class=fontBold>Description:</span><br><font color=#17D427>Gr&uuml;n:</font> Successfully connected to DZCP.de, Up to Date!<br><font color=#FFFF00>Gelb:</font> Could not connect to DZCP.de</br><font color=#FF0000>Rot:</font>A new update available!');
 define("_debug_on", 'Debug mode is enabled!');
-
 define('_no_entrys_yet_all' , '
 <tr>
   <td class="contentMainFirst" colspan="[colspan]" align="center">No entries!</td>
 </tr>');
-
 define('_include_action_error','<tr><td class="contentHead" align="center" colspan="3"><span class="fontBold"><br>File: "[file]" is missing or corrupted!<br/>The module functions are not available!<br></br></span></td></tr>');
 
 ## Navigation / Server ##
@@ -71,13 +72,6 @@ define('_news_get_timeshift' , "Timeshift News?");
 define('_news_timeshift_from', 'Show news from:');
 define('_config_gb_activ' , 'Guestbook');
 define('_config_gb_activ_info' , '<center>Here you can specify whether an item will only be released by an admin must.</center>');
-define('_legend_map_download' , 'Download map screenshots from dzcp.de');
-define('_map_download_success' , 'The screenshots has been successfully downloaded and saved!');
-define('_mapdl_download' , 'Should I search and download map screenshots for this server?');
-define('_error_mapdl_nomap' , 'For this game, no map screenshot is available right now.<br />If you want to share maps for this game with the community, please mail them to webmaster@dzcp.de.');
-define('_error_mapdl_connection' , 'No connection to the gameserver could be established.');
-define('_error_mapdl_server' , 'This gameserver does not exist!');
-define('_mapdl_loading' , 'Loading maps from dzcp.de');
 define('_placeholder' , 'Template Placeholder');
 define('_menu_kats_head' , 'Menu Categories');
 define('_menu_add_kat' , 'Add new menu category');
@@ -1106,9 +1100,6 @@ define('_error_empty_url' , 'You have to indicate a team link!');
 define('_error_empty_rank' , 'You have to indicate a rank!');
 ## Server ##
 define('_banned_reason' , 'Reason');
-define('_banned_head' , 'Bannlist');
-define('_banned_gesamt' , '<span class="fontText">Totally</span> <span class="fontBold">[ges] users</span> <span class="fontText">are inthe banlist</span>');
-define('_banned_edit_head' , 'Edit banlist');
 define('_error_banned_edited' , 'The banned user was successfully edited!');
 define('_server_head' , 'Server');
 define('_server_name' , 'Server name');
@@ -1140,20 +1131,6 @@ define('_error_empty_ip' , 'You have to indicate your serverip!');
 define('_error_empty_port' , 'You have to indicate your serverport!');
 define('_slist_added_msg' , 'New entry in the serverlist!');
 define('_slist_title' , 'Serverlist');
-define('_gt_search' , 'Search for');
-define('_gt_server' , 'Server');
-define('_gt_maps' , 'Maps');
-define('_gt_map' , 'Map');
-define('_gt_player' , 'Player');
-define('_gt_addip' , 'Click in the serverip to add it to hlsw.');
-define('_gt_addname' , 'Click on the server name to add it to hlsw');
-define('_gt_not_found' , '<tr><td class="contentMainFirst" colspan="8" align="center">- no result -</td></tr>');
-define('_gt_psearchhead' , 'Player searc');
-define('_gt_sip' , 'Serverip');
-define('_gt_found' , 'Results:');
-define('_gt_msearchhead' , 'Map search');
-define('_gt_server_ip' , 'Servername');
-define('_gt_ssearchhead' , 'Server search');
 define('_gallery_head' , 'Galleries');
 define('_subgallery_head' , 'Gallery');
 define('_gallery_images' , 'Pictures');
@@ -1651,7 +1628,7 @@ define('_backup_info' , 'The backup process can take some minutes.');
 define('_backup_link' , 'Make new backup!');
 define('_backup_successful' , 'The database backup was successfully made!');
 define('_backup_last_head' , 'Last backup');
-define('_backup_last_not_exist' , 'You didn`t backed up your database yet!');
+
 define('_news_admin_head' , 'Newsarea');
 define('_admin_news_add' , '<a href="?admin=newsadmin&amp;do=add">Insert news</a>');
 define('_admin_news_head' , 'Insert news');
@@ -1757,7 +1734,7 @@ define('_config_c_gallery' , 'Gallery ');
 define('_config_info_gallery' , 'Amount of pictures which will be maximum shown in a row');
 define('_config_server_ts_updated' , 'The teamspeak`s ip was successfully updated!');
 define('_ts_sport' , 'Server queryport');
-define('_server_admin_ftp_path' , 'Path to banned.cfg');
+
 define('_config_c_awards' , 'Awards');
 define('_counter_start' , 'Counter');
 define('_counter_start_info' , 'Here you can enter a number which will be added to the counter.');
@@ -1818,9 +1795,7 @@ define('_admin_status' , 'Livestatus');
 define('_error_unregistered' , 'You have to be registered to use this function!');
 define('_seiten' , 'Site:');
 define('_admin_user_gallery' , 'Admin: Gallery');
-define('_user_admin_joinus' , 'Receive joinus?');
-define('_user_admin_contact' , 'Receive contact?');
-define('_user_admin_formulare' , 'Forms');
+
 define('_smileys_error_file' , 'You have to indicate a smiley!');
 define('_smileys_error_bbcode' , 'You have to indicate a bbcode!');
 define('_smileys_error_type' , 'Only gif files are allowed!');
@@ -1835,7 +1810,7 @@ define('_smileys_bbcode' , 'BBCode');
 define('_smileys_head_add' , 'Insert smiley');
 define('_smileys_head_edit' , 'Edit smiley');
 define('_head_waehrung' , 'Currency');
-define('_dl_version' , 'downloadable Version');
+
 define('_admin_artikel_add' , '<a href="?admin=artikel&amp;do=add">insert article</a>');
 define('_artikel_add' , 'Insert article');
 define('_artikel_added' , 'The article was successfully registered');
@@ -1848,8 +1823,8 @@ define('_admin_artikel' , 'Admin: Article');
 define('_c_l_shoutnick' , 'Menu: Shoutbox: Nick');
 define('_config_c_martikel' , 'Article');
 define('_config_c_madminartikel' , 'Articleadmin');
-define('_admin_squadtemplate' , 'Teamlayouts');
-define('_admin_squadtemplate_info' , 'Here you can adjust several team layouts!');
+
+
 define('_reg_artikel' , 'Articlecomments');
 define('_cw_comments' , 'Clanwarcomments');
 define('_on' , 'on');
@@ -1946,7 +1921,6 @@ define('_error_invalid_url' , 'The indicated homepage isn`t reachable!');
 define('_error_nick_exists' , 'The indicated nickname is already in use!');
 define('_error_user_exists' , 'The indicated loginname is already in use!');
 define('_error_email_exists' , 'The indicated email address is already in use!');
-define('_info_edit_profile_done_pwd' , 'Your profile was successfully edited!');
 define('_error_select_buddy' , 'You didn`t selected an user!');
 define('_error_buddy_self' , 'You can`t add yourself as a buddy!');
 define('_error_buddy_already_in' , 'You already added this user to your buddies list!');
@@ -1963,8 +1937,8 @@ define('_empty_user' , 'You have to indicate a loginname!');
 define('_empty_to' , 'You have to indicate a receiver!');
 define('_empty_url' , 'You have to indicate an url!');
 define('_empty_datum' , 'You have to indicate a date!');
-define('_site_loading' , 'preloading site');
-define('_site_wait' , 'please wait');
+
+
 define('_index_headtitle' , '[clanname]');
 define('_site_sponsor' , 'Sponsors');
 define('_site_user' , 'User');
@@ -2080,16 +2054,16 @@ define('_beschreibung' , 'Description');
 define('_admin_user_get_identy' , 'You was successfully took the identity of [nick]!');
 define('_comment_added' , 'The comment was successfully registered!');
 define('_comment_deleted' , 'The comment was successfullydeleted!');
-define('_stichwort' , 'Keyword');
-define('_language_set' , 'You just set another language!');
-define('_language_set_uk' , 'Unknown language');
+
+
+
 define('_eintragen_titel' , 'insert');
 define('_titel' , 'Title');
 define('_bbcode' , 'BBCode');
 define('_answer' , 'Answer');
 define('_eintrag' , 'Entry');
-define('_ftp_server_not_reachable' , 'The FTP isn`t reachable yet. Try it again later!');
-define('_weiter' , 'forward');
+
+define('_next' , 'Next');
 define('_site_teamspeak' , 'Teamspeak');
 define('_teamspeak' , 'Teamspeak');
 define('_site_contact' , 'Contact form');
@@ -2120,7 +2094,7 @@ define('_ts_idletime' , 'AFK since');
 define('_ts_channel_head' , 'Channel Informations');
 define('_taktik_choose' , ' - Please choose - ');
 define('_config_tmpdir' , 'Standardtemplate');
-define('_template_set' , 'You choose a new template!');
+
 define('_rankings_head' , 'Rankings');
 define('_rankings_league' , 'League');
 define('_rankings_place' , 'Place old/new');
@@ -2130,13 +2104,11 @@ define('_rankings_teamlink' , 'Teamlink');
 define('_ranking_added' , 'The ranking was successfully registered!');
 define('_ranking_edited' , 'The ranking was successfully edited!');
 define('_ranking_deleted' , 'The ranking was successfully deleted!');
-define('_ranking_empty_league' , 'You have to indicate a league!');
-define('_ranking_empty_url' , 'You have to indicate the website of the league!');
-define('_ranking_empty_rank' , 'You have to indicate a rank!');
+
+
+
 define('_rankings_add_head' , 'Insert ranking');
-define('_admin_rankings' , 'Admin: Rankings');
 define('_navi_info' , 'Every link names shown in "_" (like _admin_) are placeholders, which will be used for the several languages!');
-define('_shout_delete_successful' , 'The entry was successfully deleted from the shoutbox!');
 define('_member_admin_intnews' , 'View internal news');
 define('_news_admin_intern' , 'Internal News?');
 define('_news_sticky' , '<span class="fontWichtig">Announcment:</span>');
@@ -2144,8 +2116,6 @@ define('_news_get_sticky' , 'Announce news?');
 define('_news_sticky_till' , 'until:');
 define('_cw_xonx' , 'XonX');
 define('_forum_lp_head' , 'Last post');
-define('_forum_previews' , 'Preview');
-define('_download_size' , 'Filesize:');
 define('_site_awards' , 'Awards');
 define('_error_unregistered_nc' , '
 <tr>
@@ -2157,16 +2127,11 @@ define('_no_server_navi' , '
 <tr>
   <td align="center"><span class="fontBold">No server yet</span></td>
 </tr>');
-define('_server_menu_austragen' , 'The server was successfully unset from the menu!');
-define('_server_menu_eintragen' , 'The server was successfully set into the menu!');
 define('_server_legendemenu' , 'Server is set into menu? (Click icon to change the status)<br />(Multiple entrys are possible!)');
 define('_config_c_servernavi' , 'Menu: Serverstatus');
 define('_upload_partners_head' , 'Partnerbuttons');
 define('_upload_partners_info' , 'Only jpg, gif or png files. Recommended dimensions: 88px * 31px');
-define('_user_banned' , 'Account banned');
 define('_select_field_ranking_add' , '<option value="[value]" [sel]>[what]</option>');
-define('_member_squad_wars' , '<a href="../clanwars/?action=showall&amp;id=[id]">Clanwars</a>');
-define('_member_squad_awards' , '<a href="../awards/?action=showall&amp;id=[id]">Awards</a>');
 define('_user_list_ck' , 'List in clan cash?');
 define('_fightus_squad' , 'Wanted team');
 ?>

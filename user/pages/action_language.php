@@ -1,8 +1,10 @@
 <?php
-#############################################
-##### Code for 'DZCP - Extended Edition #####
-###### DZCP - Extended Edition >= 1.0 #######
-#############################################
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
 
 ####################################
 ## Wird in einer Index ausgeführt ##

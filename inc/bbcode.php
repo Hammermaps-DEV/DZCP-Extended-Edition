@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 ## Error Reporting ##
 if(is_debug)
 {
@@ -12,6 +19,8 @@ else
 require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/sendmail.php');
+require_once(basePath."/inc/apic.php");
+require_once(basePath."/inc/api.php");
 require_once(basePath.'/inc/kernel.php');
 require_once(basePath."/inc/cache.php");
 require_once(basePath.'/inc/server_query/_functions.php');
@@ -56,7 +65,6 @@ $useronline = 1800;
 $reload = 3600 * 24;
 $datum = time();
 $today = date("j.n.Y");
-$picformat = array("jpg", "gif", "png");
 
 //-> Configtabelle auslesen
 $config = db("SELECT * FROM ".$db['config'],false,true);
@@ -132,14 +140,14 @@ Cache::init($cacheTag);
 if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pkey']) && !empty($_COOKIE[$prev.'pkey']) && empty($_SESSION['id']))
 {
     ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey FROM ".$db['users']." WHERE id = '".intval($_COOKIE[$prev.'id'])."' AND pkey = '".$_COOKIE[$prev.'pkey']."' AND level != '0'");
+    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey FROM ".$db['users']." WHERE id = '".convert::ToInt($_COOKIE[$prev.'id'])."' AND pkey = '".convert::ToString($_COOKIE[$prev.'pkey'])."' AND level != '0'");
 
     if(_rows($sql))
     {
         $get = _fetch($sql);
 
         ## Generiere neuen permanent-key ##
-        $permanent_key = md5(mkpwd(6,true));
+        $permanent_key = pass_hash(mkpwd(6,true),0);
         set_cookie($prev."pkey",$permanent_key);
 
         ## Schreibe Werte in die Server Sessions ##
@@ -176,19 +184,20 @@ if($chkMe == "unlogged")
 }
 
 //-> User Anmeldung
-function login($username='',$pwd_md5='',$permanent=false)
+function login($username='',$pwd='',$permanent=false)
 {
     global $db,$prev;
 
-    if(empty($username) || empty($pwd_md5))
+    if(empty($username) || empty($pwd))
         return false;
 
     ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,nick,pwd,email,level,time FROM ".$db['users']." WHERE user = '".$username."' AND pwd = '".$pwd_md5."' AND level != '0'");
-
+    $sql = db("SELECT id,user,pwd,pwd_encoder,time FROM ".$db['users']." WHERE user = '".$username."' AND level != '0'");
     if(_rows($sql))
     {
         $get = _fetch($sql);
+        if($get['pwd'] != pass_hash($pwd,$get['pwd_encoder']))
+            return false;
 
         ## Autologin ##
         if($permanent)
@@ -196,7 +205,7 @@ function login($username='',$pwd_md5='',$permanent=false)
             set_cookie($prev."id",$get['id']);
 
             ## Generiere neuen permanent-key ##
-            $permanent_key = md5(mkpwd(6,true));
+            $permanent_key = pass_hash(mkpwd(6,true),0);
             set_cookie($prev."pkey",$permanent_key);
         }
         else
@@ -221,6 +230,33 @@ function login($username='',$pwd_md5='',$permanent=false)
     }
 
     return false;
+}
+
+//-> Aktualisierung des Online Status *preview
+function update_user_status_preview()
+{
+    global $db,$prev;
+
+    ## User aus der Datenbank suchen ##
+    $sql = db("SELECT id,time FROM ".$db['users']." WHERE id = '".convert::ToInt($_SESSION['id'])."'
+    AND sessid = '".session_id()."' AND ip = '".visitorIp()."' AND level != '0'");
+
+    if(_rows($sql))
+    {
+        $get = _fetch($sql);
+
+        ## Schreibe Werte in die Server Sessions ##
+        $_SESSION['lastvisit']  = $get['time'];
+
+        if(data($get['id'], "ip") != $_SESSION['ip'])
+            $_SESSION['lastvisit'] = data($get['id'], "time");
+
+        if(empty($_SESSION['lastvisit']))
+            $_SESSION['lastvisit'] = data($get['id'], "time");
+
+        ## Aktualisiere Datenbank ##
+        db("UPDATE ".$db['users']." SET `online` = '1' WHERE id = '".$get['id']."'");
+    }
 }
 
 //-> User Abmeldung
@@ -267,6 +303,9 @@ else
 
 $designpath = '../inc/_templates_/'.$tmpdir;
 
+//-> API call after Templateswitch
+API_CORE::init();
+
 //-> Languagefiles einlesen
 function lang($lng)
 {
@@ -284,6 +323,26 @@ function lang($lng)
     require_once(basePath."/inc/lang/languages/".$lng.".php");
 
     header("Content-type: text/html; charset="._charset);
+}
+
+//-> User bearbeiten, Level Menu
+function get_level_dropdown_menu($selected_level=0,$userid=0)
+{
+    $levels = array(
+            'banned' => array('value' => '0', 'lang' => _admin_level_banned, 'only_admin' => false),
+            'ruser' => array('value' => '1', 'lang' => _status_user, 'only_admin' => false),
+            'trial' => array('value' => '2', 'lang' => _status_trial, 'only_admin' => false),
+            'member' => array('value' => '3', 'lang' => _status_member, 'only_admin' => false),
+            'admin' => array('value' => '4', 'lang' => _status_admin, 'only_admin' => true));
+
+    $option = '';
+    foreach($levels as $level => $array)
+    {
+        if(!$array['only_admin'] || checkme($userid) == 4)
+            $option .= '<option value="'.$array['value'].'" '.($selected_level == $array['value'] ? 'selected="selected"' : '').'>'.$array['lang'].'</option>';
+    }
+
+    return $option;
 }
 
 //-> Languagefiles einlesen *Run
@@ -847,11 +906,12 @@ function paycheck($tocheck)
 }
 
 //-> Prueft, ob User eingeloggt ist und wenn ja welches Level er besitzt
-function checkme()
+function checkme($userid_set=0)
 {
-    //banned
-
     global $db,$userid;
+
+    if($userid_set != 0)
+        $userid = $userid_set;
 
     if(!$userid)
         return "unlogged";
@@ -1119,7 +1179,7 @@ function info($msg, $url, $timeout = 5)
                                      "parts" => $parts,
                                      "timeout" => $timeout,
                                      "info" => _info,
-                                     "weiter" => _weiter,
+                                     "weiter" => _next,
                                      "backtopage" => _error_fwd));
 }
 
@@ -1320,6 +1380,9 @@ function fintern($id)
  **/
 function data($tid, $what)
 {
+    if(empty($tid) || empty($what))
+        return false;
+
     global $db;
     if(is_array($what))
     {
@@ -1390,6 +1453,7 @@ function check_msg_email()
         }
     }
 }
+
 check_msg_email();
 
 function perm_sendnews($uID)
@@ -1732,10 +1796,7 @@ function cal($i)
     if(!preg_match("=10|20|30=Uis",$i))
         $i = preg_replace("=0=", "", $i);
 
-    if($i < 10)
-        return "0".$i;
-    else
-        return $i;
+    return ($i < 10 ? "0".$i : $i);
 }
 
 //-> Entfernt fuehrende Nullen bei Monatsangaben
@@ -2069,13 +2130,15 @@ function xfire($username='')
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 }
 
-// Pruft die Ausgelagerten Seiten
+// Pruft die Ausgelagerten Seiten und API Zugriff
 function include_action($page_dir='',$default='default')
 {
-    $do = (isset($_GET['do']) ? $_GET['do'] : NULL);
-    $page = ((int)(isset($_GET['page']) ? $_GET['page'] : 1));
-    $action = (isset($_GET['action']) ? strtolower($_GET['action']) : strtolower($default));
-    if(file_exists(($modul_file=basePath.'/'.$page_dir.'/pages/action_'.$action.'.php')))
+    $do = convert::ToString((isset($_GET['do']) ? $_GET['do'] : NULL));
+    $page = convert::ToInt((isset($_GET['page']) ? $_GET['page'] : 1));
+    $action = convert::ToString(isset($_GET['action']) ? strtolower($_GET['action']) : strtolower($default));
+    if(($modul_file=API_CORE::load_additional_page($page_dir,$action)))
+        return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file);
+    else if(file_exists(($modul_file=basePath.'/'.$page_dir.'/pages/action_'.$action.'.php')))
         return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file);
     else
         return array('include' => false, 'page' => $page, 'do' => $do, 'msg' => show(_include_action_error,array('file' => $page_dir.'/pages/action_'.$action.'.php')));
@@ -2117,23 +2180,12 @@ function count_clicks($side_tag='',$clickedID=0)
 /**
  *  Neue Languages & Neue Funktionen einbinden
  */
-if(($add_languages = get_files(basePath.'/inc/additional-languages/'.$language.'/',false,true,array('php'))))
-{
-    if(count($add_languages) >= 1)
-    {
-        foreach($add_languages as $languages)
-        { if(file_exists(basePath.'/inc/additional-languages/'.$language.'/'.$languages)) include(basePath.'/inc/additional-languages/'.$language.'/'.$languages); }
-    }
-}
+if(($add_languages = API_CORE::load_additional_language()) != false)
+{ foreach($add_languages as $language) include($language); }
 
-if(($add_functions = get_files(basePath.'/inc/additional-functions/',false,true,array('php'))))
-{
-    if(count($add_functions) >= 1)
-    {
-        foreach($add_functions as $func)
-        { if(file_exists(basePath.'/inc/additional-functions/'.$func)) include(basePath.'/inc/additional-functions/'.$func); }
-    }
-}
+if(($add_functions = API_CORE::load_additional_functions()) != false)
+{ foreach($add_functions as $func) include($func); }
+unset($add_languages,$add_functions);
 
 //-> Navigation einbinden
 if(file_exists(basePath.'/inc/menu-functions/navi.php'))
@@ -2212,10 +2264,6 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         $charset = _charset;
         $index = empty($index) ? '' : (empty($check_msg) ? '' : $check_msg).'<table class="mainContent" cellspacing="1" style="margin-top:0">'.$index.'</table>';
 
-        //-> Sort & filter placeholders
-        //default placeholders
-        $arr = array("idir" => '../inc/images/admin', "dir" => $designpath);
-
         //check if placeholders are given
         $pholder = file_get_contents($designpath."/index.html");
 
@@ -2234,6 +2282,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         $pholdervars = pholderreplace($pholdervars);
 
         //put placeholders in array
+        $arr = array();
         $pholder = explode("^",$pholder);
         foreach($pholder as $phold)
         {
@@ -2306,4 +2355,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         echo show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr);
     }
 }
+
+//Initialisierung der Addon Calls
+API_CORE::call_addons_init();
 ?>

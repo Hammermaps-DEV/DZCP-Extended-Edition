@@ -1,79 +1,74 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 ####################################
 ## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
-	exit();
-	
-#####################
-## Userlogin Seite ##
-#####################
-  header("Content-type: text/html; charset=utf-8");
-  if($_GET['do'] == 'edit')
-  {
-    $qry = db("SELECT * FROM ".$db['usergb']."
-               WHERE id = '".intval($_GET['gbid'])."'");
-    $get = _fetch($qry);
+    exit();
 
-    $get_id = '?';
-    $get_userid = $get['reg'];
-    $get_date = $get['datum'];
+##############
+## Vorschau ##
+##############
+if (_version < '1.0') //Mindest Version pruefen
+    $index = _version_for_page_outofdate;
+else
+{
+    header("Content-type: text/html; charset=utf-8");
+    if($do == 'edit')
+    {
+        $get = db("SELECT reg,datum FROM ".$db['usergb']." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
 
-    if($get['reg'] == 0) $regCheck = true;
-    $editby = show(_edited_by, array("autor" => cleanautor($userid),
-                                     "time" => date("d.m.Y H:i", time())._uhr));
-  } else {
-    $get_id = cnt($db['usergb'], "WHERE user = ".intval($_GET['uid']))+1;
-    $get_userid = $userid;
-    $get_date = time();
+        $get_id = '?';
+        $get_userid = $get['reg'];
+        $get_date = $get['datum'];
+        $regCheck = (!$get['reg'] ? true : false);
+        $editby = show(_edited_by, array("autor" => cleanautor($userid), "time" => date("d.m.Y H:i", time())._uhr));
+    }
+    else
+    {
+        $get_id = cnt($db['usergb'], "WHERE user = ".(isset($_GET['uid']) ? (convert::ToInt($_GET['uid'])+1) : 1));
+        $get_userid = $userid;
+        $get_date = time();
+        $regCheck = ($chkMe == 'unlogged' ? true : false);
+        $editby = '';
+    }
 
-    if($chkMe == 'unlogged') $regCheck = true;
-  }
+    if($regCheck)
+    {
+        $get_hp = $_POST['hp'];
+        $get_email = $_POST['email'];
+        $get_nick = show(_link_mailto, array("nick" => re($_POST['nick']), "email" => eMailAddr($get_email)));
+    }
+    else
+    {
+        $get_hp = data($userid,'hp');
+        $get_email = data($userid,'email');
+        $get_nick = autor($userid);
+    }
 
-  if($regCheck)
-	{
-    $get_hp = $_POST['hp'];
-    $get_email = $_POST['email'];
-    $get_nick = $_POST['nick'];
-  
-    $onoff = "";
-    $avatar = "";
-    $nick = show(_link_mailto, array("nick" => re($get_nick),
-                                     "email" => eMailAddr($get_email)));
-  } else {
-    $get_hp = data('hp',$userid);
-    $email = data('email',$userid);
-    $onoff = onlinecheck($userid);
-    $get_nick = autor($userid);
-  }
+    $gbhp = (!empty($get_hp) ? show(_hpicon, array("hp" => links($get_hp))) : '');
+    $gbemail = (!empty($get_email) ? show(_emailicon, array("email" => eMailAddr($get_email))) : '');
+    $titel = show(_eintrag_titel, array("postid" => $get_id, "datum" => date("d.m.Y", time()), "zeit" => date("H:i", time())._uhr, "edit" => '', "delete" => ''));
+    $posted_ip = ($chkMe == 4 ? visitorIp() : _logged);
 
-  if($get_hp) $gbhp = show(_hpicon, array("hp" => links($get_hp)));
-  else $gbhp = "";
-  
-  if($get_email) $gbemail = show(_emailicon, array("email" => eMailAddr($get_email)));
-  else $gbemail = "";
+    $index = show("page/comments_show", array("titel" => $titel,
+                                              "comment" => bbcode($_POST['eintrag']),
+                                              "nick" => $get_nick,
+                                              "hp" => $gbhp,
+                                              "editby" => $editby,
+                                              "email" => $gbemail,
+                                              "avatar" => useravatar($userid),
+                                              "onoff" => onlinecheck($userid),
+                                              "rank" => getrank($userid),
+                                              "ip" => $posted_ip));
 
-  $titel = show(_eintrag_titel, array("postid" => $get_id,
-										 				     			"datum" => date("d.m.Y", time()),
-	  									 		 			    	"zeit" => date("H:i", time())._uhr,
-                                      "edit" => $edit,
-                                      "delete" => $delete));
-
-  if($chkMe == 4) $posted_ip = $ip;
-  else            $posted_ip = _logged;
-
-	$index .= show("page/comments_show", array("titel" => $titel,
-	  		   														       "comment" => bbcode($_POST['eintrag']),
-                                             "nick" => $get_nick,
-                                             "hp" => $gbhp,
-                                             "editby" => $editby,
-                                             "email" => $gbemail,
-                                             "avatar" => useravatar($userid),
-                                             "onoff" => $onoff,
-                                             "rank" => getrank($userid),
-                                             "ip" => $posted_ip));
-
-  echo '<table class="mainContent" cellspacing="1">'.$index.'</table>';
-  exit;
+    update_user_status_preview();
+    exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
+}
 ?>
-

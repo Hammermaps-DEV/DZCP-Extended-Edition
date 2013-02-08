@@ -1,6 +1,9 @@
 <?php
+define('basePath', dirname(__FILE__));
+require_once(basePath."/inc/config.php");
+
 ob_start();
-  
+
 // Start session if no headers were sent
   if(!headers_sent())
   {
@@ -16,13 +19,6 @@ ob_start();
       $_COOKIE['PHPSESSID']  = true;
     }
   }
-
-## COLORS
-    $backgroundColor  = '#444444';
-    $textColor        = '#000000';
-    $noiseColor       = '#AAAAAA';
-    $lineColor        = '#555555';
-## /COLORS
 
   if(function_exists('gd_info'))
   {
@@ -55,24 +51,24 @@ ob_start();
 
     $backgroundColor = imagecolorallocate($im, hex2rgb($backgroundColor,'r')   , hex2rgb($backgroundColor,'g')   , hex2rgb($backgroundColor,'b'));
                        imagecolortransparent ($im, $backgroundColor);
-  	$noiseColor      = imagecolorallocate($im, hex2rgb($noiseColor,'r'), hex2rgb($noiseColor,'g'), hex2rgb($noiseColor,'b'));
-  	$lineColor       = imagecolorallocate($im, hex2rgb($lineColor,'r') , hex2rgb($lineColor,'g') , hex2rgb($lineColor,'b'));
+      $noiseColor      = imagecolorallocate($im, hex2rgb($noiseColor,'r'), hex2rgb($noiseColor,'g'), hex2rgb($noiseColor,'b'));
+      $lineColor       = imagecolorallocate($im, hex2rgb($lineColor,'r') , hex2rgb($lineColor,'g') , hex2rgb($lineColor,'b'));
 
 // Pixel einfügen
     if(function_exists('imagesetpixel'))
     {
       $noise = $x * $y / 10;
-    	for($i = 0; $i < $noise; $i++)
-    		imagesetpixel($im, mt_rand(0, $x), mt_rand(0, $y), $noiseColor);
+        for($i = 0; $i < $noise; $i++)
+            imagesetpixel($im, mt_rand(0, $x), mt_rand(0, $y), $noiseColor);
     }
 
 // Linien zeichnen
     if(function_exists('imagesetpixel')) imagesetthickness($im, 1);
     if(function_exists('imageline'))
     {
-    	$anz = mt_rand(4, 9);
+        $anz = mt_rand(4, 9);
       for($i = 1; $i <= $anz; $i++)
-    	  imageline($im, mt_rand(0, $x), mt_rand(0, $y), $x - mt_rand(0, 0), mt_rand(0, $y), $lineColor);
+          imageline($im, mt_rand(0, $x), mt_rand(0, $y), $x - mt_rand(0, 0), mt_rand(0, $y), $lineColor);
     }
 // Zahlencode einfuegen
     $code = '';

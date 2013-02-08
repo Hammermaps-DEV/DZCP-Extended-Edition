@@ -78,7 +78,7 @@ class cache_memcache extends Cache
     private static function control_set($key,$ttl,$settings_array=array())
     {
         $control = array_to_string($settings_array);
-        $control = gzcompress(utf8_encode($control));
+        $control = gzcompress(convert::UTF8($control));
 
         if(@memcache_get(self::$_memcached,'control_'.md5($key)))
             @memcache_replace(self::$_memcached, 'control_'.md5($key), $control, false, $ttl+1);
@@ -89,7 +89,7 @@ class cache_memcache extends Cache
     private static function control_get($key)
     {
         $data = @memcache_get(self::$_memcached,'control_'.md5($key));
-        return string_to_array(utf8_decode(gzuncompress($data)));
+        return string_to_array(convert::UTF8_Reverse(gzuncompress($data)));
     }
 
     /**
@@ -114,7 +114,7 @@ class cache_memcache extends Cache
         if(!$data || empty($data))
             return '';
 
-        $data = utf8_decode(gzuncompress($data));
+        $data = convert::UTF8_Reverse(gzuncompress($data));
         $control = self::control_get($key);
 
         //Array Erkennung

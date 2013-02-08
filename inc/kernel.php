@@ -1,10 +1,18 @@
 <?php
 /**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+/**
 * Eine Liste der Dateien oder Verzeichnisse zusammenstellen, die sich im angegebenen Ordner befinden.
+* Updated for DZCP-Extended Edition
 *
 * @return array
 */
-function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array())
+function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array(),$dir_bl=array())
 {
     $files = array();
     if($handle = @opendir($dir))
@@ -14,8 +22,16 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
             while(false !== ($file = readdir($handle)))
             {
                 if($file != '.' && $file != '..' && !is_file($dir.'/'.$file))
-                    $files[] = $file;
-            }
+                {
+                    if(count($dir_bl) == 0)
+                        $files[] = $file;
+                    else
+                    {
+                        if(!in_array($file, $dir_bl))
+                            $files[] = $file;
+                    }
+                }
+            } //while end
         }
         else if($only_files) ## Dateien ##
         {
@@ -33,7 +49,7 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
                             $files[] = $file;
                     }
                 }
-            }
+            } //while end
         }
         else ## Ordner & Dateien ##
         {
@@ -56,7 +72,7 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
                     if($file != '.' && $file != '..')
                         $files[] = $file;
                 }
-            }
+            } //while end
         }
 
         if(!count($files))
@@ -71,10 +87,11 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
 
 /**
 * Erkennen welche PHP Version ausgeführt wird.
+* Added by DZCP-Extended Edition
 *
 * @return boolean
 */
-function is_php($version='5.0.0')
+function is_php($version='5.2.0')
 { return (floatval(phpversion()) >= $version); }
 
 /**
@@ -120,6 +137,7 @@ function parsePHPInfo()
 
 /**
  * Prüft wie PHP ausgeführt wird
+ * Added by DZCP-Extended Edition
  *
  * @return string
  **/
@@ -134,6 +152,7 @@ function php_sapi_type()
 
 /**
  * Funktion um eine Datei im Web auf Existenz zu prüfen
+ * Updated for DZCP-Extended Edition
  *
  * @return mixed
  **/
@@ -160,6 +179,7 @@ function fileExists($url)
 
 /**
  * Funktion um notige Erweiterungen zu prufen
+ * Added by DZCP-Extended Edition
  *
  * @return boolean
  **/
@@ -182,6 +202,7 @@ function fsockopen_support()
 
 /**
  * Pingt einen Server Port
+ * Added by DZCP-Extended Edition
  *
  * @return boolean
  **/
@@ -202,6 +223,7 @@ function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
 
 /**
  * Gibt die IP des Besuchers / Users zurück
+ * Added by DZCP-Extended Edition
  *
  * @return String
  */
@@ -254,20 +276,30 @@ function pholderreplace($pholder)
 
 /**
 * Sucht nach Platzhaltern und ersetzt diese.
+* Updated for DZCP-Extended Edition
 *
 * @return string
 */
-function show($tpl="", $array=array())
+function show($tpl="", $array=array(), $array_lang_constant=array())
 {
     global $tmpdir,$chkMe;
 
     if(!empty($tpl) && $tpl != null)
     {
+        ## DZCP-Extended Edition START ##
         $template = $_SESSION['installer'] ? basePath."/_installer/html/".$tpl : basePath."/inc/_templates_/".$tmpdir."/".$tpl;
-        $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;;
+        $template_additional = $_SESSION['installer'] ? false : basePath."/inc/additional-tpl/".$tmpdir."/".$tpl;
+        $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;
 
-        if(file_exists($template.".html"))
+        if($template_additional != false && file_exists($template_additional.".html"))
+            $tpl = file_get_contents($template_additional.".html");
+        else if($template_additional != false && ($tpli=API_CORE::load_additional_tpl($tpl)) && !file_exists($template_additional.".html"))
+            $tpl = $tpli;
+        else if(allow_additional && file_exists($template.".html") && !file_exists($template_additional.".html"))
             $tpl = file_get_contents($template.".html");
+        ## DZCP-Extended Edition END ##
+
+        $a = array('nick' => 'Test');
 
         //put placeholders in array
         $pholder = explode("^",pholderreplace($tpl));
@@ -280,20 +312,20 @@ function show($tpl="", $array=array())
                 continue;
 
             if(defined(substr($pholder[$i], 4)))
-                $array[$pholder[$i]] = constant(substr($pholder[$i], 4));
+                $array[$pholder[$i]] = (count($array_lang_constant) >= 1 ? show(constant(substr($pholder[$i], 4)),$array_lang_constant) : constant(substr($pholder[$i], 4)));
         }
 
         unset($pholder);
 
+        ## DZCP-Extended Edition START ##
         $tpl = ($chkMe == 'unlogged' ? preg_replace("|<logged_in>.*?</logged_in>|is", "", $tpl) : preg_replace("|<logged_out>.*?</logged_out>|is", "", $tpl));
         $tpl = str_ireplace(array("<logged_in>","</logged_in>","<logged_out>","</logged_out>"), '', $tpl);
+        ## DZCP-Extended Edition END ##
 
         if(count($array) >= 1)
         {
             foreach($array as $value => $code)
-            {
-                $tpl = str_replace('['.$value.']', $code, $tpl);
-            }
+            { $tpl = str_replace('['.$value.']', $code, $tpl); }
         }
     }
 
@@ -343,12 +375,29 @@ if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
 }
 
 /**
+ * Gibt requires Fehler aus und stoppt die Ausführung des CMS
+ * Added by DZCP-Extended Edition
+ **/
+function check_of_php52()
+{
+    if(!is_php('5.2.0'))
+    {
+        die('<b>Requires failed:</b><br /><ul>'.
+                '<li><b>The DZCP-Extended Edition requires PHP 5.2.0 or newer.</b>'.
+                '<li><b>Die DZCP-Extended Edition ben&ouml;tigt PHP 5.2.0 oder neuer.</b>');
+    }
+}
+
+check_of_php52();
+
+/**
  * Gibt Datenbank Fehler aus und stoppt die Ausführung des CMS
+ * Added by DZCP-Extended Edition
  **/
 function print_db_error($query=false)
 {
     global $prefix;
-    die('<b>MySQL-Query failed:</b><br /><br /><ul>'.
+    die('<b>MySQL-Query failed:</b><br /><ul>'.
             '<li><b>ErrorNo</b> = '.str_replace($prefix,'',mysql_errno()).
             '<li><b>Error</b>   = '.str_replace($prefix,'',mysql_error()).
             ($query ? '<li><b>Query</b>   = '.str_replace($prefix,'',$query).'</ul>' : ''));
@@ -356,6 +405,7 @@ function print_db_error($query=false)
 
 /**
  * Datenbank Query senden
+ * Updated for DZCP-Extended Edition
  * Todo: Code überarbeiten, Update auf MySQLi + SQL-Inception Schutz
  *
  * @return resource/array/int
@@ -398,7 +448,7 @@ function dbinfo()
         $sum += $tableSum;
         $rows += $allRows;
         $entrys ++;
-    }
+    } //while end
 
     $info["entrys"] = $entrys;
     $info["rows"] = $rows;
@@ -456,6 +506,7 @@ function sum($db, $where = "", $what)
 
 /**
  * Funktion um CMS Settings aus der Datenbank auszulesen
+ * Updated for DZCP-Extended Edition
  * Todo: Code überarbeiten, Update auf MySQLi
  *
  * @return mixed/array
@@ -480,6 +531,7 @@ function settings($what)
 
 /**
  * Funktion um die CMS Config aus der Datenbank auszulesen
+ * Updated for DZCP-Extended Edition
  * Todo: Code überarbeiten, Update auf MySQLi
  *
  * @return mixed/array
@@ -504,6 +556,7 @@ function config($what)
 
 /**
  * Generiert Passwörter
+ * Updated for DZCP-Extended Edition
  *
  * @return String
  */
@@ -533,6 +586,7 @@ function mkpwd($passwordLength=8,$specialcars=true)
 
 /**
  * Funktion zum schreiben der Adminlogs
+ * Added by DZCP-Extended Edition
  */
 function wire_ipcheck($what='')
 {
@@ -542,6 +596,7 @@ function wire_ipcheck($what='')
 
 /**
  * Checkt versch. Dinge anhand der Hostmaske eines Users
+ * Updated for DZCP-Extended Edition
  *
 * @return boolean
  */
@@ -565,6 +620,7 @@ function ipcheck($what,$time = "")
 
 /**
  * Wandelt einen Boolean zu einem Boolean-String um.
+ * Added by DZCP-Extended Edition
  *
  * @return String
  */
@@ -575,6 +631,7 @@ function Bool_to_StringConverter($bool)
 
 /**
  * Wandelt einen Boolean-String zu Boolean um.
+ * Added by DZCP-Extended Edition
  *
  * @return boolean
  */
@@ -585,6 +642,7 @@ function String_to_boolConverter($bool_coded)
 
 /**
  * Wandelt einen Array-String zu einem Array um.
+ * Added by DZCP-Extended Edition
  *
  * @return array
  */
@@ -600,7 +658,7 @@ function string_to_array($str,$counter=1)
         if($t1[1] == "+#bool#+" or $t1[1] == "-#bool#-")
             $vv=String_to_boolConverter($t1[1]);
         else
-            $vv=utf8_decode($t1[1]);
+            $vv=convert::UTF8_Reverse($t1[1]);
 
         if(isset($t1[2]) && $t1[2]=="~Y~")
             $arr[$kk]=string_to_array($vv,($counter+1));
@@ -613,6 +671,7 @@ function string_to_array($str,$counter=1)
 
 /**
  * Wandelt einen Array zu einem Array-String um.
+ * Added by DZCP-Extended Edition
  *
  * @return String
  */
@@ -628,7 +687,7 @@ function array_to_string($arr,$counter=1)
             if(is_bool($value))
                 $value = Bool_to_StringConverter($value);
 
-            $str.=$key."=$counter>".utf8_encode($value)."|$counter|";
+            $str.=$key."=$counter>".convert::UTF8($value)."|$counter|";
         }
     }
 
@@ -676,10 +735,53 @@ function spChars($txt)
     return str_replace($search, $replace, $txt);
 }
 
+/**
+ * Funktion um eine Variable prüfung in einem Array durchzuführen
+ * Added by DZCP-Extended Edition
+ *
+ * @return boolean
+ */
+function array_var_exists($var,$search)
+{ foreach($search as $key => $var_) { if($var_==$var) return true; } return false; }
+
+/**
+ * Funktion um Passwörter in einen Hash umzurechnen
+ * Added by DZCP-Extended Edition
+ *
+ * Info Metode:
+ * 0 => md5
+ * 1 => sha1
+ * 2 => sha256
+ * 3 => sha512
+ *
+ * @return string/hash
+ */
+function pass_hash($pass_key='',$metode=0)
+{
+    switch($metode)
+    {
+        case 1: return sha1($pass_key,false); break;
+        case 2: return hash('sha256', $pass_key,false); break;
+        case 3: return hash('sha512', $pass_key,false); break;
+        default: return md5($pass_key,false); break;
+    }
+}
+
+/**
+ * Funktion um fehlende Klassen zu laden
+ * Added by DZCP-Extended Edition
+ */
+spl_autoload_register(function ($class)
+{
+    if(file_exists(basePath. "/inc/additional-kernel/".$class.".php"))
+    { include_once(basePath. "/inc/additional-kernel/".$class.".php"); }
+    else { trigger_error("Could not load class '".$class."' from file 'inc/additional-kernel/".$class.".php'<p>Add '".$class.".php' with 'class ".$class."' to 'inc/additional-kernel/'<p>", E_USER_WARNING); }
+});
+
 #############################################
 #################### XML ####################
 #############################################
-class xml
+class xml // Class by DZCP-Extended Edition
 {
     private static $xmlobj = array(array()); //XML
 
@@ -827,5 +929,32 @@ class xml
      */
     public static function bool($value)
     { return ($value == 'true' ? true : false); }
+}
+
+#############################################
+############### TypeConverter ###############
+#############################################
+class convert // Class by DZCP-Extended Edition
+{
+    public static final function ToString($input)
+    { settype($input, 'string'); return $input;	}
+
+    public static final function BoolToInt($input)
+    { return ($input == true ? 1 : 0); }
+
+    public static final function IntToBool($input)
+    { return ($input == 0 ? false : true); }
+
+    public static final function ToInt($input)
+    { settype($input, 'integer'); return $input; }
+
+    public static final function UTF8($input)
+    { return self::ToString(utf8_encode($input)); }
+
+    public static final function UTF8_Reverse($input)
+    { return utf8_decode($input); }
+
+    public static final function ToHTML($input)
+    { return htmlentities($input, ENT_COMPAT | ENT_HTML5, _charset); }
 }
 ?>

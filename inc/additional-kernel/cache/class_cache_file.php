@@ -57,7 +57,7 @@ class cache_file extends Cache
         xml::saveXMLfile('cache_index');
         self::$_file = basePath . self::$_dir.'/'.$hash.'.cache';
 
-        if(file_put_contents(self::$_file, gzcompress(base64_encode(utf8_encode($data)))))
+        if(file_put_contents(self::$_file, gzcompress(base64_encode(convert::UTF8($data)))))
             return true;
         else
             return false;
@@ -111,7 +111,7 @@ class cache_file extends Cache
             if(!$stream = @base64_decode($stream))
                 return false;
 
-            return xml::getXMLvalue('cache_index','/cache_index/file[@hash="' . $hash . '"]/array') == 'yes' ? string_to_array(utf8_decode($stream)) : utf8_decode($stream);
+            return xml::getXMLvalue('cache_index','/cache_index/file[@hash="' . $hash . '"]/array') == 'yes' ? string_to_array(convert::UTF8_Reverse($stream)) : convert::UTF8_Reverse($stream);
         }
         else
             return false;
