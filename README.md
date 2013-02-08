@@ -82,6 +82,8 @@ Neue HTML Tags zum ein HTML Code ausblenden basierend auf dem Loginstatus des Us
 	HTML Code der nur angezeigt wird wenn der aktuelle User abgemeldet ist...
 </logged_out>
 
+- Gametiger wurde entfernt.
+
 Optional* Zusätzliche XML-Config für die DZCP Menufunktionen kann angelegt werden.
 * Es kann eingestellt werden ob die Menufunktion über Ajax Loader nachgeladen werden sollen.
 * Welches Bild für jede Menufunktion die per Ajax Loader nachgeladen wird, verwendet werden soll.
