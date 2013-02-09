@@ -28,6 +28,7 @@ define('_pwd_encoder_algorithm', 'Algorithm');
 define('_pwd_encoder', 'Password-Hash Algorithm');
 define('_pwd_encoder_info', 'Which password hash algorithm to use, default is * SHA256');
 define('_user_cant_delete_radmin', 'Root admins can not be deleted!');
+define('_no_connect_to_ts', 'Teamspeak server is offline!');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');

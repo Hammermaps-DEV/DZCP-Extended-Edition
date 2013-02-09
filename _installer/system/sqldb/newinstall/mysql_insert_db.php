@@ -145,8 +145,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Artikel ====================================================
     //===============================================================
-    db("INSERT INTO ".$db['artikel']." (`id`, `autor`, `datum`, `kat`, `titel`, `text`, `link1`, `url1`, `link2`, `url2`, `link3`, `url3`, `public`) VALUES
-    (NULL, '1', '".time()."', 1, 'Testartikel', '<p>Hier k&ouml;nnte dein Artikel stehen!</p>\r\n<p> </p>', '', '', '', '', '', '', 1);",false,false,true);
+    db("INSERT INTO ".$db['artikel']." (`id`, `autor`, `datum`, `kat`, `titel`, `text`, `link1`, `url1`, `link2`, `url2`, `link3`, `url3`, `viewed`, `public`) VALUES
+    (NULL, '1', '".time()."', 1, 'Testartikel', '<p>Hier k&ouml;nnte dein Artikel stehen!</p>\r\n<p> </p>', '', '', '', '', '', '', 0, 1);",false,false,true);
 
     //===============================================================
     //-> Profilfelder ===============================================

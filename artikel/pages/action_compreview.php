@@ -6,8 +6,13 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+#############################################
+##### Code for 'DZCP - Extended Edition #####
+###### DZCP - Extended Edition >= 1.0 #######
+#############################################
+
 ####################################
-## Wird in einer Index ausgefÃ¼hrt ##
+## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
     exit();
@@ -16,71 +21,70 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($_GET['do'] == 'edit')
+    header("Content-type: text/html; charset=utf-8");
+    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    $cid = isset($_GET['cid']) ? intval($_GET['cid']) : 0;
+    $get_hp = isset($_POST['hp']) ? $_POST['hp'] : '';
+    $get_email = isset($_POST['email']) ? $_POST['email'] : '';
+    $get_nick = isset($_POST['nick']) ? $_POST['nick'] : '';
+    $get_comment = isset($_POST['comment']) ? bbcode($_POST['comment'],1) : '';
+
+    switch (isset($_GET['do']) ? $_GET['do'] : '')
     {
-        $qry = db("SELECT * FROM ".$db['acomments']."
-               WHERE id = '".intval($_GET['cid'])."'");
-        $get = _fetch($qry);
+        case 'edit':
+            $get = db("SELECT * FROM ".$db['acomments']." WHERE id = '".$cid."'",false,true);
 
-        $get_id = '?';
-        $get_userid = $get['reg'];
-        $get_date = $get['datum'];
+            $get_id = '?';
+            $get_userid = $get['reg'];
+            $get_date = $get['datum'];
 
-        if($get['reg'] == 0) $regCheck = false;
-        else {
-            $regCheck = true;
-            $pUId = $get['reg'];
-        }
+            if($get['reg'] == 0)
+                $regCheck = false;
+            else
+            {
+                $regCheck = true;
+                $pUId = $get['reg'];
+            }
 
-        $editedby = show(_edited_by, array("autor" => cleanautor($userid),
-                "time" => date("d.m.Y H:i", time())._uhr));
-    } else {
-        $get_id = cnt($db['acomments'], " WHERE artikel = ".intval($_GET['id'])."")+1;
-        $get_userid = $userid;
-        $get_date = time();
+            $editedby = show(_edited_by, array("autor" => cleanautor($userid), "time" => date("d.m.Y H:i", time())._uhr));
+        break;
+        default:
+            $editedby = '';
+            $get_id = cnt($db['acomments'], " WHERE artikel = ".$id."")+1;
+            $get_userid = $userid;
+            $get_date = time();
 
-        if($chkMe == 'unlogged') $regCheck = false;
-        else {
-            $regCheck = true;
-            $pUId = $userid;
-        }
+            if($chkMe == 'unlogged')
+                $regCheck = false;
+            else
+            {
+                $regCheck = true;
+                $pUId = $userid;
+            }
+        break;
     }
 
-    $get_hp = $_POST['hp'];
-    $get_email = $_POST['email'];
-    $get_nick = $_POST['nick'];
-
-    if(!$regCheck)
-    {
-        if($get_hp) $hp = show(_hpicon_forum, array("hp" => links($get_hp)));
-        if($get_email) $email = '<br />'.show(_emailicon_forum, array("email" => eMailAddr($get_email)));
-        $onoff = "";
-        $avatar = "";
-        $nick = show(_link_mailto, array("nick" => re($get_nick),
-                "email" => $get_email));
-    } else {
-        $hp = "";
-        $email = "";
-        $onoff = onlinecheck($get_userid);
-        $nick = cleanautor($get_userid);
-    }
+    $hp = $regCheck ? '' : (!empty($get_hp) ? show(_hpicon_forum, array("hp" => links($get_hp))) : '');
+    $email = $regCheck ? '' : (!empty($get_email) ? '<br />'.show(_emailicon_forum, array("email" => eMailAddr($get_email))) : '');
+    $onoff = $regCheck ? onlinecheck($get_userid) : '';
+    $nick = $regCheck ? cleanautor($get_userid) : show(_link_mailto, array("nick" => re($get_nick), "email" => $get_email));
 
     $titel = show(_eintrag_titel, array("postid" => $get_id,
-            "datum" => date("d.m.Y", $get_date),
-            "zeit" => date("H:i", $get_date)._uhr,
-            "edit" => $edit,
-            "delete" => $delete));
+                                        "datum" => date("d.m.Y", $get_date),
+                                        "zeit" => date("H:i", $get_date)._uhr,
+                                        "edit" => '',
+                                        "delete" => ''));
 
     $index = show("page/comments_show", array("titel" => $titel,
-            "comment" => bbcode($_POST['comment'],1),
-            "nick" => $nick,
-            "editby" => bbcode($editedby,1),
-            "email" => $email,
-            "hp" => $hp,
-            "avatar" => useravatar($get_userid),
-            "onoff" => $onoff,
-            "rank" => getrank($get_userid),
-            "ip" => visitorIp()._only_for_admins));
+                                              "comment" => $get_comment,
+                                              "nick" => $nick,
+                                              "editby" => bbcode($editedby,1),
+                                              "email" => $email,
+                                              "hp" => $hp,
+                                              "avatar" => useravatar($get_userid),
+                                              "onoff" => $onoff,
+                                              "rank" => getrank($get_userid),
+                                              "ip" => visitorIp()._ip_only_for_admins));
 
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');

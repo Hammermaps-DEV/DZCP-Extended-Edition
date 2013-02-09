@@ -28,6 +28,7 @@ define('_pwd_encoder_algorithm', 'Algorithmus');
 define('_pwd_encoder', 'Passwort-Hash Algorithmus');
 define('_pwd_encoder_info', 'Welcher Passwort-Hash Algorithmus soll verwendet werden, Standard ist *SHA256');
 define('_user_cant_delete_radmin', 'Root Admins können nicht gel&ouml;scht werden!');
+define('_no_connect_to_ts', 'Teamspeak Server ist nicht erreichbar!');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');
@@ -577,7 +578,7 @@ Jeder berechtigte Admin hat darauf hin diese Nachricht empfangen!<br /><br />
 define('_cw_info', 'Der Admin f&uuml;r diesen Bereich erh&auml;lt auch die FightUs-Anfragen!');
 define('_level_info', 'Beim vergeben des Levels "Admin" kann das Level nur noch &uuml;ber den Root Admin (derjenige, der das Clanportal installiert hat) ge&auml;ndert werden!<br />Ferner hat der Besitzer diesen Levels <span class="fontUnder">uneingeschr&auml;nkten</span> Zugriff auf alle Bereiche!');
 ## EDITED FOR v 1.3.1
-define('_related_links','related Links:');
+define('_related_links','Weitere Links:');
 define('_cw_admin_lineup_info','Namen mit Komma trennen!');
 define('_profil_email2', 'E-mail #2');
 define('_profil_email3', 'E-mail #3');

@@ -44,6 +44,7 @@ function install_mysql_create()
       `url2` varchar(200) NOT NULL DEFAULT '',
       `link3` varchar(100) NOT NULL DEFAULT '',
       `url3` varchar(200) NOT NULL DEFAULT '',
+      `viewed` int(11) NOT NULL DEFAULT '0',
       `public` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);

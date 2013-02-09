@@ -42,6 +42,7 @@ function install_155x_1600_update()
     db("ALTER TABLE `".$db['users']."` CHANGE `gmaps_koord` `gmaps_koord` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".$db['users']."` ADD `pwd_encoder` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pwd`;",false,false,true);
     db("ALTER TABLE `".$db['settings']."` ADD `default_pwd_encoder` INT( 1 ) NOT NULL DEFAULT '2' AFTER `urls_linked`;",false,false,true);
+    db("ALTER TABLE `".$db['artikel']."` ADD `viewed` INT( 11 ) NOT NULL DEFAULT '0' AFTER `url3`;",false,false,true);
 
     // Add UNIQUE INDEX
     if(db("SELECT id FROM `".$db['config']."`",true) >= 2)

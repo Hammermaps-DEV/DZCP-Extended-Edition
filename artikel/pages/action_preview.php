@@ -6,8 +6,13 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+#############################################
+##### Code for 'DZCP - Extended Edition #####
+###### DZCP - Extended Edition >= 1.0 #######
+#############################################
+
 ####################################
-## Wird in einer Index ausgefÃ¼hrt ##
+## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
     exit();
@@ -17,60 +22,20 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     header("Content-type: text/html; charset=utf-8");
+    $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".(isset($_POST['kat']) ? intval($_POST['kat']) : 0)."'",false,true);
+    $links1 = (isset($_POST['url1']) && !empty($_POST['url1']) ? show(_news_link, array("link" => re($_POST['link1']), "url" => links($_POST['url1']))) : '');
+    $links2 = (isset($_POST['url2']) && !empty($_POST['url2']) ? show(_news_link, array("link" => re($_POST['link2']), "url" => links($_POST['url2']))) : '');
+    $links3 = (isset($_POST['url3']) && !empty($_POST['url3']) ? show(_news_link, array("link" => re($_POST['link3']), "url" => links($_POST['url3']))) : '');
+    $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-    $qrykat = db("SELECT katimg FROM ".$db['newskat']."
-                  WHERE id = '".intval($_POST['kat'])."'");
-    $getkat = _fetch($qrykat);
-
-    if($_POST['url1'])
-    {
-        $rel = _related_links;
-        $links1 = show(_artikel_link, array("link" => re($_POST['link1']),
-                "url" => links($_POST['url1'])));
-    } else {
-        $links1 = "";
-    }
-    if($_POST['url2'])
-    {
-        $rel = _related_links;
-        $links2 = show(_artikel_link, array("link" => re($_POST['link2']),
-                "url" => links($_POST['url2'])));
-    } else {
-        $links2 = "";
-    }
-    if($_POST['url3'])
-    {
-        $rel = _related_links;
-        $links3 = show(_artikel_link, array("link" => re($_POST['link3']),
-                "url" => links($_POST['url3'])));
-    } else {
-        $links3 = "";
-    }
-
-    if(!empty($links1) || !empty($links2) || !empty($links3))
-    {
-        $links = show(_artikel_links, array("link1" => $links1,
-                "link2" => $links2,
-                "link3" => $links3,
-                "rel" => $rel));
-    } else {
-        $links = "";
-    }
-
-    $index = show($dir."/show_more", array("titel" => re($_POST['titel']),
-            "id" => $get['id'],
-            "comments" => "",
-            "display" => "inline",
-            "nautor" => _autor,
-            "dir" => $designpath,
-            "kat" => re($getkat['katimg']),
-            "ndatum" => _datum,
-            "showmore" => $showmore,
-            "icq" => "",
-            "text" => bbcode($_POST['artikel'],1),
-            "datum" => date("j.m.y H:i")._uhr,
-            "links" => $links,
-            "autor" => autor($userid)));
+    $index = show($dir."/show_more", array("titel" => isset($_POST['titel']) ? re($_POST['titel']) : '',
+                                           "kat" => re($getkat['katimg']),
+                                           "id" => '_prev',
+                                           "comments" => _news_comments_prev,
+                                           "text" => isset($_POST['artikel']) ? bbcode($_POST['artikel'],1) : '',
+                                           "datum" => date("d.m.y H:i", time())._uhr,
+                                           "links" => $links,
+                                           "autor" => autor($_SESSION['id'])));
 
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
