@@ -19,11 +19,11 @@ if (!defined('IS_DZCP'))
 
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
-else if(!isset($_GET['id']) || !($news_id=intval($_GET['id'])) || db("SELECT id FROM ".$db['news']." WHERE id = '".$news_id."'",true))
+else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".$db['news']." WHERE id = ".$news_id=convert::ToInt($_GET['id']),true))
     $index = error(_id_dont_exist, 1);
 else
 {
-    $c = db("SELECT intern,public FROM ".$db['news']." WHERE id = '".$news_id."'",false,true);
+    $c = db("SELECT intern,public FROM ".$db['news']." WHERE id = ".$news_id,false,true);
 
     if(!permission("news") && !$c['public'])
         $index = error(_error_wrong_permissions, 1);
