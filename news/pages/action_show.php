@@ -17,8 +17,10 @@
 if (!defined('IS_DZCP'))
     exit();
 
-if (_version < '1.0' || !isset($_GET['id']) || !($news_id=intval($_GET['id']))) //Mindest Version pruefen
+if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
+else if(!isset($_GET['id']) || !($news_id=intval($_GET['id'])) || db("SELECT id FROM ".$db['news']." WHERE id = '".$news_id."'",true))
+    $index = error(_id_dont_exist, 1);
 else
 {
     $c = db("SELECT intern,public FROM ".$db['news']." WHERE id = '".$news_id."'",false,true);
