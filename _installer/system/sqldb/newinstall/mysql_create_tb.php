@@ -235,6 +235,7 @@ function install_mysql_create()
       `f_newscom` int(5) NOT NULL DEFAULT '20',
       `f_cwcom` int(5) NOT NULL DEFAULT '20',
       `f_artikelcom` int(5) NOT NULL DEFAULT '20',
+      `f_downloadcom` int(5) NOT NULL DEFAULT '20',
       `l_newsadmin` int(5) NOT NULL DEFAULT '20',
       `l_shouttext` int(5) NOT NULL DEFAULT '22',
       `l_newsarchiv` int(5) NOT NULL DEFAULT '20',
@@ -324,6 +325,7 @@ function install_mysql_create()
       `kat` int(5) NOT NULL DEFAULT '0',
       `date` int(20) NOT NULL DEFAULT '0',
       `last_dl` int(20) NOT NULL DEFAULT '0',
+      `comments` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
@@ -336,6 +338,24 @@ function install_mysql_create()
       `name` varchar(249) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
+    //-> Downloadkommentare =========================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['dlcomments']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['dlcomments']."` (
+      `id` int(10) NOT NULL AUTO_INCREMENT,
+      `download` int(10) NOT NULL DEFAULT '0',
+      `nick` varchar(20) NOT NULL DEFAULT '',
+      `datum` int(20) NOT NULL DEFAULT '0',
+      `email` varchar(130) NOT NULL DEFAULT '',
+      `hp` varchar(50) NOT NULL DEFAULT '',
+      `reg` int(5) NOT NULL DEFAULT '0',
+      `comment` text NOT NULL,
+      `ip` varchar(50) NOT NULL DEFAULT '',
+      `editby` text,
+      PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 
     //===============================================================
     //-> Events (Kalender) ==========================================
@@ -793,6 +813,7 @@ function install_mysql_create()
       `reg_dl` int(1) NOT NULL DEFAULT '1',
       `reg_artikel` int(1) NOT NULL DEFAULT '1',
       `reg_newscomments` int(1) NOT NULL DEFAULT '1',
+      `reg_dlcomments` int(1) NOT NULL DEFAULT '1',
       `tmpdir` varchar(100) NOT NULL DEFAULT 'version1.5',
       `wmodus` int(1) NOT NULL DEFAULT '0',
       `persinfo` int(1) NOT NULL DEFAULT '1',

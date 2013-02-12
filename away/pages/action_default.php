@@ -38,7 +38,7 @@ else
 
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-            if($userid == $get['userid'] || $chkMe == "4")
+            if(convert::ToInt($userid) == $get['userid'] || $chkMe == "4")
             {
                 $value = show("page/button_edit_single", array("id" => $get['id'],
                         "action" => "action=edit",

@@ -19,7 +19,7 @@ else
     $qry = db("SELECT s1.*,s2.internal FROM ".$db['sites']." AS s1
              LEFT JOIN ".$db['navi']." AS s2
              ON s1.id = s2.editor
-             WHERE s1.id = '".intval($_GET['show'])."'");
+             WHERE s1.id = '".convert::ToInt($_GET['show'])."'");
     $get = _fetch($qry);
 
     if(_rows($qry))

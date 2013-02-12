@@ -24,10 +24,10 @@ else
 
         foreach($picformat AS $end)
         {
-            if(file_exists(basePath.'/inc/images/squads/'.intval($get['id']).'.'.$end))
+            if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($get['id']).'.'.$end))
             {
                 $style = 'text-align:center;padding:0';
-                $squad = '<img src="../inc/images/squads/'.intval($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
+                $squad = '<img src="../inc/images/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
                 break;
             }
         }

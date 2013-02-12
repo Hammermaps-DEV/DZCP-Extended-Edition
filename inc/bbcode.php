@@ -82,7 +82,6 @@ $maxclankasse = $config['m_clankasse'];
 $maxbanned = $config['m_banned'];
 $maxadminnews = $config['m_adminnews'];
 $maxadminartikel = $config["m_adminartikel"];
-$martikel = $config["m_artikel"];
 $maxshout = $config['m_shout'];
 $maxcomments = $config['m_comments'];
 $maxcwcomments = $config['m_cwcomments'];
@@ -108,8 +107,6 @@ $flood_forum = $config['f_forum'];
 $flood_gb = $config['f_gb'];
 $flood_membergb = $config['f_membergb'];
 $flood_shout = $config['f_shout'];
-$flood_newscom = $config['f_newscom'];
-$flood_artikelcom = $config['f_artikelcom'];
 $flood_cwcom = $config['f_cwcom'];
 $lnewsadmin = $config['l_newsadmin'];
 $lshouttext = $config['l_shouttext'];
@@ -265,7 +262,7 @@ function logout()
     global $db,$prev,$userid;
 
     if($userid)
-        db("UPDATE ".$db['users']." SET online = '0', sessid = '' WHERE id = '".$userid."'");
+        db("UPDATE ".$db['users']." SET online = '0', sessid = '' WHERE id = '".convert::ToInt($userid)."'");
 
     set_cookie($prev.'id', '');
     set_cookie($prev.'pkey', '');
@@ -288,10 +285,42 @@ function userid()
     global $db;
 
     if(empty($_SESSION['id']) || empty($_SESSION['pwd']))
-        return false;
+        return 0;
 
-    $get = db("SELECT id FROM ".$db['users']." WHERE id = '".$_SESSION['id']."' AND pwd = '".$_SESSION['pwd']."'",false,true);
-    return $get['id'];
+    $sql = db("SELECT id FROM ".$db['users']." WHERE id = '".convert::ToInt($_SESSION['id'])."' AND pwd = '".$_SESSION['pwd']."'");
+
+    if(!_rows($sql))
+        return 0;
+
+    $get = _fetch($sql);
+    return convert::ToInt($get['id']);
+}
+
+//-> Prueft, ob User eingeloggt ist und wenn ja welches Level er besitzt
+function checkme($userid_set=0)
+{
+    global $db;
+
+    if($userid_set != 0)
+        $userid = convert::ToInt($userid_set);
+    else
+        $userid = userid();
+
+    if(!$userid)
+        return "unlogged";
+
+    $qry = db("SELECT level FROM ".$db['users']."
+               WHERE id = ".convert::ToInt($userid)."
+               AND pwd = '".$_SESSION['pwd']."'
+               AND ip = '".mysql_real_escape_string($_SESSION['ip'])."'");
+
+    if(_rows($qry))
+    {
+        $get = _fetch($qry);
+        return $get['level'];
+    }
+    else
+        return "unlogged";
 }
 
 //-> Templateswitch
@@ -338,7 +367,7 @@ function get_level_dropdown_menu($selected_level=0,$userid=0)
     $option = '';
     foreach($levels as $level => $array)
     {
-        if(!$array['only_admin'] || checkme($userid) == 4)
+        if(!$array['only_admin'] || checkme(convert::ToInt($userid)) == 4)
             $option .= '<option value="'.$array['value'].'" '.($selected_level == $array['value'] ? 'selected="selected"' : '').'>'.$array['lang'].'</option>';
     }
 
@@ -367,7 +396,7 @@ function languages()
 
 //-> Userspezifiesche Dinge
 if(isset($userid) && $ajaxJob != true && $userid != false)
-    db("UPDATE ".$db['userstats']." SET `hits` = hits+1, `lastvisit` = '".((int)$_SESSION['lastvisit'])."'  WHERE user = ".$userid);
+    db("UPDATE ".$db['userstats']." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".convert::ToInt($userid));
 
 //-> PHP-Code farbig anzeigen
 function highlight_text($txt)
@@ -857,13 +886,13 @@ function updateCounter()
         {
             db("DELETE FROM ".$db['c_ips']." WHERE ip = '".VisitorIP()."'");
             db(($count ? "UPDATE ".$db['counter']." SET `visitors` = visitors+1 WHERE today = '".$today."'" : "INSERT INTO ".$db['counter']." SET `visitors` = '1', `today` = '".$today."'"));
-            db("INSERT INTO ".$db['c_ips']." SET `ip` = '".VisitorIP()."', `datum`  = '".((int)$datum)."'");
+            db("INSERT INTO ".$db['c_ips']." SET `ip` = '".VisitorIP()."', `datum`  = '".convert::ToInt($datum)."'");
         }
     }
     else
     {
         db(($count ? "UPDATE ".$db['counter']." SET `visitors` = visitors+1 WHERE today = '".$today."'" : "INSERT INTO ".$db['counter']." SET `visitors` = '1', `today` = '".$today."'"));
-        db("INSERT INTO ".$db['c_ips']." SET `ip` = '".VisitorIP()."', `datum`  = '".((int)$datum)."'");
+        db("INSERT INTO ".$db['c_ips']." SET `ip` = '".VisitorIP()."', `datum`  = '".convert::ToInt($datum)."'");
     }
 }
 
@@ -876,7 +905,7 @@ function update_maxonline()
     $count = cnt($db['c_who']);
 
     if($get['maxonline'] <= $count)
-        db("UPDATE ".$db['counter']." SET `maxonline` = '".((int)$count)."' WHERE today = '".$today."'");
+        db("UPDATE ".$db['counter']." SET `maxonline` = '".convert::ToInt($count)."' WHERE today = '".$today."'");
 }
 
 //-> Prueft, wieviele Besucher gerade online sind
@@ -887,7 +916,7 @@ function online_guests($where='')
     if(!isSpider())
     {
         db("DELETE FROM ".$db['c_who']." WHERE online < ".time());
-        db("REPLACE INTO ".$db['c_who']." SET `ip` = '".VisitorIP()."', `online` = '".((int)(time()+$useronline))."', `whereami` = '".up($where)."', `login` = '".($chkMe == 'unlogged' ? '0' : '1')."'");
+        db("REPLACE INTO ".$db['c_who']." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+$useronline))."', `whereami` = '".up($where)."', `login` = '".($chkMe == 'unlogged' ? '0' : '1')."'");
         return cnt($db['c_who']);
     }
 }
@@ -905,31 +934,6 @@ function paycheck($tocheck)
     return ($tocheck >= time() ? true : false);
 }
 
-//-> Prueft, ob User eingeloggt ist und wenn ja welches Level er besitzt
-function checkme($userid_set=0)
-{
-    global $db,$userid;
-
-    if($userid_set != 0)
-        $userid = $userid_set;
-
-    if(!$userid)
-        return "unlogged";
-
-    $qry = db("SELECT level FROM ".$db['users']."
-               WHERE id = '".intval($userid)."'
-               AND pwd = '".$_SESSION['pwd']."'
-               AND ip = '".mysql_real_escape_string($_SESSION['ip'])."'");
-
-    if(_rows($qry))
-    {
-        $get = _fetch($qry);
-        return $get['level'];
-    }
-    else
-        return "unlogged";
-}
-
 //-> Prueft, ob ein User diverse Rechte besitzt
 function permission($check)
 {
@@ -943,10 +947,10 @@ function permission($check)
         // check rank permission
         $team = db("SELECT s1.`".$check."` FROM ".$db['permissions']." AS s1
                     LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi`
-                    WHERE s2.`user` = '".intval($userid)."' AND s1.`".$check."` = '1' AND s2.`posi` != '0'",true);
+                    WHERE s2.`user` = '".convert::ToInt($userid)."' AND s1.`".$check."` = '1' AND s2.`posi` != '0'",true);
 
         // check user permission
-        $user = db("SELECT id FROM ".$db['permissions']." WHERE user = '".intval($userid)."' AND `".$check."` = '1'",true);
+        $user = db("SELECT id FROM ".$db['permissions']." WHERE user = '".convert::ToInt($userid)."' AND `".$check."` = '1'",true);
 
         if($user || $team)
             return true;
@@ -973,21 +977,21 @@ function check_msg()
 function forumcheck($tid, $what)
 {
     global $db;
-    return (db("SELECT ".$what." FROM ".$db['f_threads']." WHERE id = '".intval($tid)."' AND ".$what." = '1'",true) >= 1);
+    return (db("SELECT ".$what." FROM ".$db['f_threads']." WHERE id = '".convert::ToInt($tid)."' AND ".$what." = '1'",true) >= 1);
 }
 
 //-> Preuft, ob User ein Member des Squads ist
 function squadmember($squad_id)
 {
     global $db;
-    return (db("SELECT id FROM ".$db['squaduser']." WHERE squad = '".intval($squad_id)."' AND user = '".$_SESSION['id']."'",true) ? true : false);
+    return (db("SELECT id FROM ".$db['squaduser']." WHERE squad = '".convert::ToInt($squad_id)."' AND user = '".$_SESSION['id']."'",true) ? true : false);
 }
 
 //-> Gibt ein selectfield mit Ja und Nein aus
 function select_field($what,$where,$tid)
 {
     global $db;
-    $rows = db("SELECT ".$what." FROM ".$db[$where]." WHERE user = '".intval($tid)."' AND ".$what." = '1'",true);
+    $rows = db("SELECT ".$what." FROM ".$db[$where]." WHERE user = '".convert::ToInt($tid)."' AND ".$what." = '1'",true);
     return '<option value="0" '.(!$rows ? 'selected="selected"' : '').'>'._no.'</option><option value="1" '.($rows ? 'selected="selected"' : '').'>'._yes.'</option>';
 }
 
@@ -995,7 +999,7 @@ function select_field($what,$where,$tid)
 function check_buddy($buddy)
 {
     global $db,$userid;
-    return (db("SELECT buddy FROM ".$db['buddys']." WHERE user = '".intval($userid)."' AND buddy = '".intval($buddy)."'",true) ? false : true);
+    return (db("SELECT buddy FROM ".$db['buddys']." WHERE user = '".convert::ToInt($userid)."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true);
 }
 
 //-> Funktion um bei Clanwars Endergebnisse auszuwerten
@@ -1121,15 +1125,24 @@ function squad($code)
 function links($hp)
 {
     if(!empty($hp))
-    {
-        if(stristr($hp, 'http://') != false || stristr($hp, 'https://') != false || stristr($hp, 'ftp://') != false || stristr($hp, 'ftps://') != false ||
-           stristr($hp, 'http:\\') != false || stristr($hp, 'https:\\') != false || stristr($hp, 'ftp:\\') != false || stristr($hp, 'ftps:\\') != false)
-            return $hp;
-
-        return "http://".$hp;
-    }
+        return links_check_url($hp) ? $hp : "http://".$hp;
 
     return $hp;
+}
+
+//-> Funktion um URL Adressen zu erkennen
+function links_check_url($string='')
+{
+    if(!empty($string))
+    {
+        if(stristr($string, 'http://') != false || stristr($string, 'https://') != false ||
+           stristr($string, 'ftp://') != false || stristr($string, 'ftps://') != false ||
+           stristr($string, 'http:\\') != false || stristr($string, 'https:\\') != false ||
+           stristr($string, 'ftp:\\') != false || stristr($string, 'ftps:\\') != false)
+        return true;
+    }
+
+    return false;
 }
 
 //-> set cookies
@@ -1204,17 +1217,17 @@ function check_email($email)
 //-> Bilder verkleinern
 function img_size($img)
 {
-    return "<a href=\"../".$img."\" rel=\"lightbox[l_".intval($img)."]\"><img src=\"../thumbgen.php?img=".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../thumbgen.php?img=".$img."\" alt=\"\" /></a>";
 }
 
 function img_cw($folder="", $img="")
 {
-    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".intval($folder)."]\"><img src=\"../thumbgen.php?img=".$folder."_".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../thumbgen.php?img=".$folder."_".$img."\" alt=\"\" /></a>";
 }
 
 function gallery_size($img="")
 {
-    return "<a href=\"../gallery/images/".$img."\" rel=\"lightbox[gallery_".intval($img)."]\"><img src=\"../thumbgen.php?img=gallery/images/".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../gallery/images/".$img."\" rel=\"lightbox[gallery_".convert::ToInt($img)."]\"><img src=\"../thumbgen.php?img=gallery/images/".$img."\" alt=\"\" /></a>";
 }
 
 //-> Blaetterfunktion
@@ -1271,7 +1284,7 @@ function autor($uid, $class="", $nick="", $email="", $cut="",$add="")
 {
     global $db;
 
-    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".intval($uid)."'");
+    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".convert::ToInt($uid)."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1289,7 +1302,7 @@ function cleanautor($uid, $class="", $nick="", $email="", $cut="")
 {
     global $db;
 
-    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".intval($uid)."'");
+    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".convert::ToInt($uid)."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1303,7 +1316,7 @@ function rawautor($uid)
 {
     global $db;
 
-    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".intval($uid)."'");
+    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".convert::ToInt($uid)."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1356,14 +1369,14 @@ function jsconvert($txt)
 function fintern($id)
 {
     global $db,$userid,$chkMe;
-    $fget = db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1 LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id WHERE s2.`id` = '".intval($id)."'",false,true);
+    $fget = db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1 LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id WHERE s2.`id` = '".convert::ToInt($id)."'",false,true);
 
     if($chkMe == "unlogged")
         return empty($fget['intern']) ? true : false;
     else
     {
-        $team = db("SELECT * FROM ".$db['f_access']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi` WHERE s2.`user` = '".intval($userid)."' AND s2.`posi` != '0' AND s1.`forum` = '".intval($id)."'",true);
-        $user = db("SELECT * FROM ".$db['f_access']." WHERE `user` = '".intval($userid)."' AND `forum` = '".intval($id)."'",true);
+        $team = db("SELECT * FROM ".$db['f_access']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi` WHERE s2.`user` = '".convert::ToInt($userid)."' AND s2.`posi` != '0' AND s1.`forum` = '".convert::ToInt($id)."'",true);
+        $user = db("SELECT * FROM ".$db['f_access']." WHERE `user` = '".convert::ToInt($userid)."' AND `forum` = '".convert::ToInt($id)."'",true);
 
         if($user || $team || $chkMe == 4 || !$fget['intern'])
             return true;
@@ -1390,11 +1403,11 @@ function data($tid, $what)
         foreach($what as $qy)
         { $sql .= $qy.", "; }
         $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".$db['users']."` WHERE id = '".intval($tid)."'",false,true);
+        return db("SELECT ".$sql." FROM `".$db['users']."` WHERE id = '".convert::ToInt($tid)."'",false,true);
     }
     else
     {
-        $get = db("SELECT ".$what." FROM `".$db['users']."` WHERE id = '".intval($tid)."'",false,true);
+        $get = db("SELECT ".$what." FROM `".$db['users']."` WHERE id = '".convert::ToInt($tid)."'",false,true);
         return $get[$what];
     }
 }
@@ -1414,11 +1427,11 @@ function userstats($tid, $what)
         foreach($what as $qy)
         { $sql .= $qy.", "; }
         $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".$db['userstats']."` WHERE user = '".intval($tid)."'",false,true);
+        return db("SELECT ".$sql." FROM `".$db['userstats']."` WHERE user = '".convert::ToInt($tid)."'",false,true);
     }
     else
     {
-        $get = db("SELECT ".$what." FROM `".$db['userstats']."` WHERE user = '".intval($tid)."'",false,true);
+        $get = db("SELECT ".$what." FROM `".$db['userstats']."` WHERE user = '".convert::ToInt($tid)."'",false,true);
         return $get[$what];
     }
 }
@@ -1459,8 +1472,8 @@ check_msg_email();
 function perm_sendnews($uID)
 {
     global $db;
-    $team = db("SELECT s1.`news` FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi` WHERE s2.`user` = '".intval($uID)."' AND s1.`news` = '1' AND s2.`posi` != '0'",true);
-    $user = db("SELECT id FROM ".$db['permissions']." WHERE user = '".intval($uID)."' AND `news` = '1'",true);
+    $team = db("SELECT s1.`news` FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi` WHERE s2.`user` = '".convert::ToInt($uID)."' AND s1.`news` = '1' AND s2.`posi` != '0'",true);
+    $user = db("SELECT id FROM ".$db['permissions']." WHERE user = '".convert::ToInt($uID)."' AND `news` = '1'",true);
     return ($user || $team ? true : false);
 }
 
@@ -1472,7 +1485,7 @@ function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
 
     if($userid != 0 && !empty($userid))
     {
-        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".intval($userid)."'",false,true);
+        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".convert::ToInt($userid)."'",false,true);
         if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
         { if(empty($new)) return _newicon; }
     }
@@ -1489,9 +1502,9 @@ function check_is_new($datum = false, $datum2 = false)
 {
     global $db,$userid;
 
-    if($userid != 0 && !empty($userid) && is_int($userid))
+    if($userid != 0 && !empty($userid))
     {
-        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".$userid."'",false,true);
+        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".convert::ToInt($userid)."'",false,true);
 
         if($datum && is_int($datum) && $datum >= $get['lastvisit'])
             return true;
@@ -1645,7 +1658,7 @@ function voteanswer($what, $vid)
 function exist($tid)
 {
     global $db;
-    return (db("SELECT id FROM ".$db['users']." WHERE id = '".intval($tid)."'",true) ? true : false);
+    return (db("SELECT id FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false);
 }
 
 //-> Geburtstag errechnen
@@ -1670,7 +1683,7 @@ function getAge($bday)
 //-> Ausgabe des Userlevels
 function getuserlvl($userid=0)
 {
-    switch (data($userid,"level"))
+    switch (data(convert::ToInt($userid),"level"))
     {
         case 1: return _status_user; break;
         case 2: return _status_trial; break;
@@ -1689,22 +1702,22 @@ function getrank($tid, $squad=false, $profil=false)
     if($squad)
     {
         if($profil)
-            $qry = db("SELECT posi,squad FROM ".$db['userpos']." AS s1 LEFT JOIN ".$db['squads']." AS s2 ON s1.squad = s2.id WHERE s1.user = '".intval($tid)."' AND s1.squad = '".intval($squad)."' AND s1.posi != '0'");
+            $qry = db("SELECT posi,squad FROM ".$db['userpos']." AS s1 LEFT JOIN ".$db['squads']." AS s2 ON s1.squad = s2.id WHERE s1.user = '".convert::ToInt($tid)."' AND s1.squad = '".convert::ToInt($squad)."' AND s1.posi != '0'");
         else
-            $qry = db("SELECT posi,squad FROM ".$db['userpos']." WHERE user = '".intval($tid)."' AND squad = '".intval($squad)."' AND posi != '0'");
+            $qry = db("SELECT posi,squad FROM ".$db['userpos']." WHERE user = '".convert::ToInt($tid)."' AND squad = '".convert::ToInt($squad)."' AND posi != '0'");
 
         if(_rows($qry))
         {
             while($get = _fetch($qry))
             {
-                $gets = db("SELECT name FROM ".$db['squads']." WHERE id = '".intval($get['squad'])."'",false,true);
-                $getp = db("SELECT position FROM ".$db['pos']." WHERE id = '".intval($get['posi'])."'",false,true);
+                $gets = db("SELECT name FROM ".$db['squads']." WHERE id = '".convert::ToInt($get['squad'])."'",false,true);
+                $getp = db("SELECT position FROM ".$db['pos']." WHERE id = '".convert::ToInt($get['posi'])."'",false,true);
                 return(!empty($gets['name']) ? '<b>'.$gets['name'].':</b> '.$getp['position'] : $getp['position']);
             }
         }
         else
         {
-            $get = db("SELECT level FROM ".$db['users']." WHERE id = '".intval($tid)."'",false,true);
+            $get = db("SELECT level FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."'",false,true);
             switch ($get['level'])
             {
                 case 0: return _status_unregged; break;
@@ -1719,7 +1732,7 @@ function getrank($tid, $squad=false, $profil=false)
     }
     else
     {
-        $qry = db("SELECT s1.*,s2.position FROM ".$db['userpos']." AS s1 LEFT JOIN ".$db['pos']." AS s2 ON s1.posi = s2.id WHERE s1.user = '".intval($tid)."' AND s1.posi != '0' ORDER BY s2.pid ASC");
+        $qry = db("SELECT s1.*,s2.position FROM ".$db['userpos']." AS s1 LEFT JOIN ".$db['pos']." AS s2 ON s1.posi = s2.id WHERE s1.user = '".convert::ToInt($tid)."' AND s1.posi != '0' ORDER BY s2.pid ASC");
         if(_rows($qry))
         {
             $get = _fetch($qry);
@@ -1727,7 +1740,7 @@ function getrank($tid, $squad=false, $profil=false)
         }
         else
         {
-            $get = db("SELECT level FROM ".$db['users']." WHERE id = '".intval($tid)."'",false,true);
+            $get = db("SELECT level FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."'",false,true);
             switch ($get['level'])
             {
                 case 0: return _status_unregged; break;
@@ -1754,9 +1767,9 @@ function set_lastvisit()
     global $db,$useronline,$userid;
     if($userid)
     {
-        if(!db("SELECT id FROM ".$db['users']." WHERE id = ".intval($userid)." AND time+'".$useronline."'>'".time()."'",true))
+        if(!db("SELECT id FROM ".$db['users']." WHERE id = ".convert::ToInt($userid)." AND time+'".$useronline."'>'".time()."'",true))
         {
-            $time = data($userid, "time");
+            $time = data(convert::ToInt($userid), "time");
             $_SESSION['lastvisit'] = $time;
         }
     }
@@ -1766,7 +1779,7 @@ function set_lastvisit()
 function onlinecheck($tid)
 {
     global $db,$useronline;
-    if(db("SELECT id FROM ".$db['users']." WHERE id = '".intval($tid)."' AND time+'".$useronline."'>'".time()."' AND online = 1",true))
+    if(db("SELECT id FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."' AND time+'".$useronline."'>'".time()."' AND online = 1",true))
         return '<img src="../inc/images/online.png" alt="" class="icon" />';
     else
         return '<img src="../inc/images/offline.png" alt="" class="icon" />';
@@ -1924,9 +1937,9 @@ function userpic($userid, $width=170,$height=210)
     global $picformat;
     foreach($picformat as $endung)
     {
-        if(file_exists(basePath."/inc/images/uploads/userpics/".$userid.".".$endung))
+        if(file_exists(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung))
         {
-            $pic = show(_userpic_link, array("id" => $userid, "endung" => $endung, "width" => $width, "height" => $height));
+            $pic = show(_userpic_link, array("id" => convert::ToInt($userid), "endung" => $endung, "width" => $width, "height" => $height));
             break;
         }
         else
@@ -1942,9 +1955,9 @@ function useravatar($userid, $width=100,$height=100)
     global $picformat;
     foreach($picformat as $endung)
     {
-        if(file_exists(basePath."/inc/images/uploads/useravatare/".$userid.".".$endung))
+        if(file_exists(basePath."/inc/images/uploads/useravatare/".convert::ToInt($userid).".".$endung))
         {
-            $pic = show(_userava_link, array("id" => $userid, "endung" => $endung, "width" => $width, "height" => $height));
+            $pic = show(_userava_link, array("id" => convert::ToInt($userid), "endung" => $endung, "width" => $width, "height" => $height));
             break;
         }
         else
@@ -1960,8 +1973,8 @@ function hoveruserpic($userid, $width=170,$height=210)
     global $picformat; $pic = '';
     foreach($picformat as $endung)
     {
-        if(file_exists(basePath."/inc/images/uploads/userpics/".$userid.".".$endung))
-        { $pic = "../inc/images/uploads/userpics/".$userid.".".$endung."', '".$width."', '".$height.""; break; }
+        if(file_exists(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung))
+        { $pic = "../inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung."', '".$width."', '".$height.""; break; }
     }
 
     return(empty($pic) ? "../inc/images/nopic.gif', '".$width."', '".$height."" : $pic);
@@ -1972,7 +1985,7 @@ function admin_perms($userid)
 {
     global $db,$chkMe,$rootAdmin;
 
-    if(empty($userid))
+    if(empty($userid) || !$userid)
         return false;
 
     if($chkMe == "unlogged" || $chkMe == "banned")
@@ -1982,7 +1995,7 @@ function admin_perms($userid)
     $e = array('gb', 'shoutbox', 'editusers', 'votes', 'contact', 'joinus', 'intnews', 'forum', 'gs_showpw', 'edittactics');
 
     // check user permission
-    $c = db("SELECT * FROM ".$db['permissions']." WHERE user = '".intval($userid)."'",false,true);
+    $c = db("SELECT * FROM ".$db['permissions']." WHERE user = '".convert::ToInt($userid)."'",false,true);
     if(!empty($c))
     {
         $admin_settings = array();
@@ -2004,7 +2017,7 @@ function admin_perms($userid)
                     $admin_config = (array_key_exists($v, $admin_settings) ? $admin_settings[$v] : array('Only_Root' => false, 'Only_Admin' => false));
                     if(!$admin_config['Only_Root'] && !$admin_config['Only_Admin'])
                         return true;
-                    else if($admin_config['Only_Root'] && $userid == $rootAdmin)
+                    else if($admin_config['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin))
                         return true;
                     else if($admin_config['Only_Admin'] && $chkMe == 4)
                         return true;
@@ -2014,7 +2027,7 @@ function admin_perms($userid)
     }
 
     // check rank permission
-    $qry = db("SELECT s1.* FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi` WHERE s2.`user` = '".intval($userid)."' AND s2.`posi` != '0'");
+    $qry = db("SELECT s1.* FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi` WHERE s2.`user` = '".convert::ToInt($userid)."' AND s2.`posi` != '0'");
     while($r = _fetch($qry))
     {
         foreach($r AS $v => $k)
@@ -2039,7 +2052,7 @@ function getPermissions($checkID = 0, $pos = 0)
     {
         $check = empty($pos) ? 'user' : 'pos';
         $checked = array();
-        $qry = db("SELECT * FROM ".$db['permissions']." WHERE `".$check."` = '".intval($checkID)."'");
+        $qry = db("SELECT * FROM ".$db['permissions']." WHERE `".$check."` = '".convert::ToInt($checkID)."'");
 
         if(_rows($qry))
         {
@@ -2085,7 +2098,7 @@ function getBoardPermissions($checkID = 0, $pos = 0)
         while($get2 = _fetch($qry2))
         {
             $br = ($break % 2) ? '<br />' : ''; $break++;
-            $chk =  db("SELECT * FROM ".$db['f_access']." WHERE `".(empty($pos) ? 'user' : 'pos')."` = '".intval($checkID)."' AND ".(empty($pos) ? 'user' : 'pos')." != '0' AND `forum` = '".$get2['id']."'",true) ? ' checked="checked"' : '';
+            $chk =  db("SELECT * FROM ".$db['f_access']." WHERE `".(empty($pos) ? 'user' : 'pos')."` = '".convert::ToInt($checkID)."' AND ".(empty($pos) ? 'user' : 'pos')." != '0' AND `forum` = '".$get2['id']."'",true) ? ' checked="checked"' : '';
             $fkats .= '<input type="checkbox" class="checkbox" id="board_'.$get2['id'].'" name="board['.$get2['id'].']" value="'.$get2['id'].'"'.$chk.' /><label for="board_'.$get2['id'].'"> '.re($get2['kattopic']).'</label> '.$br;
         }
 
@@ -2151,17 +2164,17 @@ function count_clicks($side_tag='',$clickedID=0)
 
     if(checkme() != 'unlogged')
     {
-        if(db("SELECT id FROM ".$db['clicks_ips']." WHERE `uid` = '".$userid."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
+        if(db("SELECT id FROM ".$db['clicks_ips']." WHERE `uid` = '".convert::ToInt($userid)."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
             return false;
 
         if(db("SELECT id FROM ".$db['clicks_ips']." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
         {
-            db("UPDATE `".$db['clicks_ips']."` SET `uid` = '".$userid."' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
+            db("UPDATE `".$db['clicks_ips']."` SET `uid` = '".convert::ToInt($userid)."' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
             return false;
         }
         else
         {
-            db("INSERT INTO ".$db['clicks_ips']." (`id` ,`ip` ,`uid` ,`ids`, `side`) VALUES (NULL , '".visitorIp()."', '".$userid."', '".$clickedID."', '".$side_tag."')");
+            db("INSERT INTO ".$db['clicks_ips']." (`id` ,`ip` ,`uid` ,`ids`, `side`) VALUES (NULL , '".visitorIp()."', '".convert::ToInt($userid)."', '".$clickedID."', '".$side_tag."')");
             return true;
         }
     }
@@ -2242,7 +2255,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         {
             $check_msg = check_msg();
             set_lastvisit();
-            db("UPDATE ".$db['users']." SET `time` = '".((int)time())."', `whereami` = '".up($where)."' WHERE id = '".intval($userid)."'");
+            db("UPDATE ".$db['users']." SET `time` = '".time()."', `whereami` = '".up($where)."' WHERE id = '".convert::ToInt($userid)."'");
         }
 
         //init templateswitch
@@ -2316,7 +2329,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
                             if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
                             (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  $chkMe != "unlogged" && $chkMe != "banned") ||
                             (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
-                            ($MenuConfig['Only_Root'] && $chkMe == 4 && $userid == $rootAdmin))
+                            ($MenuConfig['Only_Root'] && $chkMe == 4 && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                             {
                                 include_once(basePath.'/inc/menu-functions/'.$phold.'.php');
                                 $arr[$phold] = call_user_func($phold);
@@ -2327,7 +2340,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
                             if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
                             (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  $chkMe != "unlogged" && $chkMe != "banned") ||
                             (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
-                            ($MenuConfig['Only_Root'] && $chkMe == 4 && $userid == $rootAdmin))
+                            ($MenuConfig['Only_Root'] && $chkMe == 4 && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                             {
                                 $menu_index_hash = md5_file(basePath.'/inc/menu-functions/'.$phold.'.php');
                                 $Ajax_img = ($MenuConfig['AjaxLoad_Img_Use'] ? "<div style=\"width:100%;padding:10px 0;text-align:center\"><img src=\"../inc/images/".$MenuConfig['AjaxLoad_Img']."\" alt=\"\" /></div>" : "");

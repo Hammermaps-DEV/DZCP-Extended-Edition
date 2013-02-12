@@ -28,6 +28,9 @@ $index = "";
 ## SECTIONS ##
 ##############
 
+// Helper
+include(basePath."/downloads/helper.php");
+
 #########################
 ## Action Loader START ##
 #########################

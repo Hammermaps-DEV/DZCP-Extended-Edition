@@ -18,12 +18,12 @@ else
 {
 
     $qry = db("SELECT link FROM ".$db['sponsoren']."
-             WHERE id = '".intval($_GET['id'])."'");
+             WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
     $upd = db("UPDATE ".$db['sponsoren']."
              SET `hits` = hits+1
-             WHERE id = '".intval($_GET['id'])."'");
+             WHERE id = '".convert::ToInt($_GET['id'])."'");
 
     header("Location: ".$get['link']);
 }

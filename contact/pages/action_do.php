@@ -43,11 +43,11 @@ else
             $sqlAnd = '';
             while($get = _fetch($qry))
             {
-                $sqlAnd .= " AND s2.`user` != '".intval($get['id'])."'";
+                $sqlAnd .= " AND s2.`user` != '".convert::ToInt($get['id'])."'";
                 $qrys = db("INSERT INTO ".$db['msg']."
-                    SET `datum`     = '".((int)time())."',
+                    SET `datum`     = '".time()."',
                         `von`       = '0',
-                        `an`        = '".((int)$get['id'])."',
+                        `an`        = '".convert::ToInt($get['id'])."',
                         `titel`     = '"._contact_title."',
                         `nachricht` = '".up($text, 1)."'");
             }
@@ -58,9 +58,9 @@ else
             while($get = _fetch($qry))
             {
                 $qrys = db("INSERT INTO ".$db['msg']."
-                    SET `datum`     = '".((int)time())."',
+                    SET `datum`     = '".time()."',
                         `von`       = '0',
-                        `an`        = '".((int)$get['user'])."',
+                        `an`        = '".convert::ToInt($get['user'])."',
                         `titel`     = '"._contact_title."',
                         `nachricht` = '".up($text, 1)."'");
             }
@@ -94,12 +94,12 @@ else
             $sqlAnd = '';
             while($get = _fetch($qry))
             {
-                $sqlAnd .= " AND s2.`user` != '".intval($get['id'])."'";
+                $sqlAnd .= " AND s2.`user` != '".convert::ToInt($get['id'])."'";
 
                 $qrys = db("INSERT INTO ".$db['msg']."
-                    SET `datum`     = '".((int)time())."',
+                    SET `datum`     = '".time()."',
                         `von`       = '0',
-                        `an`        = '".((int)$get['id'])."',
+                        `an`        = '".convert::ToInt($get['id'])."',
                         `titel`     = '"._contact_title_joinus."',
                         `nachricht` = '".up($text, 1)."'");
             }
@@ -110,9 +110,9 @@ else
             while($get = _fetch($qry))
             {
                 $qrys = db("INSERT INTO ".$db['msg']."
-                    SET `datum`     = '".((int)time())."',
+                    SET `datum`     = '".time()."',
                         `von`       = '0',
-                        `an`        = '".((int)$get['user'])."',
+                        `an`        = '".convert::ToInt($get['user'])."',
                         `titel`     = '"._contact_title_joinus."',
                         `nachricht` = '".up($text, 1)."'");
             }
@@ -143,7 +143,7 @@ else
             }
 
             $qrysq = db("SELECT name FROM ".$db['squads']."
-                   WHERE id = '".intval($_POST['squad'])."'");
+                   WHERE id = '".convert::ToInt($_POST['squad'])."'");
             $getsq = _fetch($qrysq);
 
             $msg = show(_contact_text_fightus, array("icq" => $icq,
@@ -159,7 +159,7 @@ else
                     "map" => $_POST['maps'],
                     "nick" => $_POST['nick']));
 
-            if($chkMe != 4) $add = " AND s2.squad = '".intval($_POST['squad'])."'";
+            if($chkMe != 4) $add = " AND s2.squad = '".convert::ToInt($_POST['squad'])."'";
             $who = db("SELECT s1.user FROM ".$db['permissions']." AS s1
                  LEFT JOIN ".$db['squaduser']." AS s2
                  ON s1.user = s2.user
@@ -169,11 +169,11 @@ else
             var_dump($who);
             while($get = _fetch($who))
             {
-                $sqlAnd .= " AND s2.`user` != '".intval($get['user'])."'";
+                $sqlAnd .= " AND s2.`user` != '".convert::ToInt($get['user'])."'";
                 $qry = db("INSERT INTO ".$db['msg']."
-                   SET `datum`      = '".((int)time())."',
+                   SET `datum`      = '".time()."',
                        `von`        = '0',
-                       `an`         = '".((int)$get['user'])."',
+                       `an`         = '".convert::ToInt($get['user'])."',
                        `titel`      = '"._contact_title_fightus."',
                        `nachricht`  = '".up($msg, 1)."'");
 
@@ -187,9 +187,9 @@ else
             while($get === _fetch($qry))
             {
                 $qry = db("INSERT INTO ".$db['msg']."
-                   SET `datum`      = '".((int)time())."',
+                   SET `datum`      = '".time()."',
                        `von`        = '0',
-                       `an`         = '".((int)$get['user'])."',
+                       `an`         = '".convert::ToInt($get['user'])."',
                        `titel`      = '"._contact_title_fightus."',
                        `nachricht`  = '".up($msg, 1)."'");
             }

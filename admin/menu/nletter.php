@@ -36,7 +36,7 @@ if(_adminMenu != 'true')
         elseif($_POST['to'] == "member") $selm = "selected=\"selected\"";
         elseif($_POST['to'] == "leader") $sell = "selected=\"selected\"";
 
-            $show = show($dir."/nletter", array("von" => $userid,
+            $show = show($dir."/nletter", array("von" => convert::ToInt($userid),
                                                 "an" => _to,
                                                 "who" => _msg_global_who,
                                                 "reg" => _msg_global_reg,
@@ -70,7 +70,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".$db['userstats']."
                          SET `writtenmsg` = writtenmsg+1
-                         WHERE user = ".intval($userid));
+                         WHERE user = ".convert::ToInt($userid));
 
               $show = info(_msg_reg_answer_done, "?admin=nletter");
 
@@ -87,7 +87,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".$db['userstats']."
                         SET `writtenmsg` = writtenmsg+1
-                        WHERE user = ".intval($userid));
+                        WHERE user = ".convert::ToInt($userid));
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } elseif($_POST['to'] == "leader") {
@@ -107,7 +107,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".$db['userstats']."
                           SET `writtenmsg` = writtenmsg+1
-                          WHERE user = ".intval($userid));
+                          WHERE user = ".convert::ToInt($userid));
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } else {
@@ -125,7 +125,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".$db['userstats']."
                           SET `writtenmsg` = writtenmsg+1
-                          WHERE user = ".intval($userid));
+                          WHERE user = ".convert::ToInt($userid));
 
               $show = info(_msg_squad_answer_done, "?admin=nletter");
         }
@@ -140,7 +140,7 @@ if(_adminMenu != 'true')
                                                    "name" => re($get['name'])));
           }
 
-      $show = show($dir."/nletter", array("von" => $userid,
+      $show = show($dir."/nletter", array("von" => convert::ToInt($userid),
                                              "an" => _to,
                                             "selr" => "",
                                           "selm" => "",

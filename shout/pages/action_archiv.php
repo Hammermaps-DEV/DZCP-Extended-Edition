@@ -18,7 +18,7 @@ else
 {
     $where = _site_shoutbox;
     $title = $pagetitle." - ".$where."";
-    $page = (isset($_GET['page']) ? intval($_GET['page']) : 1);
+    $page = (isset($_GET['page']) ? convert::ToInt($_GET['page']) : 1);
     $entrys = cnt($db['shout']);
     $i = $entrys-($page - 1)*$maxshoutarchiv;
 

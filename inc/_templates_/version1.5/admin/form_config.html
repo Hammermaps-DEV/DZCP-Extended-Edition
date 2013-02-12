@@ -504,6 +504,15 @@
         </td>
       </tr>
       <tr>
+        <td class="contentMainTop"><span class="fontBold">[lang_dl_comments]:</span></td>
+        <td class="contentMainFirst" align="center">
+          <select name="reg_dlcomments" class="dropdown">
+            <option value="0">[lang_no]</option>
+            <option value="1" [selr_dc]>[lang_yes]</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
         <td class="contentMainTop"><span class="fontBold">[lang_reg_artikel]:</span></td>
         <td class="contentMainFirst" align="center">
           <select name="reg_artikel" class="dropdown">
@@ -829,6 +838,14 @@
         <td class="contentMainTop"><span class="fontBold">[lang_cw_comments]:</span></td>
         <td class="contentMainFirst" align="center">
           <input type="text"  name="f_cwcom" value="[f_cwcom]" class="inputField_dis_mid"
+          onfocus="this.className='inputField_en_mid';"
+          onblur="this.className='inputField_dis_mid';" />[lang_seconds]
+        </td>
+      </tr>
+      <tr>
+        <td class="contentMainTop"><span class="fontBold">[lang_dl_comments]:</span></td>
+        <td class="contentMainFirst" align="center">
+          <input type="text"  name="f_downloadcom" value="[f_downloadcom]" class="inputField_dis_mid"
           onfocus="this.className='inputField_en_mid';"
           onblur="this.className='inputField_dis_mid';" />[lang_seconds]
         </td>

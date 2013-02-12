@@ -19,7 +19,7 @@ else
     $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
                LEFT JOIN ".$db['f_skats']." AS s2
                ON s2.sid = s1.id
-               WHERE s2.id = '".intval($_GET['id'])."'");
+               WHERE s2.id = '".convert::ToInt($_GET['id'])."'");
     $checks = _fetch($check);
 
     if($checks['intern'] == 1 && (!permission("intforum") && !fintern($checks['id'])))
@@ -32,7 +32,7 @@ else
         if(empty($_POST['suche']))
         {
             $qry = db("SELECT * FROM ".$db['f_threads']."
-                 WHERE kid ='".intval($_GET['id'])."'
+                 WHERE kid ='".convert::ToInt($_GET['id'])."'
                  OR global = 1
                  ORDER BY global DESC, sticky DESC, lp DESC, t_date DESC
                  LIMIT ".($page - 1)*$maxfthreads.",".$maxfthreads."");
@@ -40,16 +40,16 @@ else
             $qry = db("SELECT s1.global,s1.topic,s1.subtopic,s1.t_text,s1.t_email,s1.hits,s1.t_reg,s1.t_date,s1.closed,s1.sticky,s1.id
                  FROM ".$db['f_threads']." AS s1
                  WHERE s1.topic LIKE '%".$_POST['suche']."%'
-                 AND s1.kid = '".intval($_GET['id'])."'
+                 AND s1.kid = '".convert::ToInt($_GET['id'])."'
                  OR s1.subtopic LIKE '%".$_POST['suche']."%'
-                 AND s1.kid = '".intval($_GET['id'])."'
+                 AND s1.kid = '".convert::ToInt($_GET['id'])."'
                  OR s1.t_text LIKE '%".$_POST['suche']."%'
-                 AND s1.kid = '".intval($_GET['id'])."'
+                 AND s1.kid = '".convert::ToInt($_GET['id'])."'
                  ORDER BY s1.global DESC, s1.sticky DESC, s1.lp DESC, s1.t_date DESC
                  LIMIT ".($page - 1)*$maxfthreads.",".$maxfthreads."");
         }
 
-        $entrys = cnt($db['f_threads'], " WHERE kid = ".intval($_GET['id']));
+        $entrys = cnt($db['f_threads'], " WHERE kid = ".convert::ToInt($_GET['id']));
         $i = 2;
 
         while($get = _fetch($qry))
@@ -71,7 +71,7 @@ else
             if(empty($_POST['suche']))
             {
                 $qrys = db("SELECT id FROM ".$db['f_skats']."
-                    WHERE id = '".intval($_GET['id'])."'");
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $gets = _fetch($qrys);
 
                 $threadlink = show(_forum_thread_link, array("topic" => re(cut($get['topic'],$lforumtopic)),
@@ -119,7 +119,7 @@ else
         }
 
         $qrys = db("SELECT id,kattopic FROM ".$db['f_skats']."
-                WHERE id = '".intval($_GET['id'])."'");
+                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $gets = _fetch($qrys);
 
         $search = show($dir."/forum_skat_search", array("head_search" => _forum_head_skat_search,
@@ -151,7 +151,7 @@ else
         }
 
         $qrysub = db("SELECT sid FROM ".$db['f_skats']."
-                  WHERE id = '".intval($_GET['id'])."'");
+                  WHERE id = '".convert::ToInt($_GET['id'])."'");
         $subkat = _fetch($qrysub);
 
         $qryk = db("SELECT name FROM ".$db['f_kats']."

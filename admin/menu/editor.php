@@ -104,7 +104,7 @@ if(_adminMenu != 'true')
           $qry = db("INSERT INTO ".$db['sites']."
                      SET `titel` = '".up($_POST['titel'])."',
                          `text`  = '".up($_POST['inhalt'],1)."',
-                         `html`  = '".((int)$_POST['html'])."'");
+                         `html`  = '".convert::ToInt($_POST['html'])."'");
           $insert_id = mysql_insert_id();
 
           if($_POST['pos'] == "1" || "2") $sign = ">= ";
@@ -117,23 +117,23 @@ if(_adminMenu != 'true')
 
           $posi = db("UPDATE ".$db['navi']."
                       SET `pos` = pos+1
-                      WHERE pos ".$sign." '".intval($pos)."'");
+                      WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
           $posi = db("INSERT INTO ".$db['navi']."
-                      SET `pos`     = '".((int)$pos)."',
+                      SET `pos`     = '".convert::ToInt($pos)."',
                           `kat`     = '".up($kat)."',
                           `name`    = '".up($_POST['name'])."',
                           `url`     = '".up($url)."',
                           `shown`   = '1',
                           `type`    = '3',
-                          `editor`  = '".((int)$insert_id)."',
+                          `editor`  = '".convert::ToInt($insert_id)."',
                           `wichtig` = '0'");
 
           $show = info(_site_added, "?admin=editor");
         }
       } elseif($_GET['do'] == "edit") {
         $qrys = db("SELECT * FROM ".$db['sites']."
-                    WHERE id = '".intval($_GET['id'])."'");
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $gets = _fetch($qrys);
 
         $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
@@ -154,7 +154,7 @@ if(_adminMenu != 'true')
         }
 
         $qryn = db("SELECT * FROM ".$db['navi']."
-                    WHERE editor = '".intval($_GET['id'])."'");
+                    WHERE editor = '".convert::ToInt($_GET['id'])."'");
         $getn = _fetch($qryn);
 
         if($gets['html'] == "1") $checked = "checked=\"checked\"";
@@ -229,8 +229,8 @@ if(_adminMenu != 'true')
           $qry = db("UPDATE ".$db['sites']."
                      SET `titel` = '".up($_POST['titel'])."',
                          `text`  = '".up($_POST['inhalt'],1)."',
-                         `html`   = '".((int)$_POST['html'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                         `html`   = '".convert::ToInt($_POST['html'])."'
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           if($_POST['pos'] == "1" || "2") $sign = ">= ";
           else $sign = "> ";
@@ -242,22 +242,22 @@ if(_adminMenu != 'true')
 
           $posi = db("UPDATE ".$db['navi']."
                       SET `pos` = pos+1
-                      WHERE pos ".$sign." '".intval($pos)."'");
+                      WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
           $posi = db("UPDATE ".$db['navi']."
-                      SET `pos`     = '".((int)$pos)."',
+                      SET `pos`     = '".convert::ToInt($pos)."',
                           `kat`     = '".up($kat)."',
                           `name`    = '".up($_POST['name'])."',
                           `url`     = '".up($url)."'
-                      WHERE editor = '".intval($_GET['id'])."'");
+                      WHERE editor = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_site_edited, "?admin=editor");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db['sites']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $qry = db("DELETE FROM ".$db['navi']."
-                   WHERE editor = '".intval($_GET['id'])."'");
+                   WHERE editor = '".convert::ToInt($_GET['id'])."'");
         $show = info(_editor_deleted, "?admin=editor");
       } else {
         $qry = db("SELECT * FROM ".$db['sites']."");

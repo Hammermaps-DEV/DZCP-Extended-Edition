@@ -21,7 +21,6 @@ else
     else
     {
         $has_permission = permission("clankasse");
-        $page = ((int)(isset($_GET['page']) ? $_GET['page'] : 1));
         $entrys = cnt($db['clankasse']);
         $qry = db("SELECT * FROM ".$db['clankasse']." ORDER BY datum DESC LIMIT ".($page - 1)*$maxclankasse.",".$maxclankasse."");
 

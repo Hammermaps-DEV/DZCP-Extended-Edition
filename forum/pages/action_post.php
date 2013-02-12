@@ -19,10 +19,10 @@ else
     if($_GET['do'] == "edit")
     {
         $qry = db("SELECT * FROM ".$db['f_posts']."
-               WHERE id = '".intval($_GET['id'])."'");
+               WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid || permission("forum"))
+        if($get['reg'] == convert::ToInt($userid) || permission("forum"))
         {
             if($get['reg'] != 0)
             {
@@ -62,9 +62,9 @@ else
         }
     } elseif($_GET['do'] == "editpost") {
         $qry = db("SELECT reg FROM ".$db['f_posts']."
-               WHERE id = '".intval($_GET['id'])."'");
+               WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
-        if($get['reg'] == $userid || permission("forum"))
+        if($get['reg'] == convert::ToInt($userid) || permission("forum"))
         {
             if($get['reg'] != 0 || permission('forum'))
             {
@@ -78,7 +78,7 @@ else
                 if($get['reg'] != 0)
                 {
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                    $form = show("page/editor_regged", array("nick" => autor($userid),
+                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                             "von" => _autor));
                 } else {
                     if(($_POST['secure'] != $_SESSION['sec_'.$dir]) && !isset($userid)) $error = _error_invalid_regcode;
@@ -114,10 +114,10 @@ else
                         "eintraghead" => _eintrag));
             } else {
                 $qryp = db("SELECT * FROM ".$db['f_posts']."
-                    WHERE id = '".intval($_GET['id'])."'");
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $getp = _fetch($qryp);
 
-                $editedby = show(_edited_by, array("autor" => autor($userid),
+                $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                         "time" => date("d.m.Y H:i", time())._uhr));
 
                 $qry = db("UPDATE ".$db['f_posts']."
@@ -126,14 +126,14 @@ else
                        `text`   = '".up($_POST['eintrag'],1)."',
                        `hp`     = '".links($_POST['hp'])."',
                        `edited` = '".addslashes($editedby)."'
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
                 $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".$db['f_abo']." AS s1
                         LEFT JOIN ".$db['users']." AS s2 ON s2.id = s1.user
                       WHERE s1.fid = '".$getp['sid']."'");
                 while($getabo = _fetch($checkabo))
                 {
-                    if($userid != $getabo['user'])
+                    if(convert::ToInt($userid) != $getabo['user'])
                     {
                         $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".$getp['sid']."'");
                         $gettopic = _fetch($topic);
@@ -146,7 +146,7 @@ else
                         $subj = show(settings('eml_fabo_pedit_subj'), array("titel" => $title));
 
                         $message = show(settings('eml_fabo_pedit'), array("nick" => re($getabo['nick']),
-                                "postuser" => fabo_autor($userid),
+                                "postuser" => fabo_autor(convert::ToInt($userid)),
                                 "topic" => $gettopic['topic'],
                                 "titel" => $title,
                                 "domain" => $httphost,
@@ -183,7 +183,7 @@ else
                 $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
                      LEFT JOIN ".$db['f_skats']." AS s2
                      ON s2.sid = s1.id
-                     WHERE s2.id = '".intval($_GET['kid'])."'");
+                     WHERE s2.id = '".convert::ToInt($_GET['kid'])."'");
                 $checks = _fetch($check);
                 if(forumcheck($_GET['id'], "closed"))
                 {
@@ -193,8 +193,8 @@ else
                 } else {
                     if(isset($userid))
                     {
-                        $postnick = data($userid, "nick");
-                        $postemail = data($userid, "email");
+                        $postnick = data(convert::ToInt($userid), "nick");
+                        $postemail = data(convert::ToInt($userid), "email");
                     } else {
                         $postnick = "";
                         $postemail = "";
@@ -202,7 +202,7 @@ else
                     if($_GET['zitat'])
                     {
                         $qryzitat = db("SELECT nick,reg,text FROM ".$db['f_posts']."
-                            WHERE id = '".intval($_GET['zitat'])."'");
+                            WHERE id = '".convert::ToInt($_GET['zitat'])."'");
                         $getzitat = _fetch($qryzitat);
 
                         if($getzitat['reg'] == "0") $nick = $getzitat['nick'];
@@ -211,7 +211,7 @@ else
                         $zitat = zitat($nick, $getzitat['text']);
                     } elseif($_GET['zitatt']) {
                         $qryzitat = db("SELECT t_nick,t_reg,t_text FROM ".$db['f_threads']."
-                            WHERE id = '".intval($_GET['zitatt'])."'");
+                            WHERE id = '".convert::ToInt($_GET['zitatt'])."'");
                         $getzitat = _fetch($qryzitat);
 
                         if($getzitat['t_reg'] == "0") $nick = $getzitat['t_nick'];
@@ -226,8 +226,8 @@ else
                             "kid" => $_GET['kid']));
 
                     $qryl = db("SELECT * FROM ".$db['f_posts']."
-                      WHERE kid = '".intval($_GET['kid'])."'
-                      AND sid = '".intval($_GET['id'])."'
+                      WHERE kid = '".convert::ToInt($_GET['kid'])."'
+                      AND sid = '".convert::ToInt($_GET['id'])."'
                       ORDER BY date DESC");
                     if(_rows($qryl))
                     {
@@ -247,7 +247,7 @@ else
                         if($chkMe == "4") $posted_ip = $getl['ip'];
                         else              $posted_ip = _logged;
 
-                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt($db['f_posts'], " WHERE sid =".intval($_GET['id']))+1),
+                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt($db['f_posts'], " WHERE sid =".convert::ToInt($_GET['id']))+1),
                                 "datum" => date("d.m.Y", $getl['date']),
                                 "zeit" => date("H:i", $getl['date'])._uhr,
                                 "url" => '#',
@@ -297,11 +297,11 @@ else
                                 "zitat" => _forum_zitat_preview,
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+1));
+                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     } else {
                         $qryt = db("SELECT * FROM ".$db['f_threads']."
-                        WHERE kid = '".intval($_GET['kid'])."'
-                        AND id = '".intval($_GET['id'])."'");
+                        WHERE kid = '".convert::ToInt($_GET['kid'])."'
+                        AND id = '".convert::ToInt($_GET['id'])."'");
                         $gett = _fetch($qryt);
 
                         if(data($gett['t_reg'], "signatur")) $sig = _sig.bbcode(data($gett['t_reg'], "signatur"));
@@ -372,12 +372,12 @@ else
                                 "zitat" => "",
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+1));
+                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     }
 
                     if(isset($userid))
                     {
-                        $form = show("page/editor_regged", array("nick" => autor($userid),
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                                 "von" => _autor));
                     } else {
                         $form = show("page/editor_notregged", array("nickhead" => _nick,
@@ -416,7 +416,7 @@ else
             }
         }
     } elseif($_GET['do'] == "addpost") {
-        $qry_thread = db("SELECT `id`,`kid` FROM ".$db['f_threads']." WHERE `id` = '".(int)$_GET['id']."'");
+        $qry_thread = db("SELECT `id`,`kid` FROM ".$db['f_threads']." WHERE `id` = '".convert::ToInt($_GET['id'])."'");
         if(_rows($qry_thread) == 0)
         {
             $index = error(_id_dont_exist,1);
@@ -429,7 +429,7 @@ else
                 $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
                                          LEFT JOIN ".$db['f_skats']." AS s2
                                          ON s2.sid = s1.id
-                                         WHERE s2.id = '".intval($_GET['kid'])."'");
+                                         WHERE s2.id = '".convert::ToInt($_GET['kid'])."'");
                 $checks = _fetch($check);
 
                 if($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id']))
@@ -443,7 +443,7 @@ else
                     if(isset($userid))
                     {
                         if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                        $form = show("page/editor_regged", array("nick" => autor($userid),
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                                 "von" => _autor));
                     } else {
                         if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
@@ -460,8 +460,8 @@ else
                     $dowhat = show(_forum_dowhat_add_post, array("id" => $_GET['id'],
                             "kid" => $get_threadkid['kid']));
                     $qryl = db("SELECT * FROM ".$db['f_posts']."
-                                            WHERE kid = '".intval($get_threadkid['kid'])."'
-                                            AND sid = '".intval($_GET['id'])."'
+                                            WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
+                                            AND sid = '".convert::ToInt($_GET['id'])."'
                                             ORDER BY date DESC");
                     if(_rows($qryl))
                     {
@@ -483,7 +483,7 @@ else
                         if($chkMe == "4") $posted_ip = $getl['ip'];
                         else $posted_ip = _logged;
 
-                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt($db['f_posts'], " WHERE sid = ".intval($_GET['id']))+1),
+                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt($db['f_posts'], " WHERE sid = ".convert::ToInt($_GET['id']))+1),
                                 "datum" => date("d.m.Y", $getl['date']),
                                 "zeit" => date("H:i", $getl['date'])._uhr,
                                 "url" => '#',
@@ -540,11 +540,11 @@ else
                                 "zitat" => "",
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+1));
+                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     } else {
                         $qryt = db("SELECT * FROM ".$db['f_threads']."
-                                                WHERE kid = '".intval($get_threadkid['kid'])."'
-                                                AND id = '".intval($_GET['id'])."'");
+                                                WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
+                                                AND id = '".convert::ToInt($_GET['id'])."'");
                         $gett = _fetch($qryt);
 
                         if(data($gett['t_reg'], "signatur")) $sig = _sig.bbcode(data($gett['t_reg'], "signatur"));
@@ -615,7 +615,7 @@ else
                                 "zitat" => "",
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+1));
+                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     }
 
                     $index = show($dir."/post", array("titel" => _forum_new_post_head,
@@ -643,8 +643,8 @@ else
                 } else {
                     $spam = 0;
                     $qrydp = db("SELECT * FROM ".$db['f_posts']."
-                                             WHERE kid = '".intval($get_threadkid['kid'])."'
-                                             AND sid = '".intval($_GET['id'])."'
+                                             WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
+                                             AND sid = '".convert::ToInt($_GET['id'])."'
                                              ORDER BY date DESC
                                              LIMIT 1");
                     if(_rows($qrydp))
@@ -653,7 +653,7 @@ else
 
                         if(isset($userid))
                         {
-                            if($userid == $getdp['reg'] && $double_post == 1) $spam = 1;
+                            if(convert::ToInt($userid) == $getdp['reg'] && $double_post == 1) $spam = 1;
                             else $spam = 0;
                         } else {
                             if($_POST['nick'] == $getdp['nick'] && $double_post == 1) $spam = 1;
@@ -662,13 +662,13 @@ else
                     } else {
 
                         $qrytdp = db("SELECT * FROM ".$db['f_threads']."
-                                    WHERE kid = '".intval($get_threadkid['kid'])."'
-                                    AND id = '".intval($_GET['id'])."'");
+                                    WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
+                                    AND id = '".convert::ToInt($_GET['id'])."'");
                         $gettdp = _fetch($qrytdp);
 
                         if(isset($userid))
                         {
-                            if($userid == $gettdp['t_reg'] && $double_post == 1) $spam = 2;
+                            if(convert::ToInt($userid) == $gettdp['t_reg'] && $double_post == 1) $spam = 2;
                             else $spam = 0;
                         } else {
                             if($_POST['nick'] == $gettdp['t_nick'] && $double_post == 1) $spam = 2;
@@ -678,7 +678,7 @@ else
 
                     if($spam == 1)
                     {
-                        if(isset($userid)) $fautor = autor($userid);
+                        if(isset($userid)) $fautor = autor(convert::ToInt($userid));
                         else $fautor = autor('', '', $_POST['nick'], $_POST['email']);
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
@@ -687,15 +687,15 @@ else
 
                         $qry = db("UPDATE ".$db['f_threads']."
                                                                                          SET `lp` = '".time()."'
-                                    WHERE kid = '".intval($_GET['kid'])."'
-                                    AND id = '".intval($_GET['id'])."'");
+                                    WHERE kid = '".convert::ToInt($_GET['kid'])."'
+                                    AND id = '".convert::ToInt($_GET['id'])."'");
 
                         $qry = db("UPDATE ".$db['f_posts']."
                                                  SET `date`   = '".time()."',
                                                          `text`   = '".$text."'
                                                  WHERE id = '".$getdp['id']."'");
                     } elseif($spam == 2) {
-                        if(isset($userid)) $fautor = autor($userid);
+                        if(isset($userid)) $fautor = autor(convert::ToInt($userid));
                         else $fautor = autor('', '', $_POST['nick'], $_POST['email']);
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
@@ -708,39 +708,36 @@ else
                                                  WHERE id = '".$gettdp['id']."'");
                     } else {
                         $qry = db("INSERT INTO ".$db['f_posts']."
-                                         SET `kid`   = '".((int)$get_threadkid['kid'])."',
-                                                 `sid`   = '".((int)$_GET['id'])."',
-                                                 `date`  = '".((int)time())."',
+                                         SET `kid`   = '".convert::ToInt($get_threadkid['kid'])."',
+                                                 `sid`   = '".convert::ToInt($_GET['id'])."',
+                                                 `date`  = '".time()."',
                                                  `nick`  = '".up($_POST['nick'])."',
                                                  `email` = '".up($_POST['email'])."',
                                                  `hp`    = '".links($_POST['hp'])."',
-                                                 `reg`   = '".up($userid)."',
+                                                 `reg`   = '".up(convert::ToInt($userid))."',
                                                  `text`  = '".up($_POST['eintrag'],1)."',
                                                  `ip`    = '".visitorIp()."'");
 
-                        $update = db("UPDATE ".$db['f_threads']."
-                                                SET `lp`    = '".((int)time())."',
-                                                        `first` = '0'
-                                                WHERE id    = '".intval($_GET['id'])."'");
+                       db("UPDATE ".$db['f_threads']." SET `lp`    = '".time()."', `first` = '0' WHERE id    = '".convert::ToInt($_GET['id'])."'");
                     }
 
                     wire_ipcheck("fid(".$get_threadkid['kid'].")");
 
                     $update = db("UPDATE ".$db['userstats']."
                                                 SET `forumposts` = forumposts+1
-                                                WHERE `user`       = '".$userid."'");
+                                                WHERE `user`       = '".convert::ToInt($userid)."'");
 
                     $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".$db['f_abo']." AS s1
                                     LEFT JOIN ".$db['users']." AS s2 ON s2.id = s1.user
-                                                    WHERE s1.fid = '".((int)$_GET['id'])."'");
+                                                    WHERE s1.fid = '".convert::ToInt($_GET['id'])."'");
                     while($getabo = _fetch($checkabo))
                     {
-                        if($userid != $getabo['user'])
+                        if(convert::ToInt($userid) != $getabo['user'])
                         {
-                            $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".intval($_GET['id'])."'");
+                            $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
                             $gettopic = _fetch($topic);
 
-                            $entrys = cnt($db['f_posts'], " WHERE `sid` = ".intval($_GET['id']));
+                            $entrys = cnt($db['f_posts'], " WHERE `sid` = ".convert::ToInt($_GET['id']));
 
                             if($entrys == "0") $pagenr = "1";
                             else $pagenr = ceil($entrys/$maxfposts);
@@ -748,11 +745,11 @@ else
                             $subj = show(settings('eml_fabo_npost_subj'), array("titel" => $title));
 
                             $message = show(settings('eml_fabo_npost'), array("nick" => re($getabo['nick']),
-                                    "postuser" => fabo_autor($userid),
+                                    "postuser" => fabo_autor(convert::ToInt($userid)),
                                     "topic" => $gettopic['topic'],
                                     "titel" => $title,
                                     "domain" => $httphost,
-                                    "id" => intval($_GET['id']),
+                                    "id" => convert::ToInt($_GET['id']),
                                     "entrys" => $entrys+1,
                                     "page" => $pagenr,
                                     "text" => bbcode($_POST['eintrag']),
@@ -762,7 +759,7 @@ else
                         }
                     }
 
-                    $entrys = cnt($db['f_posts'], " WHERE `sid` = ".intval($_GET['id']));
+                    $entrys = cnt($db['f_posts'], " WHERE `sid` = ".convert::ToInt($_GET['id']));
 
                     if($entrys == "0") $pagenr = "1";
                     else $pagenr = ceil($entrys/$maxfposts);
@@ -777,17 +774,17 @@ else
         }
     } elseif($_GET['do'] == "delete") {
         $qry = db("SELECT * FROM ".$db['f_posts']."
-               WHERE id = '".intval($_GET['id'])."'");
+               WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid OR permission("forum"))
+        if($get['reg'] == convert::ToInt($userid) OR permission("forum"))
         {
             $del = db("DELETE FROM ".$db['f_posts']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             $fposts = userstats($get['reg'], "forumposts")-1;
             $upd = db("UPDATE ".$db['userstats']."
-                 SET `forumposts` = '".((int)$fposts)."'
+                 SET `forumposts` = '".convert::ToInt($fposts)."'
                  WHERE user = '".$get['reg']."'");
 
             $entrys = cnt($db['f_posts'], " WHERE `sid` = ".$get['sid']);

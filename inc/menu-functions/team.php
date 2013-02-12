@@ -4,7 +4,7 @@ function team($tID = '')
 {
   global $db,$teamRow,$l_team;
 //SQL
-    if(!empty($tID)) $where = "WHERE id = '".intval($tID)."' AND navi = 1";
+    if(!empty($tID)) $where = "WHERE id = '".convert::ToInt($tID)."' AND navi = 1";
     else             $where = "WHERE navi = '1' ORDER BY RAND()";
 
     $get = _fetch(db("SELECT * FROM ".$db['squads']." ".$where.""));
@@ -23,11 +23,11 @@ function team($tID = '')
                 ORDER BY s4.pid");
     $i=1;
     $cnt=0;
-	$member = "";
+    $member = "";
     while($getm = _fetch($qrym))
     {
-	  $tr1 = "";
-	  $tr2 = "";
+      $tr1 = "";
+      $tr2 = "";
 
       if($i == 0 || $i == 1) $tr1 = "<tr>";
       if($i == $teamRow)
@@ -52,12 +52,12 @@ function team($tID = '')
 
     if(is_float($cnt/$teamRow))
     {
-		$end = "";
-		for($e=$i;$e<=$teamRow;$e++)
-		{
-			$end .= '<td></td>';
-		}
-		$end = $end."</tr>";
+        $end = "";
+        for($e=$i;$e<=$teamRow;$e++)
+        {
+            $end .= '<td></td>';
+        }
+        $end = $end."</tr>";
     }
 
 // Next / last ID

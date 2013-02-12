@@ -15,7 +15,7 @@ if (!defined('IS_DZCP'))
 ###################
 ## Link Besuchen ##
 ###################
-$get = db("SELECT url,id,hits FROM ".$db['links']." WHERE `id` = '".((int)$_GET['id'])."'",false,true);
+$get = db("SELECT url,id,hits FROM ".$db['links']." WHERE `id` = '".convert::ToInt($_GET['id'])."'",false,true);
 
 if(count_clicks('link',$get['id']))
     db("UPDATE ".$db['links']." SET `hits` = ".($get['hits'] + 1)." WHERE `id` = '".$get['id']."'");

@@ -28,7 +28,7 @@ else
         $can_erase = false;
 
         //Get Userinfos
-        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".$userid."'",false,true);
+        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".convert::ToInt($userid)."'",false,true);
 
         ##################################
         ## Neue Foreneintraege anzeigen ##
@@ -148,15 +148,15 @@ else
         ################################################
         ## Neue Eintruage im User Guastebuch anzeigen ##
         ################################################
-        $qrymember = db("SELECT datum FROM ".$db['usergb']." WHERE user = '".$userid."' ORDER BY datum DESC"); $membergb = '';
+        $qrymember = db("SELECT datum FROM ".$db['usergb']." WHERE user = '".convert::ToInt($userid)."' ORDER BY datum DESC"); $membergb = '';
         if(_rows($qrymember) >= 1)
         {
             $getmember = _fetch($qrymember);
             if(check_is_new($getmember['datum']))
             {
                 $can_erase = true;
-                $eintrag = ((($check = cnt($db['usergb'], " WHERE datum > ".$get['lastvisit']." AND user = '".$userid."'")) == 1) ? _new_eintrag_1 : _new_eintrag_2);
-                $membergb = show(_user_new_membergb, array("cnt" => $check, "id" => $userid, "eintrag" => $eintrag)); //Output
+                $eintrag = ((($check = cnt($db['usergb'], " WHERE datum > ".$get['lastvisit']." AND user = '".convert::ToInt($userid)."'")) == 1) ? _new_eintrag_1 : _new_eintrag_2);
+                $membergb = show(_user_new_membergb, array("cnt" => $check, "id" => convert::ToInt($userid), "eintrag" => $eintrag)); //Output
             }
         }
 
@@ -165,8 +165,8 @@ else
         #######################################
         ## Neue Private Nachrichten anzeigen ##
         #######################################
-        $getmsg = db("SELECT id,an,datum FROM ".$db['msg']." WHERE an = '".$userid."' AND readed = 0 AND see_u = 0 ORDER BY datum DESC",false,true);
-        if(($check = cnt($db['msg'], " WHERE an = '".$userid."' AND readed = 0 AND see_u = 0")) == 1)
+        $getmsg = db("SELECT id,an,datum FROM ".$db['msg']." WHERE an = '".convert::ToInt($userid)."' AND readed = 0 AND see_u = 0 ORDER BY datum DESC",false,true);
+        if(($check = cnt($db['msg'], " WHERE an = '".convert::ToInt($userid)."' AND readed = 0 AND see_u = 0")) == 1)
             $mymsg = show(_lobby_mymessage, array("cnt" => '1')); //Output
         else if($check >= 2)
             $mymsg = show(_lobby_mymessages, array("cnt" => $check)); //Output
@@ -364,7 +364,7 @@ else
         $qryawayn = db("SELECT * FROM ".$db['away']." ORDER BY id"); $away_new = '';
         if(_rows($qryawayn) >= 1)
         {
-            $getchklevel = db("SELECT level FROM ".$db['users']." WHERE id = '".$userid."'",false,true); $awayn = ''; $show_awayn = false;
+            $getchklevel = db("SELECT level FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true); $awayn = ''; $show_awayn = false;
             while($getawayn = _fetch($qryawayn))
             {
                 if(check_is_new($getawayn['date']) && $getchklevel['level'] >= 2)
@@ -437,13 +437,13 @@ else
 
         //Side Output
         $index = show($dir."/userlobby", array("erase" => ($can_erase ? _user_new_erase : ''),
-                                               "pic" => useravatar($userid),
-                                               "mynick" => autor($userid),
-                                               "myrank" => getrank($userid),
-                                               "myposts" => userstats($userid, "forumposts"),
-                                               "mylogins" => userstats($userid, "logins"),
-                                               "myhits" => userstats($userid, "hits"),
-                                               "mylevel" => getuserlvl($userid),
+                                               "pic" => useravatar(convert::ToInt($userid)),
+                                               "mynick" => autor(convert::ToInt($userid)),
+                                               "myrank" => getrank(convert::ToInt($userid)),
+                                               "myposts" => userstats(convert::ToInt($userid), "forumposts"),
+                                               "mylogins" => userstats(convert::ToInt($userid), "logins"),
+                                               "myhits" => userstats(convert::ToInt($userid), "hits"),
+                                               "mylevel" => getuserlvl(convert::ToInt($userid)),
                                                "mymsg" => $mymsg,
                                                "kal" => $nextkal,
                                                "art" => $artikel,

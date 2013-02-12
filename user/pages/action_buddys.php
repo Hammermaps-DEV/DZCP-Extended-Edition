@@ -29,14 +29,14 @@ else
             case 'add':
                 if($_POST['users'] == "-")
                     $index = error(_error_select_buddy, 1);
-                else if($_POST['users'] == $userid)
+                else if($_POST['users'] == convert::ToInt($userid))
                     $index = error(_error_buddy_self, 1);
                 else if(!check_buddy($_POST['users']))
                     $index = error(_error_buddy_already_in, 1);
                 else
                 {
                     db("INSERT INTO ".$db['buddys']." SET `user` = '".convert::ToInt($userid)."', `buddy` = '".convert::ToInt($_POST['users'])."'");
-                    $msg = show(_buddy_added_msg, array("user" => autor($userid)));
+                    $msg = show(_buddy_added_msg, array("user" => autor(convert::ToInt($userid))));
                     db("INSERT INTO ".$db['msg']."
                         SET `datum`     = '".time()."',
                             `von`       = '0',
@@ -52,14 +52,14 @@ else
 
                 if($user == "-")
                     $index = error(_error_select_buddy, 1);
-                elseif($user == $userid)
+                elseif($user == convert::ToInt($userid))
                     $index = error(_error_buddy_self, 1);
                  elseif(!check_buddy($user))
                     $index = error(_error_buddy_already_in, 1);
                 else
                 {
                     db("INSERT INTO ".$db['buddys']." SET `user`   = '".convert::ToInt($userid)."', `buddy`  = '".convert::ToInt($user)."'");
-                    $msg = show(_buddy_added_msg, array("user" => addslashes(autor($userid))));
+                    $msg = show(_buddy_added_msg, array("user" => addslashes(autor(convert::ToInt($userid)))));
                     db("INSERT INTO ".$db['msg']."
                         SET `datum`     = '".time()."',
                             `von`       = '0',
@@ -71,8 +71,8 @@ else
                 }
             break;
             case 'delete':
-                db("DELETE FROM ".$db['buddys']." WHERE buddy = ".convert::ToInt($_GET['id'])." AND user = '".$userid."'");
-                $msg = show(_buddy_del_msg, array("user" => addslashes(autor($userid))));
+                db("DELETE FROM ".$db['buddys']." WHERE buddy = ".convert::ToInt($_GET['id'])." AND user = '".convert::ToInt($userid)."'");
+                $msg = show(_buddy_del_msg, array("user" => addslashes(autor(convert::ToInt($userid)))));
                 db("INSERT INTO ".$db['msg']."
                       SET `datum`     = '".time()."',
                           `von`       = '0',
@@ -83,7 +83,7 @@ else
                 $index = info(_buddys_delete_successful, "../user/?action=buddys");
             break;
             default: //default page
-                $qry = db("SELECT * FROM ".$db['buddys']." WHERE user = ".$userid);
+                $qry = db("SELECT * FROM ".$db['buddys']." WHERE user = ".convert::ToInt($userid));
                 $too = ''; $color = 1; $buddys = '';
 
                 if(_rows($qry) >= 1)
@@ -92,7 +92,7 @@ else
                     {
                         $pn = show(_pn_write, array("id" => $get['buddy'], "nick" => data($get['buddy'], "nick")));
                         $delete = show(_buddys_delete, array("id" => $get['buddy']));
-                        $yesnocheck = db("SELECT * FROM ".$db['buddys']." where user = '".$get['buddy']."' AND buddy = '".$userid."'");
+                        $yesnocheck = db("SELECT * FROM ".$db['buddys']." where user = '".$get['buddy']."' AND buddy = '".convert::ToInt($userid)."'");
                         $too = (_rows($yesnocheck) ? _buddys_yesicon : _buddys_noicon);
                         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
                         $buddys .= show($dir."/buddys_show", array(

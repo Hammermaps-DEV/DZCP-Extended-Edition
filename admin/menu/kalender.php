@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
   $where = $where.': '._kalender_head;
   if(!permission("editkalender"))
@@ -13,11 +13,11 @@ if(_adminMenu != 'true')
     if($_GET['do'] == "add")
     {
       $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
-				      	                                  "month" => dropdown("month",date("m",time())),
-                                      	          "year" => dropdown("year",date("Y",time()))));
+                                                            "month" => dropdown("month",date("m",time())),
+                                                    "year" => dropdown("year",date("Y",time()))));
 
       $dropdown_time = show(_dropdown_time, array("hour" => dropdown("hour",date("H",time())),
-                                      	          "minute" => dropdown("minute",date("i",time())),
+                                                    "minute" => dropdown("minute",date("i",time())),
                                                   "uhr" => _uhr));
       $show = show($dir."/form_kalender", array("datum" => _datum,
                                                 "event" => _kalender_event,
@@ -38,7 +38,7 @@ if(_adminMenu != 'true')
         $time = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
         $insert = db("INSERT INTO ".$db['events']."
-                      SET `datum` = '".((int)$time)."',
+                      SET `datum` = '".convert::ToInt($time)."',
                           `title` = '".up($_POST['title'])."',
                           `event` = '".up($_POST['event'],1)."'");
 
@@ -46,15 +46,15 @@ if(_adminMenu != 'true')
       }
     } elseif($_GET['do'] == "edit") {
       $qry = db("SELECT * FROM ".$db['events']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
       $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",$get['datum'])),
-				      	                                  "month" => dropdown("month",date("m",$get['datum'])),
-                                      	          "year" => dropdown("year",date("Y",$get['datum']))));
+                                                            "month" => dropdown("month",date("m",$get['datum'])),
+                                                    "year" => dropdown("year",date("Y",$get['datum']))));
 
       $dropdown_time = show(_dropdown_time, array("hour" => dropdown("hour",date("H",$get['datum'])),
-                                      	          "minute" => dropdown("minute",date("i",$get['datum'])),
+                                                    "minute" => dropdown("minute",date("i",$get['datum'])),
                                                   "uhr" => _uhr));
       $show = show($dir."/form_kalender", array("datum" => _datum,
                                                 "event" => _kalender_event,
@@ -75,16 +75,16 @@ if(_adminMenu != 'true')
         $time = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
         $update = db("UPDATE ".$db['events']."
-                      SET `datum` = '".((int)$time)."',
+                      SET `datum` = '".convert::ToInt($time)."',
                           `title` = '".up($_POST['title'])."',
                           `event` = '".up($_POST['event'],1)."'
-                      WHERE id = '".intval($_GET['id'])."'");
+                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_kalender_successful_edited,"?admin=kalender");
       }
     } elseif($_GET['do'] == "delete") {
       $del = db("DELETE FROM ".$db['events']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
       $show = info(_kalender_deleted,"?admin=kalender");
     } else {

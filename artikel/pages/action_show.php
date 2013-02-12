@@ -23,6 +23,7 @@ else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".$db['
     $index = error(_id_dont_exist, 1);
 else
 {
+    $flood_artikelcom = config('f_artikelcom');
     $check = db("SELECT public FROM ".$db['artikel']." WHERE id = ".$artikel_id,false,true);
     if(!permission("artikel") && !$check['public'])
         $index = error(_error_wrong_permissions, 1);
@@ -33,7 +34,7 @@ else
         switch($do)
         {
             case 'add':
-                if(_rows(db("SELECT `id` FROM ".$db['artikel']." WHERE `id` = '".$artikel_id."'")) != 0)
+                if(db("SELECT `id` FROM ".$db['artikel']." WHERE `id` = '".$artikel_id."'",true) != 0)
                 {
                     if(settings("reg_artikel") == "1" && $chkMe == "unlogged")
                         $index = error(_error_have_to_be_logged, 1);
@@ -70,13 +71,13 @@ else
                             else
                             {
                                 db("INSERT INTO ".$db['acomments']."
-                                   SET `artikel`     = '".$artikel_id."',
+                                   SET `artikel`  = '".$artikel_id."',
                                        `datum`    = '".time()."',
                                        ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : '')."
                                        ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : '')."
                                        ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : '')."
                                        `editby`   = '',
-                                       `reg`      = '".$userid."',
+                                       `reg`      = '".convert::ToInt($userid)."',
                                        `comment`  = '".up($_POST['comment'])."',
                                        `ip`       = '".visitorIp()."'");
 
@@ -85,15 +86,15 @@ else
                             }
                         }
                         else
-                            $index = error(show(_error_flood_post, array("sek" => $flood_newscom)), 1);
+                            $index = error(show(_error_flood_post, array("sek" => $flood_artikelcom)), 1);
                     }
                 }
                 else
                     $index = error(_id_dont_exist,1);
             break;
             case 'edit':
-                $get = db("SELECT * FROM ".$db['acomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
-                if($get['reg'] == $userid || permission('artikel'))
+                $get = db("SELECT * FROM ".$db['acomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                if($get['reg'] == convert::ToInt($userid) || permission('artikel'))
                 {
                     if($get['reg'] != 0)
                         $form = show("page/editor_regged", array("nick" => autor($get['reg']), "von" => _autor));
@@ -129,17 +130,17 @@ else
                     $index = error(_error_edit_post,1);
             break;
             case 'editcom':
-                $get = db("SELECT reg FROM ".$db['acomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
-                if($get['reg'] == $userid || permission('artikel'))
+                $get = db("SELECT reg FROM ".$db['acomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                if($get['reg'] == convert::ToInt($userid) || permission('artikel'))
                 {
-                    $editedby = show(_edited_by, array("autor" => autor($userid), "time" => date("d.m.Y H:i", time())._uhr));
-                    db("UPDATE ".$db['acomments']."
-                       SET `nick`     = '".up($_POST['nick'])."',
-                           `email`    = '".up($_POST['email'])."',
-                           `hp`       = '".links($_POST['hp'])."',
+                    $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
+                    db("UPDATE ".$db['acomments']." SET
+                           ".(isset($_POST['nick']) ? " `nick`     = '".up($_POST['nick'])."'," : "")."
+                           ".(isset($_POST['email']) ? " `email`   = '".up($_POST['email'])."'," : "")."
+                           ".(isset($_POST['hp']) ? " `hp`         = '".links($_POST['hp'])."'," : "")."
                            `comment`  = '".up($_POST['comment'],1)."',
                            `editby`   = '".addslashes($editedby)."'
-                       WHERE id = '".intval($_GET['cid'])."'");
+                       WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
                     $index = info(_comment_edited, "?action=show&amp;id=".$artikel_id."");
                 }
@@ -147,10 +148,10 @@ else
                     $index = error(_error_edit_post,1);
             break;
             case 'delete':
-                $get = db("SELECT reg FROM ".$db['acomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
-                if($get['reg'] == $userid || permission('artikel'))
+                $get = db("SELECT reg FROM ".$db['acomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                if($get['reg'] == convert::ToInt($userid) || permission('artikel'))
                 {
-                    db("DELETE FROM ".$db['acomments']." WHERE id = '".intval($_GET['cid'])."'");
+                    db("DELETE FROM ".$db['acomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'");
                     $index = info(_comment_deleted, "?action=show&amp;id=".$artikel_id."");
                 }
                 else
@@ -177,7 +178,7 @@ else
             while($getc = _fetch($qryc))
             {
                 $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";
-                if(($chkMe != 'unlogged' && $getc['reg'] == $userid) || permission("artikel"))
+                if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("artikel"))
                 {
                     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=show&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
                     $delete = show("page/button_delete_single", array("id" => $artikel_id, "action" => "action=show&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
@@ -218,12 +219,12 @@ else
             else
             {
                 if(isset($userid))
-                    $form = show("page/editor_regged", array("nick" => autor($userid), "von" => _autor));
+                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
                 else
                     $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp));
 
                 $add = '';
-                if(!ipcheck("artid(".$artikel_id.")", $flood_newscom))
+                if(!ipcheck("artid(".$artikel_id.")", $flood_artikelcom))
                 {
                     $add = show("page/comments_add", array( "titel" => _artikel_comments_write_head,
                             "form" => $form,
@@ -245,7 +246,7 @@ else
             $seiten = nav($entrys,$maxcomments,"?action=show&amp;id=".$artikel_id."");
             $showmore = show($dir."/comments",array("head" => _comments_head, "show" => $comments, "seiten" => $seiten, "icq" => "", "add" => $add));
 
-            $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".intval($get['kat'])."'",false,true);
+            $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".convert::ToInt($get['kat'])."'",false,true);
             $index = show($dir."/show_more", array("titel" => re($get['titel']),
                     "id" => $get['id'],
                     "comments" => "",
@@ -257,7 +258,7 @@ else
                     "showmore" => $showmore,
                     "icq" => "",
                     "text" => bbcode($get['text']),
-                    "datum" => date("j.m.y H:i", intval($get['datum']))._uhr,
+                    "datum" => date("j.m.y H:i", convert::ToInt($get['datum']))._uhr,
                     "links" => $links,
                     "autor" => autor($get['autor'])));
         }

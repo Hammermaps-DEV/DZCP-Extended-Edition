@@ -23,9 +23,9 @@ else
         $index = error(_error_have_to_be_logged, 1);
     else
     {
-        if(isset($_GET['edit']) && data(convert::ToInt($_GET['edit']), "level") == 4 && $userid != $rootAdmin)
+        if(isset($_GET['edit']) && data(convert::ToInt($_GET['edit']), "level") == 4 && convert::ToInt($userid) != convert::ToInt($rootAdmin))
             $index = error(_error_edit_admin, 1);
-        else if(isset($_GET['edit']) && convert::ToInt($_GET['edit']) == $userid)
+        else if(isset($_GET['edit']) && convert::ToInt($_GET['edit']) == convert::ToInt($userid))
         {
             $qrysq = db("SELECT id,name FROM ".$db['squads']." ORDER BY pos"); $esquads = '';
             while($getsq = _fetch($qrysq))
@@ -37,7 +37,7 @@ else
                     $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
                 }
 
-                $check = (db("SELECT squad FROM ".$db['squaduser']." WHERE user = '".intval($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '');
+                $check = (db("SELECT squad FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '');
                 $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
                 unset($posi,$check);
             }
@@ -49,7 +49,7 @@ else
             switch($do)
             {
                 case 'identy':
-                    if((data(convert::ToInt($_GET['id']), "level") == 4 && $userid != $rootAdmin) || convert::ToInt($_GET['id']) == $rootAdmin)
+                    if((data(convert::ToInt($_GET['id']), "level") == 4 && convert::ToInt($userid) != convert::ToInt($rootAdmin)) || convert::ToInt($_GET['id']) == convert::ToInt($rootAdmin))
                         $index = error(_identy_admin, 1);
                     else
                     {
@@ -57,7 +57,7 @@ else
                         $index = info($msg, "?action=user&amp;id=".convert::ToInt($_GET['id'])."");
 
                         ## Ereignis in den Adminlog schreiben ##
-                        wire_ipcheck("ident(".$userid."_".convert::ToInt($_GET['id']).")");
+                        wire_ipcheck("ident(".convert::ToInt($userid)."_".convert::ToInt($_GET['id']).")");
 
                         //User abmelden
                         logout();
@@ -142,7 +142,7 @@ else
                             if($_POST['passwd']) $newpwd = "`pwd` = '".pass_hash($_POST['passwd'],$default_pwd_encoder)."', `pwd_encoder` = ".convert::ToInt($default_pwd_encoder).",";
                         }
 
-                        $level_sql = ($_POST['level'] == 4 ? (data($userid, "level") == 4 || $userid == $rootAdmin ? ", `level`  = '".convert::ToInt($_POST['level'])."' " : '') : ", `level`  = '".convert::ToInt($_POST['level'])."' ");
+                        $level_sql = ($_POST['level'] == 4 ? (data(convert::ToInt($userid), "level") == 4 || convert::ToInt($userid) == convert::ToInt($rootAdmin) ? ", `level`  = '".convert::ToInt($_POST['level'])."' " : '') : ", `level`  = '".convert::ToInt($_POST['level'])."' ");
                         db("UPDATE ".$db['users']." SET ".(isset($_POST['passwd']) && !empty($_POST['passwd']) ? $newpwd : '')."
                            `nick`   = '".convert::ToString(up($_POST['nick']))."',
                            `email`  = '".convert::ToString($_POST['email'])."',
@@ -152,41 +152,41 @@ else
                           WHERE id = ".$edituser);
 
                         ## Ereignis in den Adminlog schreiben ##
-                        wire_ipcheck("upduser(".$userid."_".$edituser.")");
+                        wire_ipcheck("upduser(".convert::ToInt($userid)."_".$edituser.")");
                     }
 
                     $index = info(_admin_user_edited, "?action=admin&amp;edit=".$edituser);
                 break;
                 case 'updateme':
                     // Squads Update
-                    db("DELETE FROM ".$db['squaduser']." WHERE user = '".$userid."'");
-                    db("DELETE FROM ".$db['userpos']." WHERE user = '".$userid."'");
+                    db("DELETE FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($userid)."'");
+                    db("DELETE FROM ".$db['userpos']." WHERE user = '".convert::ToInt($userid)."'");
 
                     $sq = db("SELECT id FROM ".$db['squads']."");
                     while($getsq = _fetch($sq))
                     {
                         if(isset($_POST['squad'.$getsq['id']]))
-                            db("INSERT INTO ".$db['squaduser']." SET `user` = '".$userid."', `squad`  = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
+                            db("INSERT INTO ".$db['squaduser']." SET `user` = '".convert::ToInt($userid)."', `squad`  = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
 
                         if(isset($_POST['squad'.$getsq['id']]))
-                            db("INSERT INTO ".$db['userpos']." SET `user` = '".$userid."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
+                            db("INSERT INTO ".$db['userpos']." SET `user` = '".convert::ToInt($userid)."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
                     }
 
-                    $index = info(_admin_user_edited, "?action=admin&amp;edit=".$userid."");
+                    $index = info(_admin_user_edited, "?action=admin&amp;edit=".convert::ToInt($userid)."");
                 break;
                 case 'delete':
                     $index = show(_user_delete_verify, array("user" => autor(convert::ToInt($_GET['id'])), "id" => convert::ToInt($_GET['id'])));
 
-                    if(isset($_GET['verify']) && $_GET['verify'] == "yes" && ($userid == convert::ToInt($_GET['id']) || data($userid, "level") == 4))
+                    if(isset($_GET['verify']) && $_GET['verify'] == "yes" && (convert::ToInt($userid) == convert::ToInt($_GET['id']) || data(convert::ToInt($userid), "level") == 4))
                     {
-                        if((data(convert::ToInt($_GET['id']), "level") == 4 || data(convert::ToInt($_GET['id']), "level") == 3) && $userid != $rootAdmin)
+                        if((data(convert::ToInt($_GET['id']), "level") == 4 || data(convert::ToInt($_GET['id']), "level") == 3) && convert::ToInt($userid) != convert::ToInt($rootAdmin))
                             $index = error(_user_cant_delete_admin, 2);
-                        else if (convert::ToInt($_GET['id']) == $rootAdmin)
+                        else if (convert::ToInt($_GET['id']) == convert::ToInt($rootAdmin))
                             $index = error(_user_cant_delete_radmin, 2);
                         else
                         {
                             ## Ereignis in den Adminlog schreiben ##
-                            wire_ipcheck("deluser(".$userid."_".convert::ToInt($_GET['id']).")");
+                            wire_ipcheck("deluser(".convert::ToInt($userid)."_".convert::ToInt($_GET['id']).")");
 
                             db("UPDATE ".$db['f_posts']." SET `reg` = 0 WHERE reg = ".convert::ToInt($_GET['id'])."");
                             db("UPDATE ".$db['f_threads']." SET `t_reg` = 0 WHERE t_reg = ".convert::ToInt($_GET['id'])."");
@@ -222,11 +222,11 @@ else
                                 $sel = db("SELECT id FROM ".$db['userpos']."
                                 WHERE posi = '".$getpos['id']."'
                                 AND squad = '".$getsq['id']."'
-                                AND user = '".intval($_GET['edit'])."'",true) ? 'selected="selected"' : '';
+                                AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '';
                                 $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
                             }
 
-                            $check = db("SELECT squad FROM ".$db['squaduser']." WHERE user = '".intval($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
+                            $check = db("SELECT squad FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
                             $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
                         }
 
@@ -234,15 +234,15 @@ else
                         $editpwd = show($dir."/admin_editpwd", array("pwd" => _new_pwd, "epwd" => ""));
                         $index = show($dir."/admin", array(
                                 "enick" => re($get['nick']),
-                                "user" => intval($_GET['edit']),
+                                "user" => convert::ToInt($_GET['edit']),
                                 "value" => _button_value_edit,
                                 "eemail" => $get['email'],
                                 "eloginname" => $get['user'],
                                 "esquad" => $esquads,
                                 "editpwd" => $editpwd,
                                 "eposi" => $posi,
-                                "getpermissions" => getPermissions(intval($_GET['edit'])),
-                                "getboardpermissions" => getBoardPermissions(intval($_GET['edit'])),
+                                "getpermissions" => getPermissions(convert::ToInt($_GET['edit'])),
+                                "getboardpermissions" => getBoardPermissions(convert::ToInt($_GET['edit'])),
                                 "showpos" => getrank($_GET['edit']),
                                 "listck" => (empty($get['listck']) ? '' : ' checked="checked"'),
                                 "alvl" => $get['level'],

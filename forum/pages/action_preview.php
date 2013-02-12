@@ -22,7 +22,7 @@ else
     if($_GET['do'] == 'editthread')
     {
       $qry = db("SELECT * FROM ".$db['f_threads']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
       $get_datum = $get['t_date'];
@@ -32,7 +32,7 @@ else
         $guestCheck = true;
         $pUId = $get['t_reg'];
       }
-      $editedby = show(_edited_by, array("autor" => cleanautor($userid),
+      $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
                                          "time" => date("d.m.Y H:i", time())._uhr));
       $tID = $get['id'];
     } else {
@@ -41,7 +41,7 @@ else
       if($chkMe == 'unlogged') $guestCheck = false;
       else {
         $guestCheck = true;
-        $pUId = $userid;
+        $pUId = convert::ToInt($userid);
       }
       $tID = $_GET['kid'];
     }
@@ -70,7 +70,7 @@ else
       else $hp = show(_hpicon_forum, array("hp" => $getu['hp']));
       if(data($pUId, "signatur")) $sig = _sig.bbcode(data($pUId, "signatur"),1);
       else $sig = "";
-      $onoff = onlinecheck($userid);
+      $onoff = onlinecheck(convert::ToInt($userid));
       $userposts = show(_forum_user_posts, array("posts" => userstats($pUId, "forumposts")+1));
     } else {
         $pn = "";
@@ -86,7 +86,7 @@ else
                 FROM ".$db['f_threads']." AS s1
                 LEFT JOIN ".$db['f_skats']." AS s2
                 ON s1.kid = s2.id
-                WHERE s1.id = '".intval($tID)."'");
+                WHERE s1.id = '".convert::ToInt($tID)."'");
     $getw = _fetch($qryw);
 
     $qrykat = db("SELECT name FROM ".$db['f_kats']."
@@ -141,7 +141,7 @@ else
     if($_GET['do'] == 'editpost')
     {
       $qry = db("SELECT * FROM ".$db['f_posts']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
       $get_datum = $get['date'];
@@ -151,7 +151,7 @@ else
         $guestCheck = true;
         $pUId = $get['reg'];
       }
-      $editedby = show(_edited_by, array("autor" => cleanautor($userid),
+      $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
                                          "time" => date("d.m.Y H:i", time())._uhr));
       $tID = $get['sid'];
       $cnt = "?";
@@ -161,10 +161,10 @@ else
       if($chkMe == 'unlogged') $guestCheck = false;
       else {
         $guestCheck = true;
-        $pUId = $userid;
+        $pUId = convert::ToInt($userid);
       }
       $tID = $_GET['id'];
-      $cnt = cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+2;
+      $cnt = cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+2;
     }
 
     $titel = show(_eintrag_titel_forum, array("postid" => $cnt,
@@ -176,7 +176,7 @@ else
     if($guestCheck)
     {
       $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
-                  WHERE id = '".intval($pUId)."'");
+                  WHERE id = '".convert::ToInt($pUId)."'");
       $getu = _fetch($qryu);
 
       $email = show(_emailicon_forum, array("email" => eMailAddr($getu['email'])));

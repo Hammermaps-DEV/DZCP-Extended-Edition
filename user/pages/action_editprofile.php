@@ -35,7 +35,7 @@ else
         $qrycustom = db("SELECT * FROM ".$db['profile']." WHERE kid = ".convert::ToInt($kid)." AND shown = '1' ORDER BY id ASC"); $custom = '';
         while($getcustom = _fetch($qrycustom))
         {
-            $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".$db['users']." WHERE id = '".$userid."'",false,true);
+            $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
             $custom .= show(_profil_edit_custom, array("name" => pfields_name($getcustom['name']).":", "feldname" => $getcustom['feldname'], "value" => re($getcontent[$getcustom['feldname']])));
         } //while end
         unset($qrycustom,$getcustom);
@@ -50,11 +50,11 @@ else
     {
         case 'edit':
             $check_user = 0; $check_nick = 0; $check_email = 0;
-            if(db("SELECT user,nick,email FROM ".$db['users']." AS u1 WHERE (u1.user = '".$_POST['user']."' OR u1.nick = '".$_POST['nick']."' OR u1.email = '".$_POST['email']."') AND id != ".$userid,true))
+            if(db("SELECT user,nick,email FROM ".$db['users']." AS u1 WHERE (u1.user = '".$_POST['user']."' OR u1.nick = '".$_POST['nick']."' OR u1.email = '".$_POST['email']."') AND id != ".convert::ToInt($userid),true))
             {
-                $check_user = db("SELECT id FROM ".$db['users']." WHERE user = '".$_POST['user']."' AND id != '".$userid."'",true);
-                $check_nick = db("SELECT id FROM ".$db['users']." WHERE nick = '".$_POST['nick']."' AND id != '".$userid."'",true);
-                $check_email = db("SELECT id  FROM ".$db['users']." WHERE email = '".$_POST['email']."' AND id != '".$userid."'",true);
+                $check_user = db("SELECT id FROM ".$db['users']." WHERE user = '".$_POST['user']."' AND id != '".convert::ToInt($userid)."'",true);
+                $check_nick = db("SELECT id FROM ".$db['users']." WHERE nick = '".$_POST['nick']."' AND id != '".convert::ToInt($userid)."'",true);
+                $check_email = db("SELECT id  FROM ".$db['users']." WHERE email = '".$_POST['email']."' AND id != '".convert::ToInt($userid)."'",true);
             }
 
             if(empty($_POST['user']))
@@ -77,12 +77,12 @@ else
                 {
                     $newpwd = "`pwd` = '".($passwd=pass_hash($_POST['pwd'],($default_pwd_encoder = settings('default_pwd_encoder'))))."', `pwd_encoder` = ".$default_pwd_encoder.",";
                     $_SESSION['pwd'] = $passwd; unset($passwd);
-                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".$userid."");
+                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".convert::ToInt($userid)."");
                 }
                 else
                 {
                     $newpwd = "";
-                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".$userid."");
+                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".convert::ToInt($userid)."");
                 }
 
                 $icq = preg_replace("=-=Uis","",$_POST['icq']);
@@ -119,11 +119,11 @@ else
                                                  `xfire`        = '".convert::ToString(up($_POST['xfire']))."',
                                                  `signatur`     = '".convert::ToString(up($_POST['sig'],1))."',
                                                  `beschreibung` = '".convert::ToString(up($_POST['ich'],1))."'
-                                                  WHERE id = ".$userid);
+                                                  WHERE id = ".convert::ToInt($userid));
             }
         break;
         case 'delete':
-            $getdel = db("SELECT id,nick,email,hp FROM ".$db['users']." WHERE id = '".$userid."'",false,true);
+            $getdel = db("SELECT id,nick,email,hp FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
 
             db("UPDATE ".$db['f_threads']."
                                          SET `t_nick`   = '".$getdel['nick']."',
@@ -188,7 +188,7 @@ else
         default: ## Profil editieren ##
             if($gallery_do == "delete")
             {
-                $qrygl = db("SELECT gid FROM ".$db['usergallery']." WHERE user = '".$userid."' AND id = '".convert::ToInt($_GET['gid'])."'");
+                $qrygl = db("SELECT gid FROM ".$db['usergallery']." WHERE user = '".convert::ToInt($userid)."' AND id = '".convert::ToInt($_GET['gid'])."'");
                 if(_rows($qrygl))
                 {
                     while($getgl = _fetch($qrygl))
@@ -201,7 +201,7 @@ else
             }
             else
             {
-                $qry = db("SELECT * FROM ".$db['users']." WHERE id = '".$userid."'");
+                $qry = db("SELECT * FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'");
                 if(!_rows($qry))
                     $index = error(_user_dont_exist, 1);
                 else
@@ -215,7 +215,7 @@ else
                         $clan = '<input type="hidden" name="status" value="1" />';
                     else
                     {
-                        $custom_clan = custom_fields($userid,2);
+                        $custom_clan = custom_fields(convert::ToInt($userid),2);
                         $clan = show($dir."/edit_clan", array("status" => $status, "custom_clan" => $custom_clan));
                     }
 
@@ -225,17 +225,17 @@ else
 
                     if(isset($_GET['show']) && $_GET['show'] == "gallery")
                     {
-                        $qrygl = db("SELECT * FROM ".$db['usergallery']." WHERE user = '".$userid."' ORDER BY id DESC");
+                        $qrygl = db("SELECT * FROM ".$db['usergallery']." WHERE user = '".convert::ToInt($userid)."' ORDER BY id DESC");
                         $color = 1; $gal = '';
                         if(_rows($qrygl) >= 1)
                         {
                             while($getgl = _fetch($qrygl))
                             {
-                                $pic = show(_gallery_pic_link, array("img" => $getgl['pic'], "user" => $userid));
+                                $pic = show(_gallery_pic_link, array("img" => $getgl['pic'], "user" => convert::ToInt($userid)));
                                 $delete = show(_gallery_deleteicon, array("id" => $getgl['id']));
                                 $edit = show(_gallery_editicon, array("id" => $getgl['id']));
                                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                                $gal .= show($dir."/edit_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".$userid."_".$getgl['pic']),
+                                $gal .= show($dir."/edit_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".convert::ToInt($userid)."_".$getgl['pic']),
                                                                               "beschreibung" => bbcode($getgl['beschreibung']),
                                                                               "class" => $class,
                                                                               "delete" => $delete,
@@ -258,7 +258,7 @@ else
                         $deletepic = (!preg_match("#nopic#",$pic) ? "| "._profil_delete_pic : '');
                         $deleteava = (!preg_match("#noavatar#",$avatar) ? "| "._profil_delete_ava : '');
 
-                        $delete = ($userid == $rootAdmin ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => convSpace(_confirm_del_account))));
+                        $delete = (convert::ToInt($userid) == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => convSpace(_confirm_del_account))));
                         $show = show($dir."/edit_profil", array("country" => show_countrys($get['country']),
                                 "city" => re($get['city']),
                                 "pnl" => $pnl,
@@ -287,10 +287,10 @@ else
                                 "position" => getrank($get['id']),
                                 "value" => _button_value_edit,
                                 "status" => $status,
-                                "custom_about" => custom_fields($userid,1),
-                                "custom_contact" => custom_fields($userid,3),
-                                "custom_favos" => custom_fields($userid,4),
-                                "custom_hardware" => custom_fields($userid,5),
+                                "custom_about" => custom_fields(convert::ToInt($userid),1),
+                                "custom_contact" => custom_fields(convert::ToInt($userid),3),
+                                "custom_favos" => custom_fields(convert::ToInt($userid),4),
+                                "custom_hardware" => custom_fields(convert::ToInt($userid),5),
                                 "ich" => re_bbcode($get['beschreibung']),
                                 "delete" => $delete));
                     }

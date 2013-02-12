@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $qry = db("SELECT * FROM ".$db['events']."
-             WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".date("d.m.Y",intval($_GET['time']))."'
+             WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'
              ORDER BY datum");
     while($get = _fetch($qry))
     {

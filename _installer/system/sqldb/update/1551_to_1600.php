@@ -43,6 +43,9 @@ function install_155x_1600_update()
     db("ALTER TABLE `".$db['users']."` ADD `pwd_encoder` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pwd`;",false,false,true);
     db("ALTER TABLE `".$db['settings']."` ADD `default_pwd_encoder` INT( 1 ) NOT NULL DEFAULT '2' AFTER `urls_linked`;",false,false,true);
     db("ALTER TABLE `".$db['artikel']."` ADD `viewed` INT( 11 ) NOT NULL DEFAULT '0' AFTER `url3`;",false,false,true);
+    db("ALTER TABLE `".$db['config']."` ADD `f_downloadcom` INT( 5 ) NOT NULL DEFAULT '20' AFTER `f_artikelcom`;",false,false,true);
+    db("ALTER TABLE `".$db['settings']."` ADD `reg_dlcomments` INT( 1 ) NOT NULL DEFAULT '1' AFTER `reg_newscomments`;",false,false,true);
+    db("ALTER TABLE `".$db['downloads']."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '0' AFTER `last_dl`;",false,false,true);
 
     // Add UNIQUE INDEX
     if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
@@ -294,6 +297,24 @@ function install_155x_1600_update()
         while($get = _fetch($qry))
         { db("UPDATE `".$db['navi']."` SET `extended_perm` = 'clankasse' WHERE `id` = ".$get['id'].";"); }
     }
+
+    //===============================================================
+    //-> Forum: Access ==============================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['dlcomments']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['dlcomments']."` (
+      `id` int(10) NOT NULL AUTO_INCREMENT,
+      `download` int(10) NOT NULL DEFAULT '0',
+      `nick` varchar(20) NOT NULL DEFAULT '',
+      `datum` int(20) NOT NULL DEFAULT '0',
+      `email` varchar(130) NOT NULL DEFAULT '',
+      `hp` varchar(50) NOT NULL DEFAULT '',
+      `reg` int(5) NOT NULL DEFAULT '0',
+      `comment` text NOT NULL,
+      `ip` varchar(50) NOT NULL DEFAULT '',
+      `editby` text,
+      PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 
     return true;
 }

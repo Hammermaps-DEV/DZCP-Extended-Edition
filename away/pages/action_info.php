@@ -22,7 +22,7 @@ $where = $where.' - '._info;
     $index = error(_error_wrong_permissions, 1);
   } else {
     $qry = db("SELECT * FROM ".$db['away']."
-               WHERE id = '".intval($_GET['id'])."'");
+               WHERE id = '".convert::ToInt($_GET['id'])."'");
      $get = _fetch($qry);
 
     if($get['start'] > time()) $status = _away_status_new;

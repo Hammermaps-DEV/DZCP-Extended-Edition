@@ -38,7 +38,7 @@ if(_adminMenu != 'true')
 
                 $show = show($dir."/news_form", array("head" => _admin_news_head,
                                               "nautor" => _autor,
-                                              "autor" => autor($userid),
+                                              "autor" => autor(convert::ToInt($userid)),
                                               "nkat" => _news_admin_kat,
                                               "kat" => $kat,
                                               "preview" => _preview,
@@ -116,7 +116,7 @@ if(_adminMenu != 'true')
 
                     $show = show($dir."/news_form", array("head" => _admin_news_head,
                                                 "nautor" => _autor,
-                                                "autor" => autor($userid),
+                                                "autor" => autor(convert::ToInt($userid)),
                                                 "nkat" => _news_admin_kat,
                                                 "kat" => $kat,
                                                 "preview" => _preview,
@@ -158,7 +158,7 @@ if(_adminMenu != 'true')
                         $timeshifttime = mktime($_POST['h_ts'],$_POST['min_ts'],0,$_POST['m_ts'],$_POST['t_ts'],$_POST['j_ts']);
                         $timeshift = "`timeshift` = '1',";
                         $public = "`public` = '1',";
-                        $datum = "`datum` = '".((int)$timeshifttime)."',";
+                        $datum = "`datum` = '".convert::ToInt($timeshifttime)."',";
                     } else {
                       $timeshift = "";
                         $public = '';
@@ -167,8 +167,8 @@ if(_adminMenu != 'true')
 
 
                 $qry = db("INSERT INTO ".$db['news']."
-                     SET `autor`      = '".((int)$userid)."',
-                         `kat`        = '".((int)$_POST['kat'])."',
+                     SET `autor`      = '".convert::ToInt($userid)."',
+                         `kat`        = '".convert::ToInt($_POST['kat'])."',
                          `titel`      = '".up($_POST['titel'])."',
                          `text`       = '".up($_POST['newstext'],1)."',
                          `klapplink`  = '".up($_POST['klapptitel'])."',
@@ -179,17 +179,17 @@ if(_adminMenu != 'true')
                          `url1`       = '".links($_POST['url1'])."',
                          `url2`       = '".links($_POST['url2'])."',
                          `url3`       = '".links($_POST['url3'])."',
-                         `intern`     = '".((int)$_POST['intern'])."',
+                         `intern`     = '".convert::ToInt($_POST['intern'])."',
                          ".$timeshift."
                                                  ".$public."
                                                  ".$datum."
-                                                 `sticky`     = '".((int)$stickytime)."'");
+                                                 `sticky`     = '".convert::ToInt($stickytime)."'");
 
           $show = info(_news_sended, "?admin=newsadmin");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['news']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $qryk = db("SELECT * FROM ".$db['newskat']."");
@@ -303,7 +303,7 @@ if(_adminMenu != 'true')
                         $timeshifttime = mktime($_POST['h_ts'],$_POST['min_ts'],0,$_POST['m_ts'],$_POST['t_ts'],$_POST['j_ts']);
                         $timeshift = "`timeshift` = '1',";
                         $public = "`public` = '1',";
-                        $datum = "`datum` = '".((int)$timeshifttime)."',";
+                        $datum = "`datum` = '".convert::ToInt($timeshifttime)."',";
                     } else {
                       $timeshift = "";
                         $public = '';
@@ -311,7 +311,7 @@ if(_adminMenu != 'true')
                     }
 
           $qry = db("UPDATE ".$db['news']."
-                     SET `kat`        = '".((int)$_POST['kat'])."',
+                     SET `kat`        = '".convert::ToInt($_POST['kat'])."',
                          `titel`      = '".up($_POST['titel'])."',
                          `text`       = '".up($_POST['newstext'],1)."',
                          `klapplink`  = '".up($_POST['klapptitel'])."',
@@ -321,13 +321,13 @@ if(_adminMenu != 'true')
                          `link2`      = '".up($_POST['link2'])."',
                          `url2`       = '".links($_POST['url2'])."',
                          `link3`      = '".up($_POST['link3'])."',
-                                   `intern`     = '".((int)$_POST['intern'])."',
+                                   `intern`     = '".convert::ToInt($_POST['intern'])."',
                          `url3`       = '".links($_POST['url3'])."',
                                                  ".$timeshift."
                                                  ".$public."
                                                  ".$datum."
-                         `sticky`     = '".((int)$stickytime)."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                         `sticky`     = '".convert::ToInt($stickytime)."'
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
         $show = info(_news_edited, "?admin=newsadmin");
       } elseif($_GET['do'] == 'public') {
@@ -336,19 +336,19 @@ if(_adminMenu != 'true')
           $upd = db("UPDATE ".$db['news']."
                      SET `public` = '1',
                                       `datum`  = '".time()."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
           $upd = db("UPDATE ".$db['news']."
                      SET `public` = '0'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
 
         header("Location: ?admin=newsadmin");
       } elseif($_GET['do'] == "delete") {
         $del = db("DELETE FROM ".$db['news']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $del = db("DELETE FROM ".$db['newscomments']."
-                   WHERE news = '".intval($_GET['id'])."'");
+                   WHERE news = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_news_deleted, "?admin=newsadmin");
       } else {

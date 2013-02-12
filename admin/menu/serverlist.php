@@ -54,15 +54,15 @@ if(_adminMenu != 'true')
     if($_GET['do'] == "accept")
     {
       $qry = db("UPDATE ".$db['serverliste']."
-                 SET `checked` = '".((int)$_POST['checked'])."'
-                 WHERE id = '".intval($_POST['id'])."'");
+                 SET `checked` = '".convert::ToInt($_POST['checked'])."'
+                 WHERE id = '".convert::ToInt($_POST['id'])."'");
 
       if($_POST['checked'] == "1") $show = info(_error_server_accept, "?admin=serverlist");
       else $show = info(_error_server_dont_accept, "?admin=serverlist");
 
     } elseif($_GET['do'] == "delete") {
       $qry = db("DELETE FROM ".$db['serverliste']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
       $show = info(_slist_server_deleted, "?admin=serverlist");
     }

@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._config_links;
     if(!permission("links"))
@@ -36,7 +36,7 @@ if(_adminMenu != 'true')
                                                "text" => _links_admin_textlink,
                                                "banner" => _links_admin_bannerlink,
                                                "bchecked" => "checked=\"checked\"",
-											   "bnone" => "",
+                                               "bnone" => "",
                                                "tchecked" => "",
                                                "llink" => "",
                                                "lbeschreibung" => "",
@@ -62,16 +62,16 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "edit") {
 
         $qry = db("SELECT * FROM ".$db[$_GET['type']]."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         if($get['banner'] == 1){
-			 $bchecked = "checked=\"checked\"";
-			 $bnone = "";
-        }else{ 
-			$tchecked = "checked=\"checked\"";
-			$bnone = "display:none";
-		}
+             $bchecked = "checked=\"checked\"";
+             $bnone = "";
+        }else{
+            $tchecked = "checked=\"checked\"";
+            $bnone = "display:none";
+        }
 
         $linktyp = '<input type="hidden" name="type" value="'.$_GET['type'].'" />';
 
@@ -84,7 +84,7 @@ if(_adminMenu != 'true')
                                                "banner" => _links_admin_bannerlink,
                                                "bchecked" => $bchecked,
                                                "tchecked" => $tchecked,
-											   "bnone" => $bnone,
+                                               "bnone" => $bnone,
                                                "llink" => $get['url'],
                                                "lbeschreibung" => re($get['beschreibung']),
                                                "btext" => _links_text,
@@ -103,13 +103,13 @@ if(_adminMenu != 'true')
                            `text`         = '".up($_POST['text'])."',
                            `banner`       = '".up($_POST['banner'])."',
                            `beschreibung` = '".up($_POST['beschreibung'],1)."'
-                       WHERE id = '".intval($_GET['id'])."'");
+                       WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_link_edited, "?admin=links");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db[$_GET['type']]."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_link_deleted, "?admin=links");
       } else {

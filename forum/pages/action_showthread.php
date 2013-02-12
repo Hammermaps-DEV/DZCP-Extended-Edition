@@ -20,11 +20,11 @@ else
                FROM ".$db['f_kats']." s3, ".$db['f_skats']." s2, ".$db['f_threads']." s1
                WHERE s1.kid = s2.id
                AND s2.sid = s3.id
-               AND s1.id = '".intval($_GET['id'])."'");
+               AND s1.id = '".convert::ToInt($_GET['id'])."'");
     $checks = _fetch($check);
 
     $f_check = db("SELECT * FROM ".$db['f_threads']."
-                 WHERE id = '".intval($_GET['id'])."'
+                 WHERE id = '".convert::ToInt($_GET['id'])."'
                  AND kid = '".$checks['kid']."'");
     if(_rows($f_check))
     {
@@ -34,17 +34,17 @@ else
         } else {
             $update = db("UPDATE ".$db['f_threads']."
                     SET `hits` = hits+1
-                    WHERE id = '".intval($_GET['id'])."'");
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             if(isset($_GET['page'])) $page = $_GET['page'];
             else $page = 1;
 
             $qryp = db("SELECT * FROM ".$db['f_posts']."
-                  WHERE sid = '".intval($_GET['id'])."'
+                  WHERE sid = '".convert::ToInt($_GET['id'])."'
                   ORDER BY id
                   LIMIT ".($page - 1)*$maxfposts.",".$maxfposts."");
 
-            $entrys = cnt($db['f_posts'], " WHERE sid = ".intval($_GET['id']));
+            $entrys = cnt($db['f_posts'], " WHERE sid = ".convert::ToInt($_GET['id']));
             $i = 2;
 
             if($entrys == 0) $pagenr = "1";
@@ -72,7 +72,7 @@ else
                         "action" => "action=post&amp;do=add&amp;kid=".$getp['kid']."&amp;zitat=".$getp['id'],
                         "title" => _button_title_zitat));
 
-                if($getp['reg'] == $userid || permission("forum"))
+                if($getp['reg'] == convert::ToInt($userid) || permission("forum"))
                 {
                     $edit = show("page/button_edit_single", array("id" => $getp['id'],
                             "action" => "action=post&amp;do=edit",
@@ -97,7 +97,7 @@ else
                 $titel = show(_eintrag_titel_forum, array("postid" => $i+($page-1)*$maxfposts,
                         "datum" => date("d.m.Y", $getp['date']),
                         "zeit" => date("H:i", $getp['date'])._uhr,
-                        "url" => '?action=showthread&amp;id='.intval($_GET['id']).'&amp;page='.intval(empty($_GET['page']) ? 1 : $_GET['page']).'#p'.($i+($page-1)*$maxfposts),
+                        "url" => '?action=showthread&amp;id='.convert::ToInt($_GET['id']).'&amp;page='.convert::ToInt(empty($_GET['page']) ? 1 : $_GET['page']).'#p'.($i+($page-1)*$maxfposts),
                         "edit" => $edit,
                         "delete" => $delete));
 
@@ -152,19 +152,19 @@ else
                         "zitat" => $zitat,
                         "onoff" => $onoff,
                         "top" => _topicon,
-                        "lp" => cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+1));
+                        "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                 $i++;
             }
 
             $qry = db("SELECT * FROM ".$db['f_threads']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
             $qryw = db("SELECT s1.kid,s1.topic,s2.kattopic,s2.sid
                   FROM ".$db['f_threads']." AS s1
                   LEFT JOIN ".$db['f_skats']." AS s2
                   ON s1.kid = s2.id
-                  WHERE s1.id = '".intval($_GET['id'])."'");
+                  WHERE s1.id = '".convert::ToInt($_GET['id'])."'");
             $getw = _fetch($qryw);
 
             $qrykat = db("SELECT name FROM ".$db['f_kats']."
@@ -201,7 +201,7 @@ else
             if(data($get['t_reg'], "signatur")) $sig = _sig.bbcode(data($get['t_reg'], "signatur"));
             else $sig = "";
 
-            if($get['t_reg'] == $userid || permission("forum"))
+            if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
                 $editt = show("page/button_edit_single", array("id" => $get['id'],
                         "action" => "action=thread&amp;do=edit",
                         "title" => _button_title_edit));
@@ -264,7 +264,7 @@ else
             $titel = show(_eintrag_titel_forum, array("postid" => "1",
                     "datum" => date("d.m.Y", $get['t_date']),
                     "zeit" => date("H:i", $get['t_date'])._uhr,
-                    "url" => '?action=showthread&amp;id='.intval($_GET['id']).'&amp;page=1#p1',
+                    "url" => '?action=showthread&amp;id='.convert::ToInt($_GET['id']).'&amp;page=1#p1',
                     "edit" => $editt,
                     "delete" => ""));
 
@@ -301,8 +301,8 @@ else
             }
 
             $qryabo = db("SELECT user,fid FROM ".$db['f_abo']."
-                    WHERE user = '".$userid."'
-                    AND fid = '".intval($_GET['id'])."'");
+                    WHERE user = '".convert::ToInt($userid)."'
+                    AND fid = '".convert::ToInt($_GET['id'])."'");
             $getabo = _fetch($qryabo);
             if(_rows($qryabo)) $abo = 'checked="checked"';
 
@@ -310,7 +310,7 @@ else
             {
                 $f_abo = '';
             } else {
-                $f_abo = show($dir."/forum_abo", array("id" => intval($_GET['id']),
+                $f_abo = show($dir."/forum_abo", array("id" => convert::ToInt($_GET['id']),
                         "abo" => $abo,
                         "abo_info" => _foum_fabo_checkbox,
                         "abo_title" => _forum_abo_title,
@@ -349,7 +349,7 @@ else
                     "ip" => $posted_ip,
                     "top" => _topicon,
                     "lpost" => $lpost,
-                    "lp" => cnt($db['f_posts'], " WHERE sid = '".intval($_GET['id'])."'")+1,
+                    "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1,
                     "add" => $add,
                     "nav" => $nav,
                     "vote" => $vote,

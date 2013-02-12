@@ -40,7 +40,7 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
     case 'menu';
         switch (isset($_GET['mod']) ? $_GET['mod'] : ''):
             case 'server';
-                die('<table class="hperc" cellspacing="0">'.server(intval($_GET['serverID'])).'</table>');
+                die('<table class="hperc" cellspacing="0">'.server(convert::ToInt($_GET['serverID'])).'</table>');
             break;
             case 'teamspeak';
                 die('<table class="hperc" cellspacing="0">'.teamspeak().'</table>');

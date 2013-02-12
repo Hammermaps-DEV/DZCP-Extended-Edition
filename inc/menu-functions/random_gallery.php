@@ -8,7 +8,7 @@ function random_gallery()
   $get = _fetch(db("SELECT * FROM ".$db['gallery']." ORDER BY RAND()"));
   foreach($files AS $file)
   {
-    if(intval($file) == $get['id']) array_push($imgArr, $file);
+    if(convert::ToInt($file) == $get['id']) array_push($imgArr, $file);
   }
 
   shuffle($imgArr);
@@ -16,7 +16,7 @@ function random_gallery()
   {
     $gallery = show("menu/random_gallery", array("image" => $imgArr[0],
                                                  "id"    => $get['id'],
-          							                         "kat"   => re($get['kat'])));
+                                                               "kat"   => re($get['kat'])));
   }
 
   return empty($gallery) ? '' : '<table class="navContent" cellspacing="0">'.$gallery.'</table>';

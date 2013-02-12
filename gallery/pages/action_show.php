@@ -46,7 +46,7 @@ else
     $show .= show($dir."/show_gallery", array("img" => gallery_size($files[$i]),
             "tr1" => $tr1,
             "max" => $gallery,
-            "width" => intval(round(100/$gallery)),
+            "width" => convert::ToInt(round(100/$gallery)),
             "del" => $del,
             "tr2" => $tr2));
             $t++;
@@ -65,7 +65,7 @@ else
     $end = $end."</tr>";
     }
 
-            $qry = db("SELECT kat,beschreibung FROM ".$db['gallery']." WHERE id = '".intval($_GET['id'])."'");
+            $qry = db("SELECT kat,beschreibung FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
             $index = show($dir."/show", array("gallery" => re($get['kat']),

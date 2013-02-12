@@ -20,7 +20,7 @@ else
     {
         $index = error(_error_wrong_permissions, 1);
     } else {
-        $qry = db("DELETE FROM ".$db['away']." WHERE id = '".intval($_GET['id'])."'");
+        $qry = db("DELETE FROM ".$db['away']." WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $index = info(_away_successful_del, "../away/");
     }

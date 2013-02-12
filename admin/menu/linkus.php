@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     if(permission('links'))
     {
@@ -35,12 +35,12 @@ if(_adminMenu != 'true')
                          `text`         = '".up($_POST['text'])."',
                          `banner`       = '".up($_POST['banner'])."',
                          `beschreibung` = '".up($_POST['beschreibung'])."'");
-  
+
           $show = info(_linkus_added, "?admin=linkus");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['linkus']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $show = show($dir."/form_linkus", array("head" => _linkus_admin_edit,
@@ -67,14 +67,14 @@ if(_adminMenu != 'true')
                          `text`         = '".up($_POST['text'])."',
                          `banner`       = '".up($_POST['banner'])."',
                          `beschreibung` = '".up($_POST['beschreibung'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
-  
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
+
           $show = info(_linkus_edited, "?admin=linkus");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db['linkus']."
-                   WHERE id = '".intval($_GET['id'])."'");
-  
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
+
         $show = info(_linkus_deleted, "?admin=linkus");
       } else {
         $qry = db("SELECT * FROM ".$db['linkus']."
@@ -83,7 +83,7 @@ if(_adminMenu != 'true')
         while($get = _fetch($qry))
         {
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-    
+
           $banner = show(_linkus_bannerlink, array("id" => $get['id'],
                                                    "banner" => re($get['text'])));
 
@@ -101,7 +101,7 @@ if(_adminMenu != 'true')
                                                     "cnt" => $cnt,
                                                     "banner" => $banner,
                                                     "besch" => re($get['beschreibung']),
-    									    		                      "url" => $get['url']));
+                                                                          "url" => $get['url']));
           $cnt++;
         }
 

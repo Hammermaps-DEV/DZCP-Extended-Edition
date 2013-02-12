@@ -20,7 +20,7 @@ else
     if($_GET['do'] == 'edit')
     {
         $qry = db("SELECT * FROM ".$db['cw_comments']."
-               WHERE id = '".intval($_GET['cid'])."'");
+               WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
         $get_id = '?';
@@ -33,18 +33,18 @@ else
             $pUId = $get['reg'];
         }
 
-        $editedby = show(_edited_by, array("autor" => cleanautor($userid),
+        $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
                 "time" => date("d.m.Y H:i", time())._uhr));
     } else {
 
-        $get_id = cnt($db['cw_comments'], " WHERE cw = ".intval($_GET['id'])."")+1;
-        $get_userid = $userid;
+        $get_id = cnt($db['cw_comments'], " WHERE cw = ".convert::ToInt($_GET['id'])."")+1;
+        $get_userid = convert::ToInt($userid);
         $get_date = time();
 
         if($chkMe == 'unlogged') $regCheck = false;
         else {
             $regCheck = true;
-            $pUId = $userid;
+            $pUId = convert::ToInt($userid);
         }
     }
 

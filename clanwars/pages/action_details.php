@@ -20,7 +20,7 @@ else
                     s1.serverpwd,s1.bericht,s1.squad_id,s1.gametype,s1.gcountry,s1.lineup,s1.glineup,s1.matchadmins,s2.icon,s2.name,s2.game
            FROM ".$db['cw']." AS s1
            LEFT JOIN ".$db['squads']." AS s2 ON s1.squad_id = s2.id
-           WHERE s1.id = '".intval($_GET['id'])."'");
+           WHERE s1.id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
     if($chkMe != "1" && $chkMe != "unlogged" && $get['punkte'] == "0" && $get['gpunkte'] == "0")
@@ -28,7 +28,7 @@ else
         if($get['datum'] > time())
         {
             $qryp = db("SELECT * FROM ".$db['cw_player']."
-                  WHERE cwid = '".intval($_GET['id'])."'
+                  WHERE cwid = '".convert::ToInt($_GET['id'])."'
                   ORDER BY status");
             while($getp = _fetch($qryp))
             {
@@ -36,7 +36,7 @@ else
                 elseif($getp['status'] == "1") $status = _cw_player_dont_want;
                 else $status = _cw_player_dont_know;
 
-                if($getp['member'] == $userid)
+                if($getp['member'] == convert::ToInt($userid))
                 {
                     if($getp['status'] == "0") $sely = "checked=\"checked\"";
                     elseif($getp['status'] == "1") $seln = "checked=\"checked\"";
@@ -53,7 +53,7 @@ else
                         "status" => $status));
             }
 
-            $cntPlayers = cnt($db['cw_player'], " WHERE cwid = '".intval($_GET['id'])."' AND member = '".$userid."'", "cwid");
+            $cntPlayers = cnt($db['cw_player'], " WHERE cwid = '".convert::ToInt($_GET['id'])."' AND member = '".convert::ToInt($userid)."'", "cwid");
 
             if($cntPlayers) $value = _button_value_edit;
             else            $value = _button_value_add;
@@ -63,12 +63,12 @@ else
                     "play" => _cw_players_play,
                     "yes" => _yes,
                     "no" => _no,
-                    "admin" => (permission('clanwars') ? '<input id="contentSubmitAdmin" type="button" value="'._cw_reset_button.'" class="submit" onclick="DZCP.submitButton(\'contentSubmitAdmin\');DZCP.goTo(\'?action=resetplayers&amp;id='.intval($_GET['id']).'\')" />' : ''),
+                    "admin" => (permission('clanwars') ? '<input id="contentSubmitAdmin" type="button" value="'._cw_reset_button.'" class="submit" onclick="DZCP.submitButton(\'contentSubmitAdmin\');DZCP.goTo(\'?action=resetplayers&amp;id='.convert::ToInt($_GET['id']).'\')" />' : ''),
                     "sely" => (empty($sely) && empty($seln) && empty($selm) ? 'checked="checked"' : $sely),
                     "seln" => $seln,
                     "selm" => $selm,
                     "maybe" => _maybe,
-                    "id" => intval($_GET['id']),
+                    "id" => convert::ToInt($_GET['id']),
                     "value" => $value,
                     "status" => _status,
                     "head" => _cw_players_head));
@@ -107,14 +107,14 @@ else
     if($get['bericht']) $bericht = bbcode($get['bericht']);
     else $bericht = "&nbsp;";
 
-    $libPath = "inc/images/clanwars/".intval($_GET['id']);
+    $libPath = "inc/images/clanwars/".convert::ToInt($_GET['id']);
     $screen1 = ''; $screen2 = ''; $screen3 = ''; $screen4 = '';
     foreach($picformat AS $end)
     {
-        if(file_exists(basePath."/inc/images/clanwars/".intval($_GET['id']).'_1.'.$end)) $screen1 = img_cw($libPath, '1.'.$end);
-        if(file_exists(basePath."/inc/images/clanwars/".intval($_GET['id']).'_2.'.$end)) $screen2 = img_cw($libPath, '2.'.$end);
-        if(file_exists(basePath."/inc/images/clanwars/".intval($_GET['id']).'_3.'.$end)) $screen3 = img_cw($libPath, '3.'.$end);
-        if(file_exists(basePath."/inc/images/clanwars/".intval($_GET['id']).'_4.'.$end)) $screen4 = img_cw($libPath, '4.'.$end);
+        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_1.'.$end)) $screen1 = img_cw($libPath, '1.'.$end);
+        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_2.'.$end)) $screen2 = img_cw($libPath, '2.'.$end);
+        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_3.'.$end)) $screen3 = img_cw($libPath, '3.'.$end);
+        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_4.'.$end)) $screen4 = img_cw($libPath, '4.'.$end);
     }
 
 
@@ -135,11 +135,11 @@ else
     else $page = 1;
 
     $qryc = db("SELECT * FROM ".$db['cw_comments']."
-                            WHERE cw = ".intval($_GET['id'])."
+                            WHERE cw = ".convert::ToInt($_GET['id'])."
                             ORDER BY datum DESC
               LIMIT ".($page - 1)*$maxcwcomments.",".$maxcwcomments."");
 
-    $entrys = cnt($db['cw_comments'], " WHERE cw = ".intval($_GET['id']));
+    $entrys = cnt($db['cw_comments'], " WHERE cw = ".convert::ToInt($_GET['id']));
     $i = $entrys-($page - 1)*$maxcwcomments;
 
     while($getc = _fetch($qryc))
@@ -147,7 +147,7 @@ else
         if($getc['hp']) $hp = show(_hpicon, array("hp" => $getc['hp']));
         else $hp = "";
 
-        if(($chkMe != 'unlogged' && $getc['reg'] == $userid) || permission("clanwars"))
+        if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("clanwars"))
         {
             $edit = show("page/button_edit_single", array("id" => $get['id'],
                     "action" => "action=details&amp;do=edit&amp;cid=".$getc['id'],
@@ -209,7 +209,7 @@ else
         {
             if(isset($userid))
             {
-                $form = show("page/editor_regged", array("nick" => autor($userid),
+                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                         "von" => _autor));
             } else {
                 $form = show("page/editor_notregged", array("nickhead" => _nick,
@@ -302,7 +302,7 @@ else
 
     if($_GET['do'] == "add")
     {
-        if(_rows(db("SELECT `id` FROM ".$db['cw']." WHERE `id` = '".(int)$_GET['id']."'")) != 0)
+        if(_rows(db("SELECT `id` FROM ".$db['cw']." WHERE `id` = '".convert::ToInt($_GET['id'])."'")) != 0)
         {
             if(settings("reg_cwcomments") == "1" && $chkMe == "unlogged")
             {
@@ -320,7 +320,7 @@ else
                         if(isset($userid))
                         {
                             if(empty($_POST['comment'])) $error = _empty_eintrag;
-                            $form = show("page/editor_regged", array("nick" => autor($userid),
+                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                                     "von" => _autor));
                         } else {
                             if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
@@ -356,12 +356,12 @@ else
                                 "eintraghead" => _eintrag));
                     } else {
                         $qry = db("INSERT INTO ".$db['cw_comments']."
-                                             SET `cw`       = '".((int)$_GET['id'])."',
-                                                     `datum`    = '".((int)time())."',
+                                             SET `cw`       = '".convert::ToInt($_GET['id'])."',
+                                                     `datum`    = '".time()."',
                                                      `nick`     = '".up($_POST['nick'])."',
                                                      `email`    = '".up($_POST['email'])."',
                                                      `hp`       = '".links($_POST['hp'])."',
-                                                     `reg`      = '".((int)$userid)."',
+                                                     `reg`      = '".convert::ToInt($userid)."',
                                                      `comment`  = '".up($_POST['comment'],1)."',
                                                      `ip`       = '".visitorIp()."'");
 
@@ -382,26 +382,26 @@ else
     if($_GET['do'] == "delete")
     {
         $qry = db("SELECT reg FROM ".$db['cw_comments']."
-               WHERE id = '".intval($_GET['cid'])."'");
+               WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid || permission('clanwars'))
+        if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
         {
             $qry = db("DELETE FROM ".$db['cw_comments']."
-                 WHERE id = '".intval($_GET['cid'])."'");
+                 WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
-            $index = info(_comment_deleted, "?action=details&amp;id=".intval($_GET['id'])."");
+            $index = info(_comment_deleted, "?action=details&amp;id=".convert::ToInt($_GET['id'])."");
         } else {
             $index = error(_error_wrong_permissions, 1);
         }
     } elseif($_GET['do'] == "editcom") {
         $qry = db("SELECT * FROM ".$db['cw_comments']."
-               WHERE id = '".intval($_GET['cid'])."'");
+               WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid || permission('clanwars'))
+        if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
         {
-            $editedby = show(_edited_by, array("autor" => autor($userid),
+            $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                     "time" => date("d.m.Y H:i", time())._uhr));
             $qry = db("UPDATE ".$db['cw_comments']."
                    SET `nick`     = '".up($_POST['nick'])."',
@@ -409,7 +409,7 @@ else
                        `hp`       = '".links($_POST['hp'])."',
                        `comment`  = '".up($_POST['comment'],1)."',
                        `editby`   = '".addslashes($editedby)."'
-                   WHERE id = '".intval($_GET['cid'])."'");
+                   WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
             $index = info(_comment_edited, "?action=details&amp;id=".$_GET['id']."");
         } else {
@@ -417,10 +417,10 @@ else
         }
     } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['cw_comments']."
-                 WHERE id = '".intval($_GET['cid'])."'");
+                 WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid || permission('clanwars'))
+        if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
         {
             if($get['reg'] != 0)
             {

@@ -53,6 +53,7 @@ else
 
             switch ($a)
             {
+                case 'dlid': $action = 'wrote <b>comment</b> in <b>downloads</b> with <b>ID</b> '.$wid; break;
                 case 'fid': $action = 'wrote in <b>board</b>'; break;
                 case 'ncid': $action = 'wrote <b>comment</b> in <b>news</b> with <b>ID</b> '.$wid; break;
                 case 'artid': $action = 'wrote <b>comment</b> in <b>article</b> with <b>ID</b> '.$wid; break;

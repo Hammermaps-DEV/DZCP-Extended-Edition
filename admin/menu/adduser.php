@@ -76,12 +76,12 @@ if(isset($_GET['do']))
         if(!empty($_POST['perm']))
         {
             foreach($_POST['perm'] AS $v => $k)
-                $p .= "`".substr($v, 2)."` = '".((int)$k)."',";
+                $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";
 
             if(!empty($p))
                 $p = ', '.substr($p, 0, strlen($p) - 1);
 
-            db("INSERT INTO ".$db['permissions']." SET `user` = '".((int)$insert_id)."'".$p);
+            db("INSERT INTO ".$db['permissions']." SET `user` = '".convert::ToInt($insert_id)."'".$p);
         }
 
         ## Internal boardpermissions ##
@@ -89,7 +89,7 @@ if(isset($_GET['do']))
         {
             foreach($_POST['board'] AS $v)
             {
-                db("INSERT INTO ".$db['f_access']." SET `user` = '".((int)$insert_id)."', `forum` = '".$v."'");
+                db("INSERT INTO ".$db['f_access']." SET `user` = '".convert::ToInt($insert_id)."', `forum` = '".$v."'");
             }
         }
 
@@ -98,10 +98,10 @@ if(isset($_GET['do']))
         while($getsq = _fetch($sq))
         {
             if(isset($_POST['squad'.$getsq['id']]))
-                db("INSERT INTO ".$db['squaduser']." SET `user`  = '".((int)$insert_id)."', `squad` = '".((int)$_POST['squad'.$getsq['id']])."'");
+                db("INSERT INTO ".$db['squaduser']." SET `user`  = '".convert::ToInt($insert_id)."', `squad` = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
 
             if(isset($_POST['squad'.$getsq['id']]))
-                db("INSERT INTO ".$db['userpos']." SET `user` = '".((int)$insert_id)."', `posi` = '".((int)$_POST['sqpos'.$getsq['id']])."', `squad` = '".((int)$getsq['id'])."'");
+                db("INSERT INTO ".$db['userpos']." SET `user` = '".convert::ToInt($insert_id)."', `posi` = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad` = '".convert::ToInt($getsq['id'])."'");
         }
 
         ## UserPic ##
@@ -126,7 +126,7 @@ if(isset($_GET['do']))
         }
 
         ## User Stats ##
-        db("INSERT INTO ".$db['userstats']." SET `user` = '".((int)$insert_id)."', `lastvisit`	= '".time()."'");
+        db("INSERT INTO ".$db['userstats']." SET `user` = '".convert::ToInt($insert_id)."', `lastvisit`	= '".time()."'");
 
         ## E-Mail senden ##
         $message = show(settings('eml_reg'), array("user" => up($username), "pwd" => $mkpwd));
@@ -148,12 +148,12 @@ if(empty($show))
         $qrypos = db("SELECT id,position FROM ".$db['pos']." ORDER BY pid"); $posi = '';
         while($getpos = _fetch($qrypos))
         {
-            if(db("SELECT * FROM ".$db['userpos']." WHERE posi = '".((int)$getpos['id'])."' AND squad = '".((int)$getsq['id'])."' AND user = '".(isset($_GET['edit']) ? ((int)$_GET['edit']) : '')."'",true))
+            if(db("SELECT * FROM ".$db['userpos']." WHERE posi = '".convert::ToInt($getpos['id'])."' AND squad = '".convert::ToInt($getsq['id'])."' AND user = '".(isset($_GET['edit']) ? convert::ToInt($_GET['edit']) : '')."'",true))
                    $sel = "selected=\"selected\"";
                else
                    $sel = "";
 
-               $posi .= show(_select_field_posis, array("value" => ((int)$getpos['id']), "sel" => $sel, "what" => re($getpos['position'])));
+               $posi .= show(_select_field_posis, array("value" => convert::ToInt($getpos['id']), "sel" => $sel, "what" => re($getpos['position'])));
         }
 
         $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => '', "eposi" => $posi, "squad" => re($getsq['name'])));

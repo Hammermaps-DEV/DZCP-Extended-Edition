@@ -20,7 +20,7 @@ else
     {
         $index = error(_error_wrong_permissions, 1);
     } else {
-        $qry = db("SELECT * FROM ".$db['away']." WHERE id = '".intval($_GET['id'])."'");
+        $qry = db("SELECT * FROM ".$db['away']." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $date1 = show(_dropdown_date, array("day" => dropdown("day",date("d",$get['start'])),
@@ -78,16 +78,16 @@ else
 
             } else {
                 $time = mktime(23,59,59,$_POST['monat'],$_POST['tag'],$_POST['jahr']);
-                $editedby = show(_edited_by, array("autor" => autor($userid),
+                $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                         "time" => date("d.m.Y H:i", time())._uhr));
 
                 $qry = db("UPDATE ".$db['away']."
-                    SET `start`= '".((int)$abdata)."',
-                          `end`= '".((int)$time)."',
+                    SET `start`= '".convert::ToInt($abdata)."',
+                          `end`= '".convert::ToInt($time)."',
                         `titel`= '".up($_POST['titel'])."',
                         `reason`= '".up($_POST['reason'], 1)."',
                         `lastedit`= '".addslashes($editedby)."'
-                        WHERE id = '".intval($_GET['id'])."'");
+                        WHERE id = '".convert::ToInt($_GET['id'])."'");
 
                 $index = info(_away_successful_edit, "../away/");
             }

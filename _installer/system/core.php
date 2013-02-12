@@ -184,7 +184,7 @@ function mysqlVersion($con)
     $version = @mysql_result( $result, 0, "versionsinfo" );
     $match = explode( '.', $version );
     $vers['txt'] = $version;
-    $vers['int'] = sprintf( '%d%02d%02d', $match[0], $match[1], intval( $match[2] ) );
+    $vers['int'] = sprintf( '%d%02d%02d', $match[0], $match[1], convert::ToInt( $match[2] ) );
     return $vers;
 }
 

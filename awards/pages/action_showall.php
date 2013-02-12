@@ -20,7 +20,7 @@ else
     else $page = 1;
 
     $qry = db("SELECT * FROM ".$db['squads']."
-             WHERE id = '".intval($_GET['id'])."'");
+             WHERE id = '".convert::ToInt($_GET['id'])."'");
     while($get = _fetch($qry))
     {
         if(isset($_GET['showsquad']))

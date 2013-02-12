@@ -42,7 +42,7 @@ else
             if($get['email']) $gbemail = show(_emailicon, array("email" => eMailAddr($get['email'])));
             else $gbemail = "";
 
-            if($get['reg'] == $userid || permission("gb"))
+            if($get['reg'] == convert::ToInt($userid) || permission("gb"))
             {
                 $edit = show("page/button_edit_single", array("id" => $get['id'],
                         "action" => "action=do&amp;what=edit",
@@ -114,7 +114,7 @@ else
     {
         if(isset($userid))
         {
-            $form = show("page/editor_regged", array("nick" => autor($userid),
+            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                     "von" => _autor));
         } else {
             $form = show("page/editor_notregged", array("nickhead" => _nick,

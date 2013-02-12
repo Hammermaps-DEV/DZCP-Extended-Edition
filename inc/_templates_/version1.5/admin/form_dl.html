@@ -2,11 +2,11 @@
 <td>
 <script type="text/javascript">
 <!--
-	function setFile(elementId)
-	{
-		var win = window.open('../inc/tinymce/plugins/ajaxfilemanager/ajaxfilemanager.php?editor=form&elementId='+elementId, 'ajaxFileImageManager', 'width=850,height=500');		
-		return false;
-	}
+    function setFile(elementId)
+    {
+        var win = window.open('../inc/tinymce/plugins/ajaxfilemanager/ajaxfilemanager.php?editor=form&elementId='+elementId, 'ajaxFileImageManager', 'width=850,height=500');
+        return false;
+    }
 //-->
 </script>
 <form enctype="multipart/form-data" name="dlformular" action="?admin=dladmin&amp;do=[do]" method="post" onsubmit="return(DZCP.submitButton())">
@@ -21,6 +21,15 @@
       [kats]
     </select>
   </td>
+</tr>
+<tr>
+    <td class="contentMainTop"><span class="fontBold">[lang_dl_comments]:</span></td>
+    <td class="contentMainFirst" align="center">
+        <select name="comments" class="dropdown">
+            <option value="0">[lang_no]</option>
+            <option value="1" [selr_dc]>[lang_yes]</option>
+        </select>
+    </td>
 </tr>
 <tr>
   <td class="contentMainTop"><span class="fontBold">[download]:</span></td>

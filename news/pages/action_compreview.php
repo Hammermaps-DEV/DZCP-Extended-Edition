@@ -22,8 +22,8 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     header("Content-type: text/html; charset=utf-8");
-    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-    $cid = isset($_GET['cid']) ? intval($_GET['cid']) : 0;
+    $id = isset($_GET['id']) ? convert::ToInt($_GET['id']) : 0;
+    $cid = isset($_GET['cid']) ? convert::ToInt($_GET['cid']) : 0;
     $get_hp = isset($_POST['hp']) ? $_POST['hp'] : '';
     $get_email = isset($_POST['email']) ? $_POST['email'] : '';
     $get_nick = isset($_POST['nick']) ? $_POST['nick'] : '';
@@ -46,12 +46,12 @@ else
                 $pUId = $get['reg'];
             }
 
-            $editedby = show(_edited_by, array("autor" => cleanautor($userid), "time" => date("d.m.Y H:i", time())._uhr));
+            $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
         break;
         default:
             $editedby = '';
             $get_id = cnt($db['newscomments'], " WHERE news = ".$id."")+1;
-            $get_userid = $userid;
+            $get_userid = convert::ToInt($userid);
             $get_date = time();
 
             if($chkMe == 'unlogged')
@@ -59,7 +59,7 @@ else
             else
             {
                 $regCheck = true;
-                $pUId = $userid;
+                $pUId = convert::ToInt($userid);
             }
         break;
     }

@@ -19,9 +19,9 @@ else
   if($_GET['do'] == "edit")
   {
     $qry = db("SELECT * FROM ".$db['f_threads']."
-               WHERE id = '".intval($_GET['id'])."'");
+               WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
-    if($get['t_reg'] == $userid || permission("forum"))
+    if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
     {
       if(permission("forum"))
       {
@@ -54,7 +54,7 @@ else
 
             $fget = _fetch(db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1
                          LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id
-                         WHERE s2.`id` = '".intval($get['kid'])."'"));
+                         WHERE s2.`id` = '".convert::ToInt($get['kid'])."'"));
 
             if($getv['intern'] == "1") $intern = 'checked="checked"';
           $intern = ''; $intern_kat = '';
@@ -153,10 +153,10 @@ else
     }
   } elseif($_GET['do'] == "editthread") {
     $qry = db("SELECT * FROM ".$db['f_threads']."
-               WHERE id = '".intval($_GET['id'])."'");
+               WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
-    if($get['t_reg'] == $userid || permission("forum"))
+    if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
     {
       if($get['t_reg'] != 0 || permission('forum'))
       {
@@ -205,7 +205,7 @@ else
 
             $fget = _fetch(db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1
                          LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id
-                         WHERE s2.`id` = '".intval($_GET['kid'])."'"));
+                         WHERE s2.`id` = '".convert::ToInt($_GET['kid'])."'"));
 
             if($_POST['intern']) $intern = 'checked="checked"';
           $intern = ''; $intern_kat = '';
@@ -268,7 +268,7 @@ else
                                             "eintraghead" => _eintrag));
       } else {
         $qryt = db("SELECT * FROM ".$db['f_threads']."
-                    WHERE id = '".intval($_GET['id'])."'");
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $gett = _fetch($qryt);
           if(!empty($gett['vote']))
       {
@@ -280,8 +280,8 @@ else
 
         $upd = db("UPDATE ".$db['votes']."
                    SET `titel`  = '".up($_POST['question'])."',
-                       `intern` = '".((int)$_POST['intern'])."',
-                       `closed` = '".((int)$_POST['closed'])."'
+                       `intern` = '".convert::ToInt($_POST['intern'])."',
+                       `closed` = '".convert::ToInt($_POST['closed'])."'
                    WHERE id = '".$gett['vote']."'");
 
         $upd1 = db("UPDATE ".$db['vote_results']."
@@ -321,77 +321,77 @@ else
         }
         } elseif(empty($gett['vote']) && !empty($_POST['question'])) {
           $qry = db("INSERT INTO ".$db['votes']."
-                     SET `datum`  = '".((int)time())."',
+                     SET `datum`  = '".time()."',
                          `titel`  = '".up($_POST['question'])."',
-                         `intern` = '".((int)$_POST['intern'])."',
+                         `intern` = '".convert::ToInt($_POST['intern'])."',
                                      `forum`  = 1,
-                         `von`    = '".((int)$userid)."'");
+                         `von`    = '".convert::ToInt($userid)."'");
 
           $vid = mysql_insert_id();
 
           $qry = db("INSERT INTO ".$db['vote_results']."
-                    SET `vid`   = '".((int)$vid)."',
+                    SET `vid`   = '".convert::ToInt($vid)."',
                         `what`  = 'a1',
                         `sel`   = '".up($_POST['a1'])."'");
 
           $qry = db("INSERT INTO ".$db['vote_results']."
-                     SET `vid`  = '".((int)$vid)."',
+                     SET `vid`  = '".convert::ToInt($vid)."',
                          `what` = 'a2',
                          `sel`  = '".up($_POST['a2'])."'");
 
           if(!empty($_POST['a3']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a3',
                            `sel`  = '".up($_POST['a3'])."'");
           }
           if(!empty($_POST['a4']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a4',
                            `sel`  = '".up($_POST['a4'])."'");
           }
           if(!empty($_POST['a5']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a5',
                            `sel`  = '".up($_POST['a5'])."'");
           }
           if(!empty($_POST['a6']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a6',
                            `sel`  = '".up($_POST['a6'])."'");
           }
           if(!empty($_POST['a7']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a7',
                            `sel`  = '".up($_POST['a7'])."'");
           }
           if(!empty($_POST['a8']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a8',
                            `sel`  = '".up($_POST['a8'])."'");
           }
           if(!empty($_POST['a9']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a9',
                            `sel`  = '".up($_POST['a9'])."'");
           }
           if(!empty($_POST['a10']))
           {
             $qry = db("INSERT INTO ".$db['vote_results']."
-                       SET `vid`  = '".((int)$vid)."',
+                       SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a10',
                            `sel`  = '".up($_POST['a10'])."'");
           }
@@ -410,7 +410,7 @@ else
         $vid = "";
         }
 
-        $editedby = show(_edited_by, array("autor" => autor($userid),
+        $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                                            "time" => date("d.m.Y H:i", time())._uhr));
 
           $qry = db("UPDATE ".$db['f_threads']."
@@ -420,30 +420,30 @@ else
                        `t_email`  = '".up($_POST['email'])."',
                        `t_hp`     = '".links($_POST['hp'])."',
                        `t_text`   = '".up($_POST['eintrag'],1)."',
-                       `sticky`   = '".((int)$_POST['sticky'])."',
-                       `global`   = '".((int)$_POST['global'])."',
+                       `sticky`   = '".convert::ToInt($_POST['sticky'])."',
+                       `global`   = '".convert::ToInt($_POST['global'])."',
                                             `vote`     = '".$vid."',
                        `edited`   = '".addslashes($editedby)."'
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
       $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".$db['f_abo']." AS s1
                         LEFT JOIN ".$db['users']." AS s2 ON s2.id = s1.user
-                      WHERE s1.fid = '".((int)$_GET['id'])."'");
+                      WHERE s1.fid = '".convert::ToInt($_GET['id'])."'");
         while($getabo = _fetch($checkabo))
         {
-        if($userid != $getabo['user'])
+        if(convert::ToInt($userid) != $getabo['user'])
         {
-          $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".intval($_GET['id'])."'");
+          $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
           $gettopic = _fetch($topic);
 
           $subj = show(settings('eml_fabo_tedit_subj'), array("titel" => $title));
 
            $message = show(settings('eml_fabo_tedit'), array("nick" => re($getabo['nick']),
-                                                                "postuser" => fabo_autor($userid),
+                                                                "postuser" => fabo_autor(convert::ToInt($userid)),
                                                             "topic" => $gettopic['topic'],
                                                             "titel" => $title,
                                                             "domain" => $httphost,
-                                                            "id" => intval($_GET['id']),
+                                                            "id" => convert::ToInt($_GET['id']),
                                                             "entrys" => "1",
                                                             "page" => "1",
                                                             "text" => bbcode($_POST['eintrag']),
@@ -477,13 +477,13 @@ else
 
         $fget = _fetch(db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1
                        LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id
-                       WHERE s2.`id` = '".intval($_GET['kid'])."'"));
+                       WHERE s2.`id` = '".convert::ToInt($_GET['kid'])."'"));
                 $intern = ''; $intern_kat = '';
                 if($fget['intern'] == "1") { $intern = 'checked="checked"'; $internVisible = 'style="display:none"'; };
 
                 if(isset($userid))
           {
-              $form = show("page/editor_regged", array("nick" => autor($userid),
+              $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                                                    "von" => _autor));
           } else {
           $form = show("page/editor_notregged", array("nickhead" => _nick,
@@ -548,7 +548,7 @@ else
       }
     }
   } elseif($_GET['do'] == "addthread") {
-      if(_rows(db("SELECT id FROM ".$db['f_skats']." WHERE id = '".intval($_GET['kid'])."'")) == 0) {
+      if(_rows(db("SELECT id FROM ".$db['f_skats']." WHERE id = '".convert::ToInt($_GET['kid'])."'")) == 0) {
           $index = error(_id_dont_exist, 1);
       } else {
         if(settings("reg_forum") == "1" && $chkMe == "unlogged")
@@ -592,7 +592,7 @@ else
 
                 if(isset($userid))
                 {
-                    $form = show("page/editor_regged", array("nick" => autor($userid),
+                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                                                                                                      "von" => _autor));
                 } else {
                     $form = show("page/editor_notregged", array("nickhead" => _nick,
@@ -602,7 +602,7 @@ else
 
             $fget = _fetch(db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1
                                                  LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id
-                                                 WHERE s2.`id` = '".intval($_GET['kid'])."'"));
+                                                 WHERE s2.`id` = '".convert::ToInt($_GET['kid'])."'"));
 
             if($_POST['intern']) $intern = 'checked="checked"';
             $intern = ''; $intern_kat = '';
@@ -668,102 +668,102 @@ else
                 {
                         $fgetvote = _fetch(db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1
                                                                      LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id
-                                                                     WHERE s2.`id` = '".intval($_GET['kid'])."'"));
+                                                                     WHERE s2.`id` = '".convert::ToInt($_GET['kid'])."'"));
 
                         if($fgetvote['intern'] == 1) $ivote = "`intern` = '1',";
-                        else $ivote = "`intern` = '".((int)$_POST['intern'])."',";
+                        else $ivote = "`intern` = '".convert::ToInt($_POST['intern'])."',";
 
                         $qry = db("INSERT INTO ".$db['votes']."
-                                             SET `datum`  = '".((int)time())."',
+                                             SET `datum`  = '".time()."',
                                                      `titel`  = '".up($_POST['question'])."',
                                                      ".$ivote."
                                                      `forum`  = 1,
-                                                     `von`    = '".((int)$userid)."'");
+                                                     `von`    = '".convert::ToInt($userid)."'");
 
                         $vid = mysql_insert_id();
 
                         $qry = db("INSERT INTO ".$db['vote_results']."
-                                            SET `vid`   = '".((int)$vid)."',
+                                            SET `vid`   = '".convert::ToInt($vid)."',
                                                     `what`  = 'a1',
                                                     `sel`   = '".up($_POST['a1'])."'");
 
                         $qry = db("INSERT INTO ".$db['vote_results']."
-                                             SET `vid`  = '".((int)$vid)."',
+                                             SET `vid`  = '".convert::ToInt($vid)."',
                                                      `what` = 'a2',
                                                      `sel`  = '".up($_POST['a2'])."'");
 
                         if(!empty($_POST['a3']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a3',
                                                          `sel`  = '".up($_POST['a3'])."'");
                         }
                         if(!empty($_POST['a4']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a4',
                                                          `sel`  = '".up($_POST['a4'])."'");
                         }
                         if(!empty($_POST['a5']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a5',
                                                          `sel`  = '".up($_POST['a5'])."'");
                         }
                         if(!empty($_POST['a6']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a6',
                                                          `sel`  = '".up($_POST['a6'])."'");
                         }
                         if(!empty($_POST['a7']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a7',
                                                          `sel`  = '".up($_POST['a7'])."'");
                         }
                         if(!empty($_POST['a8']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a8',
                                                          `sel`  = '".up($_POST['a8'])."'");
                         }
                         if(!empty($_POST['a9']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a9',
                                                          `sel`  = '".up($_POST['a9'])."'");
                         }
                         if(!empty($_POST['a10']))
                         {
                             $qry = db("INSERT INTO ".$db['vote_results']."
-                                                 SET `vid`  = '".((int)$vid)."',
+                                                 SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a10',
                                                          `sel`  = '".up($_POST['a10'])."'");
                         }
             } else { $vid = ""; }
 
             $qry = db("INSERT INTO ".$db['f_threads']."
-                                 SET 	`kid`      = '".((int)$_GET['kid'])."',
-                                                `t_date`   = '".((int)time())."',
+                                 SET 	`kid`      = '".convert::ToInt($_GET['kid'])."',
+                                                `t_date`   = '".time()."',
                                                 `topic`    = '".up($_POST['topic'])."',
                                                 `subtopic` = '".up($_POST['subtopic'])."',
                                                 `t_nick`   = '".up($_POST['nick'])."',
                                                 `t_email`  = '".up($_POST['email'])."',
                                                 `t_hp`     = '".links($_POST['hp'])."',
-                                                `t_reg`    = '".((int)$userid)."',
+                                                `t_reg`    = '".convert::ToInt($userid)."',
                                                 `t_text`   = '".up($_POST['eintrag'],1)."',
-                                                `sticky`   = '".((int)$_POST['sticky'])."',
-                                                `global`   = '".((int)$_POST['global'])."',
+                                                `sticky`   = '".convert::ToInt($_POST['sticky'])."',
+                                                `global`   = '".convert::ToInt($_POST['global'])."',
                                                 `ip`       = '".visitorIp()."',
-                                                `lp`       = '".((int)time())."',
+                                                `lp`       = '".time()."',
                                                 `vote`     = '".$vid."',
                                                 `first`	= '1'");
                 $thisFID = mysql_insert_id();
@@ -771,7 +771,7 @@ else
 
                 $update = db("UPDATE ".$db['userstats']."
                                             SET `forumposts` = forumposts+1
-                                            WHERE `user`       = '".$userid."'");
+                                            WHERE `user`       = '".convert::ToInt($userid)."'");
 
                 $index = info(_forum_newthread_successful, "?action=showthread&amp;id=".$thisFID."#p1");
             }

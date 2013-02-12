@@ -28,12 +28,12 @@ else
         $get_userid = $get['reg'];
         $get_date = $get['datum'];
         $regCheck = (!$get['reg'] ? true : false);
-        $editby = show(_edited_by, array("autor" => cleanautor($userid), "time" => date("d.m.Y H:i", time())._uhr));
+        $editby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
     }
     else
     {
         $get_id = cnt($db['usergb'], "WHERE user = ".(isset($_GET['uid']) ? (convert::ToInt($_GET['uid'])+1) : 1));
-        $get_userid = $userid;
+        $get_userid = convert::ToInt($userid);
         $get_date = time();
         $regCheck = ($chkMe == 'unlogged' ? true : false);
         $editby = '';
@@ -47,9 +47,9 @@ else
     }
     else
     {
-        $get_hp = data($userid,'hp');
-        $get_email = data($userid,'email');
-        $get_nick = autor($userid);
+        $get_hp = data(convert::ToInt($userid),'hp');
+        $get_email = data(convert::ToInt($userid),'email');
+        $get_nick = autor(convert::ToInt($userid));
     }
 
     $gbhp = (!empty($get_hp) ? show(_hpicon, array("hp" => links($get_hp))) : '');
@@ -63,9 +63,9 @@ else
                                               "hp" => $gbhp,
                                               "editby" => $editby,
                                               "email" => $gbemail,
-                                              "avatar" => useravatar($userid),
-                                              "onoff" => onlinecheck($userid),
-                                              "rank" => getrank($userid),
+                                              "avatar" => useravatar(convert::ToInt($userid)),
+                                              "onoff" => onlinecheck(convert::ToInt($userid)),
+                                              "rank" => getrank(convert::ToInt($userid)),
                                               "ip" => $posted_ip));
 
     update_user_status_preview();

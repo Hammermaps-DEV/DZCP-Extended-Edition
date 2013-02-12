@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._navi_head;
     if(!permission("editor"))
@@ -21,9 +21,9 @@ if(_adminMenu != 'true')
               <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
               <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
             ';
-          }          
+          }
           $thiskat = $get['kat'];
-     
+
           $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'">'._nach.' -> '.navi_name(re($get['name'])).'</option>';
         }
 
@@ -59,30 +59,30 @@ if(_adminMenu != 'true')
 
           $posi = db("UPDATE ".$db['navi']."
                       SET `pos` = pos+1
-                      WHERE pos ".$sign." '".intval($pos)."'");
+                      WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
           $posi = db("INSERT INTO ".$db['navi']."
-                      SET `pos`       = '".((int)$pos)."',
+                      SET `pos`       = '".convert::ToInt($pos)."',
                           `kat`       = '".up($kat)."',
                           `name`      = '".up($_POST['name'])."',
                           `url`       = '".up($_POST['url'])."',
                           `shown`     = '1',
-                          `target`    = '".((int)$_POST['target'])."',
-                          `internal`  = '".((int)$_POST['internal'])."',
+                          `target`    = '".convert::ToInt($_POST['target'])."',
+                          `internal`  = '".convert::ToInt($_POST['internal'])."',
                           `type`      = '2',
-                          `wichtig`   = '".((int)$_POST['wichtig'])."'");
+                          `wichtig`   = '".convert::ToInt($_POST['wichtig'])."'");
           $show = info(_navi_added,"?admin=navi");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("SELECT * FROM ".$db['navi']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $del = db("DELETE FROM ".$db['sites']."
-                   WHERE id = '".intval($get['editor'])."'");
+                   WHERE id = '".convert::ToInt($get['editor'])."'");
 
         $del = db("DELETE FROM ".$db['navi']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_navi_deleted, "?admin=navi");
       } elseif($_GET['do'] == "edit") {
@@ -97,17 +97,17 @@ if(_adminMenu != 'true')
               <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
               <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
             ';
-          }          
+          }
           $thiskat = $get['kat'];
           $sel[$i] = ($get['id'] == $_GET['id']) ? 'selected="selected"' : '';
-     
+
           $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel[$i].'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
 
           $i++;
         }
 
         $qry = db("SELECT * FROM ".$db['navi']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         if($get['type'] == "1")
@@ -153,35 +153,35 @@ if(_adminMenu != 'true')
 
         $posi = db("UPDATE ".$db['navi']."
                     SET pos = pos+1
-                    WHERE pos ".$sign." '".intval($pos)."'");
+                    WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
         $posi = db("UPDATE ".$db['navi']."
-                    SET `pos`       = '".((int)$pos)."',
+                    SET `pos`       = '".convert::ToInt($pos)."',
                         `kat`       = '".up($kat)."',
                         `name`      = '".up($_POST['name'])."',
                         `url`       = '".up($_POST['url'])."',
-                        `target`    = '".((int)$_POST['target'])."',
-                        `shown`     = '".((int)$_POST['sichtbar'])."',
-                        `internal`  = '".((int)$_POST['internal'])."',
-                        `wichtig`   = '".((int)$_POST['wichtig'])."'
-                    WHERE id = '".intval($_GET['id'])."'");
+                        `target`    = '".convert::ToInt($_POST['target'])."',
+                        `shown`     = '".convert::ToInt($_POST['sichtbar'])."',
+                        `internal`  = '".convert::ToInt($_POST['internal'])."',
+                        `wichtig`   = '".convert::ToInt($_POST['wichtig'])."'
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_navi_edited,"?admin=navi");
       } elseif($_GET['do'] == "menu") {
         $posi = db("UPDATE ".$db['navi']."
-                    SET `shown`     = '".((int)$_GET['set'])."'
-                    WHERE id = '".intval($_GET['id'])."'");
+                    SET `shown`     = '".convert::ToInt($_GET['set'])."'
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         header("Location: ?admin=navi");
       } else if($_GET['do'] == 'intern') {
         $posi = db("UPDATE ".$db['navi_kats']."
-                    SET `intern` = '".((int)$_GET['set'])."'
-                    WHERE id = '".intval($_GET['id'])."'");
+                    SET `intern` = '".convert::ToInt($_GET['set'])."'
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         header("Location: ?admin=navi");
       } else if($_GET['do'] == 'editkat') {
-        $get = _fetch(db("SELECT * FROM ".$db['navi_kats']." WHERE `id` = '".intval($_GET['id'])."'"));
-        
+        $get = _fetch(db("SELECT * FROM ".$db['navi_kats']." WHERE `id` = '".convert::ToInt($_GET['id'])."'"));
+
         $show = show($dir."/form_navi_kats", array("head" => _menu_edit_kat,
                                                    "name" => _sponsors_admin_name,
                                                    "placeholder" => _placeholder,
@@ -205,16 +205,16 @@ if(_adminMenu != 'true')
         db("UPDATE ".$db['navi_kats']."
             SET `name`        = '".up($_POST['name'])."',
                 `placeholder` = 'nav_".up($_POST['placeholder'])."',
-                `level`       = '".intval($_POST['level'])."'
-            WHERE `id` = '".intval($_GET['id'])."'");
+                `level`       = '".convert::ToInt($_POST['level'])."'
+            WHERE `id` = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_menukat_updated, '?admin=navi');
       } else if($_GET['do'] == 'deletekat') {
-        db("DELETE FROM ".$db['navi_kats']." WHERE `id` = '".intval($_GET['id'])."'");
+        db("DELETE FROM ".$db['navi_kats']." WHERE `id` = '".convert::ToInt($_GET['id'])."'");
         $show = info(_menukat_deleted, '?admin=navi');
       }  else if($_GET['do'] == 'addkat') {
-        $get = _fetch(db("SELECT * FROM ".$db['navi_kats']." WHERE `id` = '".intval($_GET['id'])."'"));
-        
+        $get = _fetch(db("SELECT * FROM ".$db['navi_kats']." WHERE `id` = '".convert::ToInt($_GET['id'])."'"));
+
         $show = show($dir."/form_navi_kats", array("head" => _menu_add_kat,
                                                    "name" => _sponsors_admin_name,
                                                    "placeholder" => _placeholder,
@@ -238,7 +238,7 @@ if(_adminMenu != 'true')
         db("INSERT INTO ".$db['navi_kats']."
             SET `name`        = '".up($_POST['name'])."',
                 `placeholder` = 'nav_".up($_POST['placeholder'])."',
-                `level`       = '".intval($_POST['intern'])."'");
+                `level`       = '".convert::ToInt($_POST['intern'])."'");
 
         $show = info(_menukat_inserted, '?admin=navi');
       } else {
@@ -274,10 +274,10 @@ if(_adminMenu != 'true')
             $shown = _noicon;
             $set = 1;
           }
-		  if($get['katname'] != $kat) { 
-			  $kat = $get['katname']; 
-			  $show_ .= '<tr><td align="center" colspan="8" class="contentHead"><span class="fontBold">'.$get['katname'].'</span></td></tr>';
-		  }
+          if($get['katname'] != $kat) {
+              $kat = $get['katname'];
+              $show_ .= '<tr><td align="center" colspan="8" class="contentHead"><span class="fontBold">'.$get['katname'].'</span></td></tr>';
+          }
           $show_ .= show($dir."/navi_show", array("class" => $class,
                                                   "name" => $type,
                                                   "id" => $get['id'],
@@ -289,12 +289,12 @@ if(_adminMenu != 'true')
                                                   "edit" => $edit,
                                                   "del" => $delete));
         }
-        
+
         unset($color);
         $qry = db("SELECT * FROM ".$db['navi_kats']." ORDER BY `name` ASC");
         while($get = _fetch($qry)) {
           $class = ($color % 2) ? 'contentMainFirst' : 'contentMainSecond'; $color++;
-          
+
           $type = re($get['name']);
           if($get['placeholder'] == 'nav_admin') {
             $edit = '';
@@ -316,8 +316,8 @@ if(_adminMenu != 'true')
                                                       "class" => $class,
                                                       "edit" => $edit,
                                                       "del" => $delete));
-        }        
-        
+        }
+
         $show = show($dir."/navi", array("show" => $show_,
                                          "intern" => _config_forum_intern,
                                          "name" => _navi_name,

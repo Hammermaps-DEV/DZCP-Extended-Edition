@@ -21,7 +21,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if(!($kat = (isset($_GET['kat']) ? intval($_GET['kat']) : false)))
+    if(!($kat = (isset($_GET['kat']) ? convert::ToInt($_GET['kat']) : false)))
     {
         $navKat = 'lazy';
         $n_kat = '';

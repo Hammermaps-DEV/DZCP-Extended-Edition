@@ -253,10 +253,8 @@ function visitorIp()
  */
 function pholderreplace($pholder)
 {
-    $search = array('@<script[^>]*?>.*?</script>@si',
-            '@<style[^>]*?>.*?</style>@siU',
-            '@<[\/\!]*?[^<>]*?>@si',
-            '@<![\s\S]*?--[ \t\n\r]*>@');
+    $search = array('@<script[^>]*?>.*?</script>@si','@<style[^>]*?>.*?</style>@siU','@<[\/\!]*?[^<>]*?>@si','@<![\s\S]*?--[ \t\n\r]*>@');
+
     //Replace
     $pholder = preg_replace("#<script(.*?)</script>#is","",$pholder);
     $pholder = preg_replace("#<style(.*?)</style>#is","",$pholder);
@@ -298,8 +296,6 @@ function show($tpl="", $array=array(), $array_lang_constant=array())
         else if(allow_additional && file_exists($template.".html") && !file_exists($template_additional.".html"))
             $tpl = file_get_contents($template.".html");
         ## DZCP-Extended Edition END ##
-
-        $a = array('nick' => 'Test');
 
         //put placeholders in array
         $pholder = explode("^",pholderreplace($tpl));
@@ -489,7 +485,7 @@ function cnt($count, $where = "", $what = "id")
 {
     $cnt = db("SELECT COUNT(".$what.") AS num FROM ".$count." ".$where,false,true);
     $cnt = (!$cnt || empty($cnt) || !is_array($cnt) ? array('num' => 0) : $cnt);
-    return ((int)$cnt['num']);
+    return convert::ToInt($cnt['num']);
 }
 
 /**
@@ -501,7 +497,7 @@ function cnt($count, $where = "", $what = "id")
 function sum($db, $where = "", $what)
 {
     $cnt = db("SELECT SUM(".$what.") AS num FROM ".$db.$where,false,true);
-    return ((int)$cnt['num']);
+    return convert::ToInt($cnt['num']);
 }
 
 /**
@@ -768,6 +764,130 @@ function pass_hash($pass_key='',$metode=0)
 }
 
 /**
+ * Funktion um Sekunden in Tage:Stinden:Minuten:Sekunden Formate umzuwandeln
+ * Added by DZCP-Extended Edition
+ *
+ * @return string
+ */
+function sec_format($seconds)
+{
+    $units = array(_sec_format_day=>86400, _sec_format_hour=>3600, _sec_format_minute=>60, _sec_format_second=>1);
+    if($seconds < 1) return _sec_format_lower_second;
+    else
+    {
+        $show = false; $out = '';
+        foreach($units as $key=>$value)
+        {
+            $t = round($seconds/$value);
+            $seconds = $seconds%$value;
+            list($s, $pl) = explode("|", $key);
+            if($t > 0 || $show)
+            {
+                if($t == 1)
+                    $out .= $t." ".$s.", ";
+                else
+                    $out .= $t." ".$s.$pl.", ";
+
+                $show = false;
+            }
+        }
+
+        return substr($out, 0, strlen($out)-2);
+    }
+}
+
+/**
+ * Funktion um Datengrößen zu ermitteln.
+ * Added by DZCP-Extended Edition
+ *
+ * @return int
+ */
+function filesize_extended($file=null)
+{
+    if(links_check_url($file))
+        return remote_filesize($file);
+
+    if(allow_os_shell) // Standardmäßig deaktiviert, sehe config.php
+        return os_filesize($file);
+
+    return @filesize($file);
+}
+
+/**
+ * Funktion um Datengrößen > 2 GB anzeigen zu können * OS-Shell Zugriff nötig und ein 64 Bit System
+ * Standardmäßig deaktiviert, sehe config.php
+ * Added by DZCP-Extended Edition
+ */
+function os_filesize($file=null)
+{
+    if (is_file($file)) //Nur Daten!
+    {
+        if(strtoupper(substr(php_uname('s'), 0, 3)) === 'WIN')
+            return function_exists('exec') ? exec('FOR %A IN ("'.$file.'") DO @ECHO %~zA') : filesize($file); ## WIN ##
+        else
+            return function_exists('shell_exec') ? shell_exec('ls -l "'.$file.'" | cut -f 5 -d " "') : filesize($file); ## Linux ##
+    }
+    else
+        return 0;
+}
+
+/**
+ * Funktion um Datengrößen auf Remote Servern zu ermitteln.
+ * Added by DZCP-Extended Edition
+ */
+function remote_filesize($url)
+{
+    global $cacheTag;
+    if(Cache::check($cacheTag,'remote_filesize_'.md5($url)))
+    {
+        $head = ""; $url_p = parse_url($url); $host = $url_p["host"];
+        if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$host))
+        {
+            $ip=gethostbyname($host);
+            if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$ip)) return -1;
+        }
+
+        $port = (isset($url_p["port"]) ? $url_p["port"] : 80);
+
+        if(!$port) $port=80;
+        $path = $url_p["path"];
+
+        if(!ping_port($host,$port,1))
+            return 0;
+
+        $fp = fsockopen($host, $port, $errno, $errstr, 20);
+        fputs($fp, "HEAD "  . $url  . " HTTP/1.1\r\n");
+        fputs($fp, "HOST: " . $host . "\r\n");
+        fputs($fp, "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/1\r\n");
+        fputs($fp, "Connection: close\r\n\r\n");
+        $headers = "";
+        while (!feof($fp))
+        { $headers .= fgets ($fp, 128); }
+        fclose ($fp);
+
+        $return = -2;
+        $arr_headers = explode("\n", $headers);
+        foreach($arr_headers as $header)
+        {
+            $s1 = "HTTP/1.1"; $s2 = "Content-Length: "; $s3 = "Location: ";
+            if(substr(strtolower ($header), 0, strlen($s1)) == strtolower($s1)) $status = substr($header, strlen($s1));
+            if(substr(strtolower ($header), 0, strlen($s2)) == strtolower($s2)) $size   = substr($header, strlen($s2));
+            if(substr(strtolower ($header), 0, strlen($s3)) == strtolower($s3)) $newurl = substr($header, strlen($s3));
+        }
+
+        if(!isset($size) || empty($size)) return 0;
+        $return= (convert::ToInt($size) > 0 ? convert::ToInt($size) : $status);
+        if (convert::ToInt($status)==302 && strlen($newurl) > 0)
+            $return = remote_filesize($newurl);
+
+        Cache::set($cacheTag,'remote_filesize_'.md5($url), $return, 28800); //Update alle 8h
+        return $return;
+    }
+
+    return Cache::get($cacheTag,'remote_filesize_'.md5($url));
+}
+
+/**
  * Funktion um fehlende Klassen zu laden
  * Added by DZCP-Extended Edition
  */
@@ -937,7 +1057,7 @@ class xml // Class by DZCP-Extended Edition
 class convert // Class by DZCP-Extended Edition
 {
     public static final function ToString($input)
-    { settype($input, 'string'); return $input;	}
+    { return (string)$input; }
 
     public static final function BoolToInt($input)
     { return ($input == true ? 1 : 0); }
@@ -946,7 +1066,7 @@ class convert // Class by DZCP-Extended Edition
     { return ($input == 0 ? false : true); }
 
     public static final function ToInt($input)
-    { settype($input, 'integer'); return $input; }
+    { return (int)$input; }
 
     public static final function UTF8($input)
     { return self::ToString(utf8_encode($input)); }

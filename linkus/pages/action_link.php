@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT url FROM ".$db['linkus']." WHERE id = '".intval($_GET['id'])."'");
+    $qry = db("SELECT url FROM ".$db['linkus']." WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
     header("Location: ".$get['url']);

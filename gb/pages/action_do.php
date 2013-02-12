@@ -29,7 +29,7 @@ else
             if(isset($userid))
             {
                 if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                $form = show("page/editor_regged", array("nick" => autor($userid),
+                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
                         "von" => _autor));
             } else {
                 if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || $_SESSION['sec_'.$dir] == NULL) $error = _error_invalid_regcode;
@@ -66,13 +66,13 @@ else
                     "eintraghead" => _eintrag));
         } else {
             $qry = db("INSERT INTO ".$db['gb']."
-                 SET `datum`      = '".((int)time())."',
+                 SET `datum`      = '".time()."',
                        `editby`     = '',
                        `public`     = 0,
                      `nick`       = '".up($_POST['nick'])."',
                      `email`      = '".up($_POST['email'])."',
                      `hp`         = '".links($_POST['hp'])."',
-                     `reg`        = '".((int)$userid)."',
+                     `reg`        = '".convert::ToInt($userid)."',
                      `nachricht`  = '".up($_POST['eintrag'], 1)."',
                      `ip`         = '".visitorIp()."'");
 
@@ -85,7 +85,7 @@ else
     {
         if(permission('gb'))
         {
-            db("UPDATE ".$db['gb']." SET `public` = '1' WHERE id = '".intval($_GET['id'])."'");
+            db("UPDATE ".$db['gb']." SET `public` = '1' WHERE id = '".convert::ToInt($_GET['id'])."'");
             header("Location: ../gb/");
         }
         else
@@ -95,7 +95,7 @@ else
     {
         if(permission('gb'))
         {
-            db("UPDATE ".$db['gb']." SET `public` = '0' WHERE id = '".intval($_GET['id'])."'");
+            db("UPDATE ".$db['gb']." SET `public` = '0' WHERE id = '".convert::ToInt($_GET['id'])."'");
             header("Location: ../gb/");
         }
         else
@@ -103,12 +103,12 @@ else
     }
     elseif($_GET['what'] == "delete")
     {
-        $qry = db("SELECT * FROM ".$db['gb']." WHERE id = '".intval($_GET['id'])."'");
+        $qry = db("SELECT * FROM ".$db['gb']." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid && $chkMe != "unlogged" or permission('gb'))
+        if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" or permission('gb'))
         {
-            db("DELETE FROM ".$db['gb']." WHERE id = '".intval($_GET['id'])."'");
+            db("DELETE FROM ".$db['gb']." WHERE id = '".convert::ToInt($_GET['id'])."'");
             $index = info(_gb_delete_successful, "../gb/");
         }
         else
@@ -117,10 +117,10 @@ else
     }
     elseif($_GET['what'] == "edit")
     {
-        $qry = db("SELECT * FROM ".$db['gb']."  WHERE id = '".intval($_GET['id'])."'");
+        $qry = db("SELECT * FROM ".$db['gb']."  WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == $userid && $chkMe != "unlogged" or permission('gb'))
+        if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" or permission('gb'))
         {
             if($get['reg'] != 0)
             {
@@ -156,7 +156,7 @@ else
             $index = error(_error_edit_post,1);
         }
     } elseif($_GET['what'] == 'editgb') {
-        if($_POST['reg'] == $userid || permission('gb'))
+        if($_POST['reg'] == convert::ToInt($userid) || permission('gb'))
         {
             if($_POST['reg'] == 0)
             {
@@ -165,15 +165,15 @@ else
                      `hp`         = '".links($_POST['hp'])."',";
             }
 
-            $editedby = show(_edited_by, array("autor" => autor($userid),
+            $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                     "time" => date("d.m.Y H:i", time())._uhr));
 
             $upd = db("UPDATE ".$db['gb']."
                    SET ".$addme."
                        `nachricht`  = '".up($_POST['eintrag'], 1)."',
-                       `reg`        = '".((int)$_POST['reg'])."',
+                       `reg`        = '".convert::ToInt($_POST['reg'])."',
                        `editby`     = '".addslashes($editedby)."'
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             $index = info(_gb_edited, "../gb/");
         } else {

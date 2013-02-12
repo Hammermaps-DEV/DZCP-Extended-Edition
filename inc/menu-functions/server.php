@@ -25,7 +25,7 @@ function server($serverID = 0)
                 $pwd = ''; $pwd_info = ''; $pwd_txt = ''; $game_icon = ''; $players = _navi_gsv_no_players_available;
                 $image_map = '../inc/images/maps/no_map.gif'; ## NoMap Picture ##
 
-                $get = _fetch(db("SELECT * FROM ".$db['server']." WHERE navi = '1' AND `id` = '".intval($serverID)."'"));
+                $get = _fetch(db("SELECT * FROM ".$db['server']." WHERE navi = '1' AND `id` = '".convert::ToInt($serverID)."'"));
                 if(!function_exists('server_query_'.$get['status']) && file_exists(basePath.'/inc/server_query/'.strtolower($get['status']).'.php'))
                     include(basePath.'/inc/server_query/'.strtolower($get['status']).'.php');
                 else

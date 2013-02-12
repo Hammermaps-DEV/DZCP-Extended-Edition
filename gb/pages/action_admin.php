@@ -23,7 +23,7 @@ else
         if($_GET['do'] == "addcomment")
         {
             $qry = db("SELECT * FROM ".$db['gb']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
             if($get['hp']) $gbhp = show(_hpicon, array("hp" => $get['hp']));
@@ -75,17 +75,17 @@ else
                     "head_gb" => _gb_addcomment_headgb));
         } elseif($_GET['do'] == "postcomment") {
             $qry = db("SELECT * FROM ".$db['gb']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
-            $comment = show($dir."/commentlayout", array("nick" => autor($userid),
+            $comment = show($dir."/commentlayout", array("nick" => autor(convert::ToInt($userid)),
                     "datum" => date("d.m.Y H:i", time())._uhr,
                     "comment" => up($_POST['comment'], 1),
                     "nachricht" => $get['nachricht']));
 
             $upd = db("UPDATE ".$db['gb']."
                  SET `nachricht` = '".$comment."'
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             $index = info(_gb_comment_added, "../gb/");
         }

@@ -16,17 +16,12 @@ if(_adminMenu != 'true')
                    ORDER BY name");
         while($get = _fetch($qry))
         {
-          $kats .= show(_select_field, array("value" => $get['id'],
-                                             "what" => re($get['name']),
-                                             "sel" => ""));
+          $kats .= show(_select_field, array("value" => $get['id'], "what" => re($get['name']), "sel" => ""));
         }
 
-        $files = get_files('../downloads/files/',false,true);
+        $files = get_files('../downloads/files/',false,true); $dl = '';
         for($i=0; $i<count($files); $i++)
-        {
-          $dl .= show(_downloads_files_exists, array("dl" => $files[$i],
-                                                     "sel" => ""));
-        }
+        { $dl .= show(_downloads_files_exists, array("dl" => $files[$i], "sel" => "")); }
 
         $show = show($dir."/form_dl", array("admin_head" => _downloads_admin_head,
                                             "ddownload" => "",
@@ -34,6 +29,7 @@ if(_adminMenu != 'true')
                                              "oder" => _or,
                                              "file" => $dl,
                                              "nothing" => "",
+                                             "selr_dc" => '',
                                              "nofile" => _downloads_nofile,
                                              "lokal" => _downloads_lokal,
                                              "what" => _button_value_add,
@@ -58,33 +54,34 @@ if(_adminMenu != 'true')
           $qry = db("INSERT INTO ".$db['downloads']."
                      SET `download`     = '".up($_POST['download'])."',
                          `url`          = '".$dl."',
-                         `date`         = '".((int)time())."',
+                         `date`         = '".time()."',
+                         `comments`     = '".convert::ToInt($_POST['comments'])."',
                          `beschreibung` = '".up($_POST['beschreibung'],1)."',
-                         `kat`          = '".((int)$_POST['kat'])."'");
+                         `kat`          = '".convert::ToInt($_POST['kat'])."'");
 
           $show = info(_downloads_added, "?admin=dladmin");
         }
-      } elseif($_GET['do'] == "edit") {
-        $qry  = db("SELECT * FROM ".$db['downloads']."
-                    WHERE id = '".intval($_GET['id'])."'");
+      }
+      elseif($_GET['do'] == "edit")
+      {
+        $qry  = db("SELECT * FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $qryk = db("SELECT * FROM ".$db['dl_kat']."
-                    ORDER BY name");
+        $qryk = db("SELECT * FROM ".$db['dl_kat']." ORDER BY name");
         while($getk = _fetch($qryk))
         {
           if($getk['id'] == $get['kat']) $sel = "selected=\"selected\"";
           else $sel = "";
 
-          $kats .= show(_select_field, array("value" => $getk['id'],
-                                             "what" => re($getk['name']),
-                                             "sel" => $sel));
+          $kats .= show(_select_field, array("value" => $getk['id'], "what" => re($getk['name']), "sel" => $sel));
         }
 
+        $selr_dc = ($get['comments'] ? 'selected="selected"' : '');
         $show = show($dir."/form_dl", array("admin_head" => _downloads_admin_head_edit,
                                             "ddownload" => re($get['download']),
                                             "durl" => re($get['url']),
                                             "file" => $dl,
+                                            "selr_dc" => $selr_dc,
                                             "lokal" => _downloads_lokal,
                                             "exist" => _downloads_exist,
                                             "nothing" => _nothing,
@@ -110,21 +107,24 @@ if(_adminMenu != 'true')
           $qry = db("UPDATE ".$db['downloads']."
                      SET `download`     = '".up($_POST['download'])."',
                          `url`          = '".$dl."',
+                         `comments`     = '".convert::ToInt($_POST['comments'])."',
                          `beschreibung` = '".up($_POST['beschreibung'],1)."',
-                         `date`         = '".((int)time())."',
-                         `kat`          = '".((int)$_POST['kat'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                         `date`         = '".time()."',
+                         `kat`          = '".convert::ToInt($_POST['kat'])."'
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_downloads_edited, "?admin=dladmin");
         }
-      } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['downloads']."
-                   WHERE id = '".intval($_GET['id'])."'");
-
+      }
+      elseif($_GET['do'] == "delete")
+      {
+        db("DELETE FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".$db['dlcomments']." WHERE download = '".convert::ToInt($_GET['id'])."'");
         $show = info(_downloads_deleted, "?admin=dladmin");
-      } else {
-        $qry = db("SELECT * FROM ".$db['downloads']."
-                   ORDER BY id");
+      }
+      else
+      {
+        $qry = db("SELECT * FROM ".$db['downloads']." ORDER BY id");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -148,8 +148,7 @@ if(_adminMenu != 'true')
                                               "date" => _datum,
                                               "titel" => _dl_file,
                                               "add" => _downloads_admin_head,
-                                              "show" => $show_
-                                              ));
+                                              "show" => $show_));
       }
     }
 ?>

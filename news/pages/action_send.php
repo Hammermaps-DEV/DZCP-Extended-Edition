@@ -48,19 +48,19 @@ else
         else
         {
             $hp = show(_contact_hp, array("hp" => links($hp)));
-            $nick = !$fromUser ? $nick : blank_autor($userid);
-            $von_nick = !$fromUser ? '0' : $userid;
-            $titel = !$fromUser ? show(_news_send_titel, array("nick" => $nick)) : show(_news_send_titel, array("nick" => blank_autor($userid)));
+            $nick = !$fromUser ? $nick : blank_autor(convert::ToInt($userid));
+            $von_nick = !$fromUser ? '0' : convert::ToInt($userid);
+            $titel = !$fromUser ? show(_news_send_titel, array("nick" => $nick)) : show(_news_send_titel, array("nick" => blank_autor(convert::ToInt($userid))));
             $email = !$fromUser ? show(_email_mailto, array("email" => $email)) : '--';
             $sendnews = !$fromUser ? '1' : '2';
-            $user = !$fromUser ? $nick : $userid;
+            $user = !$fromUser ? $nick : convert::ToInt($userid);
 
             $text = show(_contact_text_sendnews, array("hp" => $hp, "email" => $email, "titel" => up($titel), "text" => up($text), "info" => up($info), "nick" => $nick));
             $qry = db("SELECT id,level FROM ".$db['users']."");
             while($get = _fetch($qry))
             {
                 if(perm_sendnews($get['id']) || $get['level'] == 4)
-                    db("INSERT INTO ".$db['msg']." SET `datum` = '".time()."', `von` = '".$von_nick."', `an` = '".((int)$get['id'])."', `titel` = '".up($titel)."', `nachricht` = '".up($text, 1)."', `sendnews` = '".$sendnews."', `senduser` = '".$user."'");
+                    db("INSERT INTO ".$db['msg']." SET `datum` = '".time()."', `von` = '".$von_nick."', `an` = '".convert::ToInt($get['id'])."', `titel` = '".up($titel)."', `nachricht` = '".up($text, 1)."', `sendnews` = '".$sendnews."', `senduser` = '".$user."'");
             }
 
             $index = info(_news_send_done, "../news/");
@@ -70,7 +70,7 @@ else
     if(empty($index))
     {
         $form = show($dir."/send_form".($fromUser ? '2' : '1'), array(
-                "user" => ($fromUser ? autor($userid) : ''),
+                "user" => ($fromUser ? autor(convert::ToInt($userid)) : ''),
                 "value" => _button_value_send,
                 "s_nick" => (isset($nick) && !empty($nick) ? $nick : ''),
                 "s_email" => (isset($email) && !empty($email) ? $email : ''),

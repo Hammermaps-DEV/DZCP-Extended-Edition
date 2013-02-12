@@ -41,16 +41,16 @@ else
                 $index = error(_upload_no_data, 1);
             } elseif($size > $upicsize."000") {
                 $index = error(_upload_wrong_size, 1);
-            } elseif(cnt($db['usergallery'], " WHERE user = ".$userid) == $maxgallerypics) {
+            } elseif(cnt($db['usergallery'], " WHERE user = ".convert::ToInt($userid)) == $maxgallerypics) {
                 $index = error(_upload_over_limit, 2);
-            } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".$userid."_".$_FILES['file']['name'])) {
+            } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name'])) {
                 $index = error(_upload_file_exists, 1);
             } else {
-                copy($tmpname, basePath."/inc/images/uploads/usergallery/".$userid."_".$_FILES['file']['name']);
+                copy($tmpname, basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name']);
                 @unlink($_FILES['file']['tmp_name']);
 
                 $qry = db("INSERT INTO ".$db['usergallery']."
-                   SET `user`         = '".((int)$userid)."',
+                   SET `user`         = '".convert::ToInt($userid)."',
                        `beschreibung` = '".up($_POST['beschreibung'],1)."',
                        `pic`          = '".up($_FILES['file']['name'])."'");
 
@@ -58,10 +58,10 @@ else
             }
         } elseif($_GET['do'] == "edit") {
             $qry = db("SELECT * FROM ".$db['usergallery']."
-                 WHERE id = '".intval($_GET['gid'])."'");
+                 WHERE id = '".convert::ToInt($_GET['gid'])."'");
             $get = _fetch($qry);
 
-            if($get['user'] == $userid)
+            if($get['user'] == convert::ToInt($userid))
             {
                 $infos = show(_upload_usergallery_info, array("userpicsize" => $upicsize));
 
@@ -88,16 +88,16 @@ else
             $endung = strtolower($endung[count($endung)-1]);
 
             $qry = db("SELECT pic FROM ".$db['usergallery']."
-                 WHERE id = '".intval($_POST['id'])."'");
+                 WHERE id = '".convert::ToInt($_POST['id'])."'");
             $get = _fetch($qry);
 
             if(!empty($_FILES['file']['size']))
             {
                 $unlinkgallery = show(_gallery_edit_unlink, array("img" => $get['pic'],
-                        "user" => $userid));
+                        "user" => convert::ToInt($userid)));
                 @unlink($unlinkgallery);
 
-                copy($tmpname, basePath."/inc/images/uploads/usergallery/".$userid."_".$_FILES['file']['name']);
+                copy($tmpname, basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name']);
                 @unlink($_FILES['file']['tmp_name']);
 
                 $pic = "`pic` = '".$_FILES['file']['name']."',";
@@ -106,8 +106,8 @@ else
             $qry = db("UPDATE ".$db['usergallery']."
                  SET ".$pic."
                      `beschreibung` = '".up($_POST['beschreibung'],1)."'
-                 WHERE id = '".intval($_POST['id'])."'
-                 AND `user` = '".((int)$userid)."'");
+                 WHERE id = '".convert::ToInt($_POST['id'])."'
+                 AND `user` = '".convert::ToInt($userid)."'");
 
             $index = info(_edit_gallery_done, "../user/?action=editprofile&show=gallery");
         }

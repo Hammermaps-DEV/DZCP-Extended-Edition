@@ -20,7 +20,7 @@ else
     ## User Nachrichten ##
     ######################
     $where = _site_msg;
-    $msgID = (isset($_GET['id']) ? intval($_GET['id']) : 0);
+    $msgID = (isset($_GET['id']) ? convert::ToInt($_GET['id']) : 0);
 
     switch($do)
     {
@@ -32,7 +32,7 @@ else
             else
             {
                 $get = _fetch($qry);
-                if($get['von'] == $userid || $get['an'] == $userid || $chkMe == 4)
+                if($get['von'] == convert::ToInt($userid) || $get['an'] == convert::ToInt($userid) || $chkMe == 4)
                 {
                     if(!$get['von'])
                     {
@@ -75,7 +75,7 @@ else
             {
                 while($get = _fetch($qry))
                 {
-                    db("UPDATE ".$db['msg']." SET `sendnews` = 3, `sendnewsuser` = '".$userid."', `readed`= 1 WHERE datum = '".intval($_GET['datum'])."'");
+                    db("UPDATE ".$db['msg']." SET `sendnews` = 3, `sendnewsuser` = '".convert::ToInt($userid)."', `readed`= 1 WHERE datum = '".convert::ToInt($_GET['datum'])."'");
                     $index = info(_send_news_done, "?action=msg&do=show&id=".$get['id']."");
                 }
             }
@@ -84,7 +84,7 @@ else
             $qry = db("SELECT * FROM ".$db['msg']." WHERE id = ".$msgID);
             $get = _fetch($qry);
 
-            if($get['von'] == $userid || $get['an'] == $userid || $chkMe == 4)
+            if($get['von'] == convert::ToInt($userid) || $get['an'] == convert::ToInt($userid) || $chkMe == 4)
             {
                 $answermsg = show(_msg_sended_msg, array("nick" => autor($get['an'])));
                 $answer = _back;
@@ -104,10 +104,10 @@ else
             else
             {
                 $get = _fetch($qry);
-                if($get['von'] == $userid || $get['an'] == $userid || $chkMe == 4)
+                if($get['von'] == convert::ToInt($userid) || $get['an'] == convert::ToInt($userid) || $chkMe == 4)
                 {
                     $titel = (preg_match("#RE:#is",re($get['titel'])) ? re($get['titel']) : "RE: ".re($get['titel']));
-                    $index = show($dir."/answer", array("von" => $userid,
+                    $index = show($dir."/answer", array("von" => convert::ToInt($userid),
                                                         "an" => $get['von'],
                                                         "titel" => $titel,
                                                         "headtitel" => _msg_titel_answer,
@@ -123,12 +123,12 @@ else
         case 'pn':
             if($chkMe == "unlogged")
                 $index = error(_error_have_to_be_logged);
-            else if($msgID == $userid)
+            else if($msgID == convert::ToInt($userid))
                 $index = error(_error_msg_self, 1);
             else
             {
-                $titel = show(_msg_from_nick, array("nick" => data($userid,"nick")));
-                $index = show($dir."/answer", array("von" => $userid,
+                $titel = show(_msg_from_nick, array("nick" => data(convert::ToInt($userid),"nick")));
+                $index = show($dir."/answer", array("von" => convert::ToInt($userid),
                                                     "an" => $msgID,
                                                     "titel" => $titel,
                                                     "value" => _button_value_msg,
@@ -149,18 +149,18 @@ else
             {
                 db("INSERT INTO ".$db['msg']." SET
                         `datum` = '".time()."',
-                        `von` = '".intval($_POST['von'])."',
-                        `an`  = '".intval($_POST['an'])."',
+                        `von` = '".convert::ToInt($_POST['von'])."',
+                        `an`  = '".convert::ToInt($_POST['an'])."',
                         `titel` = '".up($_POST['titel'])."',
                         `nachricht` = '".up($_POST['eintrag'], 1)."',
                         `see` = '1'");
 
-                db("UPDATE ".$db['userstats']." SET `writtenmsg` = writtenmsg+1 WHERE user = ".$userid);
+                db("UPDATE ".$db['userstats']." SET `writtenmsg` = writtenmsg+1 WHERE user = ".convert::ToInt($userid));
                 $index = info(_msg_answer_done, "?action=msg");
             }
         break;
         case 'delete':
-            $qry = db("SELECT see,id FROM ".$db['msg']." WHERE an = '".$userid."' AND see_u = 0");
+            $qry = db("SELECT see,id FROM ".$db['msg']." WHERE an = '".convert::ToInt($userid)."' AND see_u = 0");
             if(_rows($qry) >= 1)
             {
                 while($get = _fetch($qry))
@@ -168,9 +168,9 @@ else
                     if(isset($_POST['pe'.$get['id']]))
                     {
                         if(!$get['see'])
-                            db("DELETE FROM ".$db['msg']." WHERE id = ".intval($_POST['pe'.$get['id']]));
+                            db("DELETE FROM ".$db['msg']." WHERE id = ".convert::ToInt($_POST['pe'.$get['id']]));
                         else
-                            db("UPDATE ".$db['msg']." SET `see_u` = 1 WHERE id = ".intval($_POST['pe'.$get['id']]));
+                            db("UPDATE ".$db['msg']." SET `see_u` = 1 WHERE id = ".convert::ToInt($_POST['pe'.$get['id']]));
                     }
                 }
             }
@@ -191,7 +191,7 @@ else
             $index = info(_msg_deleted, "?action=msg");
         break;
         case 'deletesended':
-            $qry = db("SELECT id,see_u FROM ".$db['msg']." WHERE von = '".$userid."' AND see = 1");
+            $qry = db("SELECT id,see_u FROM ".$db['msg']." WHERE von = '".convert::ToInt($userid)."' AND see = 1");
             if(_rows($qry) >= 1)
             {
                 while($get = _fetch($qry))
@@ -199,9 +199,9 @@ else
                     if(isset($_POST['pa'.$get['id']]))
                     {
                         if($get['see_u'])
-                            db("DELETE FROM ".$db['msg']." WHERE id = ".intval($_POST['pa'.$get['id']]));
+                            db("DELETE FROM ".$db['msg']." WHERE id = ".convert::ToInt($_POST['pa'.$get['id']]));
                         else
-                            db("UPDATE ".$db['msg']." SET `see` = 0 WHERE id = ".intval($_POST['pa'.$get['id']]));
+                            db("UPDATE ".$db['msg']." SET `see` = 0 WHERE id = ".convert::ToInt($_POST['pa'.$get['id']]));
                     }
                 }
             }
@@ -209,7 +209,7 @@ else
             header("Location: ?action=msg");
         break;
         case 'new':
-            $qry = db("SELECT id,nick FROM ".$db['users']." WHERE id != '".$userid."' AND `level` != '0' ORDER BY nick"); $users = '';
+            $qry = db("SELECT id,nick FROM ".$db['users']." WHERE id != '".convert::ToInt($userid)."' AND `level` != '0' ORDER BY nick"); $users = '';
             if(_rows($qry) >= 1)
             {
                 while($get = _fetch($qry))
@@ -218,7 +218,7 @@ else
                 }
             }
 
-            $qry = db("SELECT id,user,buddy FROM ".$db['buddys']." WHERE user = ".$userid." ORDER BY user"); $buddys = '';
+            $qry = db("SELECT id,user,buddy FROM ".$db['buddys']." WHERE user = ".convert::ToInt($userid)." ORDER BY user"); $buddys = '';
             if(_rows($qry) >= 1)
             {
                 while($get = _fetch($qry))
@@ -228,7 +228,7 @@ else
                 }
             }
 
-            $index = show($dir."/new", array("von" => $userid,
+            $index = show($dir."/new", array("von" => convert::ToInt($userid),
                                              "buddys" => $buddys,
                                              "users" => $users,
                                              "value" => _button_value_msg,
@@ -237,7 +237,7 @@ else
                                              "posteintrag" => ""));
         break;
         case 'send':
-            if(empty($_POST['titel']) || empty($_POST['eintrag']) || $_POST['buddys'] == "-" && $_POST['users'] == "-" || $_POST['buddys'] != "-" && $_POST['users'] != "-" || $_POST['users'] == $userid || $_POST['buddys'] == $userid)
+            if(empty($_POST['titel']) || empty($_POST['eintrag']) || $_POST['buddys'] == "-" && $_POST['users'] == "-" || $_POST['buddys'] != "-" && $_POST['users'] != "-" || $_POST['users'] == convert::ToInt($userid) || $_POST['buddys'] == convert::ToInt($userid))
             {
                 if(empty($_POST['titel']))
                     $error = _empty_titel;
@@ -247,13 +247,13 @@ else
                     $error = _empty_to;
                 else if($_POST['buddys'] != "-" AND $_POST['users'] != "-")
                     $error = _msg_to_just_1;
-                else if($_POST['buddys'] OR $_POST['users'] == $userid)
+                else if($_POST['buddys'] OR $_POST['users'] == convert::ToInt($userid))
                     $error = _msg_not_to_me;
 
                 //Error MSG
                 $error = show("errors/errortable", array("error" => $error));
 
-                $qry = db("SELECT id FROM ".$db['users']." WHERE id != '".$userid."' ORDER BY nick"); $users = '';
+                $qry = db("SELECT id FROM ".$db['users']." WHERE id != '".convert::ToInt($userid)."' ORDER BY nick"); $users = '';
                 if(_rows($qry) >= 1 )
                 {
                     while($get = _fetch($qry))
@@ -263,7 +263,7 @@ else
                     }
                 }
 
-                $qry = db("SELECT id,user,buddy FROM ".$db['buddys']." WHERE user = ".$userid); $buddys = '';
+                $qry = db("SELECT id,user,buddy FROM ".$db['buddys']." WHERE user = ".convert::ToInt($userid)); $buddys = '';
                 if(_rows($qry) >= 1 )
                 {
                     while($get = _fetch($qry))
@@ -273,7 +273,7 @@ else
                     }
                 }
 
-                $index = show($dir."/new", array("von" => $userid,
+                $index = show($dir."/new", array("von" => convert::ToInt($userid),
                                                  "buddys" => $buddys,
                                                  "users" => $users,
                                                  "value" => _button_value_msg,
@@ -284,14 +284,14 @@ else
               else
               {
                   $to = ($_POST['buddys'] == "-" ? $_POST['users'] : $_POST['buddys']);
-                  db("INSERT INTO ".$db['msg']." SET `datum` = '".((int)time())."', `von` = '".((int)$userid)."', `an` = '".((int)$to)."', `titel` = '".up($_POST['titel'])."', `nachricht` = '".up($_POST['eintrag'], 1)."', `see` = '1'");
-                  db("UPDATE ".$db['userstats']." SET `writtenmsg` = writtenmsg+1 WHERE user = ".$userid);
+                  db("INSERT INTO ".$db['msg']." SET `datum` = '".time()."', `von` = '".convert::ToInt($userid)."', `an` = '".convert::ToInt($to)."', `titel` = '".up($_POST['titel'])."', `nachricht` = '".up($_POST['eintrag'], 1)."', `see` = '1'");
+                  db("UPDATE ".$db['userstats']." SET `writtenmsg` = writtenmsg+1 WHERE user = ".convert::ToInt($userid));
                   $index = info(_msg_answer_done, "?action=msg");
               }
         break;
         default:
             ## Posteingang ##
-            $qry = db("SELECT * FROM ".$db['msg']." WHERE an = ".$userid." AND see_u = '0' ORDER BY datum DESC"); $posteingang = '';
+            $qry = db("SELECT * FROM ".$db['msg']." WHERE an = ".convert::ToInt($userid)." AND see_u = '0' ORDER BY datum DESC"); $posteingang = '';
             if(_rows($qry) >= 1)
             {
                 $color = 1;
@@ -319,7 +319,7 @@ else
                 $posteingang = show($dir."/posteingang_no_entry", array());
 
             ## Postausgang ##
-            $qry = db("SELECT * FROM ".$db['msg']." WHERE von = ".$userid." AND see = 1 ORDER BY datum DESC"); $postausgang = '';
+            $qry = db("SELECT * FROM ".$db['msg']." WHERE von = ".convert::ToInt($userid)." AND see = 1 ORDER BY datum DESC"); $postausgang = '';
             if(_rows($qry) >= 1)
             {
                 $color = 1;
@@ -345,7 +345,7 @@ else
             if(empty($postausgang))
                 $postausgang = show($dir."/postausgang_no_entry", array());
 
-            $msghead = show(_msghead, array("nick" => autor($userid)));
+            $msghead = show(_msghead, array("nick" => autor(convert::ToInt($userid))));
             $index = show($dir."/msg", array("msghead" => $msghead,
                                              "del" => _msg_del,
                                              "new" => _msg_new,

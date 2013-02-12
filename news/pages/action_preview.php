@@ -22,7 +22,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     header("Content-type: text/html; charset=utf-8");
-    $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".(isset($_POST['kat']) ? intval($_POST['kat']) : 0)."'",false,true);
+    $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".(isset($_POST['kat']) ? convert::ToInt($_POST['kat']) : 0)."'",false,true);
     $klapp = (isset($_POST['klapptitel']) && !empty($_POST['klapptitel']) ? show(_news_klapplink, array("klapplink" => re($_POST['klapptitel']), "which" => "collapse", "id" => 0)) : '');
     $links1 = (isset($_POST['url1']) && !empty($_POST['url1']) ? show(_news_link, array("link" => re($_POST['link1']), "url" => links($_POST['url1']))) : '');
     $links2 = (isset($_POST['url2']) && !empty($_POST['url2']) ? show(_news_link, array("link" => re($_POST['link2']), "url" => links($_POST['url2']))) : '');
@@ -34,8 +34,8 @@ else
                                            "id" => '_prev',
                                            "comments" => _news_comments_prev,
                                            "dp" => '',
-                                           "sticky" => (isset($_POST['sticky']) ? ((int)$_POST['sticky']) : false ? _news_sticky : ''),
-                                           "intern" => (isset($_POST['intern']) ? ((int)$_POST['intern']) : false ? _votes_intern : ''),
+                                           "sticky" => (isset($_POST['sticky']) ? convert::ToInt($_POST['sticky']) : false ? _news_sticky : ''),
+                                           "intern" => (isset($_POST['intern']) ? convert::ToInt($_POST['intern']) : false ? _votes_intern : ''),
                                            "klapp" => $klapp,
                                            "more" => isset($_POST['morenews']) ? bbcode($_POST['morenews'],1) : '',
                                            "text" => isset($_POST['newstext']) ? bbcode($_POST['newstext'],1) : '',

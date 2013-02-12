@@ -17,8 +17,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Downloads ==================================================
     //===============================================================
-    db("INSERT INTO ".$db['downloads']." (`id`, `download`, `url`, `beschreibung`, `hits`, `kat`, `date`, `last_dl`) VALUES
-    (NULL, 'Testdownload', 'http://www.url.de/test.zip', '<p>Das ist ein Testdownload</p>', 0, 1, 1298817168, 0);",false,false,true);
+    db("INSERT INTO ".$db['downloads']." (`id`, `download`, `url`, `beschreibung`, `hits`, `kat`, `date`, `last_dl`, `comments`) VALUES
+    (NULL, 'Testdownload', 'http://www.url.de/test.zip', '<p>Das ist ein Testdownload</p>', 0, 1, 1298817168, 0, 1);",false,false,true);
 
     //===============================================================
     //-> Forum ======================================================
@@ -42,11 +42,11 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Settings ===================================================
     //===============================================================
-    db("INSERT INTO `".$db['settings']."` (`id`, `clanname`, `reg_forum`, `reg_cwcomments`, `counter_start`, `reg_dl`, `reg_artikel`, `reg_newscomments`, `tmpdir`, `wmodus`, `persinfo`, `iban`,
+    db("INSERT INTO `".$db['settings']."` (`id`, `clanname`, `reg_forum`, `reg_cwcomments`, `counter_start`, `reg_dl`, `reg_artikel`, `reg_newscomments`, `reg_dlcomments`, `tmpdir`, `wmodus`, `persinfo`, `iban`,
     `bic`, `badwords`, `pagetitel`, `last_backup`, `i_domain`, `i_autor`, `k_nr`, `k_inhaber`, `k_blz`, `k_bank`, `k_waehrung`, `language`,  `domain`, `regcode`,  `mailfrom`,  `ts_ip`, `ts_port`, `ts_sport`, `ts_version`,
     `ts_customicon`, `ts_showchannel`, `ts_width`, `eml_reg_subj`, `eml_pwd_subj`, `eml_nletter_subj`, `eml_reg`, `eml_pwd`, `eml_nletter`, `reg_shout`, `prev`, `eml_fabo_npost_subj`, `eml_fabo_tedit_subj`, `eml_fabo_pedit_subj`,
     `eml_pn_subj`, `eml_fabo_npost`, `eml_fabo_tedit`, `eml_fabo_pedit`, `eml_pn`, `memcache_host`, `memcache_port`, `k_vwz`, `double_post`, `forum_vote`, `gb_activ`, `urls_linked`,`db_version`)
-     VALUES (NULL,'".up($db_infos['clanname'])."', '1', '1', '0', '1', '1', '1', 'version1.5', '0', '1', '', '', 'arsch,Arsch,arschloch,Arschloch,hure,Hure', '".up($db_infos['seitentitel'])."', '0', '".$_SERVER['SERVER_NAME']."', 'Max Mustermann', '123456789',
+     VALUES (NULL,'".up($db_infos['clanname'])."', '1', '1', '0', '1', '1', '1', '1', 'version1.5', '0', '1', '', '', 'arsch,Arsch,arschloch,Arschloch,hure,Hure', '".up($db_infos['seitentitel'])."', '0', '".$_SERVER['SERVER_NAME']."', 'Max Mustermann', '123456789',
     'Max Mustermann', '123456789', 'Musterbank', '&euro;', 'deutsch', '".$_SERVER['SERVER_ADDR']."', '1', '".$db_infos['emailweb']."', '80.190.204.164', '7000', '10011', '3', '1', '0', '0', 'Deine Registrierung', 'Deine Zugangsdaten',
     'Newsletter', 'Du hast dich erfolgreich auf unserer Seite registriert!\r\nDeine Logindaten lauten:\r\n\r\n##########\r\nLoginname: [user]\r\nPasswort: [pwd]\r\n##########\r\n\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]',
     'Ein neues Passwort wurde f&uuml;r deinen Account generiert!\r\n\r\n#########\r\nLogin-Name: [user]\r\nPasswort: [pwd]\r\n#########\r\n\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]', '[text]\r\n\r\n\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]','1', '".strtolower(mkpwd(3,false))."', 'Neuer Beitrag auf abonniertes Thema im [titel]', 'Thread auf abonniertes Thema im [titel] wurde editiert', 'Beitrag auf abonniertes Thema im [titel] wurde editiert', 'Neue PN auf [domain]',
@@ -257,9 +257,9 @@ function install_mysql_insert($db_infos)
         $_SESSION['pwd']        = $pwd_hash;
         $_SESSION['lastvisit']  = 0;
         $_SESSION['ip']         = ($userip=visitorIp());
-        db("UPDATE ".$db['userstats']." SET `logins` = logins+1 WHERE user = ".$userid);
-        db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".$userip."' WHERE id = ".$userid);
-        wire_ipcheck("login(".$userid.")");
+        db("UPDATE ".$db['userstats']." SET `logins` = logins+1 WHERE user = ".convert::ToInt($userid));
+        db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".$userip."' WHERE id = ".convert::ToInt($userid));
+        wire_ipcheck("login(".convert::ToInt($userid).")");
     }
 
     //===============================================================
@@ -302,8 +302,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Config =====================================================
     //===============================================================
-    db("INSERT INTO `".$db['config']."` (`id`, `upicsize`, `gallery`, `m_usergb`, `m_clanwars`, `maxshoutarchiv`, `m_clankasse`, `m_awards`, `m_userlist`, `m_banned`, `maxwidth`, `shout_max_zeichen`, `l_servernavi`, `m_adminnews`, `m_shout`, `m_comments`, `m_archivnews`, `m_gb`, `m_fthreads`, `m_fposts`, `m_news`, `f_forum`, `l_shoutnick`, `f_gb`, `f_membergb`, `f_shout`, `f_newscom`, `f_cwcom`, `f_artikelcom`, `l_newsadmin`, `l_shouttext`, `l_newsarchiv`, `l_forumtopic`, `l_forumsubtopic`, `l_clanwars`, `m_gallerypics`, `m_lnews`, `m_topdl`, `m_ftopics`, `m_lwars`, `m_nwars`, `l_topdl`, `l_ftopics`, `l_lnews`, `l_lwars`, `l_nwars`, `l_lreg`, `m_lreg`, `m_artikel`, `m_cwcomments`, `m_adminartikel`, `securelogin`, `allowhover`, `teamrow`, `l_lartikel`, `m_lartikel`, `l_team`, `m_events`, `m_away`, `cache_engine`, `cache_teamspeak`, `cache_server`, `cache_news`, `direct_refresh`, `news_feed`) VALUES
-    (NULL, 100, 4, 10, 10, 20, 20, 15, 40, 40, 400, 100, 22, 20, 10, 10, 30, 10, 20, 10, 5, 20, 20, 20, 20, 20, 20, 20, 20, 20, 22, 20, 20, 20, 30, 5, 6, 5, 6, 6, 6, 20, 28, 22, 12, 12, 12, 5, 15, 10, 15, ".$db_infos['loginsec'].", 1, 3, 18, 5, 7, 5, 10, 1, 30, 30, 5, 0, 1);",false,false,true);
+    db("INSERT INTO `".$db['config']."` (`id`, `upicsize`, `gallery`, `m_usergb`, `m_clanwars`, `maxshoutarchiv`, `m_clankasse`, `m_awards`, `m_userlist`, `m_banned`, `maxwidth`, `shout_max_zeichen`, `l_servernavi`, `m_adminnews`, `m_shout`, `m_comments`, `m_archivnews`, `m_gb`, `m_fthreads`, `m_fposts`, `m_news`, `f_forum`, `l_shoutnick`, `f_gb`, `f_membergb`, `f_shout`, `f_newscom`, `f_cwcom`, `f_artikelcom`, `f_downloadcom`, `l_newsadmin`, `l_shouttext`, `l_newsarchiv`, `l_forumtopic`, `l_forumsubtopic`, `l_clanwars`, `m_gallerypics`, `m_lnews`, `m_topdl`, `m_ftopics`, `m_lwars`, `m_nwars`, `l_topdl`, `l_ftopics`, `l_lnews`, `l_lwars`, `l_nwars`, `l_lreg`, `m_lreg`, `m_artikel`, `m_cwcomments`, `m_adminartikel`, `securelogin`, `allowhover`, `teamrow`, `l_lartikel`, `m_lartikel`, `l_team`, `m_events`, `m_away`, `cache_engine`, `cache_teamspeak`, `cache_server`, `cache_news`, `direct_refresh`, `news_feed`) VALUES
+    (NULL, 100, 4, 10, 10, 20, 20, 15, 40, 40, 400, 100, 22, 20, 10, 10, 30, 10, 20, 10, 5, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 22, 20, 20, 20, 30, 5, 6, 5, 6, 6, 6, 20, 28, 22, 12, 12, 12, 5, 15, 10, 15, ".$db_infos['loginsec'].", 1, 3, 18, 5, 7, 5, 10, 1, 30, 30, 5, 0, 1);",false,false,true);
 
     //===============================================================
     //-> Sponsoren ==================================================

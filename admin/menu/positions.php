@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._admin_pos;
     if($chkMe != 4)
@@ -50,16 +50,16 @@ if(_adminMenu != 'true')
         }
 
         $qry = db("SELECT * FROM ".$db['pos']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $show = show($dir."/form_pos", array("newhead" => _pos_edit_head,
-                                             "do" => "editpos&amp;id=".intval($_GET['id'])."",
+                                             "do" => "editpos&amp;id=".convert::ToInt($_GET['id'])."",
                                              "kat" => $get['position'],
                                              "pos" => _position,
                                              "rechte" => _config_positions_rights,
-                                             "getpermissions" => getPermissions(intval($_GET['id']), 1),
-                                             "getboardpermissions" => getBoardPermissions(intval($_GET['id']), 1),
+                                             "getpermissions" => getPermissions(convert::ToInt($_GET['id']), 1),
+                                             "getboardpermissions" => getBoardPermissions(convert::ToInt($_GET['id']), 1),
                                              "forenrechte" => _config_positions_boardrights,
                                              "positions" => $positions,
                                              "nothing" => _nothing,
@@ -71,48 +71,48 @@ if(_adminMenu != 'true')
           $show = error(_pos_empty_kat,1);
         } else {
           if($_POST['pos'] == "lazy")
-		      {
-		  		  $pid = "";
-		      } else {
-		  		  $pid = ",`pid` = '".((int)$_POST['pos'])."'";
+              {
+                    $pid = "";
+              } else {
+                    $pid = ",`pid` = '".convert::ToInt($_POST['pos'])."'";
 
             if($_POST['pos'] == "1" || "2") $sign = ">= ";
             else $sign = "> ";
 
             $posi = db("UPDATE ".$db['pos']."
                         SET `pid` = pid+1
-                        WHERE pid ".$sign." '".intval($_POST['pos'])."'");
-		      }
+                        WHERE pid ".$sign." '".convert::ToInt($_POST['pos'])."'");
+              }
 
           $qry = db("UPDATE ".$db['pos']."
                      SET `position` = '".up($_POST['kat'])."'
                          ".$pid."
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
     // permissions
-          db("DELETE FROM ".$db['permissions']." WHERE `pos` = '".intval($_GET['id'])."'");
+          db("DELETE FROM ".$db['permissions']." WHERE `pos` = '".convert::ToInt($_GET['id'])."'");
           if(!empty($_POST['perm']))
           {
-            foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".intval($k)."',";
+            foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";
                                   if(!empty($p))$p = ', '.substr($p, 0, strlen($p) - 1);
-                                      
-            db("INSERT INTO ".$db['permissions']." SET `pos` = '".intval($_GET['id'])."'".$p);
+
+            db("INSERT INTO ".$db['permissions']." SET `pos` = '".convert::ToInt($_GET['id'])."'".$p);
           }
     ////////////////////
-    
+
     // internal boardpermissions
-          db("DELETE FROM ".$db['f_access']." WHERE `pos` = '".intval($_GET['id'])."'");
+          db("DELETE FROM ".$db['f_access']." WHERE `pos` = '".convert::ToInt($_GET['id'])."'");
           if(!empty($_POST['board']))
           {
             foreach($_POST['board'] AS $v)
-              db("INSERT INTO ".$db['f_access']." SET `pos` = '".intval($_GET['id'])."', `forum` = '".$v."'");
+              db("INSERT INTO ".$db['f_access']." SET `pos` = '".convert::ToInt($_GET['id'])."', `forum` = '".$v."'");
           }
     ////////////////////
 
           $show = info(_pos_admin_edited, "?admin=positions");
         }
       } elseif($_GET['do'] == "delete") {
-        db("DELETE FROM ".$db['pos']." WHERE id = '".intval($_GET['id'])."'");
-        db("DELETE FROM ".$db['permissions']." WHERE pos = '".intval($_GET['id'])."'");
+        db("DELETE FROM ".$db['pos']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".$db['permissions']." WHERE pos = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_pos_admin_deleted, "?admin=positions");
 
@@ -147,19 +147,19 @@ if(_adminMenu != 'true')
 
           $posi = db("UPDATE ".$db['pos']."
                       SET `pid` = pid+1
-                      WHERE pid ".$sign." '".intval($_POST['pos'])."'");
+                      WHERE pid ".$sign." '".convert::ToInt($_POST['pos'])."'");
 
           $qry = db("INSERT INTO ".$db['pos']."
-                     SET `pid`        = '".((int)$_POST['pos'])."',
+                     SET `pid`        = '".convert::ToInt($_POST['pos'])."',
                          `position`  = '".up($_POST['kat'])."'");
           $posID = mysql_insert_id();
     // permissions
-          foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".intval($k)."',";
+          foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";
                                 if(!empty($p))$p = ', '.substr($p, 0, strlen($p) - 1);
-                                    
+
           db("INSERT INTO ".$db['permissions']." SET `pos` = '".$posID."'".$p);
     ////////////////////
-    
+
     // internal boardpermissions
           if(!empty($_POST['board']))
           {
@@ -167,7 +167,7 @@ if(_adminMenu != 'true')
               db("INSERT INTO ".$db['f_access']." SET `pos` = '".$posID."', `forum` = '".$v."'");
           }
     ////////////////////
-    
+
           $show = info(_pos_admin_added, "?admin=positions");
         }
       }

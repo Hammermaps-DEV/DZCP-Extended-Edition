@@ -33,7 +33,7 @@ else
         {
             while($getcustom = _fetch($qry))
             {
-                $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".$db['users']." WHERE `id` = '".$userid."' LIMIT 1",false,true);
+                $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".$db['users']." WHERE `id` = '".convert::ToInt($userid)."' LIMIT 1",false,true);
                 if(!empty($getcontent[$getcustom['feldname']]))
                 {
                     switch($getcustom['type'])
@@ -60,7 +60,7 @@ else
         $index = error(_user_dont_exist, 1);
     else
     {
-        $view_userID = intval($_GET['id']); //UserID
+        $view_userID = convert::ToInt($_GET['id']); //UserID
         $where = _user_profile_of.'autor_'.$view_userID;
 
         if(count_clicks('userprofil',$view_userID))
@@ -73,7 +73,7 @@ else
         switch($do)
         {
             case 'delete':
-                if($chkMe == 4 || $view_userID == $userid)
+                if($chkMe == 4 || $view_userID == convert::ToInt($userid))
                 {
                     db("DELETE FROM ".$db['usergb']." WHERE user = '".convert::ToInt($view_userID)."' AND id = '".convert::ToInt($_GET['gbid'])."'");
                     $index = info(_gb_delete_successful, "?action=user&amp;id=".$view_userID."&show=gb");
@@ -83,7 +83,7 @@ else
             break;
             case 'edit':
                 $get = db("SELECT * FROM ".$db['usergb']." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
-                if($get['reg'] == $userid || permission('editusers'))
+                if($get['reg'] == convert::ToInt($userid) || permission('editusers'))
                 {
                     if($get['reg'] != 0)
                         $form = show("page/editor_regged", array("nick" => autor($get['reg']), "von" => _autor));
@@ -158,7 +158,7 @@ else
                             $posted_ip = ($chkMe == 4 ? $getgb['ip'] : _logged);
 
                             $edit = ''; $delete = '';
-                            if(permission('editusers') || $view_userID == $userid)
+                            if(permission('editusers') || $view_userID == convert::ToInt($userid))
                             {
                                 $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=user&amp;show=gb&amp;do=edit&amp;gbid=".$getgb['id'], "title" => _button_title_edit));
                                 $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "action=user&amp;show=gb&amp;do=delete&amp;gbid=".$getgb['id'], "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
@@ -206,7 +206,7 @@ else
                     if(!ipcheck("mgbid(".$_GET['id'].")", $flood_membergb))
                     {
                         if(isset($userid))
-                            $form = show("page/editor_regged", array("nick" => autor($userid), "von" => _autor));
+                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
                         else
                             $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp, "postemail" => ""));
 
@@ -262,7 +262,7 @@ else
                             }
                         }
                         else if(isset($_GET['sq']))
-                            $pos = getrank($get['id'],intval($_GET['sq']),true);
+                            $pos = getrank($get['id'],convert::ToInt($_GET['sq']),true);
                         else
                             $pos = getrank($get['id']);
 

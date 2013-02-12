@@ -81,9 +81,9 @@ $where = $where.' - '._away_new;
       $time = mktime(23,59,59,$_POST['monat'],$_POST['tag'],$_POST['jahr']);
 
              $qry = db("INSERT INTO ".$db['away']."
-                        SET `userid`= '".((int)$userid)."',
-                                 `start`= '".((int)$abdata)."',
-                                 `end`= '".((int)$time)."',
+                        SET `userid`= '".convert::ToInt($userid)."',
+                                 `start`= '".convert::ToInt($abdata)."',
+                                 `end`= '".convert::ToInt($time)."',
                             `titel`= '".up($_POST['titel'])."',
                             `reason`= '".up($_POST['reason'],1)."',
                             `date`= '".time()."'");

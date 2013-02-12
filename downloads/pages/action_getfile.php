@@ -18,19 +18,19 @@ else
 {
     if(settings("reg_dl") == "1" && $chkMe == "unlogged")
         $index = error(_error_unregistered,1);
-    else 
+    else
     {
-        $get = db("SELECT url,id FROM ".$db['downloads']." WHERE id = '".intval($_GET['id'])."'",false,true);
+        $get = db("SELECT url,id FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
         $file = preg_replace("#added...#Uis", "", $get['url']);
-  
+
         if(preg_match("=added...=Uis",$get['url']) != FALSE)
             $dlFile = "files/".$file;
-        else 
+        else
             $dlFile = $get['url'];
 
         if(count_clicks('download',$get['id']))
-            db("UPDATE ".$db['downloads']." SET `hits` = hits+1, `last_dl` = '".time()."' WHERE id = '".$get['id']."'"); 
-    
+            db("UPDATE ".$db['downloads']." SET `hits` = hits+1, `last_dl` = '".time()."' WHERE id = '".$get['id']."'");
+
         //download file
         header("Location: ".$dlFile);
     }

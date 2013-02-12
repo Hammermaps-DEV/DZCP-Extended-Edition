@@ -19,7 +19,7 @@ if(isset($_GET['do']) && $_GET['do'] == "clear")
         $show = error(_clear_error_days,1);
     else
     {
-        $time = intval(time()-($_POST['days']*24*60*60));
+        $time = convert::ToInt(time()-($_POST['days']*24*60*60));
 
         if(isset($_POST['news']))
         {

@@ -32,17 +32,17 @@ else
             ' datum DESC');
     while($get = _fetch($qry)) {
         $qryv = db('SELECT * FROM ' . $db['vote_results'] .
-                ' WHERE vid = ' . (int) $get['id'] .
+                ' WHERE vid = ' . convert::ToInt($get['id']) .
                 ' ORDER BY id');
         $results = '';
         $check = '';
         $stimmen = 0;
-        $vid = 'vid_' . (int) $get['id'];
+        $vid = 'vid_' . convert::ToInt($get['id']);
         if($get['intern'] == 1) {
             $showVoted = '';
             $check = db('SELECT * FROM ' . $db['ipcheck'] .
                     ' WHERE what = "' . $vid .
-                    '" AND ip = ' . (int) $userid . '');
+                    '" AND ip = ' . convert::ToInt($userid) . '');
 
             $ipcheck = _rows($check) == 1;
             $intern = _votes_intern;
@@ -77,8 +77,8 @@ else
             }
         }
 
-        if($get['intern'] == 1 && $stimmen != 0 && ($get['von'] == $userid || permission('votes'))) {
-            $showVoted = ' <a href="?action=showvote&amp;id=' . (int) $get['id'] .
+        if($get['intern'] == 1 && $stimmen != 0 && ($get['von'] == convert::ToInt($userid) || permission('votes'))) {
+            $showVoted = ' <a href="?action=showvote&amp;id=' . convert::ToInt($get['id']) .
             '"><img src="../inc/images/lupe.gif" alt="" title="' .
             _show_who_voted . '" class="icon" /></a>';
         }

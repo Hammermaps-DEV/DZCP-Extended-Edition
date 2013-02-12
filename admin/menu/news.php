@@ -2,15 +2,15 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
 $where = $where.': '._config_newskats_edit_head;
 $qry = db("SELECT * FROM ".$db['newskat']." ORDER BY `kategorie`");
 $kats = ''; $color = 1;
 while($get = _fetch($qry))
 {
-	$edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=news&amp;do=edit", "title" => _button_title_edit));
+    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=news&amp;do=edit", "title" => _button_title_edit));
     $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=news&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_kat)));
     $img = show(_config_newskats_img, array("img" => re($get['katimg'])));
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -21,13 +21,13 @@ $show = show($dir."/newskats", array("head" => _config_newskats_head, "kats" => 
 if($_GET['do'] == "delete")
 {
         $qry = db("SELECT katimg FROM ".$db['newskat']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         @unlink(basePath."/inc/images/newskat/".$get['katimg']);
 
         $del = db("DELETE FROM ".$db['newskat']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_config_newskat_deleted, "?admin=news");
       } elseif($_GET['do'] == "add") {
@@ -61,7 +61,7 @@ if($_GET['do'] == "delete")
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['newskat']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $files = get_files('../inc/images/newskat/',false,true);
@@ -99,7 +99,7 @@ if($_GET['do'] == "delete")
           $qry = db("UPDATE ".$db['newskat']."
                      SET ".$katimg."
                          `kategorie` = '".up($_POST['kat'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_config_newskats_edited, "?admin=news");
         }

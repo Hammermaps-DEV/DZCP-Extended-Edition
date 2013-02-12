@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     if(permission('gallery'))
     {
@@ -22,7 +22,7 @@ if(_adminMenu != 'true')
         $ins = db("INSERT INTO ".$db['gallery']."
                    SET `kat`            = '".up($_POST['gallery'])."',
                        `beschreibung`   = '".up($_POST['beschreibung'], 1)."',
-                       `datum`          = '".((int)time())."'");
+                       `datum`          = '".time()."'");
 
         $show = show($dir."/form_gallery_step2", array("head" => _gallery_admin_head,
                                                  "what" => re($_POST['gallery']),
@@ -45,7 +45,7 @@ if(_adminMenu != 'true')
         $end = explode(".", $_FILES['file'.$i]['name']);
         $end = $end[count($end)-1];
         $imginfo = getimagesize($tmp);
-        
+
         if($_FILES['file'.$i])
         {
           if(($type == "image/gif" || $type == "image/pjpeg" || $type == "image/jpeg" || $type == "image/png") && $imginfo[0])
@@ -59,7 +59,7 @@ if(_adminMenu != 'true')
       $show = info(_gallery_added, "?admin=gallery");
     } elseif($_GET['do'] == "delgal") {
       $qry = db("DELETE FROM ".$db['gallery']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
       $files = get_files("../gallery/images/",false,true);
       for($i=0; $i<count($files); $i++)
@@ -82,7 +82,7 @@ if(_adminMenu != 'true')
       $show = info(_gallery_pic_deleted, "../gallery/?action=show&amp;id=".$pid[1]."");
     } elseif($_GET['do'] == "edit") {
       $qry = db("SELECT * FROM ".$db['gallery']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
       $show = show($dir."/form_gallery_edit", array("head" => _gallery_admin_edit,
@@ -96,12 +96,12 @@ if(_adminMenu != 'true')
       $qry = db("UPDATE ".$db['gallery']."
                  SET `kat`          = '".up($_POST['gallery'])."',
                      `beschreibung` = '".up($_POST['beschreibung'], 1)."'
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
       $show = info(_gallery_edited, "?admin=gallery");
     } elseif($_GET['do'] == "new") {
       $qry = db("SELECT * FROM ".$db['gallery']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
       for($i=1;$i<=100;$i++)
@@ -119,7 +119,7 @@ if(_adminMenu != 'true')
 
     } elseif($_GET['do'] == "editstep2") {
       $qry = db("SELECT * FROM ".$db['gallery']."
-                 WHERE id = '".intval($_GET['id'])."'");
+                 WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
       for($i=1;$i<=$_POST['anzahl'];$i++)
@@ -159,7 +159,7 @@ if(_adminMenu != 'true')
         $end = explode(".", $_FILES['file'.$i]['name']);
         $end = $end[count($end)-1];
         $imginfo = getimagesize($tmp);
-        
+
         if($_FILES['file'.$i])
         {
           if(($type == "image/gif" || $type == "image/pjpeg" || $type == "image/jpeg") && $imginfo[0])
@@ -189,7 +189,7 @@ if(_adminMenu != 'true')
         while($get = _fetch($qry))
         {
           $files = get_files("../gallery/images/",false,true);
-      
+
           $cnt = 0;
           for($i=0; $i<count($files); $i++)
           {
@@ -208,10 +208,10 @@ if(_adminMenu != 'true')
                                                          "del" => convSpace(_confirm_del_gallery)));
           $new = show(_gal_newicon, array("id" => $get['id'],
                                           "titel" => _button_value_newgal));
-          
+
           if($cnt == 1) $cntpics = _gallery_image;
           else $cntpics = _gallery_images;
-      
+
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
           $show .= show($dir."/gallery_show", array("link" => re($get['kat']),
                                                     "class" => $class,
@@ -221,10 +221,10 @@ if(_adminMenu != 'true')
                                                     "images" => $cntpics,
                                                     "id" => $get['id'],
                                                     "beschreibung" => bbcode($get['beschreibung']),
-      	    												    	          "cnt" => $cnt));
-      
+                                                                                "cnt" => $cnt));
+
         }
-        
+
         $show = show($dir."/gallery",array("show" => $show,
                                            "head" => _gallery_head,
                                            "add" => _gallery_show_admin));

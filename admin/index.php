@@ -63,7 +63,7 @@ else
                     break;
             }
 
-            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && $userid == $rootAdmin))
+            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                 $amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $settings['file_name'], "end" => $end));
 
             unset($settings,$XMLTag,$link,$permission);
@@ -114,7 +114,7 @@ else
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
 
-            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && $userid == $rootAdmin))
+            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                 require_once(basePath."/admin/menu/".$inc_file);
             else
                 $show = error(_error_wrong_permissions, 1);

@@ -7,7 +7,7 @@
  */
 
 ####################################
-## Wird in einer Index ausgefÃ¼hrt ##
+## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
     exit();
@@ -16,75 +16,32 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".$db['dl_kat']."
-             ORDER BY name");
-    $t = 1;
-    $cnt = 0;
+    $qry = db("SELECT * FROM ".$db['dl_kat']." ORDER BY name"); $color = 1; $kats = '';
     while($get = _fetch($qry))
     {
-        if(isset($_GET['kat'])) $kid = " WHERE id = '".intval($_GET['kat'])."'";
-        else                    $kid = "";
-
-        $qrydl = db("SELECT * FROM ".$db['downloads']."
-                 WHERE kat = '".$get['id']."'
-                 ORDER BY download");
-        $show = "";
+        $qrydl = db("SELECT * FROM ".$db['downloads']." WHERE kat = '".$get['id']."' ORDER BY download");
         if(_rows($qrydl))
         {
-            $display = "none";
-            $img = "expand";
+            $color_ = 1; $show = "";
             while($getdl = _fetch($qrydl))
             {
-                if($_GET['hl'] == $getdl['id'])
-                {
-                    $display = "";
-                    $img = "collapse";
+                if((isset($_GET['hl']) ? convert::ToInt($_GET['hl']) : 0) == $getdl['id'])
                     $download = highlight(re($getdl['download']));
-                } else $download = re($getdl['download']);
+                else
+                    $download = re($getdl['download']);
 
-                $link = show(_downloads_link, array("id" => $getdl['id'],
-                        "download" => $download,
-                        "titel" => re($getdl['download']),
-                        "target" => $target));
-
-                $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-
-                $show .= show($dir."/downloads_show", array("class" => $class,
-                        "link" => $link,
-                        "kid" => $get['id'],
-                        "display" => $display,
-                        "beschreibung" => bbcode($getdl['beschreibung']),
-                        "hits" => $getdl['hits']));
+                $link = show(_downloads_link, array("id" => $getdl['id'], "download" => $download, "titel" => re($getdl['download'])));
+                $class = ($color_ % 2) ? "contentMainSecond" : "contentMainFirst"; $color_++;
+                $show .= show($dir."/downloads_show", array("class" => $class, "link" => $link, "hits" => $getdl['hits']));
             }
 
             $cntKat = cnt($db['downloads'], " WHERE kat = '".$get['id']."'");
-
-            if(cnt($db['downloads'], "WHERE kat = '".$get['id']."'") == 1)  $dltitel = _dl_file;
-            else $dltitel = _site_stats_files;
-
-
-            $kat = show(_dl_titel, array("id" => $get['id'],
-                    "icon" => $moreicon,
-                    "file" => $dltitel,
-                    "cnt" => $cntKat,
-                    "name" => re($get['name'])));
-
-            $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-
-            $kats .= show($dir."/download_kats", array("kat" => $kat,
-                    "class" => $class,
-                    "kid" => $get['id'],
-                    "img" => $img,
-                    "download" => _dl_file,
-                    "hits" => _hits,
-                    "show" => $show,
-                    "display" => $display));
-
-
+            $dltitel = ($cntKat == 1 ? _dl_file : _site_stats_files);
+            $kat = show(_dl_titel, array("file" => $dltitel, "cnt" => $cntKat, "name" => re($get['name'])));
+            $kats .= show($dir."/download_kats", array("kat" => $kat, "kid" => $get['id'], "show" => $show));
         }
     }
 
-    $index = show($dir."/downloads", array("kats" => $kats,
-            "head" => _downloads_head));
+    $index = show($dir."/downloads", array("kats" => $kats));
 }
 ?>

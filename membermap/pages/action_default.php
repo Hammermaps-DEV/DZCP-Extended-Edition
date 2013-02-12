@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $level = intval(settings('gmaps_who'));
+    $level = convert::ToInt(settings('gmaps_who'));
     if(!($level == 0 || $level == 1)) {
         $level = 0;
     }

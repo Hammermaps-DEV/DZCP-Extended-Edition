@@ -5,7 +5,7 @@
   {
     return strtolower(str_replace(' ', '', preg_replace("#[^".$pattern."+]#Uis", '', $string)));
   }
-  
+
   function cut_string(&$buffer, $end_marker = "\x00")
   {
     $length = strpos($buffer, $end_marker);
@@ -21,14 +21,14 @@
 
     return $string;
   }
-  
+
   function _unpack($string, $format)
   {
     list(,$string) = unpack($format, $string);
 
     return $string;
   }
-  
+
   function cut_byte(&$buffer, $length)
   {
     $string = substr($buffer, 0, $length);
@@ -37,14 +37,14 @@
 
     return $string;
   }
-  
+
   function _time($seconds)
   {
     if ($seconds < 0) { return ""; }
 
-    $h = intval(intval($seconds) / 3600);
-    $m = intval(($seconds / 60) % 60);
-    $s = intval($seconds % 60);
+    $h = convert::ToInt(($seconds) / 3600);
+    $m = convert::ToInt(($seconds / 60) % 60);
+    $s = convert::ToInt($seconds % 60);
 
     $h = str_pad($h, "2", "0", STR_PAD_LEFT);
     $m = str_pad($m, "2", "0", STR_PAD_LEFT);
@@ -52,7 +52,7 @@
 
     return "{$h}:{$m}:{$s}";
   }
-  
+
   function parse_color($string, $type)
   {
     switch($type)
@@ -68,7 +68,7 @@
     }
     return $string;
   }
-  
+
   function cut_pascal(&$buffer, $start_byte = 1, $length_adjust = 0, $end_byte = 0)
   {
     $length = ord(substr($buffer, 0, $start_byte)) + $length_adjust;
@@ -76,5 +76,5 @@
     $buffer = substr($buffer, $start_byte + $length + $end_byte);
 
     return $string;
-  }  
+  }
 ?>

@@ -20,7 +20,7 @@ else
     if(isset($_GET['edit']) && !empty($_GET['edit']))
     {
         $qry = db("SELECT * FROM ".$db['gb']."
-               WHERE id = '".intval($_GET['edit'])."'");
+               WHERE id = '".convert::ToInt($_GET['edit'])."'");
         $get = _fetch($qry);
 
         $get_id = '?';
@@ -28,11 +28,11 @@ else
         $get_date = $get['datum'];
 
         if($get['reg'] == 0) $regCheck = true;
-        $editby = show(_edited_by, array("autor" => cleanautor($userid),
+        $editby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
                 "time" => date("d.m.Y H:i", time())._uhr));
     } else {
         $get_id = cnt($db['gb'])+1;
-        $get_userid = $userid;
+        $get_userid = convert::ToInt($userid);
         $get_date = time();
 
         if($chkMe == 'unlogged') $regCheck = true;

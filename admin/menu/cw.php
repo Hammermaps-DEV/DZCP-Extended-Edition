@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._clanwars;
     if(!permission("clanwars"))
@@ -93,7 +93,7 @@ ORDER BY game ASC");
       } elseif($_GET['do'] == "edit") {
 
         $qry = db("SELECT * FROM ".$db['cw']."
-WHERE id = '".intval($_GET['id'])."'");
+WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         list($xonx1,$xonx2) = explode('on', $get['xonx']);
@@ -200,15 +200,15 @@ ORDER BY game");
           $qry = db("INSERT INTO ".$db['cw']."
 SET ".$kid."
 ".$xonx."
-`datum` = '".((int)$datum)."',
-`squad_id` = '".((int)$_POST['squad'])."',
+`datum` = '".convert::ToInt($datum)."',
+`squad_id` = '".convert::ToInt($_POST['squad'])."',
 `clantag` = '".up($_POST['clantag'])."',
 `gegner` = '".up($_POST['gegner'])."',
 `url` = '".links($_POST['url'])."',
 `liga` = '".up($_POST['liga'])."',
 `gametype` = '".up($_POST['gametype'])."',
-`punkte` = '".((int)$_POST['punkte'])."',
-`gpunkte` = '".((int)$_POST['gpunkte'])."',
+`punkte` = '".convert::ToInt($_POST['punkte'])."',
+`gpunkte` = '".convert::ToInt($_POST['gpunkte'])."',
 `maps` = '".up($_POST['maps'])."',
 `serverip` = '".up($_POST['serverip'])."',
 `servername` = '".up($_POST['servername'])."',
@@ -224,7 +224,7 @@ SET ".$kid."
           $type = $_FILES['logo']['type'];
           $end = explode(".", $_FILES['logo']['name']);
           $end = strtolower($end[count($end)-1]);
-          
+
           if(!empty($tmp))
           {
             $img = @getimagesize($tmp);
@@ -239,7 +239,7 @@ if($img1[0])
           $type1 = $_FILES['screen1']['type'];
           $end1 = explode(".", $_FILES['screen1']['name']);
           $end1 = strtolower($end1[count($end1)-1]);
-          
+
           if(!empty($tmp1))
           {
             $img1 = @getimagesize($tmp1);
@@ -248,13 +248,13 @@ if($img1[0])
               @copy($tmp1, basePath."/inc/images/clanwars/".mysql_insert_id()."_1.".strtolower($end1));
               @unlink($tmp1);
             }
-          }	
+          }
 
           $tmp2 = $_FILES['screen2']['tmp_name'];
           $type2 = $_FILES['screen2']['type'];
           $end2 = explode(".", $_FILES['screen2']['name']);
           $end2 = strtolower($end2[count($end2)-1]);
-          
+
           if(!empty($tmp2))
           {
             $img2 = @getimagesize($tmp2);
@@ -269,7 +269,7 @@ if($img2[0])
           $type3 = $_FILES['screen3']['type'];
           $end3 = explode(".", $_FILES['screen3']['name']);
           $end3 = strtolower($end3[count($end3)-1]);
-          
+
           if(!empty($tmp3))
           {
             $img3 = @getimagesize($tmp3);
@@ -284,7 +284,7 @@ if($img3[0])
           $type4 = $_FILES['screen4']['type'];
           $end4 = explode(".", $_FILES['screen4']['name']);
           $end4 = strtolower($end4[count($end4)-1]);
-          
+
           if(!empty($tmp4))
           {
             $img4 = @getimagesize($tmp4);
@@ -293,7 +293,7 @@ if($img4[0])
               @copy($tmp4, basePath."/inc/images/clanwars/".mysql_insert_id()."_4.".strtolower($end4));
               @unlink($tmp4);
             }
-          }	
+          }
 
           $show = info(_cw_admin_added, "?admin=cw");
         }
@@ -316,15 +316,15 @@ if($img4[0])
           $qry = db("UPDATE ".$db['cw']."
 SET ".$xonx."
 ".$kid."
-`datum` = '".((int)$datum)."',
-`squad_id` = '".((int)$_POST['squad'])."',
+`datum` = '".convert::ToInt($datum)."',
+`squad_id` = '".convert::ToInt($_POST['squad'])."',
 `clantag` = '".up($_POST['clantag'])."',
 `gegner` = '".up($_POST['gegner'])."',
 `url` = '".links($_POST['url'])."',
 `liga` = '".up($_POST['liga'])."',
 `gametype` = '".up($_POST['gametype'])."',
-`punkte` = '".((int)$_POST['punkte'])."',
-`gpunkte` = '".((int)$_POST['gpunkte'])."',
+`punkte` = '".convert::ToInt($_POST['punkte'])."',
+`gpunkte` = '".convert::ToInt($_POST['gpunkte'])."',
 `maps` = '".up($_POST['maps'])."',
 `serverip` = '".up($_POST['serverip'])."',
 `servername` = '".up($_POST['servername'])."',
@@ -333,7 +333,7 @@ SET ".$xonx."
 `glineup` = '".up($_POST['glineup'])."',
 `matchadmins` = '".up($_POST['match_admins'])."',
 `bericht` = '".up($_POST['bericht'],1)."'
-WHERE id = '".intval($_GET['id'])."'");
+WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $cwid = $_GET['id'];
 
@@ -341,21 +341,21 @@ WHERE id = '".intval($_GET['id'])."'");
           $type = $_FILES['logo']['type'];
           $end = explode(".", $_FILES['logo']['name']);
           $end = strtolower($end[count($end)-1]);
-          
+
           if(!empty($tmp))
           {
             $img = @getimagesize($tmp);
 foreach($picformat AS $end1)
             {
-              if(file_exists(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_logo.'.$end1))
+              if(file_exists(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_logo.'.$end1))
               {
-                @unlink(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_logo.'.$end1);
+                @unlink(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_logo.'.$end1);
                 break;
               }
             }
             if($img[0])
             {
-              copy($tmp, basePath."/inc/images/clanwars/".intval($_GET['id'])."_logo.".strtolower($end));
+              copy($tmp, basePath."/inc/images/clanwars/".convert::ToInt($_GET['id'])."_logo.".strtolower($end));
               @unlink($tmp);
             }
           }
@@ -364,22 +364,22 @@ foreach($picformat AS $end1)
           $type1 = $_FILES['screen1']['type'];
           $end1 = explode(".", $_FILES['screen1']['name']);
           $end1 = strtolower($end1[count($end1)-1]);
-          
+
           if(!empty($tmp1))
           {
             $img1 = @getimagesize($tmp1);
 foreach($picformat AS $endun1)
             {
-              if(file_exists(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_1.'.$endun1))
+              if(file_exists(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_1.'.$endun1))
               {
-                @unlink(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_1.'.$endun1);
+                @unlink(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_1.'.$endun1);
                 break;
               }
             }
 
             if($img1[0])
             {
-              copy($tmp1, basePath."/inc/images/clanwars/".intval($_GET['id'])."_1.".strtolower($end1));
+              copy($tmp1, basePath."/inc/images/clanwars/".convert::ToInt($_GET['id'])."_1.".strtolower($end1));
               @unlink($tmp1);
             }
           }
@@ -388,21 +388,21 @@ $tmp2 = $_FILES['screen2']['tmp_name'];
           $type2 = $_FILES['screen2']['type'];
           $end2 = explode(".", $_FILES['screen2']['name']);
           $end2 = strtolower($end2[count($end2)-1]);
-          
+
           if(!empty($tmp2))
           {
             $img2 = @getimagesize($tmp2);
 foreach($picformat AS $endun2)
             {
-              if(file_exists(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_2.'.$endun2))
+              if(file_exists(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_2.'.$endun2))
               {
-                @unlink(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_2.'.$endun2);
+                @unlink(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_2.'.$endun2);
                 break;
               }
             }
             if($img2[0])
             {
-              copy($tmp2, basePath."/inc/images/clanwars/".intval($_GET['id'])."_2.".strtolower($end2));
+              copy($tmp2, basePath."/inc/images/clanwars/".convert::ToInt($_GET['id'])."_2.".strtolower($end2));
               @unlink($tmp2);
             }
           }
@@ -411,21 +411,21 @@ $tmp3 = $_FILES['screen3']['tmp_name'];
           $type3 = $_FILES['screen3']['type'];
           $end3 = explode(".", $_FILES['screen3']['name']);
           $end3 = strtolower($end3[count($end3)-1]);
-          
+
           if(!empty($tmp3))
           {
             $img3 = @getimagesize($tmp3);
 foreach($picformat AS $endun3)
             {
-              if(file_exists(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_3.'.$endun3))
+              if(file_exists(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_3.'.$endun3))
               {
-                @unlink(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_3.'.$endun3);
+                @unlink(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_3.'.$endun3);
                 break;
               }
             }
             if($img3[0])
             {
-              copy($tmp3, basePath."/inc/images/clanwars/".intval($_GET['id'])."_3.".strtolower($end3));
+              copy($tmp3, basePath."/inc/images/clanwars/".convert::ToInt($_GET['id'])."_3.".strtolower($end3));
               @unlink($tmp3);
             }
           }
@@ -434,21 +434,21 @@ $tmp4 = $_FILES['screen4']['tmp_name'];
           $type4 = $_FILES['screen4']['type'];
           $end4 = explode(".", $_FILES['screen4']['name']);
           $end4 = strtolower($end4[count($end4)-1]);
-          
+
           if(!empty($tmp4))
           {
             $img4 = @getimagesize($tmp4);
 foreach($picformat AS $endun4)
             {
-              if(file_exists(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_4.'.$endun4))
+              if(file_exists(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_4.'.$endun4))
               {
-                @unlink(basePath.'/inc/images/clanwars/'.intval($_GET['id']).'_4.'.$endun4);
+                @unlink(basePath.'/inc/images/clanwars/'.convert::ToInt($_GET['id']).'_4.'.$endun4);
                 break;
               }
             }
             if($img4[0])
             {
-              copy($tmp4, basePath."/inc/images/clanwars/".intval($_GET['id'])."_4.".strtolower($end4));
+              copy($tmp4, basePath."/inc/images/clanwars/".convert::ToInt($_GET['id'])."_4.".strtolower($end4));
               @unlink($tmp4);
             }
           }
@@ -457,17 +457,17 @@ foreach($picformat AS $endun4)
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db['cw']."
-WHERE id = '".intval($_GET['id'])."'");
+WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $qry = db("DELETE FROM ".$db['cw_comments']."
-WHERE cw = '".intval($_GET['id'])."'");
+WHERE cw = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_cw_admin_deleted, "?admin=cw");
       } elseif($_GET['do'] == "top") {
         $qry = db("UPDATE ".$db['cw']."
-SET `top` = '".intval($_GET['set'])."'
-WHERE id = '".intval($_GET['id'])."'");
-                   
+SET `top` = '".convert::ToInt($_GET['set'])."'
+WHERE id = '".convert::ToInt($_GET['id'])."'");
+
         $show = info((empty($_GET['set']) ? _cw_admin_top_unsetted : _cw_admin_top_setted), "?admin=cw");
       } else {
         if(isset($_GET['page'])) $page = $_GET['page'];

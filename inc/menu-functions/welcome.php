@@ -17,6 +17,6 @@ function welcome()
              </script>";
 
   if($chkMe == 'unlogged') return $return.' '._welcome_guest;
-  else                     return $return.' '.autor($userid, "welcome");
+  else                     return $return.' '.autor(convert::ToInt($userid), "welcome");
 }
 ?>

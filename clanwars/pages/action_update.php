@@ -21,19 +21,19 @@ else
         $index = error(_error_have_to_be_logged, 1);
     } else {
         $qry = db("SELECT * FROM ".$db['cw_player']."
-               WHERE cwid = '".intval($_GET['id'])."'
-               AND member = '".$userid."'");
+               WHERE cwid = '".convert::ToInt($_GET['id'])."'
+               AND member = '".convert::ToInt($userid)."'");
         if(_rows($qry))
         {
             $upd = db("UPDATE ".$db['cw_player']."
-                 SET `status` = '".((int)$_POST['status'])."'
-                 WHERE cwid = '".intval($_GET['id'])."'
-                 AND member = '".$userid."'");
+                 SET `status` = '".convert::ToInt($_POST['status'])."'
+                 WHERE cwid = '".convert::ToInt($_GET['id'])."'
+                 AND member = '".convert::ToInt($userid)."'");
         } else {
             $ins = db("INSERT INTO ".$db['cw_player']."
-                 SET `cwid`   = '".((int)$_GET['id'])."',
-                     `member` = '".((int)$userid)."',
-                     `status` = '".((int)$_POST['status'])."'");
+                 SET `cwid`   = '".convert::ToInt($_GET['id'])."',
+                     `member` = '".convert::ToInt($userid)."',
+                     `status` = '".convert::ToInt($_POST['status'])."'");
         }
 
         $index = info(_cw_status_set, "?action=details&amp;id=".$_GET['id']."");

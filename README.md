@@ -82,8 +82,6 @@ Neue HTML Tags zum ein HTML Code ausblenden basierend auf dem Loginstatus des Us
 	HTML Code der nur angezeigt wird wenn der aktuelle User abgemeldet ist...
 </logged_out>
 
-- Gametiger wurde entfernt.
-
 Optional* Zusätzliche XML-Config für die DZCP Menufunktionen kann angelegt werden.
 * Es kann eingestellt werden ob die Menufunktion über Ajax Loader nachgeladen werden sollen.
 * Welches Bild für jede Menufunktion die per Ajax Loader nachgeladen wird, verwendet werden soll.
@@ -102,3 +100,7 @@ Neue Addons Schnittstelle für einfaches einfügen und löschen von Addons/Mods.
 * Include und automatisches laden von Funktionen oder Classen möglich.
 * Frei zu bearbeitende Addon-XML Dateien für Statische Einstellungen aller Art.
 * Eine einfache PHP-API Schnittstelle für alle Addons. *In DEV*
+
+Die geschätzten Download Zeiten bei Downloads wurden der heutigen Zeit angepasst, ab DSL 1000 - VDSL 50.k
+Die nötigen Download Zeiten werden jetzt richtig berechnet.
+Download Kommentare können bei den Downloads geschrieben werden, kann beim Anlegen/Bearbeiten von Downloads aktiviert werden.

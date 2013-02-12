@@ -25,7 +25,7 @@ else
         {
             case 'new':
                 $index = show($dir."/new", array("date" => date("d.m.Y"),
-                "autor" => autor($userid),
+                "autor" => autor(convert::ToInt($userid)),
                 "tautor" => _autor,
                 "value" => _button_value_add,
                 "map" => _map,
@@ -42,13 +42,13 @@ else
                 else
                 {
                     db("INSERT INTO ".$db['taktik']." SET
-                           `datum`      = '".((int)time())."',
+                           `datum`      = '".time()."',
                            `map`        = '".up($_POST['map'])."',
                            `spart`      = '".up($_POST['spart'], 1)."',
                            `sparct`     = '".up($_POST['sparct'], 1)."',
                            `standardt`  = '".up($_POST['standardt'], 1)."',
                            `standardct` = '".up($_POST['standardct'], 1)."',
-                           `autor`      = '".((int)$userid)."'");
+                           `autor`      = '".convert::ToInt($userid)."'");
 
                     $index = info(_taktik_added, "../taktik/");
                 }
@@ -56,14 +56,14 @@ else
             case 'delete':
                 if(isset($_GET['id']) && !empty($_GET['id']))
                 {
-                    db("DELETE FROM ".$db['taktik']." WHERE id = ".intval($_GET['id']));
+                    db("DELETE FROM ".$db['taktik']." WHERE id = ".convert::ToInt($_GET['id']));
                     $index = info(_taktik_deleted, "../taktik/");
                 }
                 break;
             case 'edit':
                 if(isset($_GET['id']) && !empty($_GET['id']))
                 {
-                    $get = db("SELECT * FROM ".$db['taktik']." WHERE id = ".intval($_GET['id']),false,true);
+                    $get = db("SELECT * FROM ".$db['taktik']." WHERE id = ".convert::ToInt($_GET['id']),false,true);
                     $index = show($dir."/edit", array("id" => $_GET['id'],
                             "map" => re($get['map']),
                             "autor" => autor($get['autor']),
@@ -95,7 +95,7 @@ else
                                `spart`      = '".up($_POST['spart'], 1)."',
                                `standardct` = '".up($_POST['standardct'], 1)."',
                                `standardt`  = '".up($_POST['standardt'], 1)."'
-                                WHERE id = ".intval($_POST['id']));
+                                WHERE id = ".convert::ToInt($_POST['id']));
 
                         $index = info(_error_taktik_edited, "../taktik/");
                     }

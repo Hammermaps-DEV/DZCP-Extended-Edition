@@ -21,7 +21,7 @@ if(_adminMenu != 'true')
 
         $show = show($dir."/artikel_form", array("head" => _artikel_add,
                                                  "nautor" => _autor,
-                                                 "autor" => autor($userid),
+                                                 "autor" => autor(convert::ToInt($userid)),
                                                  "nkat" => _news_admin_kat,
                                                  "kat" => $kat,
                                                  "preview" => _preview,
@@ -63,7 +63,7 @@ if(_adminMenu != 'true')
 
           $show = show($dir."/artikel_form", array("head" => _artikel_add,
                                                    "nautor" => _autor,
-                                                   "autor" => autor($userid),
+                                                   "autor" => autor(convert::ToInt($userid)),
                                                    "nkat" => _news_admin_kat,
                                                    "kat" => $kat,
                                                    "preview" => _preview,
@@ -87,8 +87,8 @@ if(_adminMenu != 'true')
           if($_POST)
           {
             $qry = db("INSERT INTO ".$db['artikel']."
-                       SET `autor`  = '".((int)$userid)."',
-                           `kat`    = '".((int)$_POST['kat'])."',
+                       SET `autor`  = '".convert::ToInt($userid)."',
+                           `kat`    = '".convert::ToInt($_POST['kat'])."',
                            `titel`  = '".up($_POST['titel'])."',
                            `text`   = '".up($_POST['artikel'],1)."',
                            `link1`  = '".up($_POST['link1'])."',
@@ -102,7 +102,7 @@ if(_adminMenu != 'true')
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['artikel']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $qryk = db("SELECT * FROM ".$db['newskat']."");
@@ -120,7 +120,7 @@ if(_adminMenu != 'true')
 
         $show = show($dir."/artikel_form", array("head" => _artikel_edit,
                                                  "nautor" => _autor,
-                                                 "autor" => autor($userid),
+                                                 "autor" => autor(convert::ToInt($userid)),
                                                  "nkat" => _news_admin_kat,
                                                  "preview" => _preview,
                                                  "kat" => $kat,
@@ -143,7 +143,7 @@ if(_adminMenu != 'true')
         if($_POST)
         {
           $qry = db("UPDATE ".$db['artikel']."
-                     SET `kat`    = '".((int)$_POST['kat'])."',
+                     SET `kat`    = '".convert::ToInt($_POST['kat'])."',
                          `titel`  = '".up($_POST['titel'])."',
                          `text`   = '".up($_POST['artikel'],1)."',
                          `link1`  = '".up($_POST['link1'])."',
@@ -152,12 +152,12 @@ if(_adminMenu != 'true')
                          `url1`   = '".links($_POST['url1'])."',
                          `url2`   = '".links($_POST['url2'])."',
                          `url3`   = '".links($_POST['url3'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
         $show = info(_artikel_edited, "?admin=artikel");
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db['artikel']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $show = info(_artikel_deleted, "?admin=artikel");
       } elseif($_GET['do'] == 'public') {
         if($_GET['what'] == 'set')
@@ -165,11 +165,11 @@ if(_adminMenu != 'true')
           $upd = db("UPDATE ".$db['artikel']."
                      SET `public` = '1',
                                    `datum`  = '".time()."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
           $upd = db("UPDATE ".$db['artikel']."
                      SET `public` = '0'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
 
         header("Location: ?admin=artikel");

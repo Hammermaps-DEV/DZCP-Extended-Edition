@@ -16,10 +16,10 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if(!empty($_GET['showsquad'])) header('Location: ?action=shows&id='.intval($_GET['showsquad']));
-    else if(!empty($_GET['show'])) header('Location: ?action=shows&id='.intval($_GET['show']));
+    if(!empty($_GET['showsquad'])) header('Location: ?action=shows&id='.convert::ToInt($_GET['showsquad']));
+    else if(!empty($_GET['show'])) header('Location: ?action=shows&id='.convert::ToInt($_GET['show']));
 
-    $get = _fetch(db("SELECT * FROM ".$db['squads']." WHERE `id` = '".intval($_GET['id'])."'"));
+    $get = _fetch(db("SELECT * FROM ".$db['squads']." WHERE `id` = '".convert::ToInt($_GET['id'])."'"));
     $qrym = db("SELECT s1.user,s1.squad,s2.id,s2.nick,s2.icq,s2.email,s2.xfire,s2.rlname,
                   s2.level,s2.bday,s2.hp,s3.posi,s4.pid
                   FROM ".$db['squaduser']." AS s1
@@ -29,7 +29,7 @@ else
                   ON s3.squad=s1.squad AND s3.user=s1.user
                   LEFT JOIN ".$db['pos']." AS s4
                   ON s4.id=s3.posi
-                  WHERE s1.squad='".intval($_GET['id'])."'
+                  WHERE s1.squad='".convert::ToInt($_GET['id'])."'
                   ORDER BY s4.pid, s2.nick");
 
     $member = "";
@@ -74,10 +74,10 @@ else
     $squad = re($get['name']);
     foreach($picformat AS $end)
     {
-        if(file_exists(basePath.'/inc/images/squads/'.intval($get['id']).'.'.$end))
+        if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($get['id']).'.'.$end))
         {
             $style = 'padding:0;';
-            $squad = '<img src="../inc/images/squads/'.intval($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
+            $squad = '<img src="../inc/images/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
             break;
         }
     }
@@ -87,6 +87,6 @@ else
             "squad" => $squad,
             "style" => $style,
             "back" => _error_back,
-            "id"   => intval($_GET['id'])));
+            "id"   => convert::ToInt($_GET['id'])));
 }
 ?>

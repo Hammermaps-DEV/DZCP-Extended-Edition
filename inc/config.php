@@ -10,7 +10,7 @@
 //-> DZCP Settings Start
 #########################################
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle fehler und Notices etc.
-define('cache_in_debug', false); // Entscheidet ob im Debug Modus Seiten gecached werden können
+define('cache_in_debug', true); // Entscheidet ob im Debug Modus Seiten gecached werden können
 
 define('buffer_gzip_compress', true); // Soll die Seite mit Hilfe der GZIP-Komprimierung übertragen werden
 define('buffer_gzip_compress_level', 4); // Level der Kompression 1 - 9 *Optimal Level 4
@@ -41,6 +41,20 @@ $picformat = array("jpg", "gif", "png"); // Unterstützte Bildformate
 // Zeichen für den Passwort Generator:
 //                           Alphabet groß:                Alphabet klein:                Zahlen:        Sonderzeichen:
 $passwordComponents = array("ABCDEFGHIJKLMNOPQRSTUVWXYZ" , "abcdefghijklmnopqrstuvwxyz" , "0123456789" , "#$@!");
+
+// DSL Geschwindigkeiten für errechnen der Download Zeit:
+$dsl_formats = array("DSL 1000"=>1024, "DSL 2000"=>2048, "DSL 6000"=>6144, "DSL2+ 16000"=>16384, "VDSL 25.000"=>25600, "VDSL 50.000"=>51200);
+
+## Downloads Filesize Extended ##
+/*
+ * Wenn aktiviert, wird das Hostsystem des Servers verwendet *Linux / Windows* um die Datengrößen der Downloads zu berechnen.
+ * Das ist nötig, wenn Ihr Downloads habt die über 2GB hinausgehen. Daten die 4GB oder Größer sind, ist ein 64-Bit System notwendig.
+ * Hinweis: PHP muss einen OS-Shell Zugriff haben und das ausführen von Befehlen auf dem Hostsystem zulassen. *exec() or *shell_exec()
+ * Achtung: Bitte nur aktivieren wenn es benötigt wird!
+ */
+
+define('allow_os_shell', false);
+## Downloads Filesize Extended ##
 
 #########################################
 //-> DZCP Settings Ende
@@ -87,6 +101,7 @@ $db = array("host" =>           $sql_host,
             "cw_player" =>      $prefix."clanwar_players",
             "downloads" =>      $prefix."downloads",
             "dl_kat" =>         $prefix."download_kat",
+            "dlcomments" =>     $prefix."dlcomments",
             "events" =>         $prefix."events",
             "f_access" =>       $prefix."f_access",
             "f_abo" =>          $prefix."f_abo",

@@ -32,9 +32,9 @@ else
             $index = error(_error_unregistered, 1);
         else
         {
-            $reg = (!isset($userid) ? $_POST['email'] : $userid);
+            $reg = (!isset($userid) ? $_POST['email'] : convert::ToInt($userid));
             db("INSERT INTO ".$db['shout']." SET
-                `datum`  = '".((int)time())."',
+                `datum`  = '".time()."',
                 `nick`   = '".up($_POST['name'],'','UTF-8')."',
                 `email`  = '".up($reg,'','UTF-8')."',
                 `text`   = '".up(substr(str_replace("\n", ' ', $_POST['eintrag']),0,$shout_max_zeichen),'','UTF-8')."',

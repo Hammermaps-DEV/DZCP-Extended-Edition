@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._config_rankings;
     if(!permission("rankings"))
@@ -18,7 +18,7 @@ if(_adminMenu != 'true')
         while($gets = _fetch($qrys))
         {
           $squads .= show(_select_field_ranking_add, array("what" => re($gets['name']),
-  		              									                     "value" => $gets['id'],
+                                                                                 "value" => $gets['id'],
                                                            "icon" => $gets['icon'],
                                                            "sel" => ""));
         }
@@ -44,14 +44,14 @@ if(_adminMenu != 'true')
                      SET `league`   = '".up($_POST['league'])."',
                          `squad`    = '".up($_POST['squad'])."',
                          `url`      = '".links($_POST['url'])."',
-                         `rank`     = '".((int)$_POST['rank'])."',
-                         `postdate` = '".((int)time())."'");
+                         `rank`     = '".convert::ToInt($_POST['rank'])."',
+                         `postdate` = '".time()."'");
 
           $show = info(_ranking_added, "?admin=rankings");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['rankings']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $qrys = db("SELECT * FROM ".$db['squads']."
@@ -62,7 +62,7 @@ if(_adminMenu != 'true')
           if($get['squad'] == $gets['id']) $sel = "selected=\"selected\"";
           else $sel = "";
           $squads .= show(_select_field_ranking_add, array("what" => re($gets['name']),
-  		              									                     "value" => $gets['id'],
+                                                                                 "value" => $gets['id'],
                                                            "icon" => $gets['icon'],
                                                            "sel" => $sel));
         }
@@ -85,23 +85,23 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['rank'])) $show = error(_error_empty_rank,1);
         } else {
           $qry = db("SELECT rank FROM ".$db['rankings']."
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
           $get = _fetch($qry);
 
           $qry = db("UPDATE ".$db['rankings']."
                      SET `league`       = '".up($_POST['league'])."',
                          `squad`        = '".up($_POST['squad'])."',
                          `url`          = '".links($_POST['url'])."',
-                         `rank`         = '".((int)$_POST['rank'])."',
-                         `lastranking`  = '".((int)$get['rank'])."',
-                         `postdate`     = '".((int)time())."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                         `rank`         = '".convert::ToInt($_POST['rank'])."',
+                         `lastranking`  = '".convert::ToInt($get['rank'])."',
+                         `postdate`     = '".time()."'
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_ranking_edited, "?admin=rankings");
         }
       } elseif($_GET['do'] == "delete") {
         $del = db("DELETE FROM ".$db['rankings']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_ranking_deleted, "?admin=rankings");
       } else {

@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $qry = db("SELECT * FROM ".$db['votes']."
-             WHERE id = '".intval($_GET['id'])."'");
+             WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
     if($get['intern'] == 1)

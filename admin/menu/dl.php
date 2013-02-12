@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._admin_dlkat;
     if(!permission("downloads"))
@@ -41,7 +41,7 @@ if(_adminMenu != 'true')
       if($_GET['do'] == "edit")
       {
         $qry = db("SELECT * FROM ".$db['dl_kat']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $show = show($dir."/dlkats_form", array("newhead" => _dl_edit_head,
@@ -56,13 +56,13 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("UPDATE ".$db['dl_kat']."
                      SET `name` = '".up($_POST['kat'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_dl_admin_edited, "?admin=dl");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db['dl_kat']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_dl_admin_deleted, "?admin=dl");
 

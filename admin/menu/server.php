@@ -2,8 +2,8 @@
 #####################
 ## Admin Menu-File ##
 #####################
-if(_adminMenu != 'true') 
-	exit();
+if(_adminMenu != 'true')
+    exit();
 
     $where = $where.': '._server_admin_head;
     if(!permission("editserver"))
@@ -22,9 +22,9 @@ if(_adminMenu != 'true')
                                                           "action" => "admin=server&amp;do=delete",
                                                           "title" => _button_title_del,
                                                           "del" => convSpace(_confirm_del_server)));
-                                                          
+
         $mapdl = '<a href="?admin=server&amp;do=mapdl&amp;id='.re($get['id']).'" onclick="return(DZCP.del(\''._mapdl_download.'\'))"><img src="../inc/images/download.gif" alt="" /></a>';
-                                                          
+
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
         if($get['navi'] == "0") $menu = show(_server_menu_icon_yes, array("id" => $get['id']));
@@ -80,46 +80,46 @@ if(_adminMenu != 'true')
 
       if($_GET['do'] == "ts")
       {
-		switch (((int)$_POST['ts_version'])) {
+        switch (convert::ToInt($_POST['ts_version'])) {
         case "3": //TS3
-        	$tsport = 9987;
+            $tsport = 9987;
             $tsqport = 10011;
         break;
         default: //TS2
-        	$tsport = 8767;
-        	$tsqport = 51234;
+            $tsport = 8767;
+            $tsqport = 51234;
         break;
         }
-		$tsport = empty($_POST['ts_port']) ? $tsport : $_POST['ts_port'];
-		$tsqport = empty($_POST['ts_sport']) ? $tsqport : $_POST['ts_sport'];
+        $tsport = empty($_POST['ts_port']) ? $tsport : $_POST['ts_port'];
+        $tsqport = empty($_POST['ts_sport']) ? $tsqport : $_POST['ts_sport'];
         $qry = db("UPDATE ".$db['settings']."
-                   SET `ts_port`    	= '".((int)$tsport)."',
-                       `ts_sport`  		= '".((int)$tsqport)."',
-                       `ts_width`   	= '".((int)$_POST['ts_width'])."',
-                       `ts_version` 	= '".((int)$_POST['ts_version'])."',
+                   SET `ts_port`    	= '".convert::ToInt($tsport)."',
+                       `ts_sport`  		= '".convert::ToInt($tsqport)."',
+                       `ts_width`   	= '".convert::ToInt($_POST['ts_width'])."',
+                       `ts_version` 	= '".convert::ToInt($_POST['ts_version'])."',
                        `ts_ip`      	= '".up($_POST['ts_ip'])."',
-                       `ts_customicon`  = '".((int)$_POST['ts_customicon'])."',
-                       `ts_showchannel` = '".((int)$_POST['ts_showchannel'])."'
+                       `ts_customicon`  = '".convert::ToInt($_POST['ts_customicon'])."',
+                       `ts_showchannel` = '".convert::ToInt($_POST['ts_showchannel'])."'
                    WHERE id = 1");
 
         $show = info(_config_server_ts_updated,"?admin=server");
 
       } elseif($_GET['do'] == "menu") {
         $qrys = db("SELECT * FROM ".$db['server']."
-                    WHERE id = '".intval($_GET['id'])."'");
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qrys);
 
         if($get['navi'] == "1")
         {
           $qry = db("UPDATE ".$db['server']."
                      SET `navi` = '0'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         } else {
           if($get['status'] != "nope")
           {
             $qry = db("UPDATE ".$db['server']."
                        SET `navi` = '1'
-                       WHERE id = '".intval($_GET['id'])."'");
+                       WHERE id = '".convert::ToInt($_GET['id'])."'");
 
 
           } else {
@@ -130,7 +130,7 @@ if(_adminMenu != 'true')
         $show = header("Location: ?admin=server");
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".$db['server']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $files = get_files('../inc/images/gameicons/',false,true);
@@ -187,19 +187,19 @@ if(_adminMenu != 'true')
 
           $qry = db("UPDATE ".$db['server']."
                      SET `ip`         = '".up($_POST['ip'])."',
-                         `port`       = '".((int)$_POST['port'])."',
+                         `port`       = '".convert::ToInt($_POST['port'])."',
                          `qport`      = '".up($_POST['qport'])."',
                          `name`       = '".up($_POST['name'])."',
                          ".$game."
                          ".$status."
                          `pwd`        = '".up($_POST['pwd'])."'
-                     WHERE id = '".intval($_GET['id'])."'");
+                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_server_admin_edited, "?admin=server");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".$db['server']."
-                   WHERE id = '".intval($_GET['id'])."'");
+                   WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_server_admin_deleted, "?admin=server");
 
@@ -236,7 +236,7 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("INSERT INTO ".$db['server']."
                      SET `ip`         = '".up($_POST['ip'])."',
-                         `port`       = '".((int)$_POST['port'])."',
+                         `port`       = '".convert::ToInt($_POST['port'])."',
                          `qport`      = '".up($_POST['qport'])."',
                          `name`       = '".up($_POST['name'])."',
                          `pwd`        = '".up($_POST['pwd'])."',

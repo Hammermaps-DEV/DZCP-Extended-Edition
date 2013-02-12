@@ -24,6 +24,7 @@ else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".$db['
 else
 {
     $c = db("SELECT intern,public FROM ".$db['news']." WHERE id = ".$news_id,false,true);
+    $flood_newscom = config('f_newscom');
 
     if(!permission("news") && !$c['public'])
         $index = error(_error_wrong_permissions, 1);
@@ -81,7 +82,7 @@ else
                                        ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : '')."
                                        ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : '')."
                                        `editby`   = '',
-                                       `reg`      = '".((int)$userid)."',
+                                       `reg`      = '".convert::ToInt($userid)."',
                                        `comment`  = '".up($_POST['comment'])."',
                                        `ip`       = '".visitorIp()."'");
 
@@ -94,10 +95,10 @@ else
                     }
                 break;
                 case 'delete':
-                    $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
-                    if($get['reg'] == $userid || permission('news'))
+                    $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    if($get['reg'] == convert::ToInt($userid) || permission('news'))
                     {
-                        $qry = db("DELETE FROM ".$db['newscomments']." WHERE id = '".intval($_GET['cid'])."'");
+                        $qry = db("DELETE FROM ".$db['newscomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'");
                         $index = info(_comment_deleted, "?action=show&amp;id=".$news_id."");
                     }
                     else
@@ -111,7 +112,7 @@ else
 
                     if($toCheck)
                     {
-                        $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
+                        $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
 
                         if(isset($userid))
                             $form = show("page/editor_regged", array("nick" => autor($get['reg']), "von" => _autor));
@@ -154,17 +155,17 @@ else
                     }
                     else
                     {
-                        $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
-                        if($get['reg'] == $userid || permission('news'))
+                        $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                        if($get['reg'] == convert::ToInt($userid) || permission('news'))
                         {
-                            $editedby = show(_edited_by, array("autor" => autor($userid), "time" => date("d.m.Y H:i", time())._uhr));
+                            $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
                             db("UPDATE ".$db['newscomments']." SET
                                 ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : "")."
                                 ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : "")."
                                 ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : "")."
                                 `comment`  = '".up($_POST['comment'])."',
                                 `editby`   = '".addslashes($editedby)."'
-                                WHERE id = '".intval($_GET['cid'])."'");
+                                WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
                             $index = info(_comment_edited, "?action=show&amp;id=".$news_id."");
                         }
@@ -173,8 +174,8 @@ else
                     }
                 break;
                 case 'edit':
-                    $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".intval($_GET['cid'])."'",false,true);
-                    if($get['reg'] == $userid || permission('news'))
+                    $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    if($get['reg'] == convert::ToInt($userid) || permission('news'))
                     {
                         if($get['reg'] != 0)
                             $form = show("page/editor_regged", array("nick" => autor($get['reg']),"von" => _autor));
@@ -224,7 +225,7 @@ else
                 while($getc = _fetch($qryc))
                 {
                     $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";
-                    if(($chkMe != 'unlogged' && $getc['reg'] == $userid) || permission("news"))
+                    if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("news"))
                     {
                         $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=show&amp;do=edit&amp;cid=".$getc['id']."&amp;postid=".$i, "title" => _button_title_edit));
                         $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=show&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
@@ -244,16 +245,16 @@ else
 
                     $titel = show(_eintrag_titel, array("postid" => $i, "datum" => date("d.m.Y", $getc['datum']), "zeit" => date("H:i", $getc['datum'])._uhr, "edit" => $edit, "delete" => $delete));
                     $posted_ip = ($chkMe == 4 ? $getc['ip'] : _logged);
-                    $comments .= show("page/comments_show", array(  "titel" => $titel,
-                                                                    "comment" => bbcode($getc['comment']),
-                                                                    "nick" => $nick,
-                                                                    "hp" => $hp,
-                                                                    "editby" => bbcode($getc['editby']),
-                                                                    "email" => $email,
-                                                                    "avatar" => useravatar($getc['reg']),
-                                                                    "onoff" => $onoff,
-                                                                    "rank" => getrank($getc['reg']),
-                                                                    "ip" => $posted_ip));
+                    $comments .= show("page/comments_show", array("titel" => $titel,
+                                                                  "comment" => bbcode($getc['comment']),
+                                                                  "nick" => $nick,
+                                                                  "hp" => $hp,
+                                                                  "editby" => bbcode($getc['editby']),
+                                                                  "email" => $email,
+                                                                  "avatar" => useravatar($getc['reg']),
+                                                                  "onoff" => $onoff,
+                                                                  "rank" => getrank($getc['reg']),
+                                                                  "ip" => $posted_ip));
                     $i--;
                 }
 
@@ -265,12 +266,12 @@ else
                 else
                 {
                     if(isset($userid))
-                        $form = show("page/editor_regged", array("nick" => autor($userid), "von" => _autor));
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
                     else
                         $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp));
 
                     $add = '';
-                    if(!ipcheck("ncid(".$_GET['id'].")", $flood_newscom))
+                    if(!ipcheck("ncid(".$news_id.")", $flood_newscom))
                     {
                         $add = show("page/comments_add", array( "titel" => _news_comments_write_head,
                                                                 "form" => $form,

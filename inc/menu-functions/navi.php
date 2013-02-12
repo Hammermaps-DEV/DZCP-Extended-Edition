@@ -8,7 +8,7 @@ function navi($kat)
     {
         $k = _fetch($kats_qry);
         $intern = ($chkMe >= 2) ? '' : " AND s1.`internal` = '0'";
-        $permissions = ($kat == 'nav_admin' && admin_perms($userid)) ? "" : $intern." AND ".intval($chkMe)." >= '".intval($k['level'])."'";
+        $permissions = ($kat == 'nav_admin' && admin_perms(convert::ToInt($userid))) ? "" : $intern." AND ".convert::ToInt($chkMe)." >= '".convert::ToInt($k['level'])."'";
 
         // Extended permissions
         $extended_perms = '';

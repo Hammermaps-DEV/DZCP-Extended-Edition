@@ -4,7 +4,7 @@ function shout($ajax = 0)
 {
     global $db,$maxshout,$lshouttext,$lshoutnick,$shout_max_zeichen,$userid,$chkMe;
     $qry = db("SELECT * FROM ".$db['shout']." ORDER BY id DESC LIMIT ".$maxshout."");
-    
+
     $i = 1; $color = 1; $show = "";
     while ($get = _fetch($qry))
     {
@@ -17,9 +17,9 @@ function shout($ajax = 0)
 
         $is_num = preg_match("#\d#", $get['email']);
 
-        if($is_num && !check_email($get['email'])) 
+        if($is_num && !check_email($get['email']))
             $nick = autor($get['email'], "navShout",'','',$lshoutnick);
-        else 
+        else
             $nick = '<a class="navShout" href="mailto:'.eMailAddr($get['email']).'" title="'.$get['nick'].'">'.cut($get['nick'], $lshoutnick).'</a>';
 
         $show .= show("menu/shout_part", array( "nick" => $nick,
@@ -30,31 +30,31 @@ function shout($ajax = 0)
         $i++;
     }
 
-	$sec = ''; $only4reg = ''; $dis = ''; $dis1 = ''; $form = '';
+    $sec = ''; $only4reg = ''; $dis = ''; $dis1 = ''; $form = '';
     if(settings('reg_shout') == 1 && $chkMe == 'unlogged')
     {
-		$dis = ' style="text-align:center" disabled="disabled"';
-		$dis1 = ' style="color:#888" disabled="disabled"';
-		$only4reg = _shout_must_reg;
-    } 
-	else 
-	{
-		if($chkMe == "unlogged")
-		{
+        $dis = ' style="text-align:center" disabled="disabled"';
+        $dis1 = ' style="color:#888" disabled="disabled"';
+        $only4reg = _shout_must_reg;
+    }
+    else
+    {
+        if($chkMe == "unlogged")
+        {
             $form = show("menu/shout_form", array("dis" => $dis));
             $sec = show("menu/shout_antispam", array("help" => _login_secure_help, "dis" => $dis));
-		} 
-		else 
-			$form = autor($userid, "navShout",'','',$lshoutnick);
+        }
+        else
+            $form = autor(convert::ToInt($userid), "navShout",'','',$lshoutnick);
     }
-	
-	// 0 Zeichen, disable
-	if(!$shout_max_zeichen)
-	{
-		$dis = ' style="text-align:center;" disabled="disabled"';
-		$dis1 = ' style="color:#888" disabled="disabled"';
-	}
-	
+
+    // 0 Zeichen, disable
+    if(!$shout_max_zeichen)
+    {
+        $dis = ' style="text-align:center;" disabled="disabled"';
+        $dis1 = ' style="color:#888" disabled="disabled"';
+    }
+
     $add = show("menu/shout_add", array("form" => $form,
                                         "t_zeichen" => _zeichen,
                                         "noch" => _noch,
