@@ -86,6 +86,6 @@ else
     $edel = (permission("editusers") ? '<td class="contentMainTop" colspan="2">&nbsp;</td>' : '');
     $seiten = nav($entrys,$maxuserlist,"?action=userlist&show=".(isset($_GET['show']) ? $_GET['show'] : 1));
     $show_entrys = show(_userlist_counts, array("cnt_full" => $entrys." ".( $entrys >= 2 ? _users : _user ), "cnt" => _rows($qry)));
-    $index = show($dir."/userliste", array("show_entrys" => $show_entrys, "edel" => $edel, "search" => $search, "value" => _button_value_search, "nav" => $seiten, "show" => $userliste)); //Index Out
+    $index = show($dir."/userliste", array("show_entrys" => $show_entrys, "edel" => $edel, "search" => $search, "nav" => $seiten, "show" => $userliste)); //Index Out
 }
 ?>

@@ -23,8 +23,8 @@ class API_CORE
         /**
          *  Addons auflisten und Index zusammenstellen
          */
-        global $language,$tmpdir;
-        if(modapi_enabled)
+        global $language,$tmpdir,$ajaxThumbgen;
+        if(modapi_enabled && !$ajaxThumbgen)
         {
             $addons = get_files(basePath.'/inc/additional-addons/',true);
             if($addons && count($addons) >= 1) // Mehr >= 1 Addon vorhanden
@@ -97,8 +97,9 @@ class API_CORE
     */
     public static function load_additional_functions()
     {
+        global $ajaxThumbgen;
         $return = false;
-        if(allow_additional)
+        if(allow_additional && !$ajaxThumbgen)
         {
             $additional_functions = get_files(basePath.'/inc/additional-functions/',false,true,array('php'));
             if(count($additional_functions) >= 1 && !empty($additional_functions))
@@ -106,7 +107,7 @@ class API_CORE
             unset($additional_functions);
         }
 
-        if(modapi_enabled)
+        if(modapi_enabled && !$ajaxThumbgen)
         {
             if(count(self::$addon_index))
             {
@@ -137,9 +138,9 @@ class API_CORE
     */
     public static function load_additional_language()
     {
-        global $language;
+        global $language,$ajaxThumbgen;
         $return = false;
-        if(allow_additional)
+        if(allow_additional && !$ajaxThumbgen)
         {
             $additional_languages_global = get_files(basePath.'/inc/additional-languages/',false,true,array('php'));
             if(count($additional_languages_global) >= 1 && !empty($additional_languages_global))
@@ -152,7 +153,7 @@ class API_CORE
             unset($additional_languages,$additional_languages_global);
         }
 
-        if(modapi_enabled)
+        if(modapi_enabled && !$ajaxThumbgen)
         {
             if(count(self::$addon_index))
             {
@@ -198,8 +199,8 @@ class API_CORE
      */
     public static function load_additional_tpl($tpl)
     {
-        global $tmpdir;
-        if(modapi_enabled)
+        global $tmpdir,$ajaxThumbgen;
+        if(modapi_enabled && !$ajaxThumbgen)
         {
             if(count(self::$addon_index))
             {
@@ -227,8 +228,8 @@ class API_CORE
      */
     public static function call_addons_init()
     {
-        global $tmpdir;
-        if(modapi_enabled)
+        global $tmpdir,$ajaxThumbgen;
+        if(modapi_enabled && !$ajaxThumbgen)
         {
             if(!count(self::$addon_index))
                 return false;
@@ -260,7 +261,8 @@ class API_CORE
      */
     public static function load_additional_page($page_dir,$action)
     {
-        if(modapi_enabled)
+        global $ajaxThumbgen;
+        if(modapi_enabled  && !$ajaxThumbgen)
         {
             if(!count(self::$addon_index))
                 return false;

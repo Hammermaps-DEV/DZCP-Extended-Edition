@@ -38,6 +38,10 @@ define('_sec_format_lower_second', '< 1 second');
 define('_id_dont_exist_dl', 'The download with id: [id] does not exist');
 define('_download_comments_write_head', 'Write new comment');
 define('_dl_comments', 'Downloadcomment');
+define('_lobby_dl_comments_1', 'new comment');
+define('_lobby_dl_comments_2', 'new comments');
+define('_lobby_dlc', 'Download comments');
+define('_user_new_dlc', '&nbsp;&nbsp;<a href="../downloads/?action=download&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[download]</span></a><br />');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');

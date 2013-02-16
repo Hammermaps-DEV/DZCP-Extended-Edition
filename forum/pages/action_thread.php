@@ -35,16 +35,10 @@ else
                                                 "global" => $global));
       }
 
-      if($get['t_reg'] != 0)
-      {
-        $form = show("page/editor_regged", array("nick" => autor($get['t_reg']),
-                                                 "von" => _autor));
-
-      } else {
-        $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                                    "emailhead" => _email,
-                                                    "hphead" => _hp));
-      }
+        if($get['t_reg'] != 0)
+            $form = show("page/editor_regged", array("nick" => autor($get['t_reg'])));
+        else
+            $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
       $qryv = db("SELECT * FROM ".$db['votes']." WHERE id = '".$get['vote']."'");
       $getv = _fetch($qryv);
@@ -170,8 +164,7 @@ else
         if($get['t_reg'] != 0)
         {
           if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-          $form = show("page/editor_regged", array("nick" => autor($get['t_reg']),
-                                                   "von" => _autor));
+          $form = show("page/editor_regged", array("nick" => autor($get['t_reg'])));
 
         } else {
           if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
@@ -481,15 +474,10 @@ else
                 $intern = ''; $intern_kat = '';
                 if($fget['intern'] == "1") { $intern = 'checked="checked"'; $internVisible = 'style="display:none"'; };
 
-                if(isset($userid))
-          {
-              $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                                                   "von" => _autor));
-          } else {
-          $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                                      "emailhead" => _email,
-                                                      "hphead" => _hp));
-        }
+        if(!empty($userid) && $userid != 0)
+            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+        else
+            $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
         $vote = show($dir."/form_vote", array("head" => _votes_admin_head,
                                               "value" => _button_value_add,
@@ -555,13 +543,13 @@ else
         {
             $index = error(_error_have_to_be_logged, 1);
         } else {
-            if(isset($userid))
+            if(!empty($userid) && $userid != 0)
                 $toCheck = empty($_POST['eintrag']) || empty($_POST['topic']);
             else
                 $toCheck = empty($_POST['topic']) || empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
             if($toCheck)
             {
-                if(isset($userid))
+                if(!empty($userid) && $userid != 0)
                 {
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
                     elseif(empty($_POST['topic'])) $error = _empty_topic;
@@ -590,15 +578,10 @@ else
                     $admin = "";
                 }
 
-                if(isset($userid))
-                {
-                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                                                                                                     "von" => _autor));
-                } else {
-                    $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                                                                                            "emailhead" => _email,
-                                                                                                            "hphead" => _hp));
-                }
+                if(!empty($userid) && $userid != 0)
+                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                else
+                    $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
             $fget = _fetch(db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1
                                                  LEFT JOIN ".$db['f_skats']." AS s2 ON s2.`sid` = s1.id

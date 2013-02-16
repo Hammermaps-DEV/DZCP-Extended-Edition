@@ -47,14 +47,14 @@ else
                     {
                         if(!ipcheck("ncid(".$news_id.")", $flood_newscom))
                         {
-                            if(isset($userid))
+                            if(!empty($userid) && $userid != 0)
                                 $toCheck = empty($_POST['comment']);
                             else
                                 $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                             if($toCheck)
                             {
-                                if(isset($userid))
+                                if(!empty($userid) && $userid != 0)
                                 {
                                     if(empty($_POST['eintrag']))
                                         $error = show("errors/errortable", array("error" => _empty_eintrag));
@@ -105,7 +105,7 @@ else
                         $index = error(_error_wrong_permissions, 1);
                 break;
                 case 'editcom':
-                    if(isset($userid))
+                    if(!empty($userid) && $userid != 0 && $userid != 0)
                         $toCheck = empty($_POST['comment']);
                     else
                         $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
@@ -114,12 +114,12 @@ else
                     {
                         $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
 
-                        if(isset($userid))
-                            $form = show("page/editor_regged", array("nick" => autor($get['reg']), "von" => _autor));
+                        if(!empty($userid) && $userid != 0)
+                            $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                         else
-                            $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp));
+                            $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
-                        if(isset($userid))
+                        if(!empty($userid) && $userid != 0)
                         {
                             if(empty($_POST['eintrag']))
                                 $error = show("errors/errortable", array("error" => _empty_eintrag));
@@ -178,7 +178,7 @@ else
                     if($get['reg'] == convert::ToInt($userid) || permission('news'))
                     {
                         if($get['reg'] != 0)
-                            $form = show("page/editor_regged", array("nick" => autor($get['reg']),"von" => _autor));
+                            $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                         else
                             $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp, "postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => re($get['nick'])));
 
@@ -265,10 +265,10 @@ else
                     $add = _error_unregistered_nc;
                 else
                 {
-                    if(isset($userid))
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
+                    if(!empty($userid) && $userid != 0)
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                     else
-                        $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp));
+                        $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                     $add = '';
                     if(!ipcheck("ncid(".$news_id.")", $flood_newscom))

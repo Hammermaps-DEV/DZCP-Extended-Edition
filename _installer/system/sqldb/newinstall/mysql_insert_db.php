@@ -193,7 +193,6 @@ function install_mysql_insert($db_infos)
     (NULL, 'http://www.codeking.eu', 'codeking.gif', 0),
     (NULL, 'http://www.dzcp.de', 'dzcp.gif', 0),
     (NULL, 'http://spenden.dzcp.de', 'spenden.gif', 0),
-    (NULL, 'http://www.freunde.org', 'Freunde finden', 1),
     (NULL, 'http://www.modsbar.de', 'mb_88x32.png', 0),
     (NULL, 'http://www.templatebar.de', 'tb_88x32.png', 0);",false,false,true);
 

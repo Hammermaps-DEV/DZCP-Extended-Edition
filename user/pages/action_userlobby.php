@@ -28,7 +28,7 @@ else
         $can_erase = false;
 
         //Get Userinfos
-        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        $lastvisit = userstats($userid, 'lastvisit');
 
         ##################################
         ## Neue Foreneintraege anzeigen ##
@@ -40,37 +40,37 @@ else
             {
                 if(fintern($getkat['id']))
                 {
-                    $qrytopic = db("SELECT lp,id,topic,first,sticky FROM ".$db['f_threads']." WHERE kid = '".$getkat['id']."' AND lp > ".$get['lastvisit']." ORDER BY lp DESC LIMIT 150");
-                    $forumposts_show = '';
+                    $qrytopic = db("SELECT lp,id,topic,first,sticky FROM ".$db['f_threads']." WHERE kid = '".$getkat['id']."' AND lp > ".$lastvisit." ORDER BY lp DESC LIMIT 150"); $forumposts_show = '';
                     if(_rows($qrytopic) >= 1)
                     {
                         while($gettopic = _fetch($qrytopic))
                         {
-                            $lp = cnt($db['f_posts'], " WHERE sid = '".$gettopic['id']."'");
-                            switch(($count=cnt($db['f_posts'], " WHERE date > ".$get['lastvisit']." AND sid = '".$gettopic['id']."'")))
-                            {
-                                case 0:
-                                    $pagenr = 1;
-                                    $post = '';
-                                break;
-                                case 1:
-                                    $pagenr = ceil($lp/$maxfposts);
-                                    $post = _new_post_1;
-                                break;
-                                default:
-                                    $pagenr = ceil($lp/$maxfposts);
-                                    $post = _new_post_2;
-                                break;
-                            }
-
                             if(check_is_new($gettopic['lp']))
                             {
+                                //Posts ab 2..
+                                $lp = cnt($db['f_posts'], " WHERE sid = '".$gettopic['id']."'");
+                                switch(($count=cnt($db['f_posts'], " WHERE date > ".$lastvisit." AND sid = '".$gettopic['id']."'")))
+                                {
+                                    case 0:
+                                        $pagenr = 1;
+                                        $post = '';
+                                    break;
+                                    case 1:
+                                        $pagenr = ceil($lp/$maxfposts);
+                                        $post = _new_post_1;
+                                    break;
+                                    default:
+                                        $pagenr = ceil($lp/$maxfposts);
+                                        $post = _new_post_2;
+                                    break;
+                                }
+
                                 $intern = ($getkat['intern'] ? '<span class="fontWichtig">'._internal.':</span>&nbsp;&nbsp;&nbsp;' : '');
                                 $wichtig = ($gettopic['sticky'] ? '<span class="fontWichtig">'._sticky.':</span> ' : '');
                                 $date = (date("d.m.")==date("d.m.",$gettopic['lp'])) ? '['.date("H:i",$gettopic['lp']).']' : date("d.m.",$gettopic['lp']).' ['.date("H:i",$gettopic['lp']).']';
 
                                 $can_erase = true;
-                                $forumposts_show .= '&nbsp;&nbsp;'.$date.show(_user_new_forum, array("cnt" => $count,
+                                $forumposts_show .= '&nbsp;&nbsp;'.$date.show(_user_new_forum, array("cnt" => ($count == 0 ? $count +1 : $count),
                                                                                                      "tid" => $gettopic['id'],
                                                                                                      "thread" => re($gettopic['topic']),
                                                                                                      "intern" => $intern,
@@ -112,55 +112,60 @@ else
         #####################################
         ## Neue Registrierte User anzeigen ##
         #####################################
-        $qryu = db("SELECT regdatum FROM ".$db['users']." ORDER BY id DESC"); $user = '';
+        $qryu = db("SELECT regdatum FROM ".$db['users']." ORDER BY id DESC"); $user = ''; $i = 0;
         if(_rows($qryu) >= 1)
         {
-            $getu = _fetch($qryu);
-            if(check_is_new($getu['regdatum']))
+            while($getu = _fetch($qryu))
+            { if(check_is_new($getu['regdatum'])) { $i++; } } //while end
+
+            if($i >= 1)
             {
                 $can_erase = true;
-                $eintrag = ((($check = cnt($db['users'], " WHERE regdatum > ".$get['lastvisit'])) == 1) ? _new_users_1 : _new_users_2);
-                $user = show(_user_new_users, array("cnt" => $check, "eintrag" => $eintrag)); //Output
+                $eintrag = ($i == 1 ? _new_users_1 : _new_users_2);
+                $user = show(_user_new_users, array("cnt" => $i, "eintrag" => $eintrag)); //Output
             }
         }
 
-        unset($qryu,$getu,$check,$cnt,$eintrag); //Unset unused vars
+        unset($qryu,$getu,$check,$cnt,$eintrag,$i); //Unset unused vars
 
         ###########################################
         ## Neue Eintruage im Guastebuch anzeigen ##
         ###########################################
         $activ = ((!permission("gb") && $gb_activ) ? "WHERE public = '1'" : '');
-        $qrygb = db("SELECT datum FROM ".$db['gb']." ".$activ." ORDER BY id DESC"); $gb = '';
+        $qrygb = db("SELECT datum FROM ".$db['gb']." ".$activ." ORDER BY id DESC"); $gb = ''; $i = 0;
         if(_rows($qrygb) >= 1)
         {
-            $getgb = _fetch($qrygb);
-            if(check_is_new($getgb['datum']))
+            while($getgb = _fetch($qrygb))
+            { if(check_is_new($getgb['datum'])) { $i++; } } //while end
+
+            if($i >= 1)
             {
                 $can_erase = true;
-                $cntgb = ((!permission("gb") && $gb_activ) ? "AND public = '1'" : '');
-                $eintrag = ((($check = cnt($db['gb'], " WHERE datum > ".$get['lastvisit']." ".$cntgb)) == 1) ? _new_eintrag_1 : _new_eintrag_2);
-                $gb = show(_user_new_gb, array("cnt" => $check, "eintrag" => $eintrag)); //Output
+                $eintrag = ($i == 1 ? _new_eintrag_1 : _new_eintrag_2);
+                $gb = show(_user_new_gb, array("cnt" => $i, "eintrag" => $eintrag)); //Output
             }
         }
 
-        unset($activ,$qrygb,$getgb,$cntgb,$check,$eintrag); //Unset unused vars
+        unset($activ,$qrygb,$getgb,$cntgb,$check,$eintrag,$i); //Unset unused vars
 
         ################################################
         ## Neue Eintruage im User Guastebuch anzeigen ##
         ################################################
-        $qrymember = db("SELECT datum FROM ".$db['usergb']." WHERE user = '".convert::ToInt($userid)."' ORDER BY datum DESC"); $membergb = '';
+        $qrymember = db("SELECT datum FROM ".$db['usergb']." WHERE user = '".convert::ToInt($userid)."' ORDER BY datum DESC"); $membergb = ''; $i = 0;
         if(_rows($qrymember) >= 1)
         {
-            $getmember = _fetch($qrymember);
-            if(check_is_new($getmember['datum']))
+            while($getmember = _fetch($qrymember))
+            { if(check_is_new($getmember['datum'])) { $i++; } } //while end
+
+            if($i >= 1)
             {
                 $can_erase = true;
-                $eintrag = ((($check = cnt($db['usergb'], " WHERE datum > ".$get['lastvisit']." AND user = '".convert::ToInt($userid)."'")) == 1) ? _new_eintrag_1 : _new_eintrag_2);
-                $membergb = show(_user_new_membergb, array("cnt" => $check, "id" => convert::ToInt($userid), "eintrag" => $eintrag)); //Output
+                $eintrag = ($i == 1 ? _new_eintrag_1 : _new_eintrag_2);
+                $membergb = show(_user_new_membergb, array("cnt" => $i, "id" => convert::ToInt($userid), "eintrag" => $eintrag)); //Output
             }
         }
 
-        unset($qrymember,$getmember,$check,$eintrag); //Unset unused vars
+        unset($qrymember,$getmember,$check,$eintrag,$i); //Unset unused vars
 
         #######################################
         ## Neue Private Nachrichten anzeigen ##
@@ -186,7 +191,7 @@ else
                 if(check_is_new($getnews['datum']))
                 {
                     $can_erase = true;
-                    $news = show(_user_new_news, array("cnt" => cnt($db['news'], " WHERE datum > ".$get['lastvisit']." AND public = 1"), "eintrag" => _lobby_new_news)); //Output
+                    $news = show(_user_new_news, array("cnt" => cnt($db['news'], " WHERE datum > ".$lastvisit." AND public = 1"), "eintrag" => _lobby_new_news)); //Output
                 }
             } //while end
         }
@@ -205,13 +210,33 @@ else
                 if(check_is_new($getnewsc['datum']))
                   {
                     $can_erase = true;
-                    $eintrag = (($check = cnt($db['newscomments'], " WHERE datum > ".$get['lastvisit']." AND news = '".$getnewsc['news']."'")) == 1 ? _lobby_new_newsc_1 : _lobby_new_newsc_2);
+                    $eintrag = (($check = cnt($db['newscomments'], " WHERE datum > ".$lastvisit." AND news = '".$getnewsc['news']."'")) == 1 ? _lobby_new_newsc_1 : _lobby_new_newsc_2);
                     $newsc .= show(_user_new_newsc, array("cnt" => $check, "id" => $getnewsc['news'], "news" => re($getcheckn['titel']), "eintrag" => $eintrag)); //Output
                 }
             } //while end
         }
 
         unset($qrycheckn,$getcheckn,$getnewsc,$check,$eintrag); //Unset unused vars
+
+        #####################################
+        ## Neue Download comments anzeigen ##
+        #####################################
+        $qrycheckn = db("SELECT id,download FROM ".$db['downloads']." WHERE comments = 1"); $downloadc = '';
+        if(_rows($qrycheckn) >= 1)
+        {
+            while($getcheckn = _fetch($qrycheckn))
+            {
+                $getdownloadc = db("SELECT download,datum FROM ".$db['dlcomments']." WHERE download = '".$getcheckn['id']."' ORDER BY datum DESC",false,true);
+                if(check_is_new($getdownloadc['datum']))
+                {
+                    $can_erase = true;
+                    $eintrag = (($check = cnt($db['dlcomments'], " WHERE datum > ".$lastvisit." AND download = '".$getdownloadc['download']."'")) == 1 ? _lobby_dl_comments_1 : _lobby_dl_comments_2);
+                    $downloadc .= show(_user_new_dlc, array("cnt" => $check, "id" => $getcheckn['id'], "download" => re($getcheckn['download']), "eintrag" => $eintrag)); //Output
+                }
+            } //while end
+        }
+
+        unset($qrycheckn,$getcheckn,$getdownloadc,$check,$eintrag); //Unset unused vars
 
         #####################################
         ## Neue Clanwars comments anzeigen ##
@@ -225,7 +250,7 @@ else
                 if(check_is_new($getcwc['datum']))
                 {
                     $can_erase = true;
-                    $eintrag = ($check = cnt($db['cw_comments'], " WHERE datum > ".$get['lastvisit']." AND cw = '".$getcwc['cw']."'") == 1 ? _lobby_new_cwc_1 : _lobby_new_cwc_2);
+                    $eintrag = (($check = cnt($db['cw_comments'], " WHERE datum > ".$lastvisit." AND cw = '".$getcwc['cw']."'")) == 1 ? _lobby_new_cwc_1 : _lobby_new_cwc_2);
                     $cwcom .= show(_user_new_clanwar, array("cnt" => $check, "id" => $getcwc['cw'], "eintrag" => $eintrag)); //Output
                 }
             } //while end
@@ -243,7 +268,7 @@ else
             if(check_is_new($getnewv['datum']))
             {
                 $can_erase = true;
-                $eintrag = ($check = cnt($db['votes'], " WHERE datum > ".$get['lastvisit']." AND forum = 0") == 1 ? _new_vote_1 : _new_vote_2);
+                $eintrag = (($check = cnt($db['votes'], " WHERE datum > ".$lastvisit." AND forum = 0")) == 1 ? _new_vote_1 : _new_vote_2);
                 $newv = show(_user_new_votes, array("cnt" => $check, "eintrag" => $eintrag)); //Output
             }
         }
@@ -278,7 +303,7 @@ else
             if(check_is_new($getaw['postdate']))
             {
                 $can_erase = true;
-                $eintrag = (($check = cnt($db['awards'], " WHERE postdate > ".$get['lastvisit'])) == 1 ? _new_awards_1 : _new_awards_2);
+                $eintrag = (($check = cnt($db['awards'], " WHERE postdate > ".$lastvisit)) == 1 ? _new_awards_1 : _new_awards_2);
                 $awards = show(_user_new_awards, array("cnt" => $check, "eintrag" => $eintrag)); //Output
             }
         }
@@ -295,7 +320,7 @@ else
             if(check_is_new($getra['postdate']))
             {
                 $can_erase = true;
-                $eintrag = (($check = cnt($db['rankings'], " WHERE postdate > ".$get['lastvisit']."")) == 1 ? _new_rankings_1 : _new_rankings_2);
+                $eintrag = (($check = cnt($db['rankings'], " WHERE postdate > ".$lastvisit."")) == 1 ? _new_rankings_1 : _new_rankings_2);
                 $rankings = show(_user_new_rankings, array("cnt" => $check, "eintrag" => $eintrag)); //Output
             }
         }
@@ -313,7 +338,7 @@ else
                 if(check_is_new($getart['datum']))
                 {
                     $can_erase = true;
-                    $eintrag =  (($check = cnt($db['artikel'], " WHERE datum > ".$get['lastvisit']." AND public = 1")) == 1 ? _lobby_new_art_1 : _lobby_new_art_2);
+                    $eintrag =  (($check = cnt($db['artikel'], " WHERE datum > ".$lastvisit." AND public = 1")) == 1 ? _lobby_new_art_1 : _lobby_new_art_2);
                     $artikel = show(_user_new_art, array("cnt" => $check, "eintrag" => $eintrag)); //Output
                 }
             } //while end
@@ -333,7 +358,7 @@ else
                 if(check_is_new($getartc['datum']))
                 {
                     $can_erase = true;
-                    $eintrag = (($check = cnt($db['acomments'], " WHERE datum > ".$get['lastvisit']." AND artikel = '".$getartc['artikel']."'")) == 1 ? _lobby_new_artc_1 : _lobby_new_artc_2);
+                    $eintrag = (($check = cnt($db['acomments'], " WHERE datum > ".$lastvisit." AND artikel = '".$getartc['artikel']."'")) == 1 ? _lobby_new_artc_1 : _lobby_new_artc_2);
                     $artc .= show(_user_new_artc, array("cnt" => $check, "id" => $getartc['artikel'], "eintrag" => $eintrag)); //Output
                 }
             } //while end
@@ -344,19 +369,21 @@ else
         #########################################
         ## Neue Bilder in der Gallery anzeigen ##
         #########################################
-        $qrygal = db("SELECT id,datum FROM ".$db['gallery']." ORDER BY id DESC"); $gal = '';
+        $qrygal = db("SELECT id,datum FROM ".$db['gallery']." ORDER BY id DESC"); $gal = ''; $i = 0;
         if(_rows($qrygal) >= 1)
         {
-            $getgal = _fetch($qrygal);
-            if(check_is_new($getgal['datum']))
+            while($getgal = _fetch($qrygal))
+            { if(check_is_new($getgal['datum'])) { $i++; } } //while end
+
+            if($i >= 1)
             {
                 $can_erase = true;
-                $eintrag = (($check = cnt($db['gallery'], " WHERE datum > ".$get['lastvisit'])) == 1 ? _new_gal_1 : _new_gal_2);
-                $gal = show(_user_new_gallery, array("cnt" => $check, "eintrag" => $eintrag)); //Output
+                $eintrag = ($i == 1 ? _new_gal_1 : _new_gal_2);
+                $gal = show(_user_new_gallery, array("cnt" => $i, "action" => ($i == 1 ? "?action=show&amp;id=".$getgal['id'] : ''), "eintrag" => $eintrag)); //Output
             }
         }
 
-        unset($qrygal,$getgal,$eintrag,$check); //Unset unused vars
+        unset($qrygal,$getgal,$eintrag,$i); //Unset unused vars
 
         #########################
         ## Neue Aways anzeigen ##
@@ -448,7 +475,6 @@ else
                                                "kal" => $nextkal,
                                                "art" => $artikel,
                                                "artc" => $artc,
-                                               "board" => _forum,
                                                "rankings" => $rankings,
                                                "awards" => $awards,
                                                "ftopics" => $ftopics,
@@ -458,6 +484,7 @@ else
                                                "votes" => $newv,
                                                "cws" => $cws,
                                                "newsc" => $newsc,
+                                               "downloadc" => $downloadc,
                                                "gb" => $gb,
                                                "user" => $user,
                                                "mgb" => $membergb,

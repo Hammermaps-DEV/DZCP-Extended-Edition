@@ -11,8 +11,8 @@ function top_match()
     $squad = '_defaultlogo.jpg'; $gegner = '_defaultlogo.jpg';
     foreach($picformat AS $end)
     {
-         if(file_exists(basePath.'/inc/images/clanwars/'.$get['id'].'_logo.'.$end)) $gegner = $get['id'].'_logo.'.$end;
-      if(file_exists(basePath.'/inc/images/squads/'.$get['squad_id'].'_logo.'.$end))$squad = $get['squad_id'].'_logo.'.$end;
+         if(file_exists(basePath.'/inc/images/uploads/clanwars/'.$get['id'].'_logo.'.$end)) $gegner = $get['id'].'_logo.'.$end;
+      if(file_exists(basePath.'/inc/images/uploads/squads/'.$get['squad_id'].'_logo.'.$end))$squad = $get['squad_id'].'_logo.'.$end;
     }
 
     if($allowHover == 1 || $allowHover == 2)
@@ -21,7 +21,7 @@ function top_match()
     $topmatch = show("menu/top_match", array("id" => $get['id'],
                                               "clantag" => re(cut($get['clantag'],$llwars)),
                                               "team" => re(cut($get['name'],$llwars)),
-                                              //"game" => substr(strtoupper(str_replace('.'.re($get['icon']), '', re($get['icon']))), 0, 5), // unused 
+                                              //"game" => substr(strtoupper(str_replace('.'.re($get['icon']), '', re($get['icon']))), 0, 5), // unused
                                               "id" => $get['id'],
                                               "gegner" => $gegner,
                                               "squad" => $squad,

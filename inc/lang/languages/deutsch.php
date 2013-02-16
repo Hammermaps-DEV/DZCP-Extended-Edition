@@ -37,7 +37,11 @@ define('_sec_format_second', 'Sekunde|n');
 define('_sec_format_lower_second', '< 1 Sekunde');
 define('_id_dont_exist_dl', 'Der Download mit der ID: [id] existiert nicht');
 define('_download_comments_write_head', 'Neuen Download Kommentar schreiben');
+define('_user_new_dlc', '&nbsp;&nbsp;<a href="../downloads/?action=download&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[download]</span></a><br />');
 define('_dl_comments', 'Downloadkommentare');
+define('_lobby_dlc', 'Downloadkommentare');
+define('_lobby_dl_comments_1', 'neuer Downloadkommentar');
+define('_lobby_dl_comments_2', 'neue Downloadkommentare');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');

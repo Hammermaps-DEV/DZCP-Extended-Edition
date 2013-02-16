@@ -27,6 +27,14 @@ define('AjaxLoad', true); // Ajax Loads erlauben
 
 define('modapi_enabled', true); // DZCP ModAPI erlauben
 define('allow_additional', true); // additional functions,etc erlauben
+define('cache_thumbgen', true); // Zwischenspeichern der Thumbgen generierten Bilder zulassen
+
+/*
+ * Wenn Imagick nicht verwendet wird, muss bei groﬂen Bildern auf die PHP Einstellung "memory_limit" geachtet werden.
+ * Sollte diese zu klein sein, werden mache Vorschaubilder nicht generiert.
+ * Imagick ist bei groﬂen Bildern deutlich schneller als die PHP Bildbearbeitung und GD Erweiterung.
+ */
+define('use_imagick', true); // Verwendet die Imagick PHP Erweiterung um Vorschaubilder zu erstellen, wenn vorhanden.
 
 ## Colors Antispam ##
 $backgroundColor  = '#444444';

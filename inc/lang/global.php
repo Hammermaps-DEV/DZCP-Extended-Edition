@@ -67,16 +67,16 @@ define('_icqstatus', '<img src="http://web.icq.com/whitepages/online?icq=[uin]&a
 define('_hpicon', '<a href="[hp]" target="_blank"><img src="../inc/images/hp.gif" alt="" title="[hp]" class="icon" /></a>');
 define('_email_mailto', '<a href="mailto:[email]">[email]</a>');
 define('_emailicon', '<a href="mailto:[email]"><img src="../inc/images/email.gif" alt="" title="[email]" class="icon" /></a>');
-define('_steamicon_blank', '<img src="../inc/images/steam.gif" alt="" class="icon" />');
+define('_steamicon_blank', '<img src="../inc/images/steam.png" alt="" class="icon" />');
 define('_emailicon_blank', '<img src="../inc/images/email.gif" alt="" class="icon" />');
 define('_xfireicon_blank', '<img height="20" width="20" src="../inc/images/xfire.png" alt="" class="icon" />');
 define('_zitaticon', '<img src="../inc/images/zitat.gif" alt="" class="icon" />');
 define('_hpicon_blank', '<img src="../inc/images/hp.gif" alt="" class="icon" />');
 define('_topicon', '<img src="../inc/images/top.gif" alt="" class="icon" />');
-define('_icqicon_blank', '<img src="../inc/images/icq.gif" alt="" class="icon" />');
-define('_mficon_blank', '<img src="../inc/images/mf.gif" alt="" class="icon" />');
-define('_maleicon', '<img src="../inc/images/male.gif" alt="" class="icon" />');
-define('_femaleicon', '<img src="../inc/images/female.gif" alt="" class="icon" />');
+define('_icqicon_blank', '<img src="../inc/images/icq.png" alt="" class="icon" />');
+define('_mficon_blank', '<img src="../inc/images/female_male.png" alt="" class="icon" />');
+define('_maleicon', '<img src="../inc/images/male.png" alt="" class="icon" />');
+define('_femaleicon', '<img src="../inc/images/female.png" alt="" class="icon" />');
 define('_pnicon_blank', '<img src="../inc/images/pn.gif" alt="" class="icon" />');
 define('_yesno', '<img src="../inc/images/yesno.gif" alt="" class="icon" />');
 define('_cw_stats_won_icon', '<img src="../inc/images/won.gif" alt="" class="icon" />');
@@ -385,7 +385,7 @@ define('_user_new_awards', '&nbsp;&nbsp;<a href="../awards/"><span class="fontWi
 define('_user_new_rankings', '&nbsp;&nbsp;<a href="../rankings/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
 define('_select_field', '<option value="[value]" [sel]> [what]</option>');
 define('"_shout_nick"', "<a href='mailto:[email]'>[nick]</a>");
-define('_user_new_gallery', '&nbsp;&nbsp;<a href="../gallery/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_gallery', '&nbsp;&nbsp;<a href="../gallery/[action]"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
 ## Unzugeordnet ##
 define('_user_new_artc', '&nbsp;&nbsp;<a href="../artikel/?action=show&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
 define('_artike_sites', '<a href="?action=show&amp;id=[id]&part=[part]">[num]</a> ');

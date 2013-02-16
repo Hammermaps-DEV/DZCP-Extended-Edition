@@ -15,6 +15,10 @@ if(is_debug)
 else
     error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
+## AjaxJob ##
+$ajaxJob = (!isset($ajaxJob) ? false : $ajaxJob);
+$ajaxThumbgen = (!isset($ajaxThumbgen) ? false : $ajaxThumbgen);
+
 ## INCLUDES/REQUIRES ##
 require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');
@@ -23,13 +27,14 @@ require_once(basePath."/inc/apic.php");
 require_once(basePath."/inc/api.php");
 require_once(basePath.'/inc/kernel.php');
 require_once(basePath."/inc/cache.php");
-require_once(basePath.'/inc/server_query/_functions.php');
-require_once(basePath."/inc/teamspeak_query.php");
+
+if(!$ajaxThumbgen)
+{
+    require_once(basePath.'/inc/server_query/_functions.php');
+    require_once(basePath."/inc/teamspeak_query.php");
+}
 
 define('IS_DZCP', true);
-
-## Is AjaxJob ##
-$ajaxJob = (!isset($ajaxJob) ? false : $ajaxJob);
 
 ## FUNCTIONS ##
 //-> Legt die UserID desRootadmins fest
@@ -74,7 +79,6 @@ $maxadmincw = 10;
 $maxfilesize = @ini_get('upload_max_filesize');
 $teamRow = $config['teamrow'];
 $allowHover = $config['allowhover'];
-$gallery = $config['gallery'];
 $upicsize = $config['upicsize'];
 $maxgallerypics = $config['m_gallerypics'];
 $maxusergb = $config['m_usergb'];
@@ -134,7 +138,7 @@ Cache::setType($cacheTag,$cache_engine);
 Cache::init($cacheTag);
 
 //-> Auslesen der Cookies und automatisch anmelden
-if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pkey']) && !empty($_COOKIE[$prev.'pkey']) && empty($_SESSION['id']))
+if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pkey']) && !empty($_COOKIE[$prev.'pkey']) && empty($_SESSION['id']) && !$ajaxThumbgen)
 {
     ## User aus der Datenbank suchen ##
     $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey FROM ".$db['users']." WHERE id = '".convert::ToInt($_COOKIE[$prev.'id'])."' AND pkey = '".convert::ToString($_COOKIE[$prev.'pkey'])."' AND level != '0'");
@@ -169,15 +173,18 @@ if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pkey']) && !empty($_COOK
         logout(); ## User Logout ##
 }
 
-$userid = userid();
-$chkMe = checkme();
-
-if($chkMe == "unlogged")
+if(!$ajaxThumbgen)
 {
-    $_SESSION['id']        = '';
-    $_SESSION['pwd']       = '';
-    $_SESSION['ip']        = '';
-    $_SESSION['lastvisit'] = '';
+    $userid = userid();
+    $chkMe = checkme();
+
+    if($chkMe == "unlogged")
+    {
+        $_SESSION['id']        = '';
+        $_SESSION['pwd']       = '';
+        $_SESSION['ip']        = '';
+        $_SESSION['lastvisit'] = '';
+    }
 }
 
 //-> User Anmeldung
@@ -324,13 +331,16 @@ function checkme($userid_set=0)
 }
 
 //-> Templateswitch
-$files = get_files('../inc/_templates_/',true,false);
-if(isset($_COOKIE[$prev.'tmpdir']) && $_COOKIE[$prev.'tmpdir'] != NULL)
-    $tmpdir = (file_exists(basePath."/inc/_templates_/".$_COOKIE[$prev.'tmpdir']."/index.html") ? $_COOKIE[$prev.'tmpdir'] : $files[0]);
-else
-    $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
+if(!$ajaxThumbgen)
+{
+    $files = get_files('../inc/_templates_/',true,false);
+    if(isset($_COOKIE[$prev.'tmpdir']) && $_COOKIE[$prev.'tmpdir'] != NULL)
+        $tmpdir = (file_exists(basePath."/inc/_templates_/".$_COOKIE[$prev.'tmpdir']."/index.html") ? $_COOKIE[$prev.'tmpdir'] : $files[0]);
+    else
+        $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
 
-$designpath = '../inc/_templates_/'.$tmpdir;
+    $designpath = '../inc/_templates_/'.$tmpdir;
+}
 
 //-> API call after Templateswitch
 API_CORE::init();
@@ -375,7 +385,8 @@ function get_level_dropdown_menu($selected_level=0,$userid=0)
 }
 
 //-> Languagefiles einlesen *Run
-lang($language);
+if(!$ajaxThumbgen)
+{ lang($language); }
 
 //-> Sprachdateien auflisten
 function languages()
@@ -395,8 +406,8 @@ function languages()
 }
 
 //-> Userspezifiesche Dinge
-if(isset($userid) && $ajaxJob != true && $userid != false)
-    db("UPDATE ".$db['userstats']." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".convert::ToInt($userid));
+if(!empty($userid) && $userid != 0 && $ajaxJob != true && $userid != false && !$ajaxThumbgen)
+{ db("UPDATE ".$db['userstats']." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".convert::ToInt($userid)); }
 
 //-> PHP-Code farbig anzeigen
 function highlight_text($txt)
@@ -486,7 +497,7 @@ function regexChars($txt)
 }
 
 //-> Glossarfunktion *Buggy
-if(glossar_enabled)
+if(glossar_enabled && !$ajaxThumbgen)
 {
     $gl_words = array();
     $gl_desc = array();
@@ -1217,17 +1228,12 @@ function check_email($email)
 //-> Bilder verkleinern
 function img_size($img)
 {
-    return "<a href=\"../".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../thumbgen.php?img=".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=".$img."\" alt=\"\" /></a>";
 }
 
 function img_cw($folder="", $img="")
 {
-    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../thumbgen.php?img=".$folder."_".$img."\" alt=\"\" /></a>";
-}
-
-function gallery_size($img="")
-{
-    return "<a href=\"../gallery/images/".$img."\" rel=\"lightbox[gallery_".convert::ToInt($img)."]\"><img src=\"../thumbgen.php?img=gallery/images/".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=".$folder."_".$img."\" alt=\"\" /></a>";
 }
 
 //-> Blaetterfunktion
@@ -1467,7 +1473,8 @@ function check_msg_email()
     }
 }
 
-check_msg_email();
+if(!$ajaxThumbgen)
+{ check_msg_email(); }
 
 function perm_sendnews($uID)
 {
@@ -1491,29 +1498,6 @@ function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
     }
 
     return '';
-}
-
-/**
- * Prueft ob ein Ereignis neu ist.
- *
- * @return boolean
- */
-function check_is_new($datum = false, $datum2 = false)
-{
-    global $db,$userid;
-
-    if($userid != 0 && !empty($userid))
-    {
-        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".convert::ToInt($userid)."'",false,true);
-
-        if($datum && is_int($datum) && $datum >= $get['lastvisit'])
-            return true;
-
-        if($datum2 && is_int($datum2) && $datum2 >= $get['lastvisit'])
-            return true;
-    }
-
-    return false;
 }
 
 //-> DropDown Mens Date/Time
@@ -2128,16 +2112,16 @@ function xfire($username='')
 
     if(xfire_preloader)
     {
-        if(Cache::check($cacheTag,'xfire_'.$username))
+        if(Cache::check_binary($cacheTag,'xfire_'.$username))
         {
             if(!$img_stream = fileExists('http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'))
                 return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 
-            Cache::set($cacheTag,'xfire_'.$username, $img_stream, xfire_refresh);
+            Cache::set_binary($cacheTag,'xfire_'.$username, $img_stream, '', xfire_refresh);
             return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_stream)));
         }
         else
-            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get($cacheTag,'xfire_'.$username))));
+            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary($cacheTag,'xfire_'.$username))));
     }
 
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
@@ -2191,6 +2175,28 @@ function count_clicks($side_tag='',$clickedID=0)
 }
 
 /**
+ * Löscht angelegt Thumbgen Files
+ **/
+function thumbgen_delete($filename,$width='100',$height='')
+{
+    global $cacheTag;
+
+    if(!isset($filename) || empty($filename))
+        return false;
+
+    if(!file_exists(basePath.'/inc/images/uploads/'.$filename))
+        return false;
+
+    list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/uploads/'.$filename);
+    $neueBreite = empty($width) || $width <= 1 ? $breite : convert::ToInt($width);
+    $neueHoehe = empty($height) || $height <= 1 ? intval($hoehe*$neueBreite/$breite) : convert::ToInt($height);
+    if(Cache::delete_binary($cacheTag,'thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
+        return true;
+    else
+        return false;
+}
+
+/**
  *  Neue Languages & Neue Funktionen einbinden
  */
 if(($add_languages = API_CORE::load_additional_language()) != false)
@@ -2201,7 +2207,7 @@ if(($add_functions = API_CORE::load_additional_functions()) != false)
 unset($add_languages,$add_functions);
 
 //-> Navigation einbinden
-if(file_exists(basePath.'/inc/menu-functions/navi.php'))
+if(file_exists(basePath.'/inc/menu-functions/navi.php') && !$ajaxThumbgen)
     include_once(basePath.'/inc/menu-functions/navi.php');
 
 //-> Ausgabe des Indextemplates

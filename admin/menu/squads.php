@@ -153,7 +153,7 @@ if(_adminMenu != 'true')
             $img = getimagesize($tmp);
                         if($type == "image/gif" || $type == "image/png" || $type == "image/jpeg" || !$img[0])
             {
-              @copy($tmp, basePath."/inc/images/squads/".$insert_id.".".strtolower($end));
+              @copy($tmp, basePath."/inc/images/uploads/squads/".$insert_id.".".strtolower($end));
               @unlink($tmp);
             }
           }
@@ -168,7 +168,7 @@ if(_adminMenu != 'true')
             $img = getimagesize($tmp);
                         if($type == "image/gif" || $type == "image/pjpeg" || $type == "image/jpeg" || !$img[0])
             {
-              @copy($tmp, basePath."/inc/images/squads/".$insert_id."_logo.".strtolower($end));
+              @copy($tmp, basePath."/inc/images/uploads/squads/".$insert_id."_logo.".strtolower($end));
               @unlink($tmp);
             }
           }
@@ -238,18 +238,18 @@ if(_adminMenu != 'true')
 
         foreach($picformat AS $end)
         {
-          if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end))
+          if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end))
           {
-            $image = '<img src="../inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end.'" width="200" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=../inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
+            $image = '<img src="../inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end.'" width="200" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=../inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
             break;
           }
         }
 
         foreach($picformat AS $end)
         {
-          if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end))
+          if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end))
           {
-            $logoimage = '<img src="../inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.'" height="60" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=../inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
+            $logoimage = '<img src="../inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.'" height="60" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=../inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
             break;
           }
         }
@@ -386,15 +386,15 @@ if(_adminMenu != 'true')
             foreach($picformat AS $end1)
             {
               $img = getimagesize($tmp);
-                            if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end1))
+                            if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end1))
               {
-                @unlink(basePath.'/inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end1);
+                @unlink(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end1);
                 break;
               }
             }
             if($type == "image/gif" || $type == "image/png" || $type == "image/jpeg" || !$img[0])
             {
-              copy($tmp, basePath."/inc/images/squads/".convert::ToInt($_GET['id']).".".strtolower($end));
+              copy($tmp, basePath."/inc/images/uploads/squads/".convert::ToInt($_GET['id']).".".strtolower($end));
               @unlink($tmp);
             }
           }
@@ -409,15 +409,15 @@ if(_adminMenu != 'true')
             $img = getimagesize($tmp);
                         foreach($picformat AS $end1)
             {
-              if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end1))
+              if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end1))
               {
-                @unlink(basePath.'/inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end1);
+                @unlink(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end1);
                 break;
               }
             }
             if($type == "image/gif" || $type == "image/png" || $type == "image/jpeg" || !$img[0])
             {
-              @copy($tmp, basePath."/inc/images/squads/".convert::ToInt($_GET['id'])."_logo.".strtolower($end));
+              @copy($tmp, basePath."/inc/images/uploads/squads/".convert::ToInt($_GET['id'])."_logo.".strtolower($end));
               @unlink($tmp);
             }
           }

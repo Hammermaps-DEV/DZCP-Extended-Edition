@@ -253,7 +253,7 @@ function visitorIp()
  */
 function pholderreplace($pholder)
 {
-    $search = array('@<script[^>]*?>.*?</script>@si','@<style[^>]*?>.*?</style>@siU','@<[\/\!]*?[^<>]*?>@si','@<![\s\S]*?--[ \t\n\r]*>@');
+    $search = array('@<script[^>]*?>.*?</script>@si','@<style[^>]*?>.*?</style>@siU','@<[\/\!][^<>]*?>@si',/*'@<[\/\!]*?[^<>]*?>@si',*/'@<![\s\S]*?--[ \t\n\r]*>@');
 
     //Replace
     $pholder = preg_replace("#<script(.*?)</script>#is","",$pholder);
@@ -484,8 +484,7 @@ function _fetch($fetch)
 function cnt($count, $where = "", $what = "id")
 {
     $cnt = db("SELECT COUNT(".$what.") AS num FROM ".$count." ".$where,false,true);
-    $cnt = (!$cnt || empty($cnt) || !is_array($cnt) ? array('num' => 0) : $cnt);
-    return convert::ToInt($cnt['num']);
+    return $cnt['num'];
 }
 
 /**
@@ -817,6 +816,8 @@ function filesize_extended($file=null)
  * Funktion um Datengrößen > 2 GB anzeigen zu können * OS-Shell Zugriff nötig und ein 64 Bit System
  * Standardmäßig deaktiviert, sehe config.php
  * Added by DZCP-Extended Edition
+ *
+ * @return int
  */
 function os_filesize($file=null)
 {
@@ -834,6 +835,8 @@ function os_filesize($file=null)
 /**
  * Funktion um Datengrößen auf Remote Servern zu ermitteln.
  * Added by DZCP-Extended Edition
+ *
+ * @return int
  */
 function remote_filesize($url)
 {
@@ -885,6 +888,34 @@ function remote_filesize($url)
     }
 
     return Cache::get($cacheTag,'remote_filesize_'.md5($url));
+}
+
+
+/**
+ * Funktion um einen Binärstring zu Dekodieren.
+ * Added by DZCP-Extended Edition
+ *
+ * @return binary/string
+ */
+function hextobin($hexstr)
+{
+    if(is_php('5.4.0'))
+        return hex2bin($hexstr);
+
+    // < PHP 5.4
+    $n = strlen($hexstr);
+    $sbin="";
+    $i=0;
+    while($i<$n)
+    {
+        $a =substr($hexstr,$i,2);
+        $c = pack("H*",$a);
+        if ($i==0){$sbin=$c;}
+        else {$sbin.=$c;}
+        $i+=2;
+    }
+
+    return $sbin;
 }
 
 /**
@@ -1031,10 +1062,10 @@ class xml // Class by DZCP-Extended Edition
             foreach($nodes as $node)
             {
                 if((string)$node->attributes()->$key==$value)
-                 {
+                {
                     unset($node[0]);
                     break;
-                 }
+                }
             }
             return true;
         }

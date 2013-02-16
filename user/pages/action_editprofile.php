@@ -101,6 +101,10 @@ else
                     } //while end
                 }
 
+                $get = db("SELECT user,xfire FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
+                if($get['xfire'] != convert::ToString(up($_POST['xfire'])))
+                { Cache::delete_binary($cacheTag,'xfire_'.$get['user']); } //Delete XFire Cache
+
                 db("UPDATE ".$db['users']." SET	".$newpwd." ".$customfields."
                                                  `country`      = '".convert::ToString($_POST['land'])."',
                                                  `user`         = '".convert::ToString(up($_POST['user']))."',
@@ -125,33 +129,10 @@ else
         case 'delete':
             $getdel = db("SELECT id,nick,email,hp FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
 
-            db("UPDATE ".$db['f_threads']."
-                                         SET `t_nick`   = '".$getdel['nick']."',
-                                                 `t_email`  = '".$getdel['email']."',
-                                                 `t_hp`			= '".$getdel['hp']."',
-                                                 `t_reg`		= '0'
-                                         WHERE t_reg = '".$getdel['id']."'");
-
-            db("UPDATE ".$db['f_posts']."
-                                         SET `nick`   = '".$getdel['nick']."',
-                                                 `email`  = '".$getdel['email']."',
-                                                 `hp`			= '".$getdel['hp']."',
-                                                 `reg`		= '0'
-                                         WHERE reg = '".$getdel['id']."'");
-
-            db("UPDATE ".$db['newscomments']."
-                                         SET `nick`     = '".$getdel['nick']."',
-                                                 `email`    = '".$getdel['email']."',
-                                                 `hp`       = '".$getdel['hp']."',
-                                                 `reg`			= '0'
-                                         WHERE reg = '".$getdel['id']."'");
-
-            db("UPDATE ".$db['acomments']."
-                                         SET `nick`     = '".$getdel['nick']."',
-                                                 `email`    = '".$getdel['email']."',
-                                                 `hp`       = '".$getdel['hp']."',
-                                                 `reg`			= '0'
-                                         WHERE reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['f_threads']." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['f_posts']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['newscomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['acomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
 
             db("DELETE FROM ".$db['msg']." WHERE von = '".$getdel['id']."' OR an = '".$getdel['id']."'");
             db("DELETE FROM ".$db['news']." WHERE autor = '".$getdel['id']."'");
@@ -260,39 +241,38 @@ else
 
                         $delete = (convert::ToInt($userid) == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => convSpace(_confirm_del_account))));
                         $show = show($dir."/edit_profil", array("country" => show_countrys($get['country']),
-                                "city" => re($get['city']),
-                                "pnl" => $pnl,
-                                "pnm" => $pnm,
-                                "pwd" => "",
-                                "dropdown_age" => $dropdown_age,
-                                "ava" => $avatar,
-                                "hp" => re($get['hp']),
-                                "gmaps" => $gmaps,
-                                "nick" => re($get['nick']),
-                                "name" => re($get['user']),
-                                "gmaps_koord" => re($get['gmaps_koord']),
-                                "rlname" => re($get['rlname']),
-                                "bdayday" => $bdayday,
-                                "bdaymonth" => $bdaymonth,
-                                "bdayyear" =>$bdayyear,
-                                "sex" => $sex,
-                                "email" => re($get['email']),
-                                "icqnr" => $icq,
-                                "sig" => re_bbcode($get['signatur']),
-                                "xfire" => $get['xfire'],
-                                "clan" => $clan,
-                                "pic" => $pic,
-                                "deleteava" => $deleteava,
-                                "deletepic" => $deletepic,
-                                "position" => getrank($get['id']),
-                                "value" => _button_value_edit,
-                                "status" => $status,
-                                "custom_about" => custom_fields(convert::ToInt($userid),1),
-                                "custom_contact" => custom_fields(convert::ToInt($userid),3),
-                                "custom_favos" => custom_fields(convert::ToInt($userid),4),
-                                "custom_hardware" => custom_fields(convert::ToInt($userid),5),
-                                "ich" => re_bbcode($get['beschreibung']),
-                                "delete" => $delete));
+                                                                "city" => re($get['city']),
+                                                                "pnl" => $pnl,
+                                                                "pnm" => $pnm,
+                                                                "pwd" => "",
+                                                                "dropdown_age" => $dropdown_age,
+                                                                "ava" => $avatar,
+                                                                "hp" => re($get['hp']),
+                                                                "gmaps" => $gmaps,
+                                                                "nick" => re($get['nick']),
+                                                                "name" => re($get['user']),
+                                                                "gmaps_koord" => re($get['gmaps_koord']),
+                                                                "rlname" => re($get['rlname']),
+                                                                "bdayday" => $bdayday,
+                                                                "bdaymonth" => $bdaymonth,
+                                                                "bdayyear" =>$bdayyear,
+                                                                "sex" => $sex,
+                                                                "email" => re($get['email']),
+                                                                "icqnr" => $icq,
+                                                                "sig" => re_bbcode($get['signatur']),
+                                                                "xfire" => $get['xfire'],
+                                                                "clan" => $clan,
+                                                                "pic" => $pic,
+                                                                "deleteava" => $deleteava,
+                                                                "deletepic" => $deletepic,
+                                                                "position" => getrank($get['id']),
+                                                                "status" => $status,
+                                                                "custom_about" => custom_fields(convert::ToInt($userid),1),
+                                                                "custom_contact" => custom_fields(convert::ToInt($userid),3),
+                                                                "custom_favos" => custom_fields(convert::ToInt($userid),4),
+                                                                "custom_hardware" => custom_fields(convert::ToInt($userid),5),
+                                                                "ich" => re_bbcode($get['beschreibung']),
+                                                                "delete" => $delete));
                     }
 
                     $index = show($dir."/edit", array("show" => $show), array("nick" => autor($get['id'])));

@@ -101,6 +101,12 @@ Neue Addons Schnittstelle für einfaches einfügen und löschen von Addons/Mods.
 * Frei zu bearbeitende Addon-XML Dateien für Statische Einstellungen aller Art.
 * Eine einfache PHP-API Schnittstelle für alle Addons. *In DEV*
 
-Die geschätzten Download Zeiten bei Downloads wurden der heutigen Zeit angepasst, ab DSL 1000 - VDSL 50.k
-Die nötigen Download Zeiten werden jetzt richtig berechnet.
-Download Kommentare können bei den Downloads geschrieben werden, kann beim Anlegen/Bearbeiten von Downloads aktiviert werden.
+* Die geschätzten Download Zeiten bei Downloads wurden der heutigen Zeit angepasst, ab DSL 1000 - VDSL 50.k
+* Die nötigen Download Zeiten werden jetzt richtig berechnet.
+* Download Kommentare können bei den Downloads geschrieben werden, kann beim Anlegen/Bearbeiten von Downloads aktiviert werden.
+
+* Die Thumbgen Funktion wurde in die ajax.php importiert und es wird ein Cache der Bilder durchgeführt.
+* Die Thumbgen verwendet wenn vorhanden die Imagick PHP Erweiterung, diese ist deutlich schneller als die alte GD.
+* Alle Einstellungen betreffend der Thumbgen Funktion sind über die config.php einstellbar.
+
+* Der Cache kann Binary Code ohne Verluste speichern und erkennt *optional Änderungen an den Original Daten und aktualisiert den Cache automatisch.

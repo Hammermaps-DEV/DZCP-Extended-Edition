@@ -107,14 +107,14 @@ else
     if($get['bericht']) $bericht = bbcode($get['bericht']);
     else $bericht = "&nbsp;";
 
-    $libPath = "inc/images/clanwars/".convert::ToInt($_GET['id']);
+    $libPath = "inc/images/uploads/clanwars/".convert::ToInt($_GET['id']);
     $screen1 = ''; $screen2 = ''; $screen3 = ''; $screen4 = '';
     foreach($picformat AS $end)
     {
-        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_1.'.$end)) $screen1 = img_cw($libPath, '1.'.$end);
-        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_2.'.$end)) $screen2 = img_cw($libPath, '2.'.$end);
-        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_3.'.$end)) $screen3 = img_cw($libPath, '3.'.$end);
-        if(file_exists(basePath."/inc/images/clanwars/".convert::ToInt($_GET['id']).'_4.'.$end)) $screen4 = img_cw($libPath, '4.'.$end);
+        if(file_exists(basePath."/inc/images/uploads/clanwars/".convert::ToInt($_GET['id']).'_1.'.$end)) $screen1 = img_cw($libPath, '1.'.$end);
+        if(file_exists(basePath."/inc/images/uploads/clanwars/".convert::ToInt($_GET['id']).'_2.'.$end)) $screen2 = img_cw($libPath, '2.'.$end);
+        if(file_exists(basePath."/inc/images/uploads/clanwars/".convert::ToInt($_GET['id']).'_3.'.$end)) $screen3 = img_cw($libPath, '3.'.$end);
+        if(file_exists(basePath."/inc/images/uploads/clanwars/".convert::ToInt($_GET['id']).'_4.'.$end)) $screen4 = img_cw($libPath, '4.'.$end);
     }
 
 
@@ -207,18 +207,10 @@ else
     } else {
         if(!ipcheck("cwid(".$_GET['id'].")", $flood_cwcom))
         {
-            if(isset($userid))
-            {
-                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                        "von" => _autor));
-            } else {
-                $form = show("page/editor_notregged", array("nickhead" => _nick,
-                        "emailhead" => _email,
-                        "hphead" => _hp,
-                        "postemail" => $postemail,
-                        "posthp" => $posthp,
-                        "postnick" => $postnick,));
-            }
+            if(!empty($userid) && $userid != 0)
+                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+            else
+                $form = show("page/editor_notregged", array("postemail" => $postemail, "posthp" => $posthp, "postnick" => $postnick,));
 
             $add = show("page/comments_add", array("titel" => _cw_comments_add,
                     "nickhead" => _nick,
@@ -254,8 +246,8 @@ else
     $logo_squad = '_defaultlogo.jpg'; $logo_gegner = '_defaultlogo.jpg';
     foreach($picformat AS $end)
     {
-        if(file_exists(basePath.'/inc/images/clanwars/'.$get['id'].'_logo.'.$end)) $logo_gegner = $get['id'].'_logo.'.$end;
-        if(file_exists(basePath.'/inc/images/squads/'.$get['squad_id'].'_logo.'.$end))$logo_squad = $get['squad_id'].'_logo.'.$end;
+        if(file_exists(basePath.'/inc/images/uploads/clanwars/'.$get['id'].'_logo.'.$end)) $logo_gegner = $get['id'].'_logo.'.$end;
+        if(file_exists(basePath.'/inc/images/uploads/squads/'.$get['squad_id'].'_logo.'.$end))$logo_squad = $get['squad_id'].'_logo.'.$end;
     }
 
     $logos = ($logo_squad == '_defaultlogo.jpg') && ($logo_gegner == '_defaultlogo.jpg');
@@ -310,27 +302,24 @@ else
             } else {
                 if(!ipcheck("cwid(".$_GET['id'].")", $flood_cwcom))
                 {
-                    if(isset($userid))
+                    if(!empty($userid) && $userid != 0)
                         $toCheck = empty($_POST['comment']);
                     else
                         $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                     if($toCheck)
                     {
-                        if(isset($userid))
+                        if(!empty($userid) && $userid != 0)
                         {
                             if(empty($_POST['comment'])) $error = _empty_eintrag;
-                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                                    "von" => _autor));
+                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                         } else {
                             if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
                             elseif(empty($_POST['nick'])) $error = _empty_nick;
                             elseif(empty($_POST['email'])) $error = _empty_email;
                             elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
                             elseif(empty($_POST['comment'])) $error = _empty_eintrag;
-                            $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                    "emailhead" => _email,
-                                    "hphead" => _hp));
+                            $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
                         }
 
                         $error = show("errors/errortable", array("error" => $error));
@@ -423,18 +412,9 @@ else
         if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
         {
             if($get['reg'] != 0)
-            {
-                $form = show("page/editor_regged", array("nick" => autor($get['reg']),
-                        "von" => _autor));
-            } else {
-                $form = show("page/editor_notregged", array("nickhead" => _nick,
-                        "emailhead" => _email,
-                        "hphead" => _hp,
-                        "postemail" => $get['email'],
-                        "posthp" => links($get['hp']),
-                        "postnick" => re($get['nick']),
-                ));
-            }
+                $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
+            else
+                $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => re($get['nick'])));
 
             $index = show("page/comments_add", array("titel" => _comments_edit,
                     "nickhead" => _nick,

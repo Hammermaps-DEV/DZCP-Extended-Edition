@@ -25,17 +25,9 @@ else
         if($get['reg'] == convert::ToInt($userid) || permission("forum"))
         {
             if($get['reg'] != 0)
-            {
-                $form = show("page/editor_regged", array("nick" => autor($get['reg']),
-                        "von" => _autor));
-            } else {
-                $form = show("page/editor_notregged", array("nickhead" => _nick,
-                        "emailhead" => _email,
-                        "hphead" => _hp,
-                        "postemail" => re($get['email']),
-                        "posthp" => re($get['hp']),
-                        "postnick" => re($get['nick'])));
-            }
+                $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
+            else
+                $form = show("page/editor_notregged", array("postemail" => re($get['email']), "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
 
             $dowhat = show(_forum_dowhat_edit_post, array("id" => $_GET['id']));
             $index = show($dir."/post", array("titel" => _forum_edit_post_head,
@@ -78,17 +70,14 @@ else
                 if($get['reg'] != 0)
                 {
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                            "von" => _autor));
+                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                 } else {
-                    if(($_POST['secure'] != $_SESSION['sec_'.$dir]) && !isset($userid)) $error = _error_invalid_regcode;
+                    if(($_POST['secure'] != $_SESSION['sec_'.$dir]) && $userid == 0) $error = _error_invalid_regcode;
                     elseif(empty($_POST['nick'])) $error = _empty_nick;
                     elseif(empty($_POST['email'])) $error = _empty_email;
                     elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
                     elseif(empty($_POST['eintrag']))$error = _empty_eintrag;
-                    $form = show("page/editor_notregged", array("nickhead" => _nick,
-                            "emailhead" => _email,
-                            "hphead" => _hp));
+                    $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
                 }
 
                 $error = show("errors/errortable", array("error" => $error));
@@ -191,7 +180,7 @@ else
                 } elseif($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id'])) {
                     $index = error(_error_no_access, 1);
                 } else {
-                    if(isset($userid))
+                    if(!empty($userid) && $userid != 0)
                     {
                         $postnick = data(convert::ToInt($userid), "nick");
                         $postemail = data(convert::ToInt($userid), "email");
@@ -375,15 +364,10 @@ else
                                 "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     }
 
-                    if(isset($userid))
-                    {
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                                "von" => _autor));
-                    } else {
-                        $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                "emailhead" => _email,
-                                "hphead" => _hp));
-                    }
+                    if(!empty($userid) && $userid != 0)
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                    else
+                        $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                     $title = re($gett['topic']).' - '.$title;
                     $index = show($dir."/post", array("titel" => _forum_new_post_head,
@@ -435,25 +419,22 @@ else
                 if($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id']))
                     exit;
 
-                if(isset($userid)) $toCheck = empty($_POST['eintrag']);
+                if(!empty($userid) && $userid != 0) $toCheck = empty($_POST['eintrag']);
                 else $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                 if($toCheck)
                 {
-                    if(isset($userid))
+                    if(!empty($userid) && $userid != 0)
                     {
                         if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                                "von" => _autor));
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                     } else {
                         if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
                         elseif(empty($_POST['nick'])) $error = _empty_nick;
                         elseif(empty($_POST['email'])) $error = _empty_email;
                         elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
                         elseif(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                        $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                "emailhead" => _email,
-                                "hphead" => _hp));
+                        $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
                     }
 
                     $error = show("errors/errortable", array("error" => $error));
@@ -651,7 +632,7 @@ else
                     {
                         $getdp = _fetch($qrydp);
 
-                        if(isset($userid))
+                        if(!empty($userid) && $userid != 0)
                         {
                             if(convert::ToInt($userid) == $getdp['reg'] && $double_post == 1) $spam = 1;
                             else $spam = 0;
@@ -666,7 +647,7 @@ else
                                     AND id = '".convert::ToInt($_GET['id'])."'");
                         $gettdp = _fetch($qrytdp);
 
-                        if(isset($userid))
+                        if(!empty($userid) && $userid != 0)
                         {
                             if(convert::ToInt($userid) == $gettdp['t_reg'] && $double_post == 1) $spam = 2;
                             else $spam = 0;
@@ -678,7 +659,7 @@ else
 
                     if($spam == 1)
                     {
-                        if(isset($userid)) $fautor = autor(convert::ToInt($userid));
+                        if(!empty($userid) && $userid != 0) $fautor = autor(convert::ToInt($userid));
                         else $fautor = autor('', '', $_POST['nick'], $_POST['email']);
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
@@ -695,7 +676,7 @@ else
                                                          `text`   = '".$text."'
                                                  WHERE id = '".$getdp['id']."'");
                     } elseif($spam == 2) {
-                        if(isset($userid)) $fautor = autor(convert::ToInt($userid));
+                        if(!empty($userid) && $userid != 0) $fautor = autor(convert::ToInt($userid));
                         else $fautor = autor('', '', $_POST['nick'], $_POST['email']);
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,

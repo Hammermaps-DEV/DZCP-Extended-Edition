@@ -46,6 +46,8 @@ function install_155x_1600_update()
     db("ALTER TABLE `".$db['config']."` ADD `f_downloadcom` INT( 5 ) NOT NULL DEFAULT '20' AFTER `f_artikelcom`;",false,false,true);
     db("ALTER TABLE `".$db['settings']."` ADD `reg_dlcomments` INT( 1 ) NOT NULL DEFAULT '1' AFTER `reg_newscomments`;",false,false,true);
     db("ALTER TABLE `".$db['downloads']."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '0' AFTER `last_dl`;",false,false,true);
+    db("ALTER TABLE `".$db['f_posts']."` CHANGE `edited` `edited` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
+    db("ALTER TABLE `".$db['rankings']."` CHANGE `lastranking` `lastranking` INT( 10 ) NOT NULL DEFAULT '0'",false,false,true);
 
     // Add UNIQUE INDEX
     if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
@@ -118,12 +120,14 @@ function install_155x_1600_update()
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['cache']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['cache']."` (
-    `qry` varchar(32) NOT NULL DEFAULT '',
-    `data` mediumblob,
-    `timestamp` varchar(16) DEFAULT NULL,
-    `cacheTime` varchar(16) DEFAULT NULL,
-    `array` varchar(1) NOT NULL DEFAULT '0',
-    PRIMARY KEY (`qry`)
+      `qry` varchar(32) NOT NULL DEFAULT '',
+      `data` longblob,
+      `timestamp` varchar(16) DEFAULT NULL,
+      `cacheTime` varchar(16) DEFAULT NULL,
+      `array` varchar(1) NOT NULL DEFAULT '0',
+      `stream_hash` varchar(60) NOT NULL DEFAULT '',
+      `original_file` varchar(255) NOT NULL DEFAULT '',
+      PRIMARY KEY (`qry`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 
     //===============================================================
@@ -299,7 +303,7 @@ function install_155x_1600_update()
     }
 
     //===============================================================
-    //-> Forum: Access ==============================================
+    //-> Downloadkommentare =========================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['dlcomments']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['dlcomments']."` (
@@ -315,6 +319,45 @@ function install_155x_1600_update()
       `editby` text,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+
+    // Gallery Bilder verschieben
+    $files = get_files(basePath."/gallery/images/",false,true);
+    foreach($files as $file)
+    {
+        if(copy(basePath."/gallery/images/".$file ,basePath."/inc/images/uploads/gallery/".$file))
+            if(file_exists(basePath."/inc/images/uploads/gallery/".$file))
+                unlink(basePath."/gallery/images/".$file);
+    }
+
+    // Alten Gallery Bilder Ordner löschen
+    if(is_dir(basePath."/gallery/images"))
+        @rmdir(basePath."/gallery/images");
+
+    // Squads Bilder verschieben
+    $files = get_files(basePath."/inc/images/squads/",false,true);
+    foreach($files as $file)
+    {
+        if(copy(basePath."/inc/images/squads/".$file ,basePath."/inc/images/uploads/squads/".$file))
+            if(file_exists(basePath."/inc/images/uploads/squads/".$file))
+            unlink(basePath."/inc/images/squads/".$file);
+    }
+
+    // Alten Squads Bilder Ordner löschen
+    if(is_dir(basePath."/inc/images/squads"))
+        @rmdir(basePath."/inc/images/squads");
+
+    // Clanwars Bilder verschieben
+    $files = get_files(basePath."/inc/images/clanwars/",false,true);
+    foreach($files as $file)
+    {
+        if(copy(basePath."/inc/images/clanwars/".$file ,basePath."/inc/images/uploads/clanwars/".$file))
+            if(file_exists(basePath."/inc/images/uploads/clanwars/".$file))
+            unlink(basePath."/inc/images/clanwars/".$file);
+    }
+
+    // Alten Clanwars Bilder Ordner löschen
+    if(is_dir(basePath."/inc/images/clanwars"))
+        @rmdir(basePath."/inc/images/clanwars");
 
     return true;
 }

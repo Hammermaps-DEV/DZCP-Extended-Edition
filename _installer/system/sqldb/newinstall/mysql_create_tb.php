@@ -86,12 +86,14 @@ function install_mysql_create()
     //===============================================================
     db("DROP TABLE IF EXISTS `".$db['cache']."`;",false,false,true);
     db("CREATE TABLE IF NOT EXISTS `".$db['cache']."` (
-    `qry` varchar(32) NOT NULL DEFAULT '',
-    `data` mediumblob,
-    `timestamp` varchar(16) DEFAULT NULL,
-    `cacheTime` varchar(16) DEFAULT NULL,
-    `array` varchar(1) NOT NULL DEFAULT '0',
-    PRIMARY KEY (`qry`)
+      `qry` varchar(32) NOT NULL DEFAULT '',
+      `data` longblob,
+      `timestamp` varchar(16) DEFAULT NULL,
+      `cacheTime` varchar(16) DEFAULT NULL,
+      `array` varchar(1) NOT NULL DEFAULT '0',
+      `stream_hash` varchar(60) NOT NULL DEFAULT '',
+      `original_file` varchar(255) NOT NULL DEFAULT '',
+      PRIMARY KEY (`qry`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 
     //===============================================================
@@ -408,7 +410,7 @@ function install_mysql_create()
       `reg` int(1) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `text` text NOT NULL,
-      `edited` text NOT NULL,
+      `edited` text,
       `ip` varchar(50) NOT NULL DEFAULT '',
       `hp` varchar(249) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`),
@@ -681,7 +683,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['permissions']."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(11) NOT NULL DEFAULT '0',
-      `pos` int(1) NOT NULL,
+      `pos` int(1) NOT NULL DEFAULT '0',
       `artikel` int(1) NOT NULL DEFAULT '0',
       `awards` int(1) NOT NULL DEFAULT '0',
       `backup` int(1) NOT NULL DEFAULT '0',
@@ -757,10 +759,10 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['rankings']."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `league` varchar(50) NOT NULL,
-      `lastranking` int(10) NOT NULL,
-      `rank` int(10) NOT NULL,
+      `lastranking` int(10) NOT NULL DEFAULT '0',
+      `rank` int(10) NOT NULL DEFAULT '0',
       `squad` varchar(5) NOT NULL,
-      `url` varchar(249) NOT NULL,
+      `url` varchar(249) NOT NULL DEFAULT '',
       `postdate` int(20) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);

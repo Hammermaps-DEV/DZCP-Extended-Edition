@@ -74,10 +74,10 @@ else
     $squad = re($get['name']);
     foreach($picformat AS $end)
     {
-        if(file_exists(basePath.'/inc/images/squads/'.convert::ToInt($get['id']).'.'.$end))
+        if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end))
         {
             $style = 'padding:0;';
-            $squad = '<img src="../inc/images/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
+            $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
             break;
         }
     }

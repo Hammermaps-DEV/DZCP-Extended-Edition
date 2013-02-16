@@ -18,7 +18,7 @@ else
 {
     if($_GET['what'] == "addgb")
     {
-        if(isset($userid))
+        if(!empty($userid) && $userid != 0)
         {
             $toCheck = empty($_POST['eintrag']);
         } else {
@@ -26,20 +26,17 @@ else
         }
         if($toCheck)
         {
-            if(isset($userid))
+            if(!empty($userid) && $userid != 0)
             {
                 if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                        "von" => _autor));
+                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
             } else {
                 if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || $_SESSION['sec_'.$dir] == NULL) $error = _error_invalid_regcode;
                 elseif(empty($_POST['nick'])) $error = _empty_nick;
                 elseif(empty($_POST['email'])) $error = _empty_email;
                 elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
                 elseif(empty($_POST['eintrag']))$error = _empty_eintrag;
-                $form = show("page/editor_notregged", array("nickhead" => _nick,
-                        "emailhead" => _email,
-                        "hphead" => _hp));
+                $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
             }
 
             $error = show("errors/errortable", array("error" => $error));
@@ -123,17 +120,9 @@ else
         if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" or permission('gb'))
         {
             if($get['reg'] != 0)
-            {
-                $form = show("page/editor_regged", array("nick" => autor($get['reg']),
-                        "von" => _autor));
-            } else {
-                $form = show("page/editor_notregged", array("nickhead" => _nick,
-                        "emailhead" => _email,
-                        "hphead" => _hp,
-                        "postemail" => re($get['email']),
-                        "posthp" => re($get['hp']),
-                        "postnick" => re($get['nick'])));
-            }
+                $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
+            else
+                $form = show("page/editor_notregged", array("postemail" => re($get['email']), "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
 
             $index = show($dir."/add", array("titel" => _eintragen_titel,
                     "nickhead" => _nick,

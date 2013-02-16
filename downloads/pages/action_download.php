@@ -40,14 +40,14 @@ else
                         {
                             if(!ipcheck("dlid(".$dl_id.")", $flood_downloadcom))
                             {
-                                if(isset($userid))
+                                if(!empty($userid) && $userid != 0)
                                     $toCheck = empty($_POST['comment']);
                                 else
                                     $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                                 if($toCheck)
                                 {
-                                    if(isset($userid))
+                                    if(!empty($userid) && $userid != 0)
                                     {
                                         if(empty($_POST['eintrag']))
                                             $error = show("errors/errortable", array("error" => _empty_eintrag));
@@ -95,16 +95,9 @@ else
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
                         if($get['reg'] != 0)
-                            $form = show("page/editor_regged", array("nick" => autor($get['reg']), "von" => _autor));
+                            $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                         else
-                        {
-                            $form = show("page/editor_notregged", array("nickhead" => _nick,
-                                                                        "emailhead" => _email,
-                                                                        "hphead" => _hp,
-                                                                        "postemail" => $get['email'],
-                                                                        "posthp" => links($get['hp']),
-                                                                        "postnick" => re($get['nick'])));
-                        }
+                            $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => re($get['nick'])));
 
                         $index = show("page/comments_add", array("titel" => _comments_edit,
                                 "nickhead" => _nick,
@@ -231,10 +224,10 @@ else
                     $add = _error_unregistered_nc;
                 else
                 {
-                    if(isset($userid))
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
+                    if(!empty($userid) && $userid != 0)
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                     else
-                        $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp));
+                        $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                     $add = '';
                     if(!ipcheck("dlid(".$dl_id.")", $flood_downloadcom))

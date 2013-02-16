@@ -9,13 +9,17 @@
 ## OUTPUT BUFFER START ##
 include("../inc/buffer.php");
 
-## INCLUDES ##
+//Settings
 $ajaxJob = true;
+$ajaxThumbgen = ((isset($_GET['loader']) ? $_GET['loader'] : false) == 'thumbgen' ? true : false);
+
+## INCLUDES ##
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
+include(basePath."/inc/thumbgen.php");
 
 ## FUNCTIONS ##
-if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,array('php'))))
+if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,array('php'))) && !$ajaxThumbgen)
 {
     if(count($add_menu_functions) >= 1)
     {
@@ -54,6 +58,9 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
                         die(call_user_func($menu_index[$_GET['hash']]));
             break;
         endswitch;
+    break;
+    case 'thumbgen';
+        thumbgen($_GET['file'], isset($_GET['width']) ? $_GET['width'] : '', isset($_GET['height']) ? $_GET['height'] : '');
     break;
 
     case 'old_func';

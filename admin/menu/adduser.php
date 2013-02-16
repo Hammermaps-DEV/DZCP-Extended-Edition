@@ -49,9 +49,7 @@ if(isset($_GET['do']))
         else
             $mkpwd = pass_hash($_POST['pwd'],settings('default_pwd_encoder'));
 
-        if($_POST['t'] && $_POST['m'] && $_POST['j'])
-            $bday = cal($_POST['t']).".".cal($_POST['m']).".".$_POST['j'];
-
+        $bday = ($_POST['t'] && $_POST['m'] && $_POST['j'] ? cal($_POST['t']).".".cal($_POST['m']).".".$_POST['j'] : '');
         db("INSERT INTO ".$db['users']." SET
                 `user`     = '".convert::ToString($username)."',
                 `nick`     = '".convert::ToString($nickname)."',
@@ -69,6 +67,10 @@ if(isset($_GET['do']))
                 `status`   = '1'");
 
         $insert_id = mysql_insert_id();
+
+        //User Stats
+        db("INSERT INTO `".$db['userstats']."` SET `user` = '".$insert_id."', `lastvisit` = '".time()."';");
+
         wire_ipcheck("createuser(".$_SESSION['id']."_".$insert_id.")");
 
         ## Permissions ##

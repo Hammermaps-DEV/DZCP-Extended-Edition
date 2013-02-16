@@ -203,6 +203,38 @@ class Cache
     }
 
     /**
+     * *Binary* Speichert Daten im Cache
+     *
+     * @return boolean
+     */
+    public static function set_binary($tag=null, $key=null, $binary=null, $original_file=false, $ttl = 0)
+    {
+        if(self::$dummy_overwrite)
+        {
+            self::$dummy[$tag."_".$key] = $binary;
+            return true;
+        }
+
+        ## Cache Typen ##
+        switch (self::$cacheType[$tag])
+        {
+            case 3:
+                return cache_memcache::mem_set_binary($tag."_".$key, $binary, $original_file, $ttl == 0 ? 86400 : $ttl);
+            break;
+            case 2:
+                return cache_mysql::mysqlc_set_binary($tag."_".$key, $binary, $original_file, $ttl);
+            break;
+            case 1:
+                return cache_file::file_set_binary($tag."_".$key, $binary, $original_file, $ttl);
+            break;
+            case 0:
+                self::$dummy[$tag."_".$key] = $binary;
+                return true;
+            break;
+        }
+    }
+
+    /**
      * Liest Daten im Cache aus
      *
      * @return mixed
@@ -223,6 +255,34 @@ class Cache
             break;
             case 1:
                 return cache_file::file_get($tag."_".$key);
+            break;
+            case 0:
+                return self::$dummy[$tag."_".$key];
+            break;
+        }
+    }
+
+    /**
+     * *Binary* Liest Daten im Cache aus
+     *
+     * @return mixed
+     */
+    public static function get_binary($tag=null,$key=null)
+    {
+        if(self::$dummy_overwrite)
+            return self::$dummy[$tag."_".$key];
+
+        ## Cache Typen ##
+        switch (self::$cacheType[$tag])
+        {
+            case 3:
+                return cache_memcache::mem_get_binary($tag."_".$key);
+            break;
+            case 2:
+                return cache_mysql::mysqlc_get_binary($tag."_".$key);
+            break;
+            case 1:
+                return cache_file::file_get_binary($tag."_".$key);
             break;
             case 0:
                 return self::$dummy[$tag."_".$key];
@@ -262,6 +322,37 @@ class Cache
     }
 
     /**
+     * *Binary* Prüft ob die Daten im Cache gültig sind
+     *
+     * @return boolean
+     */
+    public static function check_binary($tag=null,$key=null)
+    {
+        if(self::$dummy_overwrite)
+            return true;
+
+        if(is_debug && !cache_in_debug)
+            return true;
+
+        ## Cache Typen ##
+        switch (self::$cacheType[$tag])
+        {
+            case 3:
+                return cache_memcache::mem_check_binary($tag."_".$key);
+            break;
+            case 2:
+                return cache_mysql::mysqlc_check_binary($tag."_".$key);
+            break;
+            case 1:
+                return cache_file::file_check_binary($tag."_".$key);
+            break;
+            case 0:
+                return true;
+            break;
+        }
+    }
+
+    /**
      * Löscht Werte und Keys im Cache
      *
      * @return boolean
@@ -285,6 +376,38 @@ class Cache
             break;
             case 1:
                 return cache_file::file_delete($tag."_".$key);
+            break;
+            case 0:
+                unset(self::$dummy[$tag."_".$key]);
+                return true;
+            break;
+        }
+    }
+
+    /**
+     * *Binary* Löscht Werte und Keys im Cache
+     *
+     * @return boolean
+     */
+    public static function delete_binary($tag=null,$key=null)
+    {
+        if(self::$dummy_overwrite)
+        {
+            unset(self::$dummy[$tag."_".$key]);
+            return true;
+        }
+
+        ## Cache Typen ##
+        switch (self::$cacheType[$tag])
+        {
+            case 3:
+                return cache_memcache::mem_delete_binary($tag."_".$key);
+            break;
+            case 2:
+                return cache_mysql::mysqlc_delete_binary($tag."_".$key);
+            break;
+            case 1:
+                return cache_file::file_delete_binary($tag."_".$key);
             break;
             case 0:
                 unset(self::$dummy[$tag."_".$key]);

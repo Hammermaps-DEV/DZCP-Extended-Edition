@@ -25,19 +25,19 @@ else
         switch($do)
         {
             case 'add':
-                if(isset($userid) && convert::ToInt($userid) != 0)
+                if(!empty($userid) && $userid != 0 && convert::ToInt($userid) != 0)
                     $toCheck = empty($_POST['eintrag']);
                 else
                     $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                 if($toCheck)
                 {
-                    if(isset($userid))
+                    if(!empty($userid) && $userid != 0)
                     {
                         if(empty($_POST['eintrag']))
                             $error = _empty_eintrag;
 
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
+                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                     }
                     else
                     {
@@ -52,34 +52,22 @@ else
                         else if(empty($_POST['eintrag']))
                             $error = _empty_eintrag;
 
-                        $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp,));
+                        $form = show("page/editor_notregged", array("postemail" => $_POST['email'], "posthp" => $_POST['hp'], "postnick" => $_POST['nick']));
                     }
 
                     $error = show("errors/errortable", array("error" => $error));
-                    $index = show($dir."/usergb_add", array("titel" => _eintragen_titel,
-                                                            "nickhead" => _nick,
-                                                            "add_head" => _gb_add_head,
-                                                            "emailhead" => _email,
-                                                            "preview" => _preview,
-                                                            "ed" => "&uid=".$_GET['id'],
+                    $index = show($dir."/usergb_add", array("ed" => "&uid=".$_GET['id'],
                                                             "whaturl" => "add",
-                                                            "security" => _register_confirm,
-                                                            "what" => _button_value_add,
-                                                            "hphead" => _hp,
                                                             "id" => $_GET['id'],
                                                             "reg" => $_POST['reg'],
                                                             "form" => $form,
-                                                            "postemail" => $_POST['email'],
-                                                            "posthp" => $_POST['hp'],
-                                                            "postnick" => re($_POST['nick']),
                                                             "posteintrag" => re_bbcode($_POST['eintrag']),
-                                                            "error" => $error,
-                                                            "eintraghead" => _eintrag));
+                                                            "error" => $error));
                 }
                 else
                 {
 
-                    if(isset($userid) && convert::ToInt($userid) != 0)
+                    if(!empty($userid) && $userid != 0 && convert::ToInt($userid) != 0)
                     {
                         $userdata = data(convert::ToInt($userid), array('email','nick','hp'));
                         db("INSERT INTO ".$db['usergb']." SET

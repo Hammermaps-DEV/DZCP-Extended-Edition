@@ -20,11 +20,11 @@ else
     {
         if(($_POST['protect'] != 'nospam' || empty($_SESSION['sec_shout']) || $_POST['spam'] != $_SESSION['sec_shout'] || empty($_POST['spam'])) && !isset($userid))
             $index = error(_error_invalid_regcode,1);
-        else if(!isset($userid) && (empty($_POST['name']) || trim($_POST['name']) == '') || $_POST['name'] == "Nick")
+        else if($userid == 0 && (empty($_POST['name']) || trim($_POST['name']) == '') || $_POST['name'] == "Nick")
             $index = error(_empty_nick, 1);
-        else if(!isset($userid) && empty($_POST['email']) || $_POST['email'] == "E-Mail")
+        else if($userid == 0 && empty($_POST['email']) || $_POST['email'] == "E-Mail")
             $index = error(_empty_email, 1);
-        else if(!isset($userid) && !check_email($_POST['email']))
+        else if($userid == 0 && !check_email($_POST['email']))
             $index = error(_error_invalid_email, 1);
         else if(empty($_POST['eintrag']))
             $index = error(_error_empty_shout, 1);
@@ -32,7 +32,7 @@ else
             $index = error(_error_unregistered, 1);
         else
         {
-            $reg = (!isset($userid) ? $_POST['email'] : convert::ToInt($userid));
+            $reg = ($userid == 0 ? $_POST['email'] : convert::ToInt($userid));
             db("INSERT INTO ".$db['shout']." SET
                 `datum`  = '".time()."',
                 `nick`   = '".up($_POST['name'],'','UTF-8')."',

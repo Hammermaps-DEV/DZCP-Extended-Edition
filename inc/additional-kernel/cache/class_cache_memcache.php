@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 class cache_memcache extends Cache
 {
     private static $_memcached;
@@ -75,6 +82,33 @@ class cache_memcache extends Cache
         }
     }
 
+    /**
+     * *Binary* Speichere Werte im Memcache
+     *
+     * @return boolean
+     */
+    public static function mem_set_binary($key, $binary, $original_file=false, $ttl = 86400)
+    {
+        $key = 'bin_'.$key;
+        $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $data = bin2hex($binary);
+        self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));
+
+        if(@memcache_get(self::$_memcached,$key))
+        {
+            if(@memcache_replace(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl))
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            if(@memcache_set(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl))
+                return true;
+            else
+                return false;
+        }
+    }
+
     private static function control_set($key,$ttl,$settings_array=array())
     {
         $control = array_to_string($settings_array);
@@ -104,6 +138,35 @@ class cache_memcache extends Cache
     }
 
     /**
+     * *Binary* Prüft ob Wert verfügbar ist und nicht abgelaufen
+     *
+     * @return boolean
+     */
+    public static function mem_check_binary($key)
+    {
+        $key = 'bin_'.$key;
+        $data = @memcache_get(self::$_memcached,md5($key));
+        if($data && !empty($data))
+        {
+            unset($data);
+            $control = self::control_get($key);
+
+            if(empty($control['stream_hash']) || empty($control['original_file']))
+                return true;
+
+            if(!file_exists(basePath.'/'.$control['original_file']))
+                return true;
+
+            if(convert::ToString(md5_file(basePath.'/'.$control['original_file'])) != $control['stream_hash'])
+                return true;
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Lese Werte vom Memcache
      *
      * @return string or boolean
@@ -125,12 +188,41 @@ class cache_memcache extends Cache
     }
 
     /**
+     * *Binary* Lese Werte vom Memcache
+     *
+     * @return string or boolean
+     */
+    public static function mem_get_binary($key)
+    {
+        $key = 'bin_'.$key;
+        $data = @memcache_get(self::$_memcached,md5($key));
+
+        if($data !='' && !empty($data))
+        {
+            if(!$stream = hextobin($data))
+                return false;
+
+            return $stream;
+        }
+        else
+            return false;
+    }
+
+    /**
      * Lösche Werte vom Memcache
      *
      * @return boolean
      */
     public static function mem_delete($key)
     { @memcache_delete(self::$_memcached,'control_'.md5($key)); return @memcache_delete(self::$_memcached,md5($key)); }
+
+    /**
+     * Lösche Werte vom Memcache
+     *
+     * @return boolean
+     */
+    public static function mem_delete_binary($key)
+    { $key = 'bin_'.$key; @memcache_delete(self::$_memcached,'control_'.md5($key)); return @memcache_delete(self::$_memcached,md5($key)); }
 
     /**
      * CleanUp vom Memcache.

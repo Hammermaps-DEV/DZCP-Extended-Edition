@@ -38,7 +38,7 @@ if(_adminMenu != 'true')
     $support .= "Server Versionen\r\n";
     $support .= "#####################\r\n";
     $support .= "Server OS: ".@php_uname()."\r\n";
-    $support .= "Webserver: ".(array_key_exists('apache2handler', $PhpInfo) ? (array_key_exists('Apache Version', $PhpInfo['apache2handler']) ? $PhpInfo['apache2handler']['Apache Version'] : 'PHP Run as CGI <No Info>' ) : 'PHP Run as CGI <No Info>')."\r\n";
+    $support .= "Webserver: ".(array_key_exists('apache2handler', $PhpInfo) ? (array_key_exists('Apache Version', $PhpInfo['apache2handler']) ? $PhpInfo['apache2handler']['Apache Version'] : 'PHP l&auml;uft als CGI <Keine Info>' ) : 'PHP l&auml;uft als CGI <Keine Info>')."\r\n";
     $support .= "PHP-Version: ".phpversion()." (".php_sapi_type().")"."\r\n";
     $support .= "MySQL-Server Version: ".mysql_get_server_info()."\r\n";
     $support .= "MySQL-Erweiterung: MySQL\r\n";
@@ -52,19 +52,19 @@ if(_adminMenu != 'true')
     $support .= "#####################\r\n";
     $support .= "Socket-Verbindungen \r\n";
     $support .= "#####################\r\n";
-    $support .= "PHP fsockopen(): ".(function_exists("fsockopen") ? 'On' : 'Off')."\r\n";
-    $support .= "PHP allow_url_fopen: ".($PhpInfo['Core']['allow_url_fopen'][0] == 'On' && $PhpInfo['Core']['allow_url_fopen'][1] == 'On' ? $PhpInfo['Core']['allow_url_fopen'][0] : 'Off')."\r\n";
-    $support .= "PHP Sockets: ".(function_exists("socket_create") && $PhpInfo['sockets']['Sockets Support'] == "enabled" ? 'On' : 'Off')."\r\n";
+    $support .= "PHP fsockopen: ".(function_exists("fsockopen") ? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "PHP allow_url_fopen: ".($PhpInfo['Core']['allow_url_fopen'][0] == 'On' ? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "PHP Sockets: ".(function_exists("socket_create") && $PhpInfo['sockets']['Sockets Support'] == "enabled" ? 'Aktiviert' : 'Deaktiviert')."\r\n";
     $support .= "\r\n";
 
     $support .= "#####################\r\n";
     $support .= "Cache Support \r\n";
     $support .= "#####################\r\n";
     $caches = Cache::get_caches();
-    $support .= "Memcache-Erweiterung: ".(function_exists("memcache_connect") ? 'On' : 'Off')."\r\n";
-    $support .= "Memcache: ".(array_key_exists('cache_memcache', $caches) ? 'On' : 'Off')."\r\n";
-    $support .= "File: ".(array_key_exists('cache_file', $caches) ? 'On' : 'Off')."\r\n";
-    $support .= "MySQL: ".(array_key_exists('cache_mysql', $caches) ? 'On' : 'Off')."\r\n";
+    $support .= "Memcache Erweiterung: ".(function_exists("memcache_connect") ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
+    $support .= "Memcache: ".(array_key_exists('cache_memcache', $caches) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
+    $support .= "File: ".(array_key_exists('cache_file', $caches) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
+    $support .= "MySQL: ".(array_key_exists('cache_mysql', $caches) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
     $support .= "Verwendet: ".(Cache::getType($cacheTag))."\r\n";
     $support .= "\r\n";
 
@@ -75,7 +75,7 @@ if(_adminMenu != 'true')
     if(!is_php('5.4.0')) //Removed in PHP 5.4.x
     {
         $support .= "register_globals: ".$PhpInfo['Core']['register_globals'][0]."\r\n";
-        $support .= "safe_mode: ".$PhpInfo['Core']['safe_mode'][0]."\r\n";
+        $support .= "Save Mode: ".$PhpInfo['Core']['safe_mode'][0]."\r\n";
         if($PhpInfo['Core']['safe_mode'][0] == 'on')
         {
             $support .= "safe_mode_exec_dir: ".$PhpInfo['Core']['safe_mode_exec_dir'][0]."\r\n";
@@ -86,7 +86,9 @@ if(_adminMenu != 'true')
 
     $support .= "open_basedir: ".$PhpInfo['Core']['open_basedir'][0]."\r\n";
     $support .= "GD-Version: ".$PhpInfo['gd']['GD Version']."\r\n";
-    $support .= "imagettftext(): ".(function_exists('imagettftext')==true? 'exists' : 'don\'t exists')."\r\n";
+    $support .= "PHP-Memory Limit: ".$PhpInfo['Core']['memory_limit'][0]."\r\n";
+    $support .= "Imagick Erweiterung: ".(function_exists('imagick')==true? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "imagettftext(): ".(function_exists('imagettftext')==true? 'existiert' : 'existiert nicht')."\r\n";
     $support .= "HTTP_ACCEPT_ENCODING: ".$_SERVER["HTTP_ACCEPT_ENCODING"]."\r\n";
 
     if(!is_php('5.4.0')) //Removed in PHP 5.4.x

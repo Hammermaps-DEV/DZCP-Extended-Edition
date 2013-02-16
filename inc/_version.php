@@ -7,8 +7,8 @@
  */
 
 define('_version', '1.0');
-define('_release', '08.02.2013');
-define('_build', 'repo:dev:git:0103');
+define('_release', '16.02.2013');
+define('_build', 'repo:dev:git:0115');
 define('_edition', 'Extended Edition');
 
 $cp_color = '#FFFFFF';  ###########################################################################

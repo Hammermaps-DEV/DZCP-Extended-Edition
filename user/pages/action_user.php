@@ -86,17 +86,9 @@ else
                 if($get['reg'] == convert::ToInt($userid) || permission('editusers'))
                 {
                     if($get['reg'] != 0)
-                        $form = show("page/editor_regged", array("nick" => autor($get['reg']), "von" => _autor));
+                        $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                     else
-                    {
-                        $form = show("page/editor_notregged", array(
-                                "nickhead" => _nick,
-                                "emailhead" => _email,
-                                "hphead" => _hp,
-                                "postemail" => re($get['email']),
-                                "posthp" => re($get['hp']),
-                                "postnick" => re($get['nick'])));
-                    }
+                        $form = show("page/editor_notregged", array("postemail" => re($get['email']), "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
 
                     $index = show($dir."/usergb_add", array("nickhead" => _nick,
                             "add_head" => _gb_edit_head,
@@ -205,10 +197,10 @@ else
                     $add = '';
                     if(!ipcheck("mgbid(".$_GET['id'].")", $flood_membergb))
                     {
-                        if(isset($userid))
-                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)), "von" => _autor));
+                        if(!empty($userid) && $userid != 0)
+                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
                         else
-                            $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp, "postemail" => ""));
+                            $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                         $add = show($dir."/usergb_add", array("titel" => _eintragen_titel,
                                                               "nickhead" => _nick,
@@ -230,7 +222,7 @@ else
                     }
 
                     $seiten = nav($entrys,$maxusergb,"?action=user&amp;id=".$_GET['id']."&show=gb");
-                    $show = show($dir."/profil_gb",array("gbhead" => _membergb, "show" => $membergb, "seiten" => $seiten, "entry" => $add));
+                    $show = show($dir."/profil_gb",array("gbhead" => _membergb, "show" => $membergb, "seiten" => $seiten, "add" => $add));
                 break;
 
                 default:
@@ -294,15 +286,15 @@ else
                             "logins" => userstats($_GET['id'], "logins"),
                             "hits" => userstats($_GET['id'], "hits"),
                             "msgs" => userstats($_GET['id'], "writtenmsg"),
-                            "forenposts" => userstats($_GET['id'], "forumposts"),
+                            "forenposts" => userstats($view_userID, "forumposts"),
                             "votes" => userstats($_GET['id'], "votes"),
                             "regdatum" => date("d.m.Y H:i", $get['regdatum'])._uhr,
-                            "lastvisit" => date("d.m.Y H:i", userstats($_GET['id'], "lastvisit"))._uhr,
+                            "lastvisit" => date("d.m.Y H:i", userstats($view_userID, "lastvisit"))._uhr,
                             "hp" => $hp,
                             "xfire_name" => re($get['xfire']),
                             "xfire" => $xfire,
                             "buddyadd" => $buddyadd,
-                            "nick" => autor($get['id']),
+                            "nick" => autor($view_userID),
                             "rlname" => $rlname,
                             "bday" => $bday,
                             "age" => getAge($get['bday']),
@@ -311,11 +303,11 @@ else
                             "icqnr" => $icqnr,
                             "pn" => $pn,
                             "edituser" => $edituser,
-                            "onoff" => onlinecheck($get['id']),
+                            "onoff" => onlinecheck($view_userID),
                             "clan" => $clan,
-                            "picture" => userpic($get['id']),
+                            "picture" => userpic($view_userID),
                             "favos_head" => $favos_head,
-                            "position" => getrank($get['id']),
+                            "position" => getrank($view_userID),
                             "status" => $status,
                             "ich" => bbcode($get['beschreibung']),
                             "custom_about" => $custom_about,
@@ -325,11 +317,11 @@ else
                 break;
             }
 
-            $navi_profil = show(_profil_navi_profil, array("id" => $_GET['id']));
-            $navi_gb = show(_profil_navi_gb, array("id" => $_GET['id']));
-            $navi_gallery = show(_profil_navi_gallery, array("id" => $_GET['id']));
-            $profil_head = show(_profil_head, array("profilhits" => userstats($_GET['id'],"profilhits")));
-            $index = show($dir."/profil", array("profilhead" => $profil_head, "show" => $show, "nick" => autor($_GET['id']), "profil" => $navi_profil, "gb" => $navi_gb, "gallery" => $navi_gallery));
+            $navi_profil = show(_profil_navi_profil, array("id" => $view_userID));
+            $navi_gb = show(_profil_navi_gb, array("id" => $view_userID));
+            $navi_gallery = show(_profil_navi_gallery, array("id" => $view_userID));
+            $profil_head = show(_profil_head, array("profilhits" => userstats($view_userID,"profilhits")));
+            $index = show($dir."/profil", array("profilhead" => $profil_head, "show" => $show, "nick" => autor($view_userID), "profil" => $navi_profil, "gb" => $navi_gb, "gallery" => $navi_gallery));
         }
     }
 }

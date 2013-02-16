@@ -59,9 +59,6 @@ else
                         ## Ereignis in den Adminlog schreiben ##
                         wire_ipcheck("ident(".convert::ToInt($userid)."_".convert::ToInt($_GET['id']).")");
 
-                        //User abmelden
-                        logout();
-
                         ## User aus der Datenbank suchen ##
                         if(!empty($_GET['id']))
                         {
@@ -77,7 +74,7 @@ else
                                 $_SESSION['ip']         = visitorIp();
 
                                 ## Aktualisiere Datenbank ##
-                                db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."' WHERE id = '".$get['id']."'");
+                                db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '' WHERE id = '".$get['id']."'");
                             }
                         }
                     }

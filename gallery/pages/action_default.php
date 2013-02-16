@@ -19,32 +19,27 @@ else
     $qry = db("SELECT id,kat,beschreibung FROM ".$db['gallery']." ORDER BY id DESC");
     if(_rows($qry))
     {
-        $color = 1;
+        $color = 1; $show = '';
         while($get = _fetch($qry))
         {
-            $files = get_files(basePath."/gallery/images/",false,true,$img_format);
-            $cnt = 0;
+            $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat); $cnt = 0;
             for($i=0; $i<count($files); $i++)
             {
-            if(preg_match("#^".$get['id']."_(.*?)#",strtolower($files[$i]))!=FALSE)
-            {
-            $cnt++;
-            }
+                if(preg_match("#^".$get['id']."_(.*?)#",strtolower($files[$i])) != false)
+                    $cnt++;
             }
 
-                $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
-                $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                        $show .= show($dir."/gallery_show", array("link" => re($get['kat']),
-                                "class" => $class,
-                                "images" => $cntpics,
-                                "id" => $get['id'],
-                                "beschreibung" => bbcode($get['beschreibung']),
-                                "cnt" => $cnt));
+            $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
+            $show .= show($dir."/gallery_show", array("link" => re($get['kat']),
+                                                      "images" => $cntpics,
+                                                      "id" => $get['id'],
+                                                      "beschreibung" => bbcode($get['beschreibung']),
+                                                      "cnt" => $cnt));
         }
-        }
-        else
-                    $show = show(_no_entrys_yet, array("colspan" => "10"));
+    }
+    else
+        $show = show(_no_entrys_yet, array("colspan" => "10"));
 
-                    $index = show($dir."/gallery",array("show" => $show, "head" => _gallery_head));
+    $index = show($dir."/gallery",array("show" => $show));
 }
 ?>

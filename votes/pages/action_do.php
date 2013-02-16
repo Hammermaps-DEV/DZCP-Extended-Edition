@@ -50,7 +50,7 @@ else
                 if(ipcheck("vid_".$_GET['id'])) $index = error(_error_voted_again,1);
                 elseif($get['closed'] == 1)     $index = error(_error_vote_closed,1);
                 else {
-                    if(isset($userid))
+                    if(!empty($userid) && $userid != 0)
                     {
                         $time = convert::ToInt($userid);
                         $update = db("UPDATE ".$db['userstats']."
@@ -68,7 +68,7 @@ else
                     if(!isset($_GET['ajax']))
                         $index = info(_vote_successful, "?action=show&amp;id=".$_GET['id']."");
                 }
-                if(isset($userid)) $cookie = convert::ToInt($userid);
+                if(!empty($userid) && $userid != 0) $cookie = convert::ToInt($userid);
                 else $cookie = "voted";
             }
             set_cookie($prev."vid_".$_GET['id'],$cookie);
@@ -96,7 +96,7 @@ else
             if(ipcheck("vid_".$_GET['id'])) $index = error(_error_voted_again,1);
             elseif($get['closed'] == 1)     $index = error(_error_vote_closed,1);
             else {
-                if(isset($userid))
+                if(!empty($userid) && $userid != 0)
                 {
                     $time = convert::ToInt($userid);
                     $update = db("UPDATE ".$db['userstats']."
@@ -113,7 +113,7 @@ else
 
                 if(!isset($_GET['fajax'])) $index = info(_vote_successful, "forum/?action=showthread&amp;kid=".$_POST['kid']."&amp;id=".$_POST['fid']."");
             }
-            if(isset($userid)) $cookie = convert::ToInt($userid);
+            if(!empty($userid) && $userid != 0) $cookie = convert::ToInt($userid);
             else $cookie = "voted";
         }
         set_cookie($prev."vid_".$_GET['id'],$cookie);

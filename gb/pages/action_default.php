@@ -112,16 +112,10 @@ else
 
     if(!ipcheck("gb", $flood_gb))
     {
-        if(isset($userid))
-        {
-            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid)),
-                    "von" => _autor));
-        } else {
-            $form = show("page/editor_notregged", array("nickhead" => _nick,
-                    "emailhead" => _email,
-                    "hphead" => _hp,
-                    "postemail" => ""));
-        }
+        if(!empty($userid) && $userid != 0)
+            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+        else
+            $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
         $entry = show($dir."/add", array("titel" => _eintragen_titel,
                 "nickhead" => _nick,
