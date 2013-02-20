@@ -59,20 +59,9 @@ if(!get_magic_quotes_gpc())
         else
             $_POST[$key] = addslashes($value);
     }
-
-    foreach($_COOKIE AS $key => $value)
-    {
-        if(is_array($_COOKIE[$key]))
-        {
-            foreach($_COOKIE[$key] AS $key1 => $value1)
-                $_COOKIE[$key][$key1] = addslashes($value1);
-        }
-        else
-            $_COOKIE[$key] = addslashes($value);
-    }
 }
 
-// checks validation of uploaded files (only images are allowed!)
+// checks validation of uploaded files (only images & zip,rar are allowed!)
 for(reset($_FILES);list($key,$value)=each($_FILES);)
 {
     if(!empty($value['tmp_name']))

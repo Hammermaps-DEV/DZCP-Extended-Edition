@@ -42,8 +42,8 @@ function counter()
             WHERE time+'".$useronline."'>'".time()."'
             AND online = 1
             ORDER BY nick");
-            
-            $kats = ""; $text = "";		  
+
+            $kats = ""; $text = "";
             while($geto = _fetch($qryo))
             {
                 $kats .= fabo_autor($geto['id']).';';

@@ -10,6 +10,7 @@
 include("../inc/buffer.php");
 
 ## INCLUDES ##
+include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 include(basePath."/admin/helper.php");
@@ -147,7 +148,7 @@ $title = $pagetitle." - ".$where."";
 page($index, $title, $where ,$time,$wysiwyg);
 
 if($cache_cleanup)
-    Cache::clean($cacheTag);
+    Cache::clean();
 
 ## OUTPUT BUFFER END ##
 gz_output();

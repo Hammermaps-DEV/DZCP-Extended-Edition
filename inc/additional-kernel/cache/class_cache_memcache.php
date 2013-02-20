@@ -6,9 +6,12 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+## Install ##
+Cache::installType('memcache',array('TypeName' => 'Memcache','CallTag' => 'mem_','Class' => 'cache_memcache','InitCache' => true,'SetServer' => true,'Required' => 'memcache'));
+
 class cache_memcache extends Cache
 {
-    private static $_memcached;
+    protected static $_memcached = NULL;
     private static $_memconfig;
     private static $_hash;
 
@@ -35,6 +38,8 @@ class cache_memcache extends Cache
 
             return $ok;
         }
+
+        return false;
     }
 
     /**
@@ -42,11 +47,15 @@ class cache_memcache extends Cache
      *
      * @return boolean
      */
-    public static function mem_server($ip='127.0.0.1',$port=11211)
+    public static function mem_server()
     {
+        $settings = settings(array('memcache_host','memcache_port'));
+        if(empty($settings['memcache_host']) || empty($settings['memcache_port']))
+            return false;
 
-        self::$_hash = md5($ip.$port);
-        self::$_memconfig[self::$_hash] = array("host" => $ip, "port" => $port);
+        self::$_hash = md5($settings['memcache_host'].$settings['memcache_port']);
+        self::$_memconfig[self::$_hash] = array("host" => $settings['memcache_host'], "port" => $settings['memcache_port']);
+        return true;
     }
 
     /**

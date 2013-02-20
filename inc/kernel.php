@@ -211,7 +211,7 @@ function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
     if(!fsockopen_support())
         return false;
 
-    if(($fp = @fsockopen($ip, $port, $errno, $errstr, $timeout)))
+    if($fp = @fsockopen($ip, $port, $errno, $errstr, $timeout))
     {
         unset($ip,$port,$errno,$errstr,$timeout);
         @fclose($fp);
@@ -840,8 +840,7 @@ function os_filesize($file=null)
  */
 function remote_filesize($url)
 {
-    global $cacheTag;
-    if(Cache::check($cacheTag,'remote_filesize_'.md5($url)))
+    if(Cache::check('remote_filesize_'.md5($url)))
     {
         $head = ""; $url_p = parse_url($url); $host = $url_p["host"];
         if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$host))
@@ -883,11 +882,11 @@ function remote_filesize($url)
         if (convert::ToInt($status)==302 && strlen($newurl) > 0)
             $return = remote_filesize($newurl);
 
-        Cache::set($cacheTag,'remote_filesize_'.md5($url), $return, 28800); //Update alle 8h
+        Cache::set('remote_filesize_'.md5($url), $return, 28800); //Update alle 8h
         return $return;
     }
 
-    return Cache::get($cacheTag,'remote_filesize_'.md5($url));
+    return Cache::get('remote_filesize_'.md5($url));
 }
 
 

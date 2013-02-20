@@ -18,7 +18,7 @@ else
 {
   if(fsockopen_support())
   {
-    if(Cache::check($cacheTag,'teamspeak_'.$language) || isset($_GET['cID']))
+    if(Cache::check('teamspeak_'.$language) || isset($_GET['cID']))
     {
         if(!ping_port($settings['ts_ip'],$settings['ts_sport'],1))
             $index = '<br /><center>'._no_connect_to_ts.'</center><br />';
@@ -83,10 +83,10 @@ else
                                              "channelstats" => $channelstats,
                                              "userstats" => $userstats));
 
-    Cache::set($cacheTag,'teamspeak_'.$language, $index, config('cache_teamspeak'));
+    Cache::set('teamspeak_'.$language, $index, config('cache_teamspeak'));
         }
     } else {
-      $index = Cache::get($cacheTag,'teamspeak_'.$language);
+      $index = Cache::get('teamspeak_'.$language);
     }
   } else {
     $index = error(_fopen,1);

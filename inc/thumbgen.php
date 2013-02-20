@@ -11,8 +11,6 @@ error_reporting(0);
 
 function thumbgen($filename,$width,$height)
 {
-    global $cacheTag;
-
     if(!isset($filename) || empty($filename) || !extension_loaded('gd'))
         die();
 
@@ -23,7 +21,7 @@ function thumbgen($filename,$width,$height)
     $neueBreite = empty($width) || $width <= 1 ? $breite : convert::ToInt($width);
     $neueHoehe = empty($height) || $height <= 1 ? intval($hoehe*$neueBreite/$breite) : convert::ToInt($height);
 
-    if(!cache_thumbgen || Cache::check_binary($cacheTag,'thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
+    if(!cache_thumbgen || Cache::check_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
     {
         if(extension_loaded('imagick') && use_imagick) //Use Imagick
         {
@@ -72,7 +70,7 @@ function thumbgen($filename,$width,$height)
             $bin=$imagick->getimage();
 
             if(cache_thumbgen)
-                @Cache::set_binary($cacheTag, 'thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/uploads/'.$filename);
+                @Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/uploads/'.$filename);
 
             $imagick->clear(); unset($imagick);
             exit($bin);
@@ -116,7 +114,7 @@ function thumbgen($filename,$width,$height)
             }
 
             if(cache_thumbgen)
-                Cache::set_binary($cacheTag,'thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/uploads/'.$filename);
+                Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/uploads/'.$filename);
 
             if(is_resource($altesBild))
                 imagedestroy($altesBild);
@@ -143,7 +141,7 @@ function thumbgen($filename,$width,$height)
             break;
         }
 
-        exit(Cache::get_binary($cacheTag,'thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type));
+        exit(Cache::get_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type));
     }
 }
 ?>

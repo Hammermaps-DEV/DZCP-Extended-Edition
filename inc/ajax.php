@@ -14,6 +14,7 @@ $ajaxJob = true;
 $ajaxThumbgen = ((isset($_GET['loader']) ? $_GET['loader'] : false) == 'thumbgen' ? true : false);
 
 ## INCLUDES ##
+include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 include(basePath."/inc/thumbgen.php");

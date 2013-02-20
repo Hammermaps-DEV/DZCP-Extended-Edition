@@ -18,7 +18,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
     case 'update':
         if(isset($_POST))
         {
-            if(convert::ToInt($_POST['cache_engine']) != $cache_engine)
+            if(convert::ToString($_POST['cache_engine']) != $cache_engine)
                 $cache_cleanup = true;
 
             db("UPDATE ".$db['config']." SET
@@ -83,7 +83,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
                 `cache_teamspeak`    = '".convert::ToInt($_POST['cache_teamspeak'])."',
                 `cache_server`       = '".convert::ToInt($_POST['cache_server'])."',
                 `cache_news`         = '".convert::ToInt($_POST['cache_news'])."',
-                `cache_engine`       = '".convert::ToInt($_POST['cache_engine'])."',
+                `cache_engine`       = '".convert::ToString($_POST['cache_engine'])."',
                 `l_nwars`            = '".convert::ToInt($_POST['l_nwars'])."',
                 `news_feed`   	     = '".convert::ToInt($_POST['feed'])."'
             WHERE id = 1");
@@ -158,10 +158,6 @@ if(empty($show))
 
     unset($tmps,$selt);
 
-    $cache = array(0 => 'Keinen', 1 => 'File', 2 => 'MySQL', 3 => 'Memcache'); $cache_select = '';
-    foreach ($cache as $key => $value)
-    { $cache_select .= show(_select_field, array("value" => $key, "what" => $value, "sel" => ($cache_engine == $key ? 'selected="selected"' : ''))); }
-
     $pwde_options = show('<option '.(!$gets['default_pwd_encoder'] ? 'selected="selected"' : '').' value="0">MD5 [lang_pwd_encoder_algorithm]</option>
     <option '.($gets['default_pwd_encoder'] == 1 ? 'selected="selected"' : '').' value="1">SHA1 [lang_pwd_encoder_algorithm]</option>
     <option '.($gets['default_pwd_encoder'] == 2 ? 'selected="selected"' : '').' value="2">SHA256 [lang_pwd_encoder_algorithm]</option>
@@ -189,7 +185,7 @@ if(empty($show))
     $sel_feed = ($get['news_feed'] ? 'selected="selected"' : '');
 
     $wysiwyg = '_word';
-    $show_ = show($dir."/form_config", array("cache_select" => $cache_select,
+    $show_ = show($dir."/form_config", array("cache_select" => Cache::GetConfigMenu(),
                                              "main_info" => _main_info,
                                              "cache_info" => _config_cache_info,
                                              "badword_info" => _admin_config_badword_info,

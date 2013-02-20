@@ -6,6 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 #########################
 ## OUTPUT BUFFER START ##
 #########################
@@ -14,6 +17,7 @@ include("../inc/buffer.php");
 ##############
 ## INCLUDES ##
 ##############
+include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 

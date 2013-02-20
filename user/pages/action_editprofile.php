@@ -103,7 +103,7 @@ else
 
                 $get = db("SELECT user,xfire FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
                 if($get['xfire'] != convert::ToString(up($_POST['xfire'])))
-                { Cache::delete_binary($cacheTag,'xfire_'.$get['user']); } //Delete XFire Cache
+                { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
 
                 db("UPDATE ".$db['users']." SET	".$newpwd." ".$customfields."
                                                  `country`      = '".convert::ToString($_POST['land'])."',

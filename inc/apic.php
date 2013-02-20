@@ -23,6 +23,7 @@ class API_CORE
         /**
          *  Addons auflisten und Index zusammenstellen
          */
+        DebugConsole::insert_initialize('API_CORE::init()', 'DZCP API-Core'); //Debug Log
         global $language,$tmpdir,$ajaxThumbgen;
         if(modapi_enabled && !$ajaxThumbgen)
         {

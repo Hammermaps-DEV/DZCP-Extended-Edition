@@ -12,11 +12,10 @@ ob_start();
     #@session_regenerate_id();
     if(!isset($_SESSION['PHPSESSID']) || !isset($_COOKIE['PHPSESSID']))
     {
-      @session_destroy();
-      @session_start();
-     # @session_regenerate_id();
-      $_SESSION['PHPSESSID'] = true;
-      $_COOKIE['PHPSESSID']  = true;
+        @session_destroy();
+        @session_start();
+        $_SESSION['PHPSESSID'] = true;
+        $_COOKIE['PHPSESSID']  = true;
     }
   }
 

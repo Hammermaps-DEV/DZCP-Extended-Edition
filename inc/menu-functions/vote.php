@@ -2,7 +2,7 @@
 //-> Votemenu
 function vote($ajax = false)
 {
-  global $db,$prev;
+  global $db;
     $qry = db("SELECT * FROM ".$db['votes']." WHERE menu = '1' AND forum = 0");
     $get = _fetch($qry);
 
@@ -16,7 +16,7 @@ function vote($ajax = false)
 
         if($stimmen != 0)
         {
-          if(ipcheck("vid_".$get['id']) || isset($_COOKIE[$prev."vid_".$get['id']]) || $get['closed'] == 1)
+          if(ipcheck("vid_".$get['id']) || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1)
           {
             $percent = round($getv['stimmen']/$stimmen*100,1);
             $rawpercent = round($getv['stimmen']/$stimmen*100,0);

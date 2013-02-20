@@ -20,7 +20,10 @@ else
     ## User Language ##
     ###################
     if(isset($_GET['set']) && !empty($_GET['set']) && file_exists(basePath."/inc/lang/languages/".$_GET['set'].".php"))
-        set_cookie($prev.'language',$_GET['set']);
+    {
+        cookie::put('language', $_GET['set']);
+        cookie::save();
+    }
 
     header("Location: ".$_SERVER['HTTP_REFERER']);
 }

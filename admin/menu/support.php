@@ -60,12 +60,8 @@ if(_adminMenu != 'true')
     $support .= "#####################\r\n";
     $support .= "Cache Support \r\n";
     $support .= "#####################\r\n";
-    $caches = Cache::get_caches();
-    $support .= "Memcache Erweiterung: ".(function_exists("memcache_connect") ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
-    $support .= "Memcache: ".(array_key_exists('cache_memcache', $caches) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
-    $support .= "File: ".(array_key_exists('cache_file', $caches) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
-    $support .= "MySQL: ".(array_key_exists('cache_mysql', $caches) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
-    $support .= "Verwendet: ".(Cache::getType($cacheTag))."\r\n";
+    $support .= Cache::get_cache_support();
+    $support .= "Aktuell verwendet: ".(Cache::getType($cache_engine))."\r\n";
     $support .= "\r\n";
 
     $support .= "#####################\r\n";

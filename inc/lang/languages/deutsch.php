@@ -42,6 +42,7 @@ define('_dl_comments', 'Downloadkommentare');
 define('_lobby_dlc', 'Downloadkommentare');
 define('_lobby_dl_comments_1', 'neuer Downloadkommentar');
 define('_lobby_dl_comments_2', 'neue Downloadkommentare');
+define('_cache_none', 'Keinen Cache');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');

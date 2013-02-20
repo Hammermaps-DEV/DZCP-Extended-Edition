@@ -42,7 +42,7 @@ else
     $show_sticky = "";
     while($get = _fetch($qry))
     {
-        if(Cache::check($cacheTag,'news_sticky_id_'.$get['id']))
+        if(Cache::check('news_sticky_id_'.$get['id']))
         {
             $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".$get['kat']."'",false,true);
             $c = cnt($db['newscomments'], " WHERE news = '".$get['id']."'");
@@ -67,14 +67,14 @@ else
                                                           "links" => $links,
                                                           "autor" => autor($get['autor'])));
             $show_sticky .= $sticky_news;
-            Cache::set($cacheTag,'news_sticky_id_'.$get['id'], $sticky_news, config('cache_news'));
+            Cache::set('news_sticky_id_'.$get['id'], $sticky_news, config('cache_news'));
         }
         else
-            $show_sticky .= Cache::get($cacheTag,'news_sticky_id_'.$get['id']);
+            $show_sticky .= Cache::get('news_sticky_id_'.$get['id']);
     }
 
     //Public News
-    if(Cache::check($cacheTag,'news_page'))
+    if(Cache::check('news_page'))
     {
         $qry = db("SELECT id,url1,url2,url3,link1,link2,link3,titel,klapptext,klapplink,text,datum,autor,viewed,intern,kat FROM ".$db['news']."
                         WHERE sticky < ".time()."
@@ -110,13 +110,13 @@ else
                                                               "autor" => autor($get['autor'])));
         }
 
-        Cache::set($cacheTag,'news_page', $show, config('cache_news'));
+        Cache::set('news_page', $show, config('cache_news'));
     }
     else
-        $show = Cache::get($cacheTag,'news_page');
+        $show = Cache::get('news_page');
 
     //Kategorien
-    if(Cache::check($cacheTag,'news_kat') || isset($_GET['kat']))
+    if(Cache::check('news_kat') || isset($_GET['kat']))
     {
         $kategorien = "";
         $qrykat = db("SELECT * FROM ".$db['newskat']."");
@@ -126,10 +126,10 @@ else
             $kategorien .= "<option value='".$getkat['id']."' ".$sel.">".$getkat['kategorie']."</option>";
         }
 
-        Cache::set($cacheTag,'news_kat', $kategorien, 10);
+        Cache::set('news_kat', $kategorien, 10);
     }
     else
-        $kategorien = Cache::get($cacheTag,'news_kat');
+        $kategorien = Cache::get('news_kat');
 
     //Output
     $index = show($dir."/news", array('show' => $show, 'show_sticky' => $show_sticky, 'nav' => nav(cnt($db['news'],$navWhere),$maxnews,'?kat='.$navKat,false), 'kategorien' => $kategorien));

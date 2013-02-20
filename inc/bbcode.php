@@ -7,10 +7,18 @@
  */
 
 ## Error Reporting ##
+if(!defined('DEBUG_LOADER'))
+exit('<b>Die Debug-Console wurde nicht included oder wurde nicht geladen!<p>
+Bitte prüfen Sie ob jede index.php einen "include(basePath."/inc/debugger.php");" Eintrag hat.</b>');
+
 if(is_debug)
 {
     ini_set('display_errors', 1);
     error_reporting(E_ALL);
+    DebugConsole::initCon();
+
+    if(show_debug_console)
+        set_error_handler('dzcp_error_handler');
 }
 else
     error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
@@ -26,6 +34,7 @@ require_once(basePath.'/inc/sendmail.php');
 require_once(basePath."/inc/apic.php");
 require_once(basePath."/inc/api.php");
 require_once(basePath.'/inc/kernel.php');
+require_once(basePath."/inc/cookie.php");
 require_once(basePath."/inc/cache.php");
 
 if(!$ajaxThumbgen)
@@ -44,10 +53,10 @@ $rootAdmin = 1;
 //-> Settingstabelle auslesen
 $settings = db("SELECT * FROM ".$db['settings'],false,true);
 $prev = $settings['prev'].'_';
-$cacheTag = 'dzcp_cache_'.$prev;
 
-//-> Language auslesen
-$language = (isset($_COOKIE[$prev.'language']) ? (file_exists(basePath.'/inc/lang/languages/'.$_COOKIE[$prev.'language'].'.php') ? $_COOKIE[$prev.'language'] : $settings["language"]) : $settings["language"]);
+//-> Cookie
+if(!$ajaxThumbgen)
+    cookie::init($prev.'dzcp');
 
 //einzelne Definitionen
 $isSpider = isSpider();
@@ -134,22 +143,28 @@ unset($config);
 
 //-> Cache
 Cache::loadClasses();
-Cache::setType($cacheTag,$cache_engine);
-Cache::init($cacheTag);
+Cache::setType($cache_engine);
+Cache::init();
 
 //-> Auslesen der Cookies und automatisch anmelden
-if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pkey']) && !empty($_COOKIE[$prev.'pkey']) && empty($_SESSION['id']) && !$ajaxThumbgen)
+if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen && !$ajaxJob && checkme() == "unlogged")
 {
-    ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey FROM ".$db['users']." WHERE id = '".convert::ToInt($_COOKIE[$prev.'id'])."' AND pkey = '".convert::ToString($_COOKIE[$prev.'pkey'])."' AND level != '0'");
+    ## Debug Log ##
+    DebugConsole::insert_initialize('inc/bbcode.php', 'Autologin');
+    DebugConsole::insert_info('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').' & Permanent-Key: '.cookie::get('pkey'));
 
+    ## User aus der Datenbank suchen ##
+    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey FROM ".$db['users']." WHERE id = '".cookie::get('id')."' AND pkey = '".cookie::get('pkey')."' AND level != '0'");
     if(_rows($sql))
     {
         $get = _fetch($sql);
+        DebugConsole::insert_successful('inc/bbcode.php', 'Autologin for "'.$get['user'].' => ID: '.$get['id'].'" is successfully');
 
         ## Generiere neuen permanent-key ##
         $permanent_key = pass_hash(mkpwd(6,true),0);
-        set_cookie($prev."pkey",$permanent_key);
+        cookie::put('pkey', $permanent_key);
+        cookie::save();
+        DebugConsole::insert_info('inc/bbcode.php', 'Update Permanent-Key for ID: '.$get['id'].' to "'.$permanent_key.'"'); //Debug Log
 
         ## Schreibe Werte in die Server Sessions ##
         $_SESSION['id']         = $get['id'];
@@ -170,11 +185,17 @@ if(isset($_COOKIE[$prev.'id']) && isset($_COOKIE[$prev.'pkey']) && !empty($_COOK
         db("UPDATE ".$db['userstats']." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
     }
     else
+    {
+        DebugConsole::insert_error('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').'" was not successful'); //Debug Log
         logout(); ## User Logout ##
+    }
 }
 
 if(!$ajaxThumbgen)
 {
+    //-> Language auslesen
+    $language = (cookie::get('language') != false ? (file_exists(basePath.'/inc/lang/languages/'.cookie::get('language').'.php') ? cookie::get('language') : $settings["language"]) : $settings["language"]);
+
     $userid = userid();
     $chkMe = checkme();
 
@@ -190,7 +211,7 @@ if(!$ajaxThumbgen)
 //-> User Anmeldung
 function login($username='',$pwd='',$permanent=false)
 {
-    global $db,$prev;
+    global $db;
 
     if(empty($username) || empty($pwd))
         return false;
@@ -206,11 +227,11 @@ function login($username='',$pwd='',$permanent=false)
         ## Autologin ##
         if($permanent)
         {
-            set_cookie($prev."id",$get['id']);
+            cookie::put('id', $get['id']);
 
             ## Generiere neuen permanent-key ##
             $permanent_key = pass_hash(mkpwd(6,true),0);
-            set_cookie($prev."pkey",$permanent_key);
+            cookie::put('pkey', $permanent_key);
         }
         else
             $permanent_key = '';
@@ -239,7 +260,7 @@ function login($username='',$pwd='',$permanent=false)
 //-> Aktualisierung des Online Status *preview
 function update_user_status_preview()
 {
-    global $db,$prev;
+    global $db;
 
     ## User aus der Datenbank suchen ##
     $sql = db("SELECT id,time FROM ".$db['users']." WHERE id = '".convert::ToInt($_SESSION['id'])."'
@@ -266,14 +287,13 @@ function update_user_status_preview()
 //-> User Abmeldung
 function logout()
 {
-    global $db,$prev,$userid;
+    global $db,$userid;
 
     if($userid)
         db("UPDATE ".$db['users']." SET online = '0', sessid = '' WHERE id = '".convert::ToInt($userid)."'");
 
-    set_cookie($prev.'id', '');
-    set_cookie($prev.'pkey', '');
-    set_cookie(session_name(), '');
+    cookie::clear();
+    cookie::save();
     session_unset();
     session_destroy();
     session_regenerate_id();
@@ -334,8 +354,8 @@ function checkme($userid_set=0)
 if(!$ajaxThumbgen)
 {
     $files = get_files('../inc/_templates_/',true,false);
-    if(isset($_COOKIE[$prev.'tmpdir']) && $_COOKIE[$prev.'tmpdir'] != NULL)
-        $tmpdir = (file_exists(basePath."/inc/_templates_/".$_COOKIE[$prev.'tmpdir']."/index.html") ? $_COOKIE[$prev.'tmpdir'] : $files[0]);
+    if(cookie::get('tmpdir') != false)
+        $tmpdir = (file_exists(basePath."/inc/_templates_/".cookie::get('tmpdir')."/index.html") ? cookie::get('tmpdir') : $files[0]);
     else
         $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
 
@@ -1156,29 +1176,6 @@ function links_check_url($string='')
     return false;
 }
 
-//-> set cookies
-function set_cookie($name, $value = '', $path = '/', $secure = false, $http_only = true)
-{
-    $expires = (empty($value) ? time() - 6000 : time() + 3600 * 24 * 360);
-    $domain = $_SERVER['HTTP_HOST'];
-
-    if(strtolower(substr($domain, 0, 4)) == 'www.')
-        $domain = substr($domain, 4);
-
-    $domain = '.' . $domain;
-    $port = strpos($domain, ':');
-
-    if($port !== false)
-        $domain = substr($domain, 0, $port);
-
-    header('Set-Cookie: ' . rawurlencode($name) . '=' . rawurlencode($value)
-                          . (empty($expires) ? '' : '; expires=' . gmdate('D, d-M-Y H:i:s \\G\\M\\T', $expires))
-                          . (empty($path)    ? '' : '; path=' . $path)
-                          . '; domain=' . $domain
-                          . (!$secure        ? '' : '; secure')
-                          . (!$http_only    ? '' : '; HttpOnly'), false);
-}
-
 //-> Infomeldung ausgeben
 function info($msg, $url, $timeout = 5)
 {
@@ -1222,7 +1219,7 @@ function error2($error)
 //-> Email wird auf korrekten Syntax & Erreichbarkeit ueberprueft
 function check_email($email)
 {
-    return (!preg_match("#^([a-zA-Z0-9\.\_\-]+)@([a-zA-Z0-9\.\-]+\.[A-Za-z][A-Za-z]+)$#", $email) ? false : true);
+    return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email);
 }
 
 //-> Bilder verkleinern
@@ -2095,8 +2092,6 @@ function getBoardPermissions($checkID = 0, $pos = 0)
 //-> Show Xfire Status
 function xfire($username='')
 {
-    global $cacheTag;
-
     if(empty($username))
         return '-';
 
@@ -2112,16 +2107,16 @@ function xfire($username='')
 
     if(xfire_preloader)
     {
-        if(Cache::check_binary($cacheTag,'xfire_'.$username))
+        if(Cache::check_binary('xfire_'.$username))
         {
             if(!$img_stream = fileExists('http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'))
                 return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 
-            Cache::set_binary($cacheTag,'xfire_'.$username, $img_stream, '', xfire_refresh);
+            Cache::set_binary('xfire_'.$username, $img_stream, '', xfire_refresh);
             return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_stream)));
         }
         else
-            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary($cacheTag,'xfire_'.$username))));
+            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary('xfire_'.$username))));
     }
 
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
@@ -2179,8 +2174,6 @@ function count_clicks($side_tag='',$clickedID=0)
  **/
 function thumbgen_delete($filename,$width='100',$height='')
 {
-    global $cacheTag;
-
     if(!isset($filename) || empty($filename))
         return false;
 
@@ -2190,7 +2183,7 @@ function thumbgen_delete($filename,$width='100',$height='')
     list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/uploads/'.$filename);
     $neueBreite = empty($width) || $width <= 1 ? $breite : convert::ToInt($width);
     $neueHoehe = empty($height) || $height <= 1 ? intval($hoehe*$neueBreite/$breite) : convert::ToInt($height);
-    if(Cache::delete_binary($cacheTag,'thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
+    if(Cache::delete_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
         return true;
     else
         return false;
@@ -2368,11 +2361,17 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
 
         $pholdervars = explode("^",$pholdervars);
         foreach($pholdervars as $pholdervar)
-        { @eval("if(isset(\$".$pholdervar.")) \$arr[".$pholdervar."] = \$".$pholdervar.";"); }
+        { if(isset($$pholdervar)) $arr[$pholdervar] = $$pholdervar; }
+
+        if(save_debug_console)
+            DebugConsole::save_log();
 
         //index output
-        echo show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr);
+        echo (is_debug && show_debug_console ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr);
     }
+
+    // Cookie speichern
+    cookie::save();
 }
 
 //Initialisierung der Addon Calls

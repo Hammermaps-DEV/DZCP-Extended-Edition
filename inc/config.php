@@ -11,6 +11,8 @@
 #########################################
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug Modus Seiten gecached werden können
+define('show_debug_console', false); //Zeigt die Debug Console
+define('save_debug_console', false); //Speichert alle in der Debug Console ausgegebenen Texte in eine Log Datei
 
 define('buffer_gzip_compress', true); // Soll die Seite mit Hilfe der GZIP-Komprimierung übertragen werden
 define('buffer_gzip_compress_level', 4); // Level der Kompression 1 - 9 *Optimal Level 4
@@ -28,6 +30,8 @@ define('AjaxLoad', true); // Ajax Loads erlauben
 define('modapi_enabled', true); // DZCP ModAPI erlauben
 define('allow_additional', true); // additional functions,etc erlauben
 define('cache_thumbgen', true); // Zwischenspeichern der Thumbgen generierten Bilder zulassen
+
+define('cookie_expires', (60*60*24*30*12)); // Wie Lange die Cookies des CMS gültig bleiben.
 
 /*
  * Wenn Imagick nicht verwendet wird, muss bei großen Bildern auf die PHP Einstellung "memory_limit" geachtet werden.

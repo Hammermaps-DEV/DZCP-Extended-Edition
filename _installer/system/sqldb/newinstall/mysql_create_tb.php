@@ -268,7 +268,7 @@ function install_mysql_create()
       `l_team` int(5) NOT NULL DEFAULT '7',
       `m_events` int(5) NOT NULL DEFAULT '5',
       `m_away` int(5) NOT NULL DEFAULT '10',
-      `cache_engine` int(1) NOT NULL DEFAULT '1',
+      `cache_engine` varchar(50) NOT NULL DEFAULT 'file',
       `cache_teamspeak` int(10) NOT NULL DEFAULT '30',
       `cache_server` int(10) NOT NULL DEFAULT '30',
       `cache_news` int(10) NOT NULL DEFAULT '5',

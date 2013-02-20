@@ -1,7 +1,7 @@
 <?php
 function server($serverID = 0)
 {
-    global $db, $servermenu, $language, $picformat, $cacheTag;
+    global $db, $servermenu, $language, $picformat;
 
     $servernavi=''; $st = 0;
     if(empty($serverID))
@@ -20,7 +20,7 @@ function server($serverID = 0)
     {
         if(fsockopen_support())
         {
-            if(Cache::check($cacheTag,'nav_server_'.$serverID))
+            if(Cache::check('nav_server_'.$serverID))
             {
                 $pwd = ''; $pwd_info = ''; $pwd_txt = ''; $game_icon = ''; $players = _navi_gsv_no_players_available;
                 $image_map = '../inc/images/maps/no_map.gif'; ## NoMap Picture ##
@@ -117,10 +117,10 @@ function server($serverID = 0)
                                                         "txt_players_view" => _navi_gsv_view_players,
                                                         "txt_game" => _navi_gsv_game));
 
-                Cache::set($cacheTag,'nav_server_'.$serverID, $servernavi, config('cache_server'));
+                Cache::set('nav_server_'.$serverID, $servernavi, config('cache_server'));
             }
             else
-                $servernavi = Cache::get($cacheTag,'nav_server_'.$serverID);
+                $servernavi = Cache::get('nav_server_'.$serverID);
         }
         else
             $servernavi = error2(_fopen);

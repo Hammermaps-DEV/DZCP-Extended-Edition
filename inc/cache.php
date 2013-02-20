@@ -8,7 +8,9 @@
 
 class Cache
 {
-    private static $cacheType=array();
+    private static $cacheInstalled=array();
+    private static $cacheToInstall=array();
+    private static $cacheType = 'file';
     private static $dummy=array();
     private static $caches=array();
     private static $dummy_overwrite=false;
@@ -26,10 +28,6 @@ class Cache
             {
                 if(!require_once(basePath . '/inc/additional-kernel/cache/'.$func))
                     die('CMSKernel: Can not include "inc/additional-kernel/cache/'.$func.'"!');
-
-                $func = explode('.',$func);
-                $func = explode('class_',$func[0]);
-                self::$caches[$func[1]] = true;
             }
 
             self::$dummy_overwrite = false;
@@ -42,164 +40,161 @@ class Cache
     }
 
     /**
-     * Gibt den verwendeten Cache Type zuruck
+     * Installiert einen Cache Type
+     *
+     * @return boolean
+     */
+    public static function installType($typeShort='',$install=array())
+    {
+        if(!array_key_exists($typeShort, self::$cacheInstalled))
+        {
+            if(empty($install['Required']) || !extension_loaded(!$install['Required']))
+                self::$cacheInstalled[$typeShort] = $install;
+            else if((!empty($install['Required']) || !extension_loaded($install['Required'])) && show_cache_debug)
+                DebugConsole::insert_info('inc/cache.php', 'PHP-Extension: "'.$install['Required'].'" not loaded, required for Cache Type: "'.$install['TypeName'].'"');
+        }
+
+        if(!array_key_exists($typeShort, self::$cacheToInstall))
+            self::$cacheToInstall[$typeShort] = $install;
+    }
+
+    /**
+     * Gibt eine liste für die Administration
+     *
+     * @return boolean
+     */
+    public static function GetConfigMenu()
+    {
+        global $cache_engine;
+        $cache_select = show(_select_field, array("value" => '', "what" => _cache_none, "sel" => ''));
+        foreach(self::$cacheInstalled as $typeShort => $install)
+        { $cache_select .= show(_select_field, array("value" => $typeShort, "what" => $install['TypeName'], "sel" => ($cache_engine == $typeShort ? 'selected="selected"' : ''))); }
+        return $cache_select;
+    }
+
+    /**
+     * Gibt den verwendeten Cache Type zurück *Support*
      *
      * @return boolean
      */
     public static function getType($tag=null)
-    {
-
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
-        {
-            case 1: //File
-                return 'File';
-            break;
-            case 2: //MySQL
-                return 'MySQL';
-            break;
-            case 3: //Memcache
-                return 'Memcache';
-            break;
-            default:
-                return 'Keinen';
-            break;
-        }
-    }
+    { return self::$cacheInstalled[$tag]['TypeName']; }
 
     /**
      * Setzt die Tags und Caches Typen
      *
      * @return boolean
      */
-    public static function setType($tag=null,$cacheType=null)
+    public static function setType($cacheType=null)
     {
         if(self::$dummy_overwrite)
         {
-            self::$cacheType[$tag] = 0;
+            if(show_cache_debug)
+                DebugConsole::insert_error('inc/cache.php', 'Use Cache Dummy-Overwrite!');
+
+            self::$cacheType = 'dummy';
             return true;
         }
 
-        ## Cache Typen ##
-        switch ($cacheType)
+        if(array_key_exists($cacheType, self::$cacheInstalled))
+            self::$cacheType = $cacheType;
+        else
         {
-            case 3: //Memcache
-                if(self::$caches['cache_memcache'] && function_exists("memcache_connect"))
-                {
-                    self::$cacheType[$tag] = 3;
-                    return true;
-                }
-                else
-                {
-                    self::$cacheType[$tag] = 0;
-                    return false;
-                }
-                break;
-            case 2: //MySQL
-                if(self::$caches['cache_mysql'])
-                {
-                    self::$cacheType[$tag] = 2;
-                    return true;
-                }
-                else
-                {
-                    self::$cacheType[$tag] = 0;
-                    return false;
-                }
-                break;
-            case 1: //File
-                if(self::$caches['cache_file'])
-                {
-                    self::$cacheType[$tag] = 1;
-                    return true;
-                }
-                else
-                {
-                    self::$cacheType[$tag] = 0;
-                    return false;
-                }
-                break;
-            default:
-                self::$cacheType[$tag] = 0;
-                return true;
-            break;
+            self::$cacheType = 'dummy';
+            self::$dummy_overwrite = true;
+
+            if(show_cache_debug)
+                DebugConsole::insert_error('inc/cache.php', 'Use Cache Dummy-Overwrite! Cache Type: "'.$cacheType.'" not loaded!');
+
+            return true;
         }
     }
 
     /**
      * Initialisiert die Classen
      */
-    public static function init($tag=null)
+    public static function init()
     {
-        global $db;
-
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy' || empty(self::$cacheType))
             return;
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                $settings = settings(array('memcache_host','memcache_port'));
-                if(empty($settings['memcache_host']) || empty($settings['memcache_port']) || !extension_loaded('Memcache'))
+            $install = self::$cacheInstalled[self::$cacheType];
+            if($install['SetServer'])
+            {
+                if(!call_user_func($install['Class'].'::'.$install['CallTag'].'server'))
                 {
+                    self::$cacheType = 'dummy';
                     self::$dummy_overwrite = true;
-                    return;
-                }
 
-                cache_memcache::mem_server($settings['memcache_host'],$settings['memcache_port']);
-                if(!cache_memcache::initC())
-                {
-                    self::$dummy_overwrite = true;
-                    return;
+                    if(show_cache_debug)
+                        DebugConsole::insert_error('inc/cache.php', 'Use Cache Dummy-Overwrite! '.$install['Class'].'::server()'.' is FALSE');
                 }
-            break;
-            case 1:
-                cache_file::file_server("/inc/_cache");
-                cache_file::initC();
-            break;
-            case 0: break;
+            }
+
+            if($install['InitCache'])
+            {
+                if(!call_user_func($install['Class'].'::initC'))
+                {
+                    self::$cacheType = 'dummy';
+                    self::$dummy_overwrite = true;
+
+                    if(show_cache_debug)
+                        DebugConsole::insert_error('inc/cache.php', 'Use Cache Dummy-Overwrite! '.$install['Class'].'::initC()'.' is FALSE');
+                }
+            }
         }
+        else if(show_cache_debug)
+            DebugConsole::insert_error('inc/cache.php', 'Use Cache Dummy-Overwrite! Cache Type: "'.self::$cacheType.'" not loaded!');
     }
 
     /**
-     * Gibt die geladenen Cache Classe aus
+     * Gibt die liste geladenen Cache Classe aus *Support*
      *
      * @return array
      */
-    public static function get_caches()
-    { return self::$caches; }
+    public static function get_cache_support()
+    {
+        $support = '';
+        foreach(self::$cacheToInstall as $typeShort => $install)
+        {
+            if(!empty($install['Required']))
+                $support .= $install['TypeName']." Erweiterung: ".(extension_loaded($install['Required']) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
+
+            $support .= $install['TypeName'].": ".(array_key_exists($typeShort, self::$cacheInstalled) ? 'Ist verf&uuml;gbar' : 'Deaktiviert')."\r\n";
+        }
+
+        return $support;
+    }
 
     /**
      * Speichert Daten im Cache
      *
      * @return boolean
      */
-    public static function set($tag=null, $key=null, $data=null, $ttl = 3600)
+    public static function set($key=null, $data=null, $ttl = 3600)
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
-            self::$dummy[$tag."_".$key] = $data;
+            self::$dummy[$key] = $data;
             return true;
         }
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_set($tag."_".$key, $data, $ttl);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_set($tag."_".$key, $data, $ttl);
-            break;
-            case 1:
-                return cache_file::file_set($tag."_".$key, $data, $ttl);
-            break;
-            case 0:
-                self::$dummy[$tag."_".$key] = $data;
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Set Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'set | Keys: '.$key.' | '.$ttl);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'set',$key,$data,$ttl);
         }
+
+        return false;
     }
 
     /**
@@ -207,31 +202,28 @@ class Cache
      *
      * @return boolean
      */
-    public static function set_binary($tag=null, $key=null, $binary=null, $original_file=false, $ttl = 0)
+    public static function set_binary($key=null, $binary=null, $original_file=false, $ttl = 0)
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
-            self::$dummy[$tag."_".$key] = $binary;
+            self::$dummy['bin_'.$key] = $binary;
             return true;
         }
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_set_binary($tag."_".$key, $binary, $original_file, $ttl == 0 ? 86400 : $ttl);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_set_binary($tag."_".$key, $binary, $original_file, $ttl);
-            break;
-            case 1:
-                return cache_file::file_set_binary($tag."_".$key, $binary, $original_file, $ttl);
-            break;
-            case 0:
-                self::$dummy[$tag."_".$key] = $binary;
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType]; $ttl = ($ttl == 0 ? 86400 : $ttl);
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Set Binary Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'set_binary | Keys: '.$key.' | '.$original_file.' | '.$ttl);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'set_binary',$key,$binary,$original_file,$ttl);
         }
+
+        return false;
     }
 
     /**
@@ -239,27 +231,25 @@ class Cache
      *
      * @return mixed
      */
-    public static function get($tag=null,$key=null)
+    public static function get($key=null)
     {
-        if(self::$dummy_overwrite)
-            return self::$dummy[$tag."_".$key];
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
+            return self::$dummy[$key];
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_get($tag."_".$key);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_get($tag."_".$key);
-            break;
-            case 1:
-                return cache_file::file_get($tag."_".$key);
-            break;
-            case 0:
-                return self::$dummy[$tag."_".$key];
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Get Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'get | Keys: '.$key);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'get',$key);
         }
+
+        return false;
     }
 
     /**
@@ -267,27 +257,25 @@ class Cache
      *
      * @return mixed
      */
-    public static function get_binary($tag=null,$key=null)
+    public static function get_binary($key=null)
     {
-        if(self::$dummy_overwrite)
-            return self::$dummy[$tag."_".$key];
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
+            return self::$dummy['bin_'.$key];
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_get_binary($tag."_".$key);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_get_binary($tag."_".$key);
-            break;
-            case 1:
-                return cache_file::file_get_binary($tag."_".$key);
-            break;
-            case 0:
-                return self::$dummy[$tag."_".$key];
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Get Binary Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'get_binary | Keys: '.$key);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'get_binary',$key);
         }
+
+        return false;
     }
 
     /**
@@ -295,30 +283,28 @@ class Cache
      *
      * @return boolean
      */
-    public static function check($tag=null,$key=null)
+    public static function check($key=null)
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
             return true;
 
         if(is_debug && !cache_in_debug)
             return true;
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_check($tag."_".$key);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_check($tag."_".$key);
-            break;
-            case 1:
-                return cache_file::file_check($tag."_".$key);
-            break;
-            case 0:
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Check Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'check | Keys: '.$key);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'check',$key);
         }
+
+        return false;
     }
 
     /**
@@ -326,30 +312,28 @@ class Cache
      *
      * @return boolean
      */
-    public static function check_binary($tag=null,$key=null)
+    public static function check_binary($key=null)
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
             return true;
 
         if(is_debug && !cache_in_debug)
             return true;
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_check_binary($tag."_".$key);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_check_binary($tag."_".$key);
-            break;
-            case 1:
-                return cache_file::file_check_binary($tag."_".$key);
-            break;
-            case 0:
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Check Binary Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'check_binary | Keys: '.$key);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'check_binary',$key);
         }
+
+        return false;
     }
 
     /**
@@ -357,31 +341,28 @@ class Cache
      *
      * @return boolean
      */
-    public static function delete($tag=null,$key=null)
+    public static function delete($key=null)
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
-            unset(self::$dummy[$tag."_".$key]);
+            unset(self::$dummy[$key]);
             return true;
         }
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_delete($tag."_".$key);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_delete($tag."_".$key);
-            break;
-            case 1:
-                return cache_file::file_delete($tag."_".$key);
-            break;
-            case 0:
-                unset(self::$dummy[$tag."_".$key]);
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Delete Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'delete | Keys: '.$key);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'delete',$key);
         }
+
+        return false;
     }
 
     /**
@@ -389,31 +370,28 @@ class Cache
      *
      * @return boolean
      */
-    public static function delete_binary($tag=null,$key=null)
+    public static function delete_binary($key=null)
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
-            unset(self::$dummy[$tag."_".$key]);
+            unset(self::$dummy['bin_'.$key]);
             return true;
         }
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_delete_binary($tag."_".$key);
-            break;
-            case 2:
-                return cache_mysql::mysqlc_delete_binary($tag."_".$key);
-            break;
-            case 1:
-                return cache_file::file_delete_binary($tag."_".$key);
-            break;
-            case 0:
-                unset(self::$dummy[$tag."_".$key]);
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Delete Binary Cache => Key: '.$key);
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'delete_binary | Keys: '.$key);
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'delete_binary',$key);
         }
+
+        return false;
     }
 
     /**
@@ -421,30 +399,25 @@ class Cache
      *
      * @return boolean
      */
-    public static function clean($tag=null)
+    public static function clean()
     {
-        if(self::$dummy_overwrite)
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
             self::$dummy = array();
             return true;
         }
 
-        ## Cache Typen ##
-        switch (self::$cacheType[$tag])
+        if(array_key_exists(self::$cacheType, self::$cacheInstalled))
         {
-            case 3:
-                return cache_memcache::mem_clean();
-            break;
-            case 2:
-                return cache_mysql::mysqlc_clean();
-            break;
-            case 1:
-                return cache_file::file_clean();
-            break;
-            case 0:
-                self::$dummy = array();
-                return true;
-            break;
+            $install = self::$cacheInstalled[self::$cacheType];
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Clean Cache');
+                DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'clean');
+            }
+
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'clean');
         }
     }
 }

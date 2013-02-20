@@ -15,6 +15,7 @@ if (!defined('IS_DZCP'))
 #####################
 ## Template switch ##
 #####################
-set_cookie($prev.'tmpdir',$_GET['set']);
+cookie::put('tmpdir', $_GET['set']);
+cookie::save();
 header("Location: ".$_SERVER['HTTP_REFERER']);
 ?>

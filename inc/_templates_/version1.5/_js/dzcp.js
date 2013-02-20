@@ -91,9 +91,9 @@
         return true;
     },
 
-  // handle popups
-    popup: function(url, x, y) {
-      url = (url.indexOf('img=') == -1) ? url : '../popup.php?' + url;
+    // handle popups
+    popup: function(url, x, y)
+    {
       x = parseInt(x); y = parseInt(y) + 50;
 
       popup = window.open(url, 'Popup', "width=1,height=1,location=0,scrollbars=0,resizable=1,status=0");

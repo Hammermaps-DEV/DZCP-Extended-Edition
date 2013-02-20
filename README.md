@@ -1,6 +1,10 @@
 DZCP - Extended Edition
 =======================
 
+=======================
+Bei der DZCP - Extended Edition handelt es sich um eine unfertige Entwickler Version und sie ist noch nicht für den Produktiven Einsatz gedacht!
+=======================
+
 Die DZCP - Extended Edition ist eine Abwandlung der DZCP 1.6 Version.
 
 Die Extended Edition zeichnet sich auf neueren PHP Laufzeiten >= V5.3.x durch Überarbeitungen am CMS Kern aus.
@@ -18,7 +22,8 @@ Viele der Kernfunktionen die in die kernel.php exportiert wurden, haben eine üb
 Es wurde eine richtige Cache Klasse eingefügt, die standardmäßig auf 'File'  eingestellt ist. 
 Der Cache speichert Seiten und Serverantworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen muss.
 Dabei wird auch zbs. die News Seite in den Cache geladen und alle paar Sekunden aktualisiert, dieses Verfahren ermöglicht eine Entlastung der Datenbank und des Servers bei vielen gleichzeitigen Besuchern.
-Der Cache kann als Files, Memcache oder SQL Erweiterung betrieben werden. 
+Der Cache kann als Files, Memcache, ZEND - Shared Memory, ZEND - Disk oder MySQL Erweiterung betrieben werden.
+Die ZEND Shared Memory und ZEND Disk Cache setzt einen Zend Technologies Server vorraus -> http://www.zend.com/de/products/server/
 
 Der Installer / Updater wurde komplett überarbeitet und wird nachfolgende Updates selbständig erkennen und die nötigen Aktualisierungen vornehmen. *Sie müssen nur noch auf 'Weiter' drücken.
 
@@ -57,7 +62,7 @@ Unterstützung mehrere Bildformate zbs. für Server Pics, Adminmenü Icons, usw.
 Infos wie der XFire Status wird per Ajax nachgeladen um lange Ladezeiten der gesamten DZCP Seite zu verhindern.
 Eine Auswahl des Skins der bei XFire verwendet wird ist über die config.php möglich.
 
-Er wird ein zufälliger MD5 Code verwendet um ein Login zu Speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
+Es wird ein zufälliger MD5 Code verwendet um ein Login zu Speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
 Es wurden einzelne neue Smileys eingefügt.
 
 Die Administrationsseiten können über eine XML Datei zusätzlich konfiguriert werden.

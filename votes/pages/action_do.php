@@ -71,7 +71,8 @@ else
                 if(!empty($userid) && $userid != 0) $cookie = convert::ToInt($userid);
                 else $cookie = "voted";
             }
-            set_cookie($prev."vid_".$_GET['id'],$cookie);
+
+            cookie::put('vid_'.$_GET['id'], $cookie);
         }
     }
 
@@ -116,7 +117,8 @@ else
             if(!empty($userid) && $userid != 0) $cookie = convert::ToInt($userid);
             else $cookie = "voted";
         }
-        set_cookie($prev."vid_".$_GET['id'],$cookie);
+
+        cookie::put('vid_'.$_GET['id'], $cookie);
     }
 
     if($_GET['fajax'] == 1)

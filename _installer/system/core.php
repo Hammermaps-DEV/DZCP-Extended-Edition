@@ -5,6 +5,7 @@ $host = str_replace('www.','',$_SERVER['HTTP_HOST']);
 if((isset($_GET['action']) ? $_GET['action'] : '') == 'mysql_setup_tb')
     $_SESSION['db_install'] = true;
 
+require_once(basePath."/inc/debugger.php");
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/config.php');
 require_once(basePath.'/inc/kernel.php');

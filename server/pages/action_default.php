@@ -25,7 +25,7 @@ else
             if($get['status'] != "nope" && file_exists(basePath.'/inc/server_query/'.$get['status'].'.php'))
             {
 
-                if(Cache::check($cacheTag,'gameserver_'.convert::ToInt($get['id']).'_'.$language))
+                if(Cache::check('gameserver_'.convert::ToInt($get['id']).'_'.$language))
                 {
                     if(!function_exists('server_query_'.$get['status']))
                         include(basePath.'/inc/server_query/'.strtolower($get['status']).'.php');
@@ -209,9 +209,9 @@ else
                             "name" => re($server['hostname']),
                             "image_map" => $image_map));
 
-                    Cache::set($cacheTag,'gameserver_'.convert::ToInt($get['id']).'_'.$language, $index, config('cache_server'));
+                    Cache::set('gameserver_'.convert::ToInt($get['id']).'_'.$language, $index, config('cache_server'));
                 } else {
-                    $index = Cache::get($cacheTag,'gameserver_'.convert::ToInt($get['id']).'_'.$language);;
+                    $index = Cache::get('gameserver_'.convert::ToInt($get['id']).'_'.$language);;
                 }
             } else {
                 if(!empty($get['pwd'])) $pwds = show(_server_pwd, array("pwd" => re($get['pwd'])));

@@ -13,12 +13,11 @@
 */
 function show_dzcp_version()
 {
-    global $cacheTag;
     $dzcp_version_info = 'onmouseover="DZCP.showInfo(\'<tr><td colspan=2 align=center padding=3 class=infoTop>DZCP Versions Checker</td></tr><tr><td>'._dzcp_vcheck.'</td></tr>\')" onmouseout="DZCP.hideInfo()"';
     $return = array();
     if(dzcp_version_checker || !fsockopen_support())
     {
-        if(Cache::check($cacheTag,'dzcp_version'))
+        if(Cache::check('dzcp_version'))
         {
             if($dzcp_online_v = fileExists("http://www.hammermaps.de/dzcp_version.txt"))
             {
@@ -34,7 +33,7 @@ function show_dzcp_version()
                     $return['old'] = "_old";
                 }
 
-                Cache::set($cacheTag,'dzcp_version', $return, dzcp_version_checker_refresh);
+                Cache::set('dzcp_version', $return, dzcp_version_checker_refresh);
             }
             else
             {
@@ -44,7 +43,7 @@ function show_dzcp_version()
             }
         }
         else
-            $return = Cache::get($cacheTag,'dzcp_version');
+            $return = Cache::get('dzcp_version');
     }
     else
     {

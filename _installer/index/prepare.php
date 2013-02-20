@@ -17,7 +17,6 @@ else
 
     //-> Check Scriptfiles
     $prepare_array_script = is_writable_array(($array_script = array(
-    'inc/_cache',
     'rss.xml',
     'admin',
     'banner',
@@ -26,6 +25,8 @@ else
     'upload',
     'upload/index.php',
     'inc',
+    'inc/_cache',
+    'inc/_cache/binary',
     'inc/images',
     'inc/images/gameicons',
     'inc/images/maps',

@@ -6,6 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+## Install ##
+Cache::installType('file',array('TypeName' => 'File Cache','CallTag' => 'file_','Class' => 'cache_file','InitCache' => true,'SetServer' => false,'Required' => ''));
+
 class cache_file extends Cache
 {
     private static $_file;
@@ -13,19 +16,15 @@ class cache_file extends Cache
 
     public static function initC()
     {
+        self::$_dir = "/inc/_cache";
+
         if(!is_dir(basePath . self::$_dir))
             @mkdir(basePath . self::$_dir);
 
         xml::openXMLfile('cache_index', self::$_dir . "/cache.index");
         xml::openXMLfile('cache_index_binary', self::$_dir . "/binary/cache.index");
+        return true;
     }
-
-    /**
-     * Trage Zielordner ein.
-     */
-    public static function file_server($dir="/inc/_cache")
-    { self::$_dir = $dir; return true; }
-
 
     /**
      * Speichere Werte im FileCache.

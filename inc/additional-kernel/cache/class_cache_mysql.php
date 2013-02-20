@@ -6,6 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+## Install ##
+Cache::installType('mysql',array('TypeName' => 'MySQL Cache','CallTag' => 'mysqlc_','Class' => 'cache_mysql','InitCache' => false,'SetServer' => false,'Required' => 'mysql'));
+
 class cache_mysql extends Cache
 {
     private static $_result = array();

@@ -54,7 +54,7 @@ else
         while($getv = _fetch($qryv)) {
             $stimmen += $getv['stimmen'];
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            if($hostIpcheck || $ipcheck || isset($_COOKIE[$prev."vid_".$get['id']]) || $get['closed'] == 1) {
+            if($hostIpcheck || $ipcheck || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1) {
                 $percent = @round($getv['stimmen']/$stimmen*100,2);
                 $rawpercent = @round($getv['stimmen']/$stimmen*100,0);
 

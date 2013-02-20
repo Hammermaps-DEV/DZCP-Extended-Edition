@@ -42,6 +42,7 @@ define('_lobby_dl_comments_1', 'new comment');
 define('_lobby_dl_comments_2', 'new comments');
 define('_lobby_dlc', 'Download comments');
 define('_user_new_dlc', '&nbsp;&nbsp;<a href="../downloads/?action=download&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[download]</span></a><br />');
+define('_cache_none', 'No Cache');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
@@ -139,7 +140,6 @@ define('_sq_banner' , 'Teambanner');
 define('_forum_abo_title' , 'Suscribe Thread');
 define('_forum_vote' , 'Vote');
 define('_admin_user_clanhead_info' , 'These permissions can be set <u>additional</u> to the permissions in the user ranks.');
-define('_user_noposi' , '<option value="lazy" class="dropdownKat">no user rank</option>');
 define('_config_positions_boardrights' , 'internal board permissions');
 define('_perm_awards' , 'manage awards');
 define('_perm_clankasse' , 'manage Clancash');
@@ -169,7 +169,6 @@ define('_perm_shoutbox' , 'Shoutbox admin');
 define('_perm_votes' , 'can see internal votes');
 define('_perm_gs_showpw' , 'can see gameserver password');
 define('_config_positions_rights' , 'Permissions');
-define('_config_positions' , 'User Ranks');
 define('_admin_pos' , 'User Ranks');
 define('_awaycal' , 'Away Calendar');
 define('_clear_away' , 'Away Calendar entrys?');
@@ -531,7 +530,6 @@ define('_config_allgemein' , 'Configuration');
 define('_config_impressum' , 'Imprint');
 define('_config_clankasse' , 'Clan Cash');
 define('_config_downloads' , 'Download categories');
-define('_config_dl' , 'Downloads');
 define('_config_newsadmin' , 'News');
 define('_config_filebrowser' , 'Filebrowser');
 define('_config_navi' , 'Navigation');
@@ -947,7 +945,6 @@ define('_kalender_deleted' , 'The event was successfully deleted!');
 ## Umfragen ##
 define('_error_vote_closed' , 'This vote is closed!');
 define('_votes_admin_closed' , 'Close vote');
-define('_vote_menu_no_vote' , '<tr><td align="center"><span class="fontBold">No vote registered</span></td></tr>');
 define('_votes_head' , 'Votes');
 define('_votes_stimmen' , 'Voted');
 define('_votes_intern' , '<span class="fontWichtig">Internal:</span> ');
@@ -1075,8 +1072,6 @@ define('_cw_head_details_show' , 'Details');
 define('_cw_head_page' , 'Site: ');
 define('_cw_head_legende' , 'Legend');
 define('_cw_nothing' , '<option value="lazy" class="" class="dropdownKat">--- change nothing ---</option>');
-define('_cw_screenshot' , 'Screen');
-define('_cw_screens' , 'Screenshots');
 define('_cw_new' , 'New');
 define('_cw_screens_info' , 'jpg, gif and png files only!');
 define('_clanwars_no_show' , 'No registered clanwar yet!');
@@ -1731,7 +1726,6 @@ define('_config_c_gallerypics' , 'User: Usergallery');
 define('_config_c_upicsize_what' , 'allowed filesize of the pictures in KB (Newspicture, Userpicture etc.)');
 define('_config_c_regcode' , 'Reg: Securitycodee');
 define('_config_c_regcode_what' , 'User have to enter a securitycode during the registration');
-define('_admin_pos' , 'Position labels');
 define('_pos_add_new' , '<a href="?admin=positions&amp;do=new">Insert position</a>');
 define('_pos_new_head' , 'Insert position');
 define('_pos_edit_head' , 'Edit position');
@@ -1748,7 +1742,6 @@ define('_config_c_gallery' , 'Gallery ');
 define('_config_info_gallery' , 'Amount of pictures which will be maximum shown in a row');
 define('_config_server_ts_updated' , 'The teamspeak`s ip was successfully updated!');
 define('_ts_sport' , 'Server queryport');
-
 define('_config_c_awards' , 'Awards');
 define('_counter_start' , 'Counter');
 define('_counter_start_info' , 'Here you can enter a number which will be added to the counter.');
@@ -2136,10 +2129,6 @@ define('_error_unregistered_nc' , '
   <td class="contentMainFirst" colspan="2" align="center">
     <span class="fontBold">You have to be registered to write a comment!</span>
   </td>
-</tr>');
-define('_no_server_navi' , '
-<tr>
-  <td align="center"><span class="fontBold">No server yet</span></td>
 </tr>');
 define('_server_legendemenu' , 'Server is set into menu? (Click icon to change the status)<br />(Multiple entrys are possible!)');
 define('_config_c_servernavi' , 'Menu: Serverstatus');

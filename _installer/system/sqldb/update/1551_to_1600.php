@@ -24,7 +24,7 @@ function install_155x_1600_update()
     db("ALTER TABLE `".$db['serverliste']."` CHANGE `clanname` `clanname` VARCHAR( 50 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".$db['serverliste']."` CHANGE `datum` `datum` INT( 11 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".$db['settings']."` ADD `db_version` VARCHAR( 5 ) NOT NULL DEFAULT '00000'");
-    db("ALTER TABLE `".$db['config']."` ADD `cache_engine` INT(1) NOT NULL DEFAULT '1'",false,false,true);
+    db("ALTER TABLE `".$db['config']."` ADD `cache_engine` varchar(50) NOT NULL DEFAULT 'file'",false,false,true);
     db("ALTER TABLE `".$db['settings']."` ADD `memcache_host` VARCHAR( 50 ) NOT NULL DEFAULT '';",false,false,true);
     db("ALTER TABLE `".$db['settings']."` ADD `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211';",false,false,true);
     db("ALTER TABLE `".$db['config']."` ADD `cache_news` INT( 10 ) NOT NULL DEFAULT '5' AFTER `cache_server`;",false,false,true);
