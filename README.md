@@ -1,9 +1,9 @@
 DZCP - Extended Edition
 =======================
 
-=======================
-Bei der DZCP - Extended Edition handelt es sich um eine unfertige Entwickler Version und sie ist noch nicht für den Produktiven Einsatz gedacht!
-=======================
+
+*Bei der DZCP - Extended Edition handelt es sich um eine unfertige Entwickler Version und sie ist noch nicht für den Produktiven Einsatz gedacht!
+
 
 Die DZCP - Extended Edition ist eine Abwandlung der DZCP 1.6 Version.
 
