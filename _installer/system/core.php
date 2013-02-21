@@ -306,29 +306,22 @@ function set_chmod_ftp($array,$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd,$connect_te
     {
         if(@fsockopen($ftp_host, 21, $errno, $errstr, 1))
         {
-            if(!$conn=@ftp_connect($ftp_host))
+            if(!ftp_connect($ftp_host))
                 return false;
             else
                 return true;
         }
         else
-        return false;
+            return false;
     }
     else if($login_test)
-    {
-        if(!@ftp_login($conn, $ftp_user, $ftp_pwd))
-        return false;
-        else
-        return true;
-    }
+        return ftp_login(ftp_connect($ftp_host), $ftp_user, $ftp_pwd);
     else
     {
+        $ftpcon=ftp_connect($ftp_host);
+        ftp_login($ftpcon, $ftp_user, $ftp_pwd);
         foreach($array as $file)
-        {
-            $conn = @ftp_connect($ftp_host);
-            @ftp_login($conn, $ftp_user, $ftp_pwd);
-            ftp_site($conn, 'CHMOD 0775 '.$ftp_pfad.'/'.$file);
-        }
+        { ftp_site($ftpcon, $com='CHMOD 0775 '.$ftp_pfad.'/'.$file); }
 
         return true;
     }

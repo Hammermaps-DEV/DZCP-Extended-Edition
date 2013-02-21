@@ -12,36 +12,34 @@ else
     $ftp_user = isset($_POST['user']) ? $_POST['user'] : '';
     $ftp_pwd = isset($_POST['pwd']) ? $_POST['pwd'] : '';
 
-    //-> Check Installfiles
-    $prepare_array_install = is_writable_array(($array_install = array('_installer','_installer/index.php')));
+    $array_script = array(
+            'rss.xml',
+            'admin',
+            'banner',
+            'banner/partners',
+            'server',
+            'upload',
+            'upload/index.php',
+            'inc',
+            'inc/_cache',
+            'inc/_cache/binary',
+            'inc/images',
+            'inc/images/gameicons',
+            'inc/images/maps',
+            'inc/images/newskat',
+            'inc/images/smileys',
+            'inc/images/uploads',
+            'inc/images/uploads/taktiken',
+            'inc/images/uploads/useravatare',
+            'inc/images/uploads/usergallery',
+            'inc/images/uploads/userpics',
+            'inc/images/uploads/gallery',
+            'inc/images/uploads/squads',
+            'inc/images/uploads/clanwars',
+            'inc/tinymce_files',
+            'inc/config.php');
 
-    //-> Check Scriptfiles
-    $prepare_array_script = is_writable_array(($array_script = array(
-    'rss.xml',
-    'admin',
-    'banner',
-    'banner/partners',
-    'server',
-    'upload',
-    'upload/index.php',
-    'inc',
-    'inc/_cache',
-    'inc/_cache/binary',
-    'inc/images',
-    'inc/images/gameicons',
-    'inc/images/maps',
-    'inc/images/newskat',
-    'inc/images/smileys',
-    'inc/images/uploads',
-    'inc/images/uploads/taktiken',
-    'inc/images/uploads/useravatare',
-    'inc/images/uploads/usergallery',
-    'inc/images/uploads/userpics',
-    'inc/images/uploads/gallery',
-    'inc/images/uploads/squads',
-    'inc/images/uploads/clanwars',
-    'inc/tinymce_files',
-    'inc/config.php')));
+    $array_install = array('_installer','_installer/index.php');
 
     //Über FTP die Rechte setzen
     if(isset($_GET['do']))
@@ -79,6 +77,12 @@ else
             }
         }
     }
+
+    //-> Check Installfiles
+    $prepare_array_install = is_writable_array($array_install);
+
+    //-> Check Scriptfiles
+    $prepare_array_script = is_writable_array($array_script);
 
     $_SESSION['type'] = isset($_POST['type']) ? $_POST['type'] : $_SESSION['type'];
 
