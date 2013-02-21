@@ -22,10 +22,10 @@ else
         $color = 1; $show = '';
         while($get = _fetch($qry))
         {
-            $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat); $cnt = 0;
-            for($i=0; $i<count($files); $i++)
+            $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat); $cnt = 0; sort($files,SORT_STRING);
+            foreach($files as $file)
             {
-                if(preg_match("#^".$get['id']."_(.*?)#",strtolower($files[$i])) != false)
+                if(preg_match("#^".$get['id']."_(.*?)#",strtolower($file)) !== false)
                     $cnt++;
             }
 

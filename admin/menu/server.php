@@ -133,16 +133,14 @@ if(_adminMenu != 'true')
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $files = get_files('../inc/images/gameicons/',false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/gameicons/',false,true);
+        foreach($files as $file)
         {
-          if($files[$i] == $get['game']) $sel = "selected=\"selected\"";
+          if($file == $get['game']) $sel = "selected=\"selected\"";
           else $sel = "";
 
-          if(preg_match("=\.gif|.jpg|.png=Uis",$files[$i]))
-            $game .= show(_select_field, array("value" => $files[$i],
-                                               "what" => strtoupper(preg_replace("#\.(.*?)$#","",$files[$i])),
-                                               "sel" => $sel));
+          if(preg_match("=\.gif|.jpg|.png=Uis",$file))
+            $game .= show(_select_field, array("value" => $file, "what" => strtoupper(preg_replace("#\.(.*?)$#","",$file)), "sel" => $sel));
         }
 
         $show = show($dir."/server_edit", array("edithead" => _admin_server_edit,
@@ -204,11 +202,11 @@ if(_adminMenu != 'true')
         $show = info(_server_admin_deleted, "?admin=server");
 
       } elseif($_GET['do'] == "new") {
-        $files = get_files('../inc/images/gameicons/',false,true,array('gif','jpg','png'));
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/gameicons/',false,true,array('gif','jpg','png'));
+        foreach($files as $file)
         {
-            $game .= show(_select_field, array("value" => $files[$i],
-                                               "what" => strtoupper(preg_replace("#\.(.*?)$#","",$files[$i])),
+            $game .= show(_select_field, array("value" => $file,
+                                               "what" => strtoupper(preg_replace("#\.(.*?)$#","",$file)),
                                                "sel" => ""));
         }
 

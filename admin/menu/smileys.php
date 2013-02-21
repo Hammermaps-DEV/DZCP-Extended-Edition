@@ -100,17 +100,17 @@ switch (isset($_GET['do']) ? $_GET['do'] : false)
         }
     break;
     default:
-        $files = get_files('../inc/images/smileys',false,true,array('gif')); $color = 1; $show_default = '';
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/smileys',false,true,array('gif')); $color = 1; $show_default = '';
+        foreach($files as $file)
         {
-            if($files[$i] != '^^.gif')
+            if($file != '^^.gif')
             {
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                $smileys = "../inc/images/smileys/".$files[$i];
-                $bbc = ":".preg_replace("=.gif=Uis","",$files[$i]).":";
-                $edit = show("page/button_edit_single", array("id" => $files[$i], "action" => "admin=smileys&amp;do=edit", "title" => _button_title_edit));
-                $delete = show("page/button_delete_single", array("id" => $files[$i], "action" => "admin=smileys&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_smiley)));
-                $show_default .= show($dir."/smileys_show", array("bbcode" => $bbc, "smiley" => $smileys, "class" => $class, "del" => $delete, "edit" => $edit, "id" => $files[$i]));
+                $smileys = "../inc/images/smileys/".$file;
+                $bbc = ":".preg_replace("=.gif=Uis","",$file).":";
+                $edit = show("page/button_edit_single", array("id" => $file, "action" => "admin=smileys&amp;do=edit", "title" => _button_title_edit));
+                $delete = show("page/button_delete_single", array("id" => $file, "action" => "admin=smileys&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_smiley)));
+                $show_default .= show($dir."/smileys_show", array("bbcode" => $bbc, "smiley" => $smileys, "class" => $class, "del" => $delete, "edit" => $edit, "id" => $file));
             }
         }
     break;

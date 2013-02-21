@@ -21,7 +21,7 @@ if(_adminMenu != 'true')
                                                  "value" => _button_value_add
                                                  ));
       } elseif($_GET['do'] == 'insert') {
-        if(empty($_POST['link']) || empty($_POST['beschreibung']) || preg_match("#[[:punct:]]]#is",$_POST['link']))
+        if(empty($_POST['link']) || empty($_POST['beschreibung']) || preg_match("#[[:punct:]]]#is",$_POST['link']) === true)
         {
           if(empty($_POST['link']))       $show = error(_admin_error_glossar_word);
           elseif($_POST['beschreibung'])  $show = error(_admin_error_glossar_desc);
@@ -47,7 +47,7 @@ if(_adminMenu != 'true')
                                                  "value" => _button_value_edit
                                                  ));
       } elseif($_GET['do'] == 'update') {
-        if(empty($_POST['link']) || empty($_POST['beschreibung']) || preg_match("#[[:punct:]]]#is",$_POST['link']))
+        if(empty($_POST['link']) || empty($_POST['beschreibung']) || preg_match("#[[:punct:]]]#is",$_POST['link']) === true)
         {
           if(empty($_POST['link']))       $show = error(_admin_error_glossar_word);
           elseif($_POST['beschreibung'])  $show = error(_admin_error_glossar_desc);

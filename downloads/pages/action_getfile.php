@@ -23,7 +23,7 @@ else
         $get = db("SELECT url,id FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
         $file = preg_replace("#added...#Uis", "", $get['url']);
 
-        if(preg_match("=added...=Uis",$get['url']) != FALSE)
+        if(preg_match("=added...=Uis",$get['url']) !== FALSE)
             $dlFile = "files/".$file;
         else
             $dlFile = $get['url'];

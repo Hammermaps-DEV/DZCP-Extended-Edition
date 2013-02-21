@@ -29,6 +29,7 @@ else
 
         //Get Userinfos
         $lastvisit = userstats($userid, 'lastvisit');
+        $lastvisit = empty($lastvisit) ? "0" : $lastvisit;
 
         ##################################
         ## Neue Foreneintraege anzeigen ##

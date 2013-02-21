@@ -3,10 +3,10 @@
 if(IS_DZCP != 'true') exit();
 function uotm()
 {
-    global $db, $allowHover;
+    global $db, $picformat;
     $imgFiles = array(); $uotm = '';
 
-    if(!$folder=get_files('../inc/images/uploads/userpics',false,true))
+    if(!$folder=get_files(basePath.'/inc/images/uploads/userpics',false,true,$picformat))
         return '';
 
     //Mischen

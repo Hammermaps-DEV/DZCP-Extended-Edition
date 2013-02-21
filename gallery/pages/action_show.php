@@ -18,9 +18,9 @@ else
 {
     $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat);
     $t = 1; $cnt = 0; $color = 1; $show = ''; $gallery = config('gallery');
-    for($i=0; $i<count($files); $i++)
+    foreach($files as $file)
     {
-        if(preg_match("#^".$_GET['id']."_(.*?)#",strtolower($files[$i]))!=false)
+        if(preg_match("#^".$_GET['id']."_(.*?)#",strtolower($file)) !== false)
         {
             $tr1 = ""; $tr2 = "";
 
@@ -33,9 +33,9 @@ else
                 $t = 0;
             }
 
-            $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$files[$i], "title" => _button_title_del, "del" => convSpace(_confirm_del_galpic))) : '');
+            $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => convSpace(_confirm_del_galpic))) : '');
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show .= show($dir."/show_gallery", array("img" => "<a href=\"../inc/images/uploads/gallery/".$files[$i]."\" rel=\"lightbox[gallery_".$i."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=gallery/".$files[$i]."&width=160\" alt=\"\" /></a>",
+            $show .= show($dir."/show_gallery", array("img" => "<a href=\"../inc/images/uploads/gallery/".$file."\" rel=\"lightbox[gallery_".$cnt."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=gallery/".$file."&width=160\" alt=\"\" /></a>",
                                                       "tr1" => $tr1,
                                                       "max" => $gallery,
                                                       "width" => convert::ToInt(round(100/$gallery)),

@@ -321,7 +321,7 @@ function set_chmod_ftp($array,$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd,$connect_te
         $ftpcon=ftp_connect($ftp_host);
         ftp_login($ftpcon, $ftp_user, $ftp_pwd);
         foreach($array as $file)
-        { ftp_site($ftpcon, $com='CHMOD 0775 '.$ftp_pfad.'/'.$file); }
+        { ftp_site($ftpcon, $com='CHMOD 0774 '.$ftp_pfad.'/'.$file); }
 
         return true;
     }

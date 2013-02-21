@@ -63,11 +63,11 @@ if(_adminMenu != 'true')
                                                   "what" => _nach.' '.re($get['name'])));
         }
 
-        $files = get_files('../inc/images/gameicons/',false,true,array('gif','jpg','png'));
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/gameicons/',false,true,array('gif','jpg','png'));
+        foreach($files as $file)
         {
-            $gameicons .= show(_select_field, array("value" => $files[$i],
-                                                    "what" => strtoupper(preg_replace("#\.(.*?)$#","",$files[$i])),
+            $gameicons .= show(_select_field, array("value" => $file,
+                                                    "what" => strtoupper(preg_replace("#\.(.*?)$#","",$file)),
                                                     "sel" => ""));
         }
 
@@ -224,16 +224,16 @@ if(_adminMenu != 'true')
         if($get['status'] == 1) 		$status = "selected=\"selected\"";
                 if($get['team_show'] == 1) 	$team_show = "selected=\"selected\"";
 
-        $files = get_files('../inc/images/gameicons/',false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/gameicons/',false,true);
+        foreach($files as $file)
         {
-          if($files[$i] == $get['icon']) $sel = "selected=\"selected\"";
+          if($file == $get['icon']) $sel = "selected=\"selected\"";
           else $sel = "";
 
-          if(preg_match("#\.gif|.jpg|.png#Uis",$files[$i]))
-            $gameicons .= show(_select_field, array("value" => $files[$i],
+          if(preg_match("#\.gif|.jpg|.png#Uis",$file))
+            $gameicons .= show(_select_field, array("value" => $file,
                                                     "sel" => $sel,
-                                                    "what" => strtoupper(preg_replace("#\.(.*?)$#","",$files[$i]))));
+                                                    "what" => strtoupper(preg_replace("#\.(.*?)$#","",$file))));
         }
 
         foreach($picformat AS $end)

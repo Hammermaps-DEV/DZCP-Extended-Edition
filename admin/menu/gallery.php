@@ -50,12 +50,12 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
     case 'delgal':
         db("DELETE FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $files = get_files("../inc/images/uploads/gallery/",false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath."/inc/images/uploads/gallery/",false,true);
+        foreach($files as $file)
         {
-            if(preg_match("#".$_GET['id']."_(.*?).(gif|jpg|jpeg|png)#",strtolower($files[$i]))!= FALSE)
+            if(preg_match("#".$_GET['id']."_(.*?).(gif|jpg|jpeg|png)#",strtolower($file))!= FALSE)
             {
-                preg_match("#".$_GET['id']."_(.*)#",$files[$i],$match);
+                preg_match("#".$_GET['id']."_(.*)#",$file,$match);
                 thumbgen_delete("gallery/".$_GET['id']."_".$match[1],160); //Gallery
                 thumbgen_delete("gallery/".$_GET['id']."_".$match[1],150); //Menu: random_gallery
                 @unlink(basePath."/inc/images/uploads/gallery/".$_GET['id']."_".$match[1]);
@@ -107,12 +107,12 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
     case 'editpics':
         $galid = $_GET['id'];
         $anzahl = $_POST['anzahl'];
-        $files = get_files("../inc/images/uploads/gallery/",false,true);
+        $files = get_files(basePath."/inc/images/uploads/gallery/",false,true);
 
         $cnt = 0;
         for($c=0; $c<count($files); $c++)
         {
-            if(preg_match("#".$galid."_(.*?).(gif|GIF|JPG|jpg|JPEG|jpeg|png)#",$files[$c])!=FALSE)
+            if(preg_match("#".$galid."_(.*?).(gif|GIF|JPG|jpg|JPEG|jpeg|png)#",$files[$c])!==FALSE)
             { $cnt++; }
         }
 
@@ -146,10 +146,10 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
         $qry = db("SELECT * FROM ".$db['gallery']." ORDER BY id DESC"); $color = 1; $show = '';
         while($get = _fetch($qry))
         {
-            $files = get_files("../inc/images/uploads/gallery/",false,true); $cnt = 0;
-            for($i=0; $i<count($files); $i++)
+            $files = get_files(basePath."/inc/images/uploads/gallery/",false,true); $cnt = 0;
+            foreach($files as $file)
             {
-                if(preg_match("#^".$get['id']."_(.*?).(gif|jpg|jpeg|png)#",strtolower($files[$i]))!=FALSE)
+                if(preg_match("#^".$get['id']."_(.*?).(gif|jpg|jpeg|png)#",strtolower($file))!==FALSE)
                 { $cnt++; }
             }
 

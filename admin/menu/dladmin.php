@@ -19,9 +19,9 @@ if(_adminMenu != 'true')
           $kats .= show(_select_field, array("value" => $get['id'], "what" => re($get['name']), "sel" => ""));
         }
 
-        $files = get_files('../downloads/files/',false,true); $dl = '';
-        for($i=0; $i<count($files); $i++)
-        { $dl .= show(_downloads_files_exists, array("dl" => $files[$i], "sel" => "")); }
+        $files = get_files(basePath.'/downloads/files/',false,true); $dl = '';
+        foreach($files as $file)
+        { $dl .= show(_downloads_files_exists, array("dl" => $file, "sel" => "")); }
 
         $show = show($dir."/form_dl", array("admin_head" => _downloads_admin_head,
                                             "ddownload" => "",

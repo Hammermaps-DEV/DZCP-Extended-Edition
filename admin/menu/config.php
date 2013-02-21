@@ -139,24 +139,24 @@ if(empty($show))
     $get = db("SELECT * FROM ".$db['config'],false,true);
     $gets = db("SELECT * FROM ".$db['settings'],false,true);
 
-    $files = get_files('../inc/lang/languages/',false,true,array('php')); $lang = '';
-    for($i=0; $i<count($files); $i++)
+    $files = get_files(basePath.'/inc/lang/languages/',false,true,array('php')); $lang = '';
+    foreach($files as $file)
     {
-        $sel = ($gets['language'] == $files[$i] ? 'selected="selected"' : '');
-        $lng = preg_replace("#.php#", "",$files[$i]);
+        $sel = ($gets['language'] == $file ? 'selected="selected"' : '');
+        $lng = preg_replace("#.php#", "",$file);
         $lang .= show(_select_field, array("value" => $lng, "what" => $lng, "sel" => $sel));
     }
 
-    unset($files,$lng,$sel);
+    unset($files,$file,$lng,$sel);
 
-    $tmps = get_files('../inc/_templates_/',true); $tmpldir = '';
-    for($i=0; $i<count($tmps); $i++)
+    $tmps = get_files(basePath.'/inc/_templates_/',true); $tmpldir = '';
+    foreach($tmps as $tmp)
     {
-        $selt = ($gets['tmpdir'] == $tmps[$i] ? 'selected="selected"' : '');
-        $tmpldir .= show(_select_field, array("value" => $tmps[$i], "what" => $tmps[$i], "sel" => $selt));
+        $selt = ($gets['tmpdir'] == $tmp ? 'selected="selected"' : '');
+        $tmpldir .= show(_select_field, array("value" => $tmp, "what" => $tmp, "sel" => $selt));
     }
 
-    unset($tmps,$selt);
+    unset($tmps,$tmp,$selt);
 
     $pwde_options = show('<option '.(!$gets['default_pwd_encoder'] ? 'selected="selected"' : '').' value="0">MD5 [lang_pwd_encoder_algorithm]</option>
     <option '.($gets['default_pwd_encoder'] == 1 ? 'selected="selected"' : '').' value="1">SHA1 [lang_pwd_encoder_algorithm]</option>

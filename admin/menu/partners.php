@@ -8,10 +8,10 @@ if(_adminMenu != 'true')
     $where = $where.': '._partners_head;
       if($_GET['do'] == "add")
       {
-        $files = get_files('../banner/partners/',false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/banner/partners/',false,true);
+        foreach($files as $file)
         {
-          $banners .= show(_partners_select_icons, array("icon" => $files[$i],
+          $banners .= show(_partners_select_icons, array("icon" => $file,
                                                          "sel" => ""));
         }
         $show = show($dir."/form_partners", array("do" => "addbutton",
@@ -42,13 +42,13 @@ if(_adminMenu != 'true')
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $files = get_files('../banner/partners/',false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/banner/partners/',false,true);
+        foreach($files as $file)
         {
-          if(re($get['banner']) == $files[$i]) $sel = "selected=\"selected\"";
+          if(re($get['banner']) == $file) $sel = "selected=\"selected\"";
           else $sel = "";
 
-          $banners .= show(_partners_select_icons, array("icon" => $files[$i],
+          $banners .= show(_partners_select_icons, array("icon" => $file,
                                                          "sel" => $sel));
         }
         $show = show($dir."/form_partners", array("do" => "editbutton&amp;id=".$get['id']."",

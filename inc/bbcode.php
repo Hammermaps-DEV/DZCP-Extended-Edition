@@ -353,7 +353,7 @@ function checkme($userid_set=0)
 //-> Templateswitch
 if(!$ajaxThumbgen)
 {
-    $files = get_files('../inc/_templates_/',true,false);
+    $files = get_files(basePath.'/inc/_templates_/',true,false);
     if(cookie::get('tmpdir') != false)
         $tmpdir = (file_exists(basePath."/inc/_templates_/".cookie::get('tmpdir')."/index.html") ? cookie::get('tmpdir') : $files[0]);
     else
@@ -412,10 +412,10 @@ if(!$ajaxThumbgen)
 function languages()
 {
     $lang="";
-    $files = get_files('../inc/lang/languages/',false,true,array('php'));
-    for($i=0;$i<=count($files)-1;$i++)
+    $files = get_files(basePath.'/inc/lang/languages/',false,true,array('php'));
+    foreach($files as $file)
     {
-        $file = str_replace('.php','',$files[$i]);
+        $file = str_replace('.php','',$file);
         $upFile = strtoupper(substr($file,0,1)).substr($file,1);
 
         if(file_exists('../inc/lang/flaggen/'.$file.'.gif'))
@@ -432,7 +432,7 @@ if(!empty($userid) && $userid != 0 && $ajaxJob != true && $userid != false && !$
 //-> PHP-Code farbig anzeigen
 function highlight_text($txt)
 {
-    while(preg_match("=\[php\](.*)\[/php\]=Uis",$txt)!=FALSE)
+    while(preg_match("=\[php\](.*)\[/php\]=Uis",$txt) != false)
     {
         $res = preg_match("=\[php\](.*)\[/php\]=Uis", $txt, $matches);
         $src = str_replace('<?php','',$matches[1]);
@@ -459,7 +459,7 @@ function highlight_text($txt)
         '#444444' => 'bg',     '#555555' => 'default', '#666666' => 'html');
 
         foreach ($colors as $color => $key)
-            ini_set('highlight.'.$key, $color);
+        { ini_set('highlight.'.$key, $color); }
 
         // Farben ersetzen & highlighten
         $src = preg_replace('!style="color: (#\d{6})"!e','"class=\"".$colors["\1"]."\""', highlight_string($src, TRUE));
@@ -808,13 +808,12 @@ function re($txt)
 //-> Smileys ausgeben
 function smileys($txt)
 {
-    $files = get_files('../inc/images/smileys',false,true,array('gif'));
-    for($i=0; $i<count($files); $i++)
+    $files = get_files(basePath.'/inc/images/smileys',false,true,array('gif'));
+    foreach($files as $file)
     {
-        $smileys = $files[$i];
-        $bbc = preg_replace("=.gif=Uis","",$smileys);
+        $bbc = preg_replace("=.gif=Uis","",$file);
 
-        if(preg_match("=:".$bbc.":=Uis",$txt)!=FALSE)
+        if(preg_match("=:".$bbc.":=Uis",$txt) !== false)
             $txt = preg_replace("=:".$bbc.":=Uis","<img src=\"../inc/images/smileys/".$bbc.".gif\" alt=\"\" />", $txt);
     }
 
@@ -2258,7 +2257,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         }
 
         //init templateswitch
-        $tmpldir=''; $tmps = get_files('../inc/_templates_/',true,false);
+        $tmpldir=''; $tmps = get_files(basePath.'/inc/_templates_/',true,false);
         foreach($tmps as $tmp)
         {
             $selt = ($tmpdir == $tmp ? 'selected="selected"' : '');

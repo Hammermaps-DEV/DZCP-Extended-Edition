@@ -270,7 +270,7 @@ function install_mysql_insert($db_infos)
     //-> Vote Möglichkeit ===========================================
     //===============================================================
     db("INSERT INTO ".$db['vote_results']." (`id`, `vid`, `what`, `sel`, `stimmen`) VALUES
-    (NULL, 1, 'a1', 'Gut', 0), (2, 1, 'a2', 'Schlecht', 0);",false,false,true);
+    (NULL, 1, 'a1', 'Gut', 0), (NULL, 1, 'a2', 'Schlecht', 0);",false,false,true);
 
     //===============================================================
     //-> Navigation Kategorien ======================================

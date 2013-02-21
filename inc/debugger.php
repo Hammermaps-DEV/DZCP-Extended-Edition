@@ -3,10 +3,10 @@
 //-> Debug Console Settings Start
 #########################################
 
-define('show_initialize', true);
-define('show_loaded', true);
-define('show_info', true);
-define('show_warning', true);
+define('show_initialize', false);
+define('show_loaded', false);
+define('show_info', false);
+define('show_warning', false);
 define('show_cache_debug', false);
 
 #############################################

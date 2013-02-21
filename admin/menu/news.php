@@ -31,12 +31,12 @@ if($_GET['do'] == "delete")
 
         $show = info(_config_newskat_deleted, "?admin=news");
       } elseif($_GET['do'] == "add") {
-        $files = get_files('../inc/images/newskat/',false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/newskat/',false,true);
+        foreach($files as $file)
         {
-          $img .= show(_select_field, array("value" => $files[$i],
+          $img .= show(_select_field, array("value" => $file,
                                             "sel" => "",
-                                            "what" => $files[$i]));
+                                            "what" => $file));
         }
 
         $show = show($dir."/newskatform", array("head" => _config_newskats_add_head,
@@ -64,15 +64,15 @@ if($_GET['do'] == "delete")
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $files = get_files('../inc/images/newskat/',false,true);
-        for($i=0; $i<count($files); $i++)
+        $files = get_files(basePath.'/inc/images/newskat/',false,true);
+        foreach($files as $file)
         {
-          if($get['katimg'] == $files[$i]) $sel = "selected=\"selected\"";
+          if($get['katimg'] == $file) $sel = "selected=\"selected\"";
           else $sel = '';
 
-          $img .= show(_select_field, array("value" => $files[$i],
+          $img .= show(_select_field, array("value" => $file,
                                             "sel" => $sel,
-                                            "what" => $files[$i]));
+                                            "what" => $file));
         }
 
         $upload = show(_config_neskats_katbild_upload_edit, array("id" => $_GET['id']));
