@@ -22,7 +22,7 @@ else
         $index = error(_error_unregistered);
     else
     {
-        $flood_downloadcom = config('f_downloadcom');
+        $downloadcomconfig = config(array('f_downloadcom','m_comments'));
         #################################### do case ####################################
         $error = '';
 
@@ -38,7 +38,7 @@ else
                             $index = error(_error_have_to_be_logged, 1);
                         else
                         {
-                            if(!ipcheck("dlid(".$dl_id.")", $flood_downloadcom))
+                            if(!ipcheck("dlid(".$dl_id.")", $downloadcomconfig['f_downloadcom']))
                             {
                                 if(!empty($userid) && $userid != 0)
                                     $toCheck = empty($_POST['comment']);
@@ -68,7 +68,7 @@ else
                                 }
                                 else
                                 {
-                                    db("INSERT INTO ".$db['dlcomments']."
+                                    db("INSERT INTO ".$db['dl_comments']."
                                        SET `download`     = '".$dl_id."',
                                            `datum`    = '".time()."',
                                            ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : '')."
@@ -84,14 +84,14 @@ else
                                 }
                             }
                             else
-                                $index = error(show(_error_flood_post, array("sek" => $flood_downloadcom)), 1);
+                                $index = error(show(_error_flood_post, array("sek" => $downloadcomconfig['f_downloadcom'])), 1);
                         }
                     }
                     else
                         $index = error(_id_dont_exist,1);
                     break;
                 case 'edit':
-                    $get = db("SELECT * FROM ".$db['dlcomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    $get = db("SELECT * FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
                         if($get['reg'] != 0)
@@ -121,11 +121,11 @@ else
                         $index = error(_error_edit_post,1);
                     break;
                 case 'editcom':
-                    $get = db("SELECT reg FROM ".$db['dlcomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    $get = db("SELECT reg FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
                         $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                        db("UPDATE ".$db['dlcomments']." SET
+                        db("UPDATE ".$db['dl_comments']." SET
                                 ".(isset($_POST['nick']) ? " `nick`     = '".up($_POST['nick'])."'," : "")."
                                 ".(isset($_POST['email']) ? " `email`   = '".up($_POST['email'])."'," : "")."
                                 ".(isset($_POST['hp']) ? " `hp`         = '".links($_POST['hp'])."'," : "")."
@@ -139,10 +139,10 @@ else
                         $index = error(_error_edit_post,1);
                     break;
                 case 'delete':
-                    $get = db("SELECT reg FROM ".$db['dlcomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    $get = db("SELECT reg FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
-                        db("DELETE FROM ".$db['dlcomments']." WHERE id = '".convert::ToInt($_GET['cid'])."'");
+                        db("DELETE FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'");
                         $index = info(_comment_deleted, "?action=download&amp;id=".$dl_id."");
                     }
                     else
@@ -177,10 +177,10 @@ else
 
             if($get['comments'])
             {
-                $entrys = cnt($db['dlcomments'], " WHERE download = ".$dl_id);
-                $i = $entrys-($page - 1)*$maxcomments;
+                $entrys = cnt($db['dl_comments'], " WHERE download = ".$dl_id);
+                $i = $entrys-($page - 1)*$downloadcomconfig['m_comments'];
 
-                $qryc = db("SELECT * FROM ".$db['dlcomments']." WHERE download = ".$dl_id." ORDER BY datum DESC LIMIT ".($page - 1)*$maxcomments.",".$maxcomments.""); $comments = '';
+                $qryc = db("SELECT * FROM ".$db['dl_comments']." WHERE download = ".$dl_id." ORDER BY datum DESC LIMIT ".($page - 1)*$downloadcomconfig['m_comments'].",".$downloadcomconfig['m_comments'].""); $comments = '';
                 while($getc = _fetch($qryc))
                 {
                     $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";
@@ -218,7 +218,7 @@ else
                 }
 
                 if(empty($comments))
-                    $comments = show("page/comments_no_entry", array());
+                    $comments = show("page/comments_no_entry");
 
                 if(settings("reg_dlcomments") && $chkMe == "unlogged")
                     $add = _error_unregistered_nc;
@@ -230,7 +230,7 @@ else
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                     $add = '';
-                    if(!ipcheck("dlid(".$dl_id.")", $flood_downloadcom))
+                    if(!ipcheck("dlid(".$dl_id.")", $downloadcomconfig['f_downloadcom']))
                     {
                         $add = show("page/comments_add", array( "titel" => _download_comments_write_head,
                                                                 "form" => $form,
@@ -249,11 +249,11 @@ else
                     }
                 }
 
-                $seiten = nav($entrys,$maxcomments,"?action=download&amp;id=".$dl_id."");
+                $seiten = nav($entrys,$downloadcomconfig['m_comments'],"?action=download&amp;id=".$dl_id."");
                 $showmore = show($dir."/comments",array("head" => _comments_head, "show" => $comments, "seiten" => $seiten, "icq" => "", "add" => $add));
             }
             else
-                $showmore = show("page/comments_no_enabled", array());
+                $showmore = show("page/comments_no_enabled");
 
             //////////////////////////////////////////////////////////////////////////////////////////
 

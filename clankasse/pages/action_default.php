@@ -22,7 +22,7 @@ else
     {
         $has_permission = permission("clankasse");
         $entrys = cnt($db['clankasse']);
-        $qry = db("SELECT * FROM ".$db['clankasse']." ORDER BY datum DESC LIMIT ".($page - 1)*$maxclankasse.",".$maxclankasse."");
+        $qry = db("SELECT * FROM ".$db['clankasse']." ORDER BY datum DESC LIMIT ".($page - 1)*($maxclankasse = config('m_clankasse')).",".$maxclankasse."");
 
         $show = ''; $color = 1;
         while ($get = _fetch($qry))
@@ -77,12 +77,12 @@ else
                 if(paycheck($gets['payed']))
                     $status = show(_clankasse_status_payed, array("payed" => date("d.m.Y", $gets['payed'])));
                 else if(date("d.m.Y", $gets['payed']) == date("d.m.Y", time()))
-                    $status = show(_clankasse_status_today, array());
+                    $status = show(_clankasse_status_today);
                 else
                     $status = show(_clankasse_status_notpayed, array("payed" => date("d.m.Y", $gets['payed'])));
             }
             else
-                $status = show(_clankasse_status_noentry, array());
+                $status = show(_clankasse_status_noentry);
 
             $edit = ($has_permission ? show(_admin_ck_edit, array("id" => $gets['id'])) : '');
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

@@ -24,6 +24,7 @@ include(basePath."/inc/bbcode.php");
 $dir = "clanwars";
 $where = _site_clanwars;
 $index = "";
+$maxcw = config('m_clanwars');
 
 ##############
 ## SECTIONS ##

@@ -16,51 +16,38 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat);
-    $t = 1; $cnt = 0; $color = 1; $show = ''; $gallery = config('gallery');
-    foreach($files as $file)
+    $t = 1; $cnt = 0; $color = 1; $show = ''; $galleryconfig = config(array('gallery','m_gallery'));
+    $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat,"#^".convert::ToInt($_GET['id'])."_(.*)#");
+    $start_on = ($page >= 2 ? ($page - 1)*$galleryconfig['m_gallery']+1 : 1); ksort($files);
+    $files_foreach = limited_array($files,$start_on,$galleryconfig['m_gallery']);
+    foreach($files_foreach as $file)
     {
-        if(preg_match("#^".$_GET['id']."_(.*?)#",strtolower($file)) !== false)
-        {
-            $tr1 = ""; $tr2 = "";
+        $tr1 = ($t == 0 || $t == 1 ? '<tr>' : '');
+        $tr2 = ($t == $galleryconfig['gallery'] ? '</tr>' : '');
+        $t = ($t == $galleryconfig['gallery'] ? 0 : $t);
 
-            if($t == 0 || $t == 1)
-                $tr1 = "<tr>";
-
-            if($t == $gallery)
-            {
-                $tr2 = "</tr>";
-                $t = 0;
-            }
-
-            $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => convSpace(_confirm_del_galpic))) : '');
-            $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show .= show($dir."/show_gallery", array("img" => "<a href=\"../inc/images/uploads/gallery/".$file."\" rel=\"lightbox[gallery_".$cnt."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=gallery/".$file."&width=160\" alt=\"\" /></a>",
-                                                      "tr1" => $tr1,
-                                                      "max" => $gallery,
-                                                      "width" => convert::ToInt(round(100/$gallery)),
-                                                      "del" => $del,
-                                                      "tr2" => $tr2));
-            $t++; $cnt++;
-        }
+        $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => convSpace(_confirm_del_galpic))) : '');
+        $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+        $show .= show($dir."/show_gallery", array("img" => "<a href=\"../inc/images/uploads/gallery/".$file."\" rel=\"lightbox[gallery_".$cnt."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=gallery/".$file."&width=160\" alt=\"\" /></a>",
+                                                  "tr1" => $tr1,
+                                                  "max" => $galleryconfig['gallery'],
+                                                  "width" => convert::ToInt(round(100/$galleryconfig['gallery'])),
+                                                  "del" => $del,
+                                                  "tr2" => $tr2));
+        $t++; $cnt++;
     }
 
     $end = '';
-    if(is_float($cnt/$gallery))
+    if(is_float($cnt/$galleryconfig['gallery']))
     {
-        $end = "";
-        for($e=$t; $e<=$gallery; $e++)
+        for($e=$t; $e<=$galleryconfig['gallery']; $e++)
         { $end .= '<td class="contentMainFirst"></td>'; }
 
         $end = $end."</tr>";
     }
 
+    $seiten = nav(count($files),$galleryconfig['m_gallery'],"?action=show&amp;id=".convert::ToString($_GET['id']).""); unset($files_foreach,$files);
     $get = db("SELECT kat,beschreibung FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
-    $index = show($dir."/show", array("gallery" => re($get['kat']),
-                                      "show" => $show,
-                                      "beschreibung" => bbcode($get['beschreibung']),
-                                      "end" => $end,
-                                      "back" => _gal_back,
-                                      "head" => _subgallery_head));
+    $index = show($dir."/show", array("gallery" => re($get['kat']), "show" => $show, "beschreibung" => bbcode($get['beschreibung']), "end" => $end, "seiten" => $seiten));
 }
 ?>

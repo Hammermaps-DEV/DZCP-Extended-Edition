@@ -16,14 +16,9 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-
-    $qry = db("SELECT link FROM ".$db['sponsoren']."
-             WHERE id = '".convert::ToInt($_GET['id'])."'");
-    $get = _fetch($qry);
-
-    $upd = db("UPDATE ".$db['sponsoren']."
-             SET `hits` = hits+1
-             WHERE id = '".convert::ToInt($_GET['id'])."'");
+    $get = db("SELECT id,link FROM ".$db['sponsoren']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+    if(count_clicks('sponsoren',$get['id']))
+        db("UPDATE ".$db['sponsoren']." SET `hits` = hits+1 WHERE id = '".$get['id']."'");
 
     header("Location: ".$get['link']);
 }

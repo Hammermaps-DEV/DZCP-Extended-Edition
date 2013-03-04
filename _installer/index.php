@@ -1,8 +1,12 @@
 <?php
-ob_start();
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
 
+ob_start();
     @session_start();
 
     if((isset($_SESSION['db_install']) ? $_SESSION['db_install'] : false) == true && (isset($_GET['action']) ? $_GET['action'] : '') == '')
@@ -11,7 +15,6 @@ error_reporting(E_ALL);
     define('basePath', dirname(dirname(__FILE__).'../'));
     require_once(basePath.'/_installer/system/core.php');
     $index = '';
-    ##################################
 
     switch (isset($_GET['action']) ? $_GET['action'] : ''):
     default:
@@ -35,13 +38,10 @@ error_reporting(E_ALL);
     case 'mysql_setup_users'; //Administrator anlegen,Erste Konfiguration etc.
         require_once(basePath.'/_installer/index/mysql_setup_users.php');
     break;
-    case 'done';
-        require_once(basePath.'/_installer/index/done.php');
-    break;
+    case 'done'; require_once(basePath.'/_installer/index/done.php'); break;
     endswitch;
 
-    ##################################
-    echo show("body", array("version" => _version, "release" => _release, "index" => $index, "steps" => steps(), "ctime" => date("Y", time())));
+    echo show("body", array("index" => $index, "steps" => steps(), "ctime" => date("Y", time())));
 
     if((isset($_GET['action']) ? $_GET['action'] : '') == 'done')
         $_SESSION['installer'] = false;

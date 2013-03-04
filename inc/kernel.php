@@ -12,7 +12,7 @@
 *
 * @return array
 */
-function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array(),$dir_bl=array())
+function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array(),$preg_match=false,$blacklist=array())
 {
     $files = array();
     if($handle = @opendir($dir))
@@ -23,11 +23,11 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
             {
                 if($file != '.' && $file != '..' && !is_file($dir.'/'.$file))
                 {
-                    if(count($dir_bl) == 0)
+                    if(!count($blacklist) && ($preg_match ? preg_match($preg_match,$file) : true))
                         $files[] = $file;
                     else
                     {
-                        if(!in_array($file, $dir_bl))
+                        if(!in_array($file, $blacklist) && ($preg_match ? preg_match($preg_match,$file) : true))
                             $files[] = $file;
                     }
                 }
@@ -39,13 +39,13 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
             {
                 if($file != '.' && $file != '..' && is_file($dir.'/'.$file))
                 {
-                    if(count($file_ext) == 0)
+                    if(!in_array($file, $blacklist) && !count($file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
                         $files[] = $file;
                     else
                     {
                         ## Extension Filter ##
                         $exp_string = explode(".", $file);
-                        if(in_array(strtolower($exp_string[1]), $file_ext))
+                        if(!in_array($file, $blacklist) && in_array(strtolower($exp_string[1]), $file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
                             $files[] = $file;
                     }
                 }
@@ -57,28 +57,30 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
             {
                 if($file != '.' && $file != '..' && is_file($dir.'/'.$file))
                 {
-                    if(count($file_ext) == 0)
+                    if(!in_array($file, $blacklist) && !count($file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
                         $files[] = $file;
                     else
                     {
                         ## Extension Filter ##
                         $exp_string = explode(".", $file);
-                        if(in_array(strtolower($exp_string[1]), $file_ext))
+                        if(!in_array($file, $blacklist) && in_array(strtolower($exp_string[1]), $file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
                             $files[] = $file;
                     }
                 }
                 else
                 {
-                    if($file != '.' && $file != '..')
+                    if(!in_array($file, $blacklist) && $file != '.' && $file != '..' && ($preg_match ? preg_match($preg_match,$file) : true))
                         $files[] = $file;
                 }
             } //while end
         }
 
+        if(is_resource($handle))
+            closedir($handle);
+
         if(!count($files))
             return false;
 
-        @closedir($handle);
         return $files;
     }
     else
@@ -102,7 +104,7 @@ function is_php($version='5.2.0')
 function parsePHPInfo()
 {
     ob_start();
-    phpinfo();
+        phpinfo();
         $s = ob_get_contents();
     ob_end_clean();
 
@@ -145,20 +147,19 @@ function php_sapi_type()
 {
     $sapi_type = php_sapi_name();
     $sapi_types = array("apache" => 'Apache HTTP Server', "apache2filter" => 'Apache 2: Filter',
-            "apache2handler" => 'Apache 2: Handler', "cgi" => 'CGI', "cgi-fcgi" => 'Fast-CGI',
-            "cli" => 'CLI', "isapi" => 'ISAPI', "nsapi" => 'NSAPI');
+    "apache2handler" => 'Apache 2: Handler', "cgi" => 'CGI', "cgi-fcgi" => 'Fast-CGI', "cli" => 'CLI', "isapi" => 'ISAPI', "nsapi" => 'NSAPI');
     return(empty($sapi_types[substr($sapi_type, 0, 3)]) ? substr($sapi_type, 0, 3) : $sapi_types[substr($sapi_type, 0, 3)]);
 }
 
 /**
- * Funktion um eine Datei im Web auf Existenz zu prüfen
+ * Funktion um eine Datei im Web auf Existenz zu prüfen und abzurufen
  * Updated for DZCP-Extended Edition
  *
- * @return mixed
+ * @return String
  **/
 function fileExists($url)
 {
-    if(!fsockopen_support())
+    if((!fsockopen_support() && !use_curl || (use_curl && !extension_loaded('curl'))))
         return false;
 
     $url_p = @parse_url($url);
@@ -170,11 +171,28 @@ function fileExists($url)
         return false;
 
     unset($host,$port);
+    if(use_curl && extension_loaded('curl')) //curl
+    {
+        if(!$curl = curl_init())
+            return false;
 
-    if(!$content = @file_get_contents($url))
-        return false;
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-    return trim($content);
+        if(!$content = curl_exec($curl))
+            return false;
+
+        @curl_close($curl);
+        unset($curl);
+    }
+    else
+    {
+        if(!$content = @file_get_contents($url))
+            return false;
+    }
+
+    return convert::ToString(trim($content));
 }
 
 /**
@@ -206,12 +224,12 @@ function fsockopen_support()
  *
  * @return boolean
  **/
-function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
+function ping_port($address='',$port=0000,$timeout=2)
 {
     if(!fsockopen_support())
         return false;
 
-    if($fp = @fsockopen($ip, $port, $errno, $errstr, $timeout))
+    if($fp = @fsockopen(DNSToIp($address), $port, $errno, $errstr, $timeout))
     {
         unset($ip,$port,$errno,$errstr,$timeout);
         @fclose($fp);
@@ -219,6 +237,26 @@ function ping_port($ip='0.0.0.0',$port=0000,$timeout=2)
     }
 
     return false;
+}
+
+/**
+ * Wandelt eine DNS Adresse in eine IPv4 um
+ * Added by DZCP-Extended Edition
+ *
+ * @return String / IPv4
+ */
+function DNSToIp($address='')
+{
+    if(!preg_match('#^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$#', $address))
+    {
+        $result = gethostbyname($address);
+        if ($result === $address)
+            $result = false;
+    }
+    else
+        $result = $address;
+
+    return $result;
 }
 
 /**
@@ -278,7 +316,7 @@ function pholderreplace($pholder)
 *
 * @return string
 */
-function show($tpl="", $array=array(), $array_lang_constant=array())
+function show($tpl="", $array=array(), $array_lang_constant=array(), $array_block=array())
 {
     global $tmpdir,$chkMe;
 
@@ -301,6 +339,9 @@ function show($tpl="", $array=array(), $array_lang_constant=array())
         $pholder = explode("^",pholderreplace($tpl));
         for($i=0;$i<=count($pholder)-1;$i++)
         {
+            if(in_array($pholder[$i],$array_block))
+                continue;
+
             if(array_key_exists($pholder[$i],$array))
                 continue;
 
@@ -375,14 +416,9 @@ if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
  * Added by DZCP-Extended Edition
  **/
 function check_of_php52()
-{
-    if(!is_php('5.2.0'))
-    {
-        die('<b>Requires failed:</b><br /><ul>'.
-                '<li><b>The DZCP-Extended Edition requires PHP 5.2.0 or newer.</b>'.
-                '<li><b>Die DZCP-Extended Edition ben&ouml;tigt PHP 5.2.0 oder neuer.</b>');
-    }
-}
+{ if(!is_php('5.2.0')) die('<b>Requires failed:</b><br /><ul>'.
+ '<li><b>The DZCP-Extended Edition requires PHP 5.2.0 or newer.</b>'.
+ '<li><b>Die DZCP-Extended Edition ben&ouml;tigt PHP 5.2.0 oder neuer.</b>'); }
 
 check_of_php52();
 
@@ -537,8 +573,7 @@ function config($what)
     if(is_array($what))
     {
         $sql='';
-        foreach($what as $qy)
-        { $sql .= $qy.", "; }
+        foreach($what as $qy) { $sql .= $qy.", "; }
         $sql = substr($sql, 0, -2);
         return db("SELECT ".$sql." FROM `".$db['config']."`",false,true);
     }

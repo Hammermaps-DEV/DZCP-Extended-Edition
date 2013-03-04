@@ -83,7 +83,8 @@ if(_adminMenu != 'true')
     $support .= "open_basedir: ".$PhpInfo['Core']['open_basedir'][0]."\r\n";
     $support .= "GD-Version: ".$PhpInfo['gd']['GD Version']."\r\n";
     $support .= "PHP-Memory Limit: ".$PhpInfo['Core']['memory_limit'][0]."\r\n";
-    $support .= "Imagick Erweiterung: ".(function_exists('imagick')==true? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "Imagick Erweiterung: ".(extension_loaded('imagick')==true? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "Verwendet Imagick: ".(use_imagick==true && extension_loaded('imagick') ? 'Ja' : 'Nein')."\r\n";
     $support .= "imagettftext(): ".(function_exists('imagettftext')==true? 'existiert' : 'existiert nicht')."\r\n";
     $support .= "HTTP_ACCEPT_ENCODING: ".$_SERVER["HTTP_ACCEPT_ENCODING"]."\r\n";
 

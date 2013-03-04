@@ -22,7 +22,7 @@ else
         {
             $index = error(_error_wrong_permissions, 1);
         } else {
-            $infos = show(_upload_partners_info, array("userpicsize" => $upicsize));
+            $infos = show(_upload_partners_info, array("userpicsize" => config('upicsize')));
 
             $index = show($dir."/upload", array("uploadhead" => _upload_partners_head,
                     "file" => _upload_file,

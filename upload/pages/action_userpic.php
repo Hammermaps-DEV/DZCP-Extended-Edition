@@ -18,7 +18,7 @@ else
 {
     if($chkMe != 'unlogged')
     {
-        $infos = show(_upload_userpic_info, array("userpicsize" => $upicsize));
+        $infos = show(_upload_userpic_info, array("userpicsize" => config('upicsize')));
 
         $index = show($dir."/upload", array("uploadhead" => _upload_head,
                 "file" => _upload_file,
@@ -41,7 +41,7 @@ else
             if(!$tmpname)
             {
                 $index = error(_upload_no_data, 1);
-            } elseif($size > $upicsize."000")  {
+            } elseif($size > config('upicsize')."000")  {
                 $index = error(_upload_wrong_size, 1);
             } else {
                 foreach($picformat as $tmpendung)

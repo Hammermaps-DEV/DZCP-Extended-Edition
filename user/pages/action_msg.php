@@ -316,7 +316,7 @@ else
 
             // Have no Entrys
             if(empty($posteingang))
-                $posteingang = show($dir."/posteingang_no_entry", array());
+                $posteingang = show($dir."/posteingang_no_entry");
 
             ## Postausgang ##
             $qry = db("SELECT * FROM ".$db['msg']." WHERE von = ".convert::ToInt($userid)." AND see = 1 ORDER BY datum DESC"); $postausgang = '';
@@ -343,7 +343,7 @@ else
 
             // Have no Entrys
             if(empty($postausgang))
-                $postausgang = show($dir."/postausgang_no_entry", array());
+                $postausgang = show($dir."/postausgang_no_entry");
 
             $msghead = show(_msghead, array("nick" => autor(convert::ToInt($userid))));
             $index = show($dir."/msg", array("msghead" => $msghead,

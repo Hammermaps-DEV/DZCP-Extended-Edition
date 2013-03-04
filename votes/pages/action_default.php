@@ -16,48 +16,36 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $fvote = '';
-    if($forum_vote == 0) {
-        $fvote = ' AND forum = 0 ';
-    }
-    if(!permission('votes')) {
-        $whereIntern = ' WHERE intern = 0 ';
-        $orderIntern = '';
-    } else {
-        $whereIntern = '';
-        $orderIntern = ' intern DESC,';
-    }
-    $qry = db('SELECT * FROM ' . $db['votes'] .
-            $whereIntern . $fvote . ' ORDER BY ' . $orderIntern .
-            ' datum DESC');
-    while($get = _fetch($qry)) {
-        $qryv = db('SELECT * FROM ' . $db['vote_results'] .
-                ' WHERE vid = ' . convert::ToInt($get['id']) .
-                ' ORDER BY id');
-        $results = '';
-        $check = '';
-        $stimmen = 0;
-        $vid = 'vid_' . convert::ToInt($get['id']);
-        if($get['intern'] == 1) {
-            $showVoted = '';
-            $check = db('SELECT * FROM ' . $db['ipcheck'] .
-                    ' WHERE what = "' . $vid .
-                    '" AND ip = ' . convert::ToInt($userid) . '');
+    $fvote = (!settings('forum_vote') ? ' AND forum = 0 ' : '');
+    $whereIntern = (!permission('votes') ? ' WHERE intern = 0 ' : '');
+    $orderIntern = (!permission('votes') ? '' : ' intern DESC,');
 
+    $qry = db('SELECT * FROM ' . $db['votes'] . $whereIntern . $fvote . ' ORDER BY ' . $orderIntern . ' datum DESC'); $show = ''; $color2 = 1;
+    while($get = _fetch($qry))
+    {
+        $qryv = db('SELECT * FROM ' . $db['vote_results'] . ' WHERE vid = ' . convert::ToInt($get['id']) . ' ORDER BY id');
+        $check = ''; $vid = 'vid_' . convert::ToInt($get['id']);
+        if($get['intern'] == 1)
+        {
+            $showVoted = '';
+            $check = db('SELECT * FROM ' . $db['ipcheck'] . ' WHERE what = "' . $vid . '" AND ip = ' . convert::ToInt($userid) . '');
             $ipcheck = _rows($check) == 1;
             $intern = _votes_intern;
-        } else {
+        }
+        else
+        {
             $ipcheck = false;
             $intern = '';
         }
+
         $hostIpcheck = ipcheck($vid);
-        while($getv = _fetch($qryv)) {
-            $stimmen += $getv['stimmen'];
+        $stimmen = sum($db['vote_results']," WHERE vid = '".$get['id']."'","stimmen"); $color = 1; $results ='';
+        while($getv = _fetch($qryv))
+        {
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             if($hostIpcheck || $ipcheck || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1) {
                 $percent = @round($getv['stimmen']/$stimmen*100,2);
                 $rawpercent = @round($getv['stimmen']/$stimmen*100,0);
-
                 $balken = show(_votes_balken, array("width" => $rawpercent));
 
                 $result_head = _votes_results_head;
@@ -68,16 +56,17 @@ else
                         "class" => $class,
                         "stimmen" => $getv['stimmen'],
                         "balken" => $balken));
-            } else {
+            }
+            else
+            {
                 $result_head = _votes_results_head_vote;
                 $votebutton = '<input id="voteSubmit_'.$get['id'].'" type="submit" value="'._button_value_vote.'" class="submit" />';
-                $results .= show($dir."/votes_vote", array("id" => $getv['id'],
-                        "answer" => re($getv['sel']),
-                        "class" => $class));
+                $results .= show($dir."/votes_vote", array("id" => $getv['id'], "answer" => re($getv['sel']), "class" => $class));
             }
         }
 
-        if($get['intern'] == 1 && $stimmen != 0 && ($get['von'] == convert::ToInt($userid) || permission('votes'))) {
+        if($get['intern'] == 1 && $stimmen != 0 && ($get['von'] == convert::ToInt($userid) || permission('votes')))
+        {
             $showVoted = ' <a href="?action=showvote&amp;id=' . convert::ToInt($get['id']) .
             '"><img src="../inc/images/lupe.gif" alt="" title="' .
             _show_who_voted . '" class="icon" /></a>';
@@ -87,7 +76,9 @@ else
         {
             $moreicon = "collapse";
             $display = "";
-        } else {
+        }
+        else
+        {
             $moreicon = "expand";
             $display = "none";
         }
@@ -95,10 +86,7 @@ else
         if($get['forum'] == 1) $ftitel = re($get['titel']).' (Forum)';
         else $ftitel = re($get['titel']);
 
-        $titel = show(_votes_titel, array("titel" => $ftitel,
-                "vid" => $get['id'],
-                "icon" => $moreicon,
-                "intern" => $intern));
+        $titel = show(_votes_titel, array("titel" => $ftitel, "vid" => $get['id'], "icon" => $moreicon, "intern" => $intern));
 
         if($get['closed'] == 1) $closed = _closedicon_votes;
         else                    $closed = "";

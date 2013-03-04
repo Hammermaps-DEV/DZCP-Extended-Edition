@@ -2,8 +2,9 @@
 //-> Shoutbox
 function shout($ajax = 0)
 {
-    global $db,$maxshout,$lshouttext,$lshoutnick,$shout_max_zeichen,$userid,$chkMe;
-    $qry = db("SELECT * FROM ".$db['shout']." ORDER BY id DESC LIMIT ".$maxshout."");
+    global $db,$userid,$chkMe;
+    $shoutconfig = config(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));
+    $qry = db("SELECT * FROM ".$db['shout']." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
 
     $i = 1; $color = 1; $show = "";
     while ($get = _fetch($qry))
@@ -18,13 +19,13 @@ function shout($ajax = 0)
         $is_num = preg_match("#\d#", $get['email']);
 
         if($is_num && !check_email($get['email']))
-            $nick = autor($get['email'], "navShout",'','',$lshoutnick);
+            $nick = autor($get['email'], "navShout",'','',$shoutconfig['l_shoutnick']);
         else
-            $nick = '<a class="navShout" href="mailto:'.eMailAddr($get['email']).'" title="'.$get['nick'].'">'.cut($get['nick'], $lshoutnick).'</a>';
+            $nick = '<a class="navShout" href="mailto:'.eMailAddr($get['email']).'" title="'.$get['nick'].'">'.cut($get['nick'], $shoutconfig['l_shoutnick']).'</a>';
 
         $show .= show("menu/shout_part", array( "nick" => $nick,
                                                 "datum" => date("j.m.Y H:i", $get['datum'])._uhr,
-                                                "text" => bbcode(wrap(re($get['text']), $lshouttext),0,0,0,1),
+                                                "text" => bbcode(wrap(re($get['text']), $shoutconfig['l_shouttext']),0,0,0,1),
                                                 "class" => $class,
                                                 "del" => $delete));
         $i++;
@@ -45,11 +46,11 @@ function shout($ajax = 0)
             $sec = show("menu/shout_antispam", array("help" => _login_secure_help, "dis" => $dis));
         }
         else
-            $form = autor(convert::ToInt($userid), "navShout",'','',$lshoutnick);
+            $form = autor(convert::ToInt($userid), "navShout",'','',$shoutconfig['l_shoutnick']);
     }
 
     // 0 Zeichen, disable
-    if(!$shout_max_zeichen)
+    if(!$shoutconfig['shout_max_zeichen'])
     {
         $dis = ' style="text-align:center;" disabled="disabled"';
         $dis1 = ' style="color:#888" disabled="disabled"';
@@ -62,7 +63,7 @@ function shout($ajax = 0)
                                         "dis" => $dis,
                                         "only4reg" => $only4reg,
                                         "security" => $sec,
-                                        "zeichen" => $shout_max_zeichen));
+                                        "zeichen" => $shoutconfig['shout_max_zeichen']));
 
     $shout = show("menu/shout", array("shout" => $show,
                                       "shoutbox" => _shoutbox_head,

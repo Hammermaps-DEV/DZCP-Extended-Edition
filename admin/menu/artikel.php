@@ -180,7 +180,7 @@ if(_adminMenu != 'true')
         $entrys = cnt($db['artikel']);
         $qry = db("SELECT * FROM ".$db['artikel']."
                    ORDER BY `public` ASC, `datum` DESC
-                                     LIMIT ".($page - 1)*$maxadminartikel.",".$maxadminartikel."");
+                                     LIMIT ".($page - 1)*($maxadminartikel=config('m_adminartikel')).",".$maxadminartikel."");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -190,7 +190,7 @@ if(_adminMenu != 'true')
                                                             "action" => "admin=artikel&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => convSpace(_confirm_del_artikel)));
-          $titel = show(_artikel_show_link, array("titel" => re(cut($get['titel'],$lnewsadmin)),
+          $titel = show(_artikel_show_link, array("titel" => re(cut($get['titel'],config('l_newsadmin'))),
                                                   "id" => $get['id']));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -212,7 +212,8 @@ if(_adminMenu != 'true')
                                                    "edit" => $edit,
                                                    "delete" => $delete));
         }
-        $nav = nav($entrys,$maxadminnews,"?admin=artikel");
+
+        $nav = nav($entrys,config('m_adminnews'),"?admin=artikel");
         $show = show($dir."/admin_news", array("head" => _artikel,
                                                "nav" => $nav,
                                                "autor" => _autor,

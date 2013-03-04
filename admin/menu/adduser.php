@@ -6,15 +6,13 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-## Admin Menu-File ##
-#####################
+/* Admin Menu-File */
 if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_useradd_head;
 
-## DO ##
+/* DO */
 $error = "";
 if(isset($_GET['do']))
 {
@@ -82,9 +80,10 @@ if(isset($_GET['do']))
 
             if(!empty($p))
                 $p = ', '.substr($p, 0, strlen($p) - 1);
-
-            db("INSERT INTO ".$db['permissions']." SET `user` = '".convert::ToInt($insert_id)."'".$p);
         }
+
+        // User Permissions insert
+        db("INSERT INTO ".$db['permissions']." SET `user` = '".convert::ToInt($insert_id)."'".$p);
 
         ## Internal boardpermissions ##
         if(!empty($_POST['board']))
@@ -165,14 +164,14 @@ if(empty($show))
     if(isset($sex))
     {
         if($sex == 0)
-            $sel_sex = show(_pedit_sex_ka,array());
+            $sel_sex = show(_pedit_sex_ka);
         else if ($sex == 1)
-            $sel_sex = show(_pedit_male,array());
+            $sel_sex = show(_pedit_male);
         else
-            $sel_sex = show(_pedit_female,array());
+            $sel_sex = show(_pedit_female);
     }
     else
-        $sel_sex = show(_pedit_sex_ka,array());
+        $sel_sex = show(_pedit_sex_ka);
 
     $show = show($dir."/register", array("registerhead" => _useradd_head,
                                          "wname" => (isset($username) ? $username : ""),

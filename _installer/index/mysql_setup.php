@@ -3,7 +3,7 @@ if (!defined('IN_DZCP'))
     exit();
 
 if($_SESSION['agb'] =! true)
-    $index = show("/msg/agb_error",array());
+    $index = show("/msg/agb_error");
 else
 {
     $write=false;

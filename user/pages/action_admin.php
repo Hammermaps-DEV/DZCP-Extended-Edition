@@ -98,13 +98,18 @@ else
                             }
                         }
 
+                        // Check User Permissions is exists
+                        if(!db('SELECT id FROM `'.$db['permissions'].'` WHERE `user` = '.$edituser.' LIMIT 1',true))
+                            db("INSERT INTO ".$db['permissions']." SET `user` = '".convert::ToInt($edituser)."';");
+
+                        // Update Permissions
                         db('UPDATE '.$db['permissions'].' SET '.substr($sql_update, 0, -2).' WHERE user = '.$edituser);
 
                         // Internal Boardpermissions Update
                         if(empty($_POST['board']))
                             $_POST['board'] = array();
 
-                        //Cleanup
+                        // Cleanup
                         $sql = db('SELECT id,forum FROM `'.$db['f_access'].'` WHERE `user` = '.$edituser);
                         while($get = _fetch($sql))
                         { if(!array_var_exists($get['forum'],$_POST['board'])) db('DELETE FROM `'.$db['f_access'].'` WHERE `id` = '.$get['id']); }
@@ -185,23 +190,50 @@ else
                             ## Ereignis in den Adminlog schreiben ##
                             wire_ipcheck("deluser(".convert::ToInt($userid)."_".convert::ToInt($_GET['id']).")");
 
-                            db("UPDATE ".$db['f_posts']." SET `reg` = 0 WHERE reg = ".convert::ToInt($_GET['id'])."");
-                            db("UPDATE ".$db['f_threads']." SET `t_reg` = 0 WHERE t_reg = ".convert::ToInt($_GET['id'])."");
-                            db("UPDATE ".$db['gb']." SET `reg` = 0 WHERE reg = ".convert::ToInt($_GET['id'])."");
-                            db("UPDATE ".$db['newscomments']." SET `reg` = 0 WHERE reg = ".convert::ToInt($_GET['id'])."");
-                            db("UPDATE ".$db['usergb']." SET `reg` = 0 WHERE reg = ".convert::ToInt($_GET['id'])."");
+                            $getdel = db("SELECT id,nick,email,hp FROM ".$db['users']." WHERE id = '".convert::ToInt(convert::ToInt($_GET['id']))."'",false,true);
 
-                            db("DELETE FROM ".$db['msg']." WHERE von = '".convert::ToInt($_GET['id'])."' OR an = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['news']." WHERE autor = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['permissions']." WHERE user = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['f_access']." WHERE user = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['taktik']." WHERE autor = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['buddys']." WHERE user = '".convert::ToInt($_GET['id'])."' OR buddy = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['userpos']." WHERE user = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['users']." WHERE id = '".convert::ToInt($_GET['id'])."'");
-                            db("DELETE FROM ".$db['userstats']." WHERE user = '".convert::ToInt($_GET['id'])."'");
+                            Cache::delete('xfire_'.$getdel['user']);
 
+                            db("UPDATE ".$db['f_threads']." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
+                            db("UPDATE ".$db['f_posts']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".$db['newscomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".$db['acomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".$db['dl_comments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".$db['gb_comments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".$db['gb']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+
+                            db("DELETE FROM ".$db['clicks_ips']." WHERE `uid` = ".$getdel['id']);
+
+                            db("DELETE FROM ".$db['msg']." WHERE von = '".$getdel['id']."' OR an = '".$getdel['id']."'");
+                            db("DELETE FROM ".$db['news']." WHERE autor = '".$getdel['id']."'");
+                            db("DELETE FROM ".$db['permissions']." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".$db['squaduser']." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".$db['buddys']." WHERE user = '".$getdel['id']."' OR buddy = '".$getdel['id']."'");
+                            db("UPDATE ".$db['usergb']." SET `reg` = 0 WHERE reg = ".$getdel['id']."");
+                            db("DELETE FROM ".$db['userpos']." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".$db['userstats']." WHERE user = '".$getdel['id']."'");
+
+                            foreach($picformat as $tmpendung)
+                            {
+                                if(file_exists(basePath."/inc/images/uploads/userpics/".$getdel['id'].".".$tmpendung))
+                                    @unlink(basePath."/inc/images/uploads/userpics/".$getdel['id'].".".$tmpendung);
+
+                                if(file_exists(basePath."/inc/images/uploads/useravatare/".$getdel['id'].".".$tmpendung))
+                                    @unlink(basePath."/inc/images/uploads/useravatare/".$getdel['id'].".".$tmpendung);
+                            }
+
+                            $qrygl = db("SELECT pic FROM ".$db['usergallery']." WHERE user = '".$getdel['id']."'");
+                            if(_rows($qrygl) >= 1)
+                            {
+                                while($getgl = _fetch($qrygl))
+                                {
+                                    @unlink(basePath."inc/images/uploads/usergallery/".$getdel['id']."_".$getgl['pic']);
+                                } //while end
+
+                                db("DELETE FROM ".$db['usergallery']." WHERE user = '".$getdel['id']."'");
+                            }
+
+                            db("DELETE FROM ".$db['users']." WHERE id = '".$getdel['id']."'");
                             $index = info(_user_deleted, "?action=userlist");
                         }
                     }

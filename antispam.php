@@ -8,8 +8,6 @@ ob_start();
   if(!headers_sent())
   {
     @session_start();
-  # Patch by David Vieira-Kurz of majorsecurity.de
-    #@session_regenerate_id();
     if(!isset($_SESSION['PHPSESSID']) || !isset($_COOKIE['PHPSESSID']))
     {
         @session_destroy();

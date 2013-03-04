@@ -36,7 +36,7 @@ class API_CORE
                     $additional_languages_global = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/',false,true,array('php'));
                     $additional_languages = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/'.$language.'/',false,true,array('php'));
                     $additional_tpl = get_files(basePath.'/inc/additional-addons/'.$addon.'/_templates_/',true); $addon_infos = array();
-                    $additional_pages = get_files(basePath.'/inc/additional-addons/'.$addon.'/',true,false,array(),array('_templates_','functions','languages'));
+                    $additional_pages = get_files(basePath.'/inc/additional-addons/'.$addon.'/',true,false,array(),false,array('_templates_','functions','languages'));
                     $addon_infos = array();
 
                     if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/addon_info.xml'))
@@ -318,17 +318,6 @@ class API_CORE
             header('Cache-Control: no-transform');
             header('Vary: User-Agent, Accept');
         }
-    }
-
-    /**
-     *  Verbinde zum Update Server
-     */
-    public static function connect_master($action='',$input_array=array())
-    {
-        if(!fsockopen_support())
-            return false;
-
-        return false;
     }
 }
 ?>

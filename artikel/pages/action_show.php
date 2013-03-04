@@ -165,7 +165,7 @@ else
             $links3 = (!empty($get['url3']) ? show(_artikel_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
             $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_artikel_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
             $entrys = cnt($db['acomments'], " WHERE artikel = ".$artikel_id);
-            $i = $entrys-($page - 1)*$maxcomments;
+            $i = $entrys-($page - 1)*($maxcomments=config('m_comments'));
 
             $qryc = db("SELECT * FROM ".$db['acomments']." WHERE artikel = ".$artikel_id." ORDER BY datum DESC LIMIT ".($page - 1)*$maxcomments.",".$maxcomments.""); $comments = '';
             while($getc = _fetch($qryc))
@@ -205,7 +205,7 @@ else
             }
 
             if(empty($comments))
-                $comments = show("page/comments_no_entry", array());
+                $comments = show("page/comments_no_entry");
 
             if(settings("reg_artikel") == "1" && $chkMe == "unlogged")
                 $add = _error_unregistered_nc;

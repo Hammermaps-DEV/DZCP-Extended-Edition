@@ -64,13 +64,13 @@ label {
 Set global style of the horizontal line
 ---------------------------------------------*/
 hr {
-	color : #000;
-	height : 1px;
-	padding : 0;
-	border-color : #000;
-	border-width : 1px 0 0 0;
-	border-style : solid;
-	margin: 3px 0 6px 0;
+    color : #000;
+    height : 1px;
+    padding : 0;
+    border-color : #000;
+    border-width : 1px 0 0 0;
+    border-style : solid;
+    margin: 3px 0 6px 0;
 }
 
 *+html hr { margin: 0 }
@@ -80,7 +80,7 @@ hr {
 Set a square as in front of an unordered list
 ---------------------------------------------*/
 ul li {
-	list-style: square;
+    list-style: square;
 }
 
 /*---------------------------------------------
@@ -755,6 +755,11 @@ span.fontItalic {
   font-style: italic;
 }
 
+span.fontItalicGB {
+  font-style: italic;
+  color: #000;
+}
+
 span.fontUnder {
   text-decoration: underline;
 }
@@ -767,6 +772,12 @@ span.fontBoldUnder {
 span.fontItalicUnder {
   font-style: italic;
   text-decoration: underline;
+}
+
+span.fontItalicUnderGB {
+  font-style: italic;
+  text-decoration: underline;
+  color: #000;
 }
 
 span.fontError,span.fontWichtig,span.fontMarked,span.fontRed {
@@ -1209,27 +1220,27 @@ Adminmenu
 ---------------------------------------------*/
 .adminBarInner,.adminBarInnerOver {
   text-align: center;
-	text-decoration: none;
+    text-decoration: none;
   margin: 0px;
-	padding: 3px;
+    padding: 3px;
 }
 .adminBarInnerOver {
 
 }
 
 .adminBarOuter,.adminBarOuterOver {
-	text-decoration : none;
-	border: 1px solid #353535;
+    text-decoration : none;
+    border: 1px solid #353535;
 }
 
 .adminMenuInner,.adminMenuInnerOver {
-	margin: 3px 0 0 22px;
+    margin: 3px 0 0 22px;
 }
 
 .adminMenuOuter,.adminMenuOuterOver {
-	text-decoration : none;
-	border: 1px solid #353535;
-	padding: 0;
+    text-decoration : none;
+    border: 1px solid #353535;
+    padding: 0;
   background-repeat: no-repeat;
   background-position: 2px 50%;
 }
@@ -1361,92 +1372,92 @@ div.permissions br {
   Lightbox
 **************/
 #jquery-overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	z-index: 90;
-	width: 100%;
-	height: 500px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    width: 100%;
+    height: 500px;
 }
 #jquery-lightbox {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	z-index: 100;
-	text-align: center;
-	line-height: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    text-align: center;
+    line-height: 0;
 }
 #jquery-lightbox a img { border: none; }
 #lightbox-container-image-box {
-	position: relative;
-	background-color: #FFF;
-	width: 250px;
-	height: 250px;
-	margin: 0 auto;
+    position: relative;
+    background-color: #FFF;
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
 }
 #lightbox-container-image { padding: 10px; }
 #lightbox-loading {
-	position: absolute;
-	top: 40%;
-	left: 0%;
-	height: 25%;
-	width: 100%;
-	text-align: center;
-	line-height: 0;
+    position: absolute;
+    top: 40%;
+    left: 0%;
+    height: 25%;
+    width: 100%;
+    text-align: center;
+    line-height: 0;
 }
 #lightbox-nav {
-	position: absolute;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
-	z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
 }
 #lightbox-container-image-box > #lightbox-nav { left: 0; }
 #lightbox-nav a { outline: none;}
 #lightbox-nav-btnPrev, #lightbox-nav-btnNext {
-	width: 49%;
-	height: 100%;
-	zoom: 1;
-	display: block;
+    width: 49%;
+    height: 100%;
+    zoom: 1;
+    display: block;
 }
-#lightbox-nav-btnPrev { 
-	left: 0; 
-	float: left;
+#lightbox-nav-btnPrev {
+    left: 0;
+    float: left;
 }
-#lightbox-nav-btnNext { 
-	right: 0; 
-	float: right;
+#lightbox-nav-btnNext {
+    right: 0;
+    float: right;
 }
 #lightbox-container-image-data-box {
-	font: 10px Verdana, Helvetica, sans-serif;
-	background-color: #fff;
-	margin: 0 auto;
-	line-height: 1.4em;
-	overflow: auto;
-	width: 100%;
-	padding: 0 10px 0;
+    font: 10px Verdana, Helvetica, sans-serif;
+    background-color: #fff;
+    margin: 0 auto;
+    line-height: 1.4em;
+    overflow: auto;
+    width: 100%;
+    padding: 0 10px 0;
 }
 #lightbox-container-image-data {
-	padding: 0 10px; 
-	color: #666; 
+    padding: 0 10px;
+    color: #666;
 }
-#lightbox-container-image-data #lightbox-image-details { 
-	width: 70%; 
-	float: left; 
-	text-align: left; 
-}	
+#lightbox-container-image-data #lightbox-image-details {
+    width: 70%;
+    float: left;
+    text-align: left;
+}
 #lightbox-image-details-caption { font-weight: bold; }
 #lightbox-image-details-currentNumber {
-	display: block; 
-	clear: left; 
-	padding-bottom: 1.0em;	
-}			
+    display: block;
+    clear: left;
+    padding-bottom: 1.0em;
+}
 #lightbox-secNav-btnClose {
-	width: 26px; 
-	float: right;
-	padding-bottom: 15px;	
+    width: 26px;
+    float: right;
+    padding-bottom: 15px;
 }
 
 /**************
@@ -1523,14 +1534,14 @@ img.border {
 }
 /*TeamSpeak Channeltree*/
 .tstree_left {
-	float:left;
-	width:80%;
+    float:left;
+    width:80%;
 }
 .tstree_right {
-	float:right;
-	text-align:right;
-	width:20%;
+    float:right;
+    text-align:right;
+    width:20%;
 }
 .tstree_clear {
-	clear:both;
+    clear:both;
 }

@@ -15,12 +15,17 @@ if (!defined('IS_DZCP'))
 #####################
 ## Links Übersicht ##
 #####################
-$qry = db("SELECT * FROM ".$db['links']." ORDER BY banner DESC"); $show="";
-while($get = _fetch($qry))
+if (_version < '1.0') //Mindest Version pruefen
+    $index = _version_for_page_outofdate;
+else
 {
-    $banner = ($get['banner'] ? show(_links_bannerlink, array("id" => $get['id'], "banner" => re($get['text']))) : show(_links_textlink, array("id" => $get['id'], "text" => str_replace('http://','',re($get['url'])))));
-    $show .= show($dir."/links_show", array("beschreibung" => bbcode($get['beschreibung']), "hits" => $get['hits'], "hit" => _hits, "banner" => $banner),$get['id'].'_links',true);
-}
+    $qry = db("SELECT * FROM ".$db['links']." ORDER BY banner DESC"); $show="";
+    while($get = _fetch($qry))
+    {
+        $banner = ($get['banner'] ? show(_links_bannerlink, array("id" => $get['id'], "banner" => re($get['text']))) : show(_links_textlink, array("id" => $get['id'], "text" => str_replace('http://','',re($get['url'])))));
+        $show .= show($dir."/links_show", array("beschreibung" => bbcode($get['beschreibung']), "hits" => $get['hits'], "hit" => _hits, "banner" => $banner),$get['id'].'_links');
+    }
 
-$index = show($dir."/links", array("head" => _links_head, "show" => $show));
+    $index = show($dir."/links", array("head" => _links_head, "show" => $show));
+}
 ?>

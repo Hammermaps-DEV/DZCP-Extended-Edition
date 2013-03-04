@@ -10,6 +10,7 @@ require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/config.php');
 require_once(basePath.'/inc/kernel.php');
 require_once(basePath.'/_installer/system/global.php');
+require_once(basePath.'/_installer/system/emlv.php');
 
 //-> Sichert die ausgelagerten Dateien gegen directe Ausführung
 define('IN_DZCP', true);
@@ -21,93 +22,93 @@ function steps()
     $db = ''; $update = ''; $adminacc = ''; $done = '';
 
     switch (!isset($_GET['action']) ? "" : $_GET['action']):
-    default:
-        $lizenz = show(_step,array("text" => _link_start));
-        $type = show(_step,array("text" => _link_type_1));
-    break;
-    case 'installtype'; //Auswahl: Installation / Update
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type));
-    break;
-    case'prepare'; //Schreibrechte PrÃ¼fen
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type_1));
-        $prepare = show(_step,array("text" => _link_prepare));
-        $mysql = show(_step,array("text" => _link_mysql_1));
-        $db = show(_step,array("text" => _link_db_1));
+        default:
+            $lizenz = show(_step,array("text" => _link_start));
+            $type = show(_step,array("text" => _link_type_1));
+        break;
+        case 'installtype'; //Auswahl: Installation / Update
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type));
+        break;
+        case'prepare'; //Schreibrechte PrÃ¼fen
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $prepare = show(_step,array("text" => _link_prepare));
+            $mysql = show(_step,array("text" => _link_mysql_1));
+            $db = show(_step,array("text" => _link_db_1));
 
-        if($_SESSION['type'] == 1)
-            $update = show(_step,array("text" => _link_update_1));
-        else
-            $adminacc = show(_step,array("text" => _link_adminacc_1));
+            if($_SESSION['type'] == 1)
+                $update = show(_step,array("text" => _link_update_1));
+            else
+                $adminacc = show(_step,array("text" => _link_adminacc_1));
 
-        $done = show(_step,array("text" => _link_done_1));
-    break;
-    case'mysql'; //MySQL Verbindung abfragen & herstellen
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type_1));
-        $prepare = show(_step,array("text" => _link_prepare_1));
-        $mysql = show(_step,array("text" => _link_mysql));
-        $db = show(_step,array("text" => _link_db_1));
+            $done = show(_step,array("text" => _link_done_1));
+        break;
+        case'mysql'; //MySQL Verbindung abfragen & herstellen
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $prepare = show(_step,array("text" => _link_prepare_1));
+            $mysql = show(_step,array("text" => _link_mysql));
+            $db = show(_step,array("text" => _link_db_1));
 
-        if($_SESSION['type'] == 1)
-            $update = show(_step,array("text" => _link_update_1));
-        else
-            $adminacc = show(_step,array("text" => _link_adminacc_1));
+            if($_SESSION['type'] == 1)
+                $update = show(_step,array("text" => _link_update_1));
+            else
+                $adminacc = show(_step,array("text" => _link_adminacc_1));
 
-        $done = show(_step,array("text" => _link_done_1));
-    break;
-    case'mysql_setup'; //MySQL Config schreiben
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type_1));
-        $prepare = show(_step,array("text" => _link_prepare_1));
-        $mysql = show(_step,array("text" => _link_mysql_1));
-        $db = show(_step,array("text" => _link_db));
+            $done = show(_step,array("text" => _link_done_1));
+        break;
+        case'mysql_setup'; //MySQL Config schreiben
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $prepare = show(_step,array("text" => _link_prepare_1));
+            $mysql = show(_step,array("text" => _link_mysql_1));
+            $db = show(_step,array("text" => _link_db));
 
-        if($_SESSION['type'] == 1)
-            $update = show(_step,array("text" => _link_update_1));
-        else
-            $adminacc = show(_step,array("text" => _link_adminacc_1));
+            if($_SESSION['type'] == 1)
+                $update = show(_step,array("text" => _link_update_1));
+            else
+                $adminacc = show(_step,array("text" => _link_adminacc_1));
 
-        $done = show(_step,array("text" => _link_done_1));
-    break; //Tabellen anlegen
-    case 'mysql_setup_tb';
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type_1));
-        $prepare = show(_step,array("text" => _link_prepare_1));
-        $mysql = show(_step,array("text" => _link_mysql_1));
-        $db = show(_step,array("text" => _link_db_1));
+            $done = show(_step,array("text" => _link_done_1));
+        break; //Tabellen anlegen
+        case 'mysql_setup_tb';
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $prepare = show(_step,array("text" => _link_prepare_1));
+            $mysql = show(_step,array("text" => _link_mysql_1));
+            $db = show(_step,array("text" => _link_db_1));
 
-        if($_SESSION['type'] == 1)
-            $update = show(_step,array("text" => _link_update));
-        else
-            $adminacc = show(_step,array("text" => _link_adminacc_1));
+            if($_SESSION['type'] == 1)
+                $update = show(_step,array("text" => _link_update));
+            else
+                $adminacc = show(_step,array("text" => _link_adminacc_1));
 
-        $done = show(_step,array("text" => _link_done_1));
-    break;
-    case 'mysql_setup_users'; //Administrator anlegen,Erste Konfiguration etc.
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type_1));
-        $prepare = show(_step,array("text" => _link_prepare_1));
-        $mysql = show(_step,array("text" => _link_mysql_1));
-        $db = show(_step,array("text" => _link_db_1));
-        $adminacc = show(_step,array("text" => _link_adminacc));
-        $done = show(_step,array("text" => _link_done_1));
-    break;
-    case 'done';
-        $lizenz = show(_step,array("text" => _link_start_1));
-        $type = show(_step,array("text" => _link_type_1));
-        $prepare = show(_step,array("text" => _link_prepare_1));
-        $mysql = show(_step,array("text" => _link_mysql_1));
-        $db = show(_step,array("text" => _link_db_1));
+            $done = show(_step,array("text" => _link_done_1));
+        break;
+        case 'mysql_setup_users'; //Administrator anlegen,Erste Konfiguration etc.
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $prepare = show(_step,array("text" => _link_prepare_1));
+            $mysql = show(_step,array("text" => _link_mysql_1));
+            $db = show(_step,array("text" => _link_db_1));
+            $adminacc = show(_step,array("text" => _link_adminacc));
+            $done = show(_step,array("text" => _link_done_1));
+        break;
+        case 'done';
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $prepare = show(_step,array("text" => _link_prepare_1));
+            $mysql = show(_step,array("text" => _link_mysql_1));
+            $db = show(_step,array("text" => _link_db_1));
 
-        if($_SESSION['type'] == 1)
-            $update = show(_step,array("text" => _link_update_1));
-        else
-            $adminacc = show(_step,array("text" => _link_adminacc_1));
+            if($_SESSION['type'] == 1)
+                $update = show(_step,array("text" => _link_update_1));
+            else
+                $adminacc = show(_step,array("text" => _link_adminacc_1));
 
-        $done = show(_step,array("text" => _link_done));
-    break;
+            $done = show(_step,array("text" => _link_done));
+        break;
     endswitch;
 
     return $lizenz.$type.$prepare.$mysql.$db.$update.$adminacc.$done;
@@ -196,6 +197,13 @@ function check_db_ndb($con)
     return (stristr($db, "ndb") !== false && stristr($db, "cluster") !== false);
 }
 
+//-> Prüft MySQL Server auf Aria Erweiterung
+function check_db_aria($con)
+{
+    $db = mysql_get_server_info($con);
+    return (stristr($db, "MariaDB") !== false && stristr($db, "Maria") !== false);
+}
+
 //-> Nachrichten ausgeben
 function writemsg($stg='',$error=false, $warn=false)
 {
@@ -214,11 +222,7 @@ function sql_installer($insert=false,$db_infos=array(),$newinstall=true)
     {
         require_once(basePath.'/_installer/system/sqldb/newinstall/mysql_create_tb.php');
         require_once(basePath.'/_installer/system/sqldb/newinstall/mysql_insert_db.php');
-
-        if($insert)
-            install_mysql_insert($db_infos);
-        else
-            install_mysql_create();
+        ($insert ? install_mysql_insert($db_infos) : install_mysql_create());
     }
     else
     {

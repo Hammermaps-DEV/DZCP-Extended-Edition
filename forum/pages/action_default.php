@@ -109,13 +109,13 @@ else
 
     $qryo = db("SELECT id FROM ".$db['users']."
               WHERE whereami = 'Forum'
-              AND time+'".$useronline."'>'".time()."'
+              AND time+'".users_online."'>'".time()."'
               AND id != '".convert::ToInt($userid)."'");
     if(_rows($qryo))
     {
         $i=0;
         $check = 1;
-        $cnto = cnt($db['users'], " WHERE time+'".$useronline."'>'".time()."' AND whereami = 'Forum' AND id != '".convert::ToInt($userid)."'");
+        $cnto = cnt($db['users'], " WHERE time+'".users_online."'>'".time()."' AND whereami = 'Forum' AND id != '".convert::ToInt($userid)."'");
         while($geto = _fetch($qryo))
         {
             if($i == 5)

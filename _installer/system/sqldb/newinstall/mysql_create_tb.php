@@ -16,7 +16,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['acomments']."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `artikel` int(10) NOT NULL DEFAULT '0',
-      `nick` varchar(20) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `datum` int(20) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(50) NOT NULL DEFAULT '',
@@ -181,6 +181,7 @@ function install_mysql_create()
     `uid` int(11) NOT NULL DEFAULT '0',
     `ids` int(11) NOT NULL DEFAULT '0',
     `side` varchar(30) NOT NULL DEFAULT '',
+    `time` int(20) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `ip` (`ip`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
@@ -192,7 +193,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['cw_comments']."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `cw` int(10) NOT NULL DEFAULT '0',
-      `nick` varchar(20) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `datum` int(20) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(50) NOT NULL DEFAULT '',
@@ -211,13 +212,13 @@ function install_mysql_create()
       `id` int(1) NOT NULL AUTO_INCREMENT,
       `upicsize` int(5) NOT NULL DEFAULT '100',
       `gallery` int(5) NOT NULL DEFAULT '4',
+      `m_gallery` int(11) NOT NULL DEFAULT '36',
       `m_usergb` int(5) NOT NULL DEFAULT '10',
       `m_clanwars` int(5) NOT NULL DEFAULT '10',
       `maxshoutarchiv` int(5) NOT NULL DEFAULT '20',
       `m_clankasse` int(5) NOT NULL DEFAULT '20',
       `m_awards` int(5) NOT NULL DEFAULT '15',
       `m_userlist` int(5) NOT NULL DEFAULT '40',
-      `m_banned` int(5) NOT NULL DEFAULT '40',
       `maxwidth` int(4) NOT NULL DEFAULT '400',
       `shout_max_zeichen` int(5) NOT NULL DEFAULT '100',
       `l_servernavi` int(5) NOT NULL DEFAULT '22',
@@ -265,7 +266,6 @@ function install_mysql_create()
       `teamrow` int(1) NOT NULL DEFAULT '3',
       `l_lartikel` int(1) NOT NULL DEFAULT '18',
       `m_lartikel` int(1) NOT NULL DEFAULT '5',
-      `l_team` int(5) NOT NULL DEFAULT '7',
       `m_events` int(5) NOT NULL DEFAULT '5',
       `m_away` int(5) NOT NULL DEFAULT '10',
       `cache_engine` varchar(50) NOT NULL DEFAULT 'file',
@@ -344,11 +344,11 @@ function install_mysql_create()
     //===============================================================
     //-> Downloadkommentare =========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['dlcomments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['dlcomments']."` (
+    db("DROP TABLE IF EXISTS `".$db['dl_comments']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['dl_comments']."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `download` int(10) NOT NULL DEFAULT '0',
-      `nick` varchar(20) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `datum` int(20) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(50) NOT NULL DEFAULT '',
@@ -406,7 +406,7 @@ function install_mysql_create()
       `kid` int(2) NOT NULL DEFAULT '0',
       `sid` int(2) NOT NULL DEFAULT '0',
       `date` int(20) NOT NULL DEFAULT '0',
-      `nick` varchar(30) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `reg` int(1) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `text` text NOT NULL,
@@ -493,7 +493,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['gb']."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
-      `nick` varchar(30) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(130) DEFAULT NULL,
       `reg` int(1) NOT NULL DEFAULT '0',
@@ -503,6 +503,24 @@ function install_mysql_create()
       `public` int(1) NOT NULL,
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
+    //-> Gästebuchkommentare ========================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['gb_comments']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['gb_comments']."` (
+      `id` int(10) NOT NULL AUTO_INCREMENT,
+      `gbe` int(10) NOT NULL DEFAULT '0',
+      `nick` varchar(50) NOT NULL DEFAULT '',
+      `datum` int(20) NOT NULL DEFAULT '0',
+      `email` varchar(130) NOT NULL DEFAULT '',
+      `hp` varchar(50) NOT NULL DEFAULT '',
+      `reg` int(5) NOT NULL DEFAULT '0',
+      `comment` text NOT NULL,
+      `ip` varchar(50) NOT NULL DEFAULT '',
+      `editby` text,
+      PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
 
     //===============================================================
     //-> Glossar ====================================================
@@ -584,7 +602,7 @@ function install_mysql_create()
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `pos` int(20) NOT NULL DEFAULT '0',
       `kat` varchar(20) DEFAULT '',
-      `shown` int(1) NOT NULL DEFAULT '0',
+      `shown` int(1) NOT NULL DEFAULT '1',
       `name` varchar(249) DEFAULT '',
       `url` varchar(249) DEFAULT '',
       `target` int(1) NOT NULL DEFAULT '0',
@@ -653,7 +671,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['newscomments']."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `news` int(10) NOT NULL DEFAULT '0',
-      `nick` varchar(20) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `datum` int(20) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(50) NOT NULL DEFAULT '',
@@ -861,7 +879,7 @@ function install_mysql_create()
       `eml_pn` text NOT NULL,
       `memcache_host` VARCHAR(50) NOT NULL DEFAULT '',
       `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211',
-      `k_vwz` varchar(200) NOT NULL,
+      `k_vwz` varchar(200) NOT NULL DEFAULT '',
       `double_post` int(1) NOT NULL DEFAULT '1',
       `forum_vote` int(1) NOT NULL DEFAULT '1',
       `gb_activ` int(1) NOT NULL DEFAULT '1',
@@ -878,7 +896,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['shout']."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `datum` int(30) NOT NULL DEFAULT '0',
-      `nick` varchar(30) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `email` varchar(130) NOT NULL DEFAULT '',
       `text` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
@@ -996,7 +1014,7 @@ function install_mysql_create()
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `datum` int(20) NOT NULL DEFAULT '0',
-      `nick` varchar(30) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(100) NOT NULL DEFAULT '',
       `reg` int(1) NOT NULL DEFAULT '0',
@@ -1026,7 +1044,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".$db['users']."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` varchar(200) NOT NULL DEFAULT '',
-      `nick` varchar(200) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `pwd` varchar(255) NOT NULL DEFAULT '',
       `pwd_encoder` int(1) NOT NULL DEFAULT '2',
       `sessid` varchar(32) DEFAULT NULL,
@@ -1089,6 +1107,7 @@ function install_mysql_create()
       `beschreibung` text,
       `gmaps_koord` varchar(255) NOT NULL DEFAULT '',
       `pnmail` int(1) NOT NULL DEFAULT '1',
+      `profile_access` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 

@@ -6,10 +6,8 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._clanwars;
-    if(!permission("clanwars"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
+
+    $maxadmincw = 10;
       if($_GET['do'] == "new")
       {
         $qry = db("SELECT * FROM ".$db['squads']."
@@ -533,5 +531,4 @@ if($gets['id'] == $_GET['squad']) { $sel = ' class="dropdownKat"'; } else { $sel
                                              "navi" => nav($entrys,$maxadmincw,"?admin=cw&amp;squad=".$_GET['squad']."")
                                              ));
       }
-    }
 ?>

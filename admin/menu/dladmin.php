@@ -119,7 +119,7 @@ if(_adminMenu != 'true')
       elseif($_GET['do'] == "delete")
       {
         db("DELETE FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        db("DELETE FROM ".$db['dlcomments']." WHERE download = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".$db['dl_comments']." WHERE download = '".convert::ToInt($_GET['id'])."'");
         $show = info(_downloads_deleted, "?admin=dladmin");
       }
       else

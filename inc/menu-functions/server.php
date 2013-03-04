@@ -1,7 +1,7 @@
 <?php
 function server($serverID = 0)
 {
-    global $db, $servermenu, $language, $picformat;
+    global $db, $language, $picformat;
 
     $servernavi=''; $st = 0;
     if(empty($serverID))
@@ -98,7 +98,7 @@ function server($serverID = 0)
                 }
 
                 ## Show ##
-                $servername = jsconvert(re(cut($server['hostname'],$servermenu)));
+                $servername = jsconvert(re(cut($server['hostname'],($servermenu=config('l_servernavi')))));
                 $servernameout = (!empty($servername)) ? $servername : _navi_gsv_no_name_available;
                 $info = 'onmouseover="DZCP.showInfo(\''.$servernameout.'\', \'IP/Port:;'.$pwd_info.';'._navi_gsv_game.':;Map:;'._navi_gsv_players_online.':;'._navi_gsv_on_the_game.':\', \''.$get['ip'].':'.$get['port'].';'.$pwd_txt.';'.jsconvert(re($game_icon)).''.$server_name_short.';'.(empty($server['mapname']) ? '-' : re($server['mapname'])).';'.$server['players'].' / '.$server['maxplayers'].';'.$players.'\')" onmouseout="DZCP.hideInfo()"';
                 $servernavi = show("menu/server", array("host" => re(cut($server['hostname'],$servermenu)),
