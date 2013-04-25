@@ -20,6 +20,7 @@ else
   {
     if(Cache::check('teamspeak_'.$language) || isset($_GET['cID']))
     {
+        $settings = db("SELECT * FROM ".$db['settings'],false,true);
         if(!ping_port($settings['ts_ip'],$settings['ts_sport'],1))
             $index = '<br /><center>'._no_connect_to_ts.'</center><br />';
         else

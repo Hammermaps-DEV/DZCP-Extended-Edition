@@ -2,7 +2,9 @@
 //-> Teamausgabe in der Navigation
 function team($tID = '')
 {
-  global $db,$teamRow,$l_team;
+  global $db;
+  $teamRow = config('teamrow');
+
 //SQL
     if(!empty($tID)) $where = "WHERE id = '".convert::ToInt($tID)."' AND navi = 1";
     else             $where = "WHERE navi = '1' ORDER BY RAND()";
@@ -38,7 +40,6 @@ function team($tID = '')
 
       $status = ($getm['status'] == 1 || $getm['level'] == 1) ? "aktiv" : "inaktiv";
       $info = 'onmouseover="DZCP.showInfo(\''.fabo_autor($getm['id']).'\', \''._posi.';'._status.';'._age.'\', \''.getrank($getm['id'],$get['id']).';'.$status.';'.getAge($getm['bday']).'\', \''.hoveruserpic($getm['id']).'\')" onmouseout="DZCP.hideInfo()"';
-
       $member .= show("menu/team_show", array("pic" => userpic($getm['id'],40,50),
                                               "tr1" => $tr1,
                                               "tr2" => $tr2,

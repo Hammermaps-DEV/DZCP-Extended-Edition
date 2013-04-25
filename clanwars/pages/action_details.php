@@ -137,7 +137,7 @@ else
     $qryc = db("SELECT * FROM ".$db['cw_comments']."
                             WHERE cw = ".convert::ToInt($_GET['id'])."
                             ORDER BY datum DESC
-              LIMIT ".($page - 1)*$maxcwcomments.",".$maxcwcomments."");
+              LIMIT ".($page - 1)*($maxcwcomments=config('m_cwcomments')).",".$maxcwcomments."");
 
     $entrys = cnt($db['cw_comments'], " WHERE cw = ".convert::ToInt($_GET['id']));
     $i = $entrys-($page - 1)*$maxcwcomments;
@@ -205,7 +205,7 @@ else
     {
         $add = _error_unregistered_nc;
     } else {
-        if(!ipcheck("cwid(".$_GET['id'].")", $flood_cwcom))
+        if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
         {
             if(!empty($userid) && $userid != 0)
                 $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
@@ -300,7 +300,7 @@ else
             {
                 $index = error(_error_have_to_be_logged, 1);
             } else {
-                if(!ipcheck("cwid(".$_GET['id'].")", $flood_cwcom))
+                if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
                 {
                     if(!empty($userid) && $userid != 0)
                         $toCheck = empty($_POST['comment']);
@@ -360,7 +360,7 @@ else
                         $index = info(_comment_added, "?action=details&amp;id=".$_GET['id']."");
                     }
                 } else {
-                    $index = error(show(_error_flood_post, array("sek" => $flood_cwcom)), 1);
+                    $index = error(show(_error_flood_post, array("sek" => config('f_cwcom'))), 1);
                 }
             }
         } else{

@@ -16,12 +16,13 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
+    $info = settings(array('i_domain','i_autor'));
     $index = show($dir."/impressum", array("head" => _impressum_head,
             "domain" => _impressum_domain,
             "autor" => _impressum_autor,
             "disclaimer_head" => _impressum_disclaimer,
             "disclaimer" => _impressum_txt,
-            "show_domain" => $i_domain,
-            "show_autor" => bbcode($i_autor)));
+            "show_domain" => $info['i_domain'],
+            "show_autor" => bbcode($info['i_autor'])));
 }
 ?>

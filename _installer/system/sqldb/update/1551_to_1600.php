@@ -48,6 +48,10 @@ function install_155x_1600_update()
     db("ALTER TABLE `".$db['downloads']."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '0' AFTER `last_dl`;",false,false,true);
     db("ALTER TABLE `".$db['f_posts']."` CHANGE `edited` `edited` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".$db['rankings']."` CHANGE `lastranking` `lastranking` INT( 10 ) NOT NULL DEFAULT '0'",false,false,true);
+    db("ALTER TABLE `".$db['users']."` ADD `profile_access` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pnmail`;",false,false,true);
+    db("ALTER TABLE `".$db['config']."` ADD `m_gallery` INT( 11 ) NOT NULL DEFAULT '36' AFTER `gallery`;",false,false,true);
+    db("ALTER TABLE `".$db['config']."` DROP `m_banned`;",false,false,true);
+    db("ALTER TABLE `".$db['config']."` DROP `l_team`;",false,false,true);
 
     // Add UNIQUE INDEX
     if(db("SELECT id FROM `".$db['config']."`",true) >= 2)
@@ -140,6 +144,7 @@ function install_155x_1600_update()
     `uid` int(11) NOT NULL DEFAULT '0',
     `ids` int(11) NOT NULL DEFAULT '0',
     `side` varchar(30) NOT NULL DEFAULT '',
+    `time` int(20) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `ip` (`ip`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
@@ -305,11 +310,29 @@ function install_155x_1600_update()
     //===============================================================
     //-> Downloadkommentare =========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['dlcomments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['dlcomments']."` (
+    db("DROP TABLE IF EXISTS `".$db['dl_comments']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['dl_comments']."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `download` int(10) NOT NULL DEFAULT '0',
-      `nick` varchar(20) NOT NULL DEFAULT '',
+      `nick` varchar(50) NOT NULL DEFAULT '',
+      `datum` int(20) NOT NULL DEFAULT '0',
+      `email` varchar(130) NOT NULL DEFAULT '',
+      `hp` varchar(50) NOT NULL DEFAULT '',
+      `reg` int(5) NOT NULL DEFAULT '0',
+      `comment` text NOT NULL,
+      `ip` varchar(50) NOT NULL DEFAULT '',
+      `editby` text,
+      PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+
+    //===============================================================
+    //-> Gästebuchkommentare ========================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".$db['gb_comments']."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".$db['gb_comments']."` (
+      `id` int(10) NOT NULL AUTO_INCREMENT,
+      `gbe` int(10) NOT NULL DEFAULT '0',
+      `nick` varchar(50) NOT NULL DEFAULT '',
       `datum` int(20) NOT NULL DEFAULT '0',
       `email` varchar(130) NOT NULL DEFAULT '',
       `hp` varchar(50) NOT NULL DEFAULT '',

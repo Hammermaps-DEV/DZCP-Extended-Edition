@@ -1,13 +1,13 @@
 <?php
 function events()
 {
-  global $db,$maxevent;
+  global $db;
 
    $qry = db("SELECT id,datum,title,event FROM ".$db['events']."
               WHERE datum > ".time()."
               ORDER BY datum
-              LIMIT ".$maxevent."");
-   
+              LIMIT ".config('m_events')."");
+
    $eventbox = '';
    while($get = _fetch($qry))
    {
@@ -15,7 +15,7 @@ function events()
                                             "timestamp" => $get['datum'],
                                             "event" => $get['title']));
 
-  	 $eventbox .= show("menu/event", array("events" => $events));
+       $eventbox .= show("menu/event", array("events" => $events));
    }
 
 

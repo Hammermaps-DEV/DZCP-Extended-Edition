@@ -16,30 +16,17 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".$db['events']."
-             WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'
-             ORDER BY datum");
-    while($get = _fetch($qry))
+    if(isset($_GET['time']))
     {
-        if(permission("editkalender"))
+        $qry = db("SELECT * FROM ".$db['events']." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."' ORDER BY datum"); $events = '';
+        while($get = _fetch($qry))
         {
-            $edit = show("page/button_edit", array("id" => $get['id'],
-                    "action" => "action=admin&amp;do=edit",
-                    "title" => _button_title_edit));
-        } else {
-            $edit = "";
+            $edit = (permission("editkalender") ? show("page/button_edit_nolink", array("action" => "../admin/?admin=kalender&amp;do=edit&amp;id=".$get['id'], "title" => _button_title_edit)) : '');
+            $events .= show($dir."/event_show", array("edit" => $edit, "show_time" => date("H:i", $get['datum'])._uhr, "show_event" => bbcode($get['event']), "show_title" => re($get['title'])));
         }
 
-        $events .= show($dir."/event_show", array("event" => _kalender_event,
-                "time" => _kalender_uhrzeit,
-                "edit" => $edit,
-                "show_time" => date("H:i", $get['datum'])._uhr,
-                "show_event" => bbcode($get['event']),
-                "show_title" => re($get['title'])));
+        $head = show(_kalender_events_head, array("datum" => date("d.m.Y",$_GET['time'])));
+        $index = show($dir."/event", array("head" => $head, "events" => $events));
     }
-
-    $head = show(_kalender_events_head, array("datum" => date("d.m.Y",$_GET['time'])));
-    $index = show($dir."/event", array("head" => $head,
-            "events" => $events));
 }
 ?>

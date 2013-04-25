@@ -16,11 +16,8 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if(isset($_GET['page'])) $page = $_GET['page'];
-    else $page = 1;
-
-    $qry = db("SELECT * FROM ".$db['squads']."
-             ORDER BY pos");
+    $maxawards = config('m_awards');
+    $qry = db("SELECT * FROM ".$db['squads']." ORDER BY pos");
     while($get = _fetch($qry))
     {
         if(!empty($_GET['showsquad']) || !empty($_GET['show']))

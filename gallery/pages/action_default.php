@@ -7,7 +7,7 @@
  */
 
 ####################################
-## Wird in einer Index ausgefÃ¼hrt ##
+## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
     exit();
@@ -22,13 +22,8 @@ else
         $color = 1; $show = '';
         while($get = _fetch($qry))
         {
-            $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat); $cnt = 0; sort($files,SORT_STRING);
-            foreach($files as $file)
-            {
-                if(preg_match("#^".$get['id']."_(.*?)#",strtolower($file)) !== false)
-                    $cnt++;
-            }
-
+            $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat,"#^".$get['id']."_(.*?)#");
+            $cnt = convert::ToString($files ? count($files) : 0);
             $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
             $show .= show($dir."/gallery_show", array("link" => re($get['kat']),
                                                       "images" => $cntpics,

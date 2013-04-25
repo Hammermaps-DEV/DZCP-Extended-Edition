@@ -132,7 +132,7 @@ else
         ###########################################
         ## Neue Eintruage im Guastebuch anzeigen ##
         ###########################################
-        $activ = ((!permission("gb") && $gb_activ) ? "WHERE public = '1'" : '');
+        $activ = ((!permission("gb") && settings('gb_activ')) ? "WHERE public = '1'" : '');
         $qrygb = db("SELECT datum FROM ".$db['gb']." ".$activ." ORDER BY id DESC"); $gb = ''; $i = 0;
         if(_rows($qrygb) >= 1)
         {
@@ -177,7 +177,7 @@ else
         else if($check >= 2)
             $mymsg = show(_lobby_mymessages, array("cnt" => $check)); //Output
         else
-            $mymsg = show(_no_lobby_mymessages, array()); //Output
+            $mymsg = show(_no_lobby_mymessages); //Output
 
         unset($getmsg,$check,$cnt); //Unset unused vars
 
@@ -227,11 +227,11 @@ else
         {
             while($getcheckn = _fetch($qrycheckn))
             {
-                $getdownloadc = db("SELECT download,datum FROM ".$db['dlcomments']." WHERE download = '".$getcheckn['id']."' ORDER BY datum DESC",false,true);
+                $getdownloadc = db("SELECT download,datum FROM ".$db['dl_comments']." WHERE download = '".$getcheckn['id']."' ORDER BY datum DESC",false,true);
                 if(check_is_new($getdownloadc['datum']))
                 {
                     $can_erase = true;
-                    $eintrag = (($check = cnt($db['dlcomments'], " WHERE datum > ".$lastvisit." AND download = '".$getdownloadc['download']."'")) == 1 ? _lobby_dl_comments_1 : _lobby_dl_comments_2);
+                    $eintrag = (($check = cnt($db['dl_comments'], " WHERE datum > ".$lastvisit." AND download = '".$getdownloadc['download']."'")) == 1 ? _lobby_dl_comments_1 : _lobby_dl_comments_2);
                     $downloadc .= show(_user_new_dlc, array("cnt" => $check, "id" => $getcheckn['id'], "download" => re($getcheckn['download']), "eintrag" => $eintrag)); //Output
                 }
             } //while end

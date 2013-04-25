@@ -65,6 +65,8 @@ else
                 $index = error(_empty_email, 1);
             else if(!check_email($_POST['email']))
                 $index = error(_error_invalid_email, 1);
+            else if(!empty($_POST['pwd']) && $_POST['pwd'] != $_POST['pwd2'])
+                $index = error(_wrong_pwd, 1);
             else if($check_user)
                 $index = error(_error_user_exists, 1);
             else if($check_nick)
@@ -106,33 +108,41 @@ else
                 { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
 
                 db("UPDATE ".$db['users']." SET	".$newpwd." ".$customfields."
-                                                 `country`      = '".convert::ToString($_POST['land'])."',
-                                                 `user`         = '".convert::ToString(up($_POST['user']))."',
-                                                 `nick`         = '".convert::ToString(up($_POST['nick']))."',
-                                                 `rlname`       = '".convert::ToString(up($_POST['rlname']))."',
-                                                 `sex`          = '".convert::ToInt($_POST['sex'])."',
-                                                 `status`       = '".convert::ToInt($_POST['status'])."',
-                                                 `bday`         = '".convert::ToString($bday)."',
-                                                 `email`        = '".convert::ToString(up($_POST['email']))."',
-                                                 `nletter`      = '".convert::ToInt($_POST['nletter'])."',
-                                                 `pnmail`       = '".convert::ToInt($_POST['pnmail'])."',
-                                                 `city`         = '".convert::ToString(up($_POST['city']))."',
-                                                 `gmaps_koord`  = '".convert::ToString(up($_POST['gmaps_koord']))."',
-                                                 `hp`           = '".convert::ToString(links($_POST['hp']))."',
-                                                 `icq`          = '".convert::ToInt($icq)."',
-                                                 `xfire`        = '".convert::ToString(up($_POST['xfire']))."',
-                                                 `signatur`     = '".convert::ToString(up($_POST['sig'],1))."',
-                                                 `beschreibung` = '".convert::ToString(up($_POST['ich'],1))."'
+                                                 `country`          = '".convert::ToString($_POST['land'])."',
+                                                 `user`             = '".convert::ToString(up($_POST['user']))."',
+                                                 `nick`             = '".convert::ToString(up($_POST['nick']))."',
+                                                 `rlname`           = '".convert::ToString(up($_POST['rlname']))."',
+                                                 `sex`              = '".convert::ToInt($_POST['sex'])."',
+                                                 `status`           = '".convert::ToInt($_POST['status'])."',
+                                                 `bday`             = '".convert::ToString($bday)."',
+                                                 `email`            = '".convert::ToString(up($_POST['email']))."',
+                                                 `nletter`          = '".convert::ToInt($_POST['nletter'])."',
+                                                 `pnmail`           = '".convert::ToInt($_POST['pnmail'])."',
+                                                 `city`             = '".convert::ToString(up($_POST['city']))."',
+                                                 `gmaps_koord`      = '".convert::ToString(up($_POST['gmaps_koord']))."',
+                                                 `hp`               = '".convert::ToString(links($_POST['hp']))."',
+                                                 `icq`              = '".convert::ToInt($icq)."',
+                                                 `xfire`            = '".convert::ToString(up($_POST['xfire']))."',
+                                                 `signatur`         = '".convert::ToString(up($_POST['sig'],1))."',
+                                                 `profile_access`   = '".convert::ToInt($_POST['paccess'])."',
+                                                 `beschreibung`     = '".convert::ToString(up($_POST['ich'],1))."'
                                                   WHERE id = ".convert::ToInt($userid));
             }
         break;
         case 'delete':
-            $getdel = db("SELECT id,nick,email,hp FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
+            $getdel = db("SELECT id,nick,email,hp,user FROM ".$db['users']." WHERE id = '".convert::ToInt($userid)."'",false,true);
+
+            Cache::delete('xfire_'.$getdel['user']);
 
             db("UPDATE ".$db['f_threads']." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
             db("UPDATE ".$db['f_posts']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
             db("UPDATE ".$db['newscomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
             db("UPDATE ".$db['acomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['dl_comments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['gb_comments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+            db("UPDATE ".$db['gb']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+
+            db("DELETE FROM ".$db['clicks_ips']." WHERE `uid` = ".$getdel['id']);
 
             db("DELETE FROM ".$db['msg']." WHERE von = '".$getdel['id']."' OR an = '".$getdel['id']."'");
             db("DELETE FROM ".$db['news']." WHERE autor = '".$getdel['id']."'");
@@ -235,6 +245,7 @@ else
                         $gmaps = show('membermap/geocoder', array('form' => 'editprofil'));
                         $pnl = ($get['nletter'] ? 'checked="checked"' : '');
                         $pnm = ($get['pnmail'] ? 'checked="checked"' : '');
+                        $paccess = ($get['profile_access'] ? 'checked="checked"' : '');
                         $pic = userpic($get['id']); $avatar = useravatar($get['id']);
                         $deletepic = (!preg_match("#nopic#",$pic) ? "| "._profil_delete_pic : '');
                         $deleteava = (!preg_match("#noavatar#",$avatar) ? "| "._profil_delete_ava : '');
@@ -244,6 +255,7 @@ else
                                                                 "city" => re($get['city']),
                                                                 "pnl" => $pnl,
                                                                 "pnm" => $pnm,
+                                                                "paccess" => $paccess,
                                                                 "pwd" => "",
                                                                 "dropdown_age" => $dropdown_age,
                                                                 "ava" => $avatar,

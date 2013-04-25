@@ -24,6 +24,7 @@ include(basePath."/inc/bbcode.php");
 $dir = "forum";
 $where = _site_forum;
 $index = "";
+$maxfposts = config('m_fposts');
 
 ##############
 ## SECTIONS ##

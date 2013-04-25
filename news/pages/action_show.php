@@ -24,7 +24,6 @@ else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".$db['
 else
 {
     $c = db("SELECT intern,public FROM ".$db['news']." WHERE id = ".$news_id,false,true);
-    $flood_newscom = config('f_newscom');
 
     if(!permission("news") && !$c['public'])
         $index = error(_error_wrong_permissions, 1);
@@ -45,7 +44,7 @@ else
                         $index = error(_error_have_to_be_logged, 1);
                     else
                     {
-                        if(!ipcheck("ncid(".$news_id.")", $flood_newscom))
+                        if(!ipcheck("ncid(".$news_id.")", ($f_newscom=config('f_newscom'))))
                         {
                             if(!empty($userid) && $userid != 0)
                                 $toCheck = empty($_POST['comment']);
@@ -91,7 +90,7 @@ else
                             }
                         }
                         else
-                            $index = error(show(_error_flood_post, array("sek" => $flood_newscom)), 1);
+                            $index = error(show(_error_flood_post, array("sek" => $f_newscom)), 1);
                     }
                 break;
                 case 'delete':
@@ -217,7 +216,7 @@ else
                 $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
                 $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
                 $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
-                $qryc = db("SELECT * FROM ".$db['newscomments']." WHERE news = ".$news_id." ORDER BY datum DESC LIMIT ".($page - 1)*$maxcomments.",".$maxcomments."");
+                $qryc = db("SELECT * FROM ".$db['newscomments']." WHERE news = ".$news_id." ORDER BY datum DESC LIMIT ".($page - 1)*($maxcomments=config('m_comments')).",".$maxcomments."");
                 $entrys = cnt($db['newscomments'], " WHERE news = ".$news_id);
                 $i = $entrys-($page - 1)*$maxcomments;
 
@@ -259,7 +258,7 @@ else
                 }
 
                 if(empty($comments))
-                    $comments = show("page/comments_no_entry", array());
+                    $comments = show("page/comments_no_entry");
 
                 if(settings("reg_newscomments") == "1" && $chkMe == "unlogged")
                     $add = _error_unregistered_nc;
@@ -271,7 +270,7 @@ else
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                     $add = '';
-                    if(!ipcheck("ncid(".$news_id.")", $flood_newscom))
+                    if(!ipcheck("ncid(".$news_id.")", config('f_newscom')))
                     {
                         $add = show("page/comments_add", array( "titel" => _news_comments_write_head,
                                                                 "form" => $form,

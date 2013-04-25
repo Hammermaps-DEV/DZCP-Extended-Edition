@@ -27,7 +27,7 @@ else
         $entrys = cnt($db['away']);
         $qry = db("SELECT * FROM ".$db['away']."
                ORDER BY id DESC
-               LIMIT ".($page - 1)*$maxaway.",".$maxaway."");
+               LIMIT ".($page - 1)*($maxaway=config('m_away')).",".$maxaway."");
 
         $show = '';
         while($get = _fetch($qry))

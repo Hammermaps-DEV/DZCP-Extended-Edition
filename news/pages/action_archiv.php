@@ -32,9 +32,10 @@ else
         $intern2 = "WHERE intern = 0 AND datum <= ".time()." AND public = 1";
     }
 
+    $narchivconfig = config(array('m_archivnews','l_newsarchiv'));
     $page = (isset($_GET['page']) ? $_GET['page'] : 1);
     $n_kat = (empty($kat) ? '' : "AND kat = '".$kat."'");
-    $qry = db("SELECT id,titel,autor,datum,kat,text FROM ".$db['news']." ".$intern2." ".$n_kat." ORDER BY datum DESC LIMIT ".($page - 1)*$maxarchivnews.",".$maxarchivnews."");
+    $qry = db("SELECT id,titel,autor,datum,kat,text FROM ".$db['news']." ".$intern2." ".$n_kat." ORDER BY datum DESC LIMIT ".($page - 1)*$narchivconfig['m_archivnews'].",".$narchivconfig['m_archivnews']."");
     $entrys = cnt($db['news'], " ".$intern2." ".$n_kat);
 
     $color = 1; $show = '';
@@ -42,7 +43,7 @@ else
     {
         $getk = db("SELECT kategorie FROM ".$db['newskat']." WHERE id = '".$get['kat']."'",false,true);
         $comments = cnt($db['newscomments'], " WHERE news = ".$get['id']."");
-        $titel = show(_news_show_link, array("titel" => cut(re($get['titel']),$lnewsarchiv), "id" => $get['id']));
+        $titel = show(_news_show_link, array("titel" => cut(re($get['titel']),$narchivconfig['l_newsarchiv']), "id" => $get['id']));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $show .= show($dir."/archiv_show", array("autor" => autor($get['autor']),
                                                          "date" => date("d.m.y", $get['datum']),
@@ -52,7 +53,7 @@ else
                                                          "comments" => $comments));
     }
 
-    $nav = nav($entrys,$maxarchivnews,"?action=archiv");
+    $nav = nav($entrys,$narchivconfig['m_archivnews'],"?action=archiv");
     $index = show($dir."/archiv", array("head" => _news_archiv_head,
                                             "date" => _datum,
                                             "titel" => _titel,

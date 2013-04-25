@@ -20,7 +20,7 @@ else
     {
         $index = error(_error_wrong_permissions, 1);
     } else {
-        $infos = show(_upload_usergallery_info, array("userpicsize" => $upicsize));
+        $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
 
         $index = show($dir."/upload", array("uploadhead" => _upload_icons_head,
                 "file" => _upload_file,

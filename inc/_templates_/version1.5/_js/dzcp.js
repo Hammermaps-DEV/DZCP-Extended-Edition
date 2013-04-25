@@ -25,6 +25,50 @@
 
   // init lightbox
       DZCP.initLightbox();
+
+      // PreLoad checkPassword Pics
+      images = new Array();
+      images[0]="../inc/images/lvl0.jpg";
+      images[1]="../inc/images/lvl1.jpg";
+      images[2]="../inc/images/lvl2.jpg";
+      images[3]="../inc/images/lvl3.jpg";
+      images[3]="../inc/images/lvl4.jpg";
+      images[3]="../inc/images/lvl5.jpg";
+
+      imageObj = new Image();
+      var i; for(i=0; i<=3; i++)
+      { imageObj.src=images[i]; }
+    },
+
+    checkPassword: function(passwd)
+    {
+        var level = new Array(); var intScore = 0;
+        level[0] = '<table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl1.jpg" width="200" height="18" /></td></tr></table>';
+        level[1] = '<table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl2.jpg" width="200" height="18" /></td></tr></table>';
+        level[2] = '<table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl3.jpg" width="200" height="18" /></td></tr></table>';
+        level[3] = '<table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl4.jpg" width="200" height="18" /></td></tr></table>';
+        level[4] = '<table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl5.jpg" width="200" height="18" /></td></tr></table>';
+        level[5] = '<table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl0.jpg" width="200" height="18" /></td></tr></table>';
+
+        var base = 0;
+        if (passwd.match(/[a-z]/)) { base = (base+26); }
+        if (passwd.match(/[A-Z]/)) { base = (base+26); }
+        if (passwd.match(/\d+/)) { base = (base+7); }
+        if (passwd.match(/(\d.*\d.*\d)/)) { base = (base+5); }
+        if (passwd.match(/[!",@#$%^&*?_~§$%&/\()=?`´°ß\][}³²;:üäöÖÜÄ]/)) { base = (base+40); }
+        if (passwd.match(/([!,@#$%^&*?_~].*[!,@#$%^&*?_~])/)) { base = (base+23); }
+        if (passwd.match(/[a-z]/) && passwd.match(/[A-Z]/)) { base = (base+26); }
+        if (passwd.match(/\d/) && passwd.match(/\D/)) { base = (base+5); }
+        if (passwd.match(/([a-zA-Z0-9].*[!,@,#,$,%,^,&,*,?,_,~])|([!,@,#,$,%,^,&,*,?,_,~].*[a-zA-Z0-9])/)) { base = (base+5); }
+        if (passwd.match(/[a-z]/) && passwd.match(/[A-Z]/) && passwd.match(/\d/) && passwd.match(/[!,@#$%^&*?_~]/)) { base = (base+5); }
+
+        var combos=Math.pow(base,passwd.length);
+        if(combos == 1) { $('#Words').html(level[5]); }
+        else if(combos > 1 && combos < 1000000) { $('#Words').html(level[0]); }
+        else if (combos >= 1000000 && combos < 1000000000000) { $('#Words').html(level[1]); }
+        else if (combos >= 1000000000000 && combos < 1000000000000000000) { $('#Words').html(level[2]); }
+        else if (combos >= 1000000000000000000 && combos < 1000000000000000000000000) { $('#Words').html(level[3]); }
+        else { $('#Words').html(level[4]); }
     },
 
   // init lightbox
@@ -308,28 +352,26 @@
       },
 
   // ajax preview
-    ajaxPreview: function(form) {
-      var tag=doc.getElementsByTagName("textarea");
-      for(var i=0;i<tag.length;i++)
-      {
-        var thisTag = tag[i].className;
-        var thisID = tag[i].id;
-        if(thisTag == "editorStyle" || thisTag == "editorStyleWord" || thisTag == "editorStyleNewsletter")
+    ajaxPreview: function(form)
+    {
+        var tag=doc.getElementsByTagName("textarea");
+        for(var i=0;i<tag.length;i++)
         {
-          var inst = tinyMCE.getInstanceById(thisID);
-          $('#' + thisID).attr('value', inst.getBody().innerHTML);
+            var thisTag = tag[i].className;
+            var thisID = tag[i].id;
+
+            if(thisTag == "editorStyle" || thisTag == "editorStyleWord" || thisTag == "editorStyleNewsletter")
+            {
+                var inst = tinyMCE.getInstanceById(thisID);
+                $('#' + thisID).attr('value', inst.getBody().innerHTML);
+            }
         }
-      }
 
-      $('#previewDIV').html('<div style="width:100%;text-align:center">'
-                             + ' <img src="../inc/images/admin/loading.gif" alt="" />'
-                             + '</div>');
+        $('#previewDIV').html('<div style="width:100%;text-align:center">' + ' <img src="../inc/images/ajax-loader-bar.gif" alt="" />' + '</div>');
 
-      var url = prevURL;
-      var addpars = (form == 'cwForm') ? '&s1=' + $('#screen1').attr('value') + '&s2=' + $('#screen2').attr('value') + '&s3=' + $('#screen3').attr('value') + '&s4=' + $('#screen4').attr('value') : '';
-      $.post(url, $('#' + form).serialize() + addpars, function(req) {
-        $('#previewDIV').html(req);
-      });
+        var url = prevURL;
+        var addpars = (form == 'cwForm') ? '&s1=' + $('#screen1').attr('value') + '&s2=' + $('#screen2').attr('value') + '&s3=' + $('#screen3').attr('value') + '&s4=' + $('#screen4').attr('value') : '';
+        $.post(url, $('#' + form).serialize() + addpars, function(req) { $('#previewDIV').html(req); });
     },
 
   // confirm delete
@@ -339,8 +381,6 @@
 
       return confirm(txt + '?');
     },
-
-
 
   // forum search
     hideForumFirst: function() {
@@ -412,11 +452,9 @@
     }
   }
 
+
+
 // load global events
-  $(document).ready(function() {
-    DZCP.init();
-  });
+  $(document).ready(function() { DZCP.init(); });
 // load global events
-  $(window).load(function() {
-    DZCP.resizeImages();
-  });
+  $(window).load(function() { DZCP.resizeImages(); });

@@ -17,7 +17,7 @@ Geplant sind weitere Überarbeitungen bei Geschwindigkeit und Zuverlässigkeit, 
 =======================
 
 Viele der Kernfunktionen wurde in die kernel.php exportiert um später eine reine BBCode.php zu erhalten die sich wirklich nur um die Darstellung kümmert.
-Viele der Kernfunktionen die in die kernel.php exportiert wurden, haben eine überarbeitung erfahren und wurde auf einer php 5.4 Laufzeit mit voll eingeschalteten Error Reporting getestet.
+Viele der Kernfunktionen die in die kernel.php exportiert wurden, haben eine Überarbeitung erfahren und wurde auf einer php 5.4 Laufzeit mit voll eingeschalteten Error Reporting getestet.
 
 Es wurde eine richtige Cache Klasse eingefügt, die standardmäßig auf 'File'  eingestellt ist. 
 Der Cache speichert Seiten und Serverantworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen muss.
@@ -106,12 +106,21 @@ Neue Addons Schnittstelle für einfaches einfügen und löschen von Addons/Mods.
 * Frei zu bearbeitende Addon-XML Dateien für Statische Einstellungen aller Art.
 * Eine einfache PHP-API Schnittstelle für alle Addons. *In DEV*
 
-* Die geschätzten Download Zeiten bei Downloads wurden der heutigen Zeit angepasst, ab DSL 1000 - VDSL 50.k
-* Die nötigen Download Zeiten werden jetzt richtig berechnet.
-* Download Kommentare können bei den Downloads geschrieben werden, kann beim Anlegen/Bearbeiten von Downloads aktiviert werden.
+Die geschätzten Download Zeiten bei Downloads wurden der heutigen Zeit angepasst, ab DSL 1000 - VDSL 50.k
+Die nötigen Download Zeiten werden jetzt richtig berechnet.
+Download Kommentare können bei den Downloads geschrieben werden, kann beim Anlegen/Bearbeiten von Downloads aktiviert werden.
 
-* Die Thumbgen Funktion wurde in die ajax.php importiert und es wird ein Cache der Bilder durchgeführt.
-* Die Thumbgen verwendet wenn vorhanden die Imagick PHP Erweiterung, diese ist deutlich schneller als die alte GD.
-* Alle Einstellungen betreffend der Thumbgen Funktion sind über die config.php einstellbar.
+Die Thumbgen Funktion wurde in die ajax.php importiert und es wird ein Cache der Bilder durchgeführt.
+Die Thumbgen verwendet wenn vorhanden die Imagick PHP Erweiterung, diese ist deutlich schneller als die alte GD.
+Alle Einstellungen betreffend der Thumbgen Funktion sind über die config.php einstellbar.
 
-* Der Cache kann Binary Code ohne Verluste speichern und erkennt *optional Änderungen an den Original Daten und aktualisiert den Cache automatisch.
+Der Cache kann Binary Code ohne Verluste speichern und erkennt *optional Änderungen an den Original Daten und aktualisiert den Cache automatisch.
+Userprofile können nun auch nur für Registrierte User zugänglich gemacht werden. *Privatsphärenschutz*
+* Es kann unter *Profil editieren* Aktiviert oder Deaktiviert werden.
+
+Das Gästebuch wurde überarbeitet, nun können die User Kommentare gelöscht oder bearbeitet werden, ohne den Original Gästebucheintrag zu verändern.
+* Gästebucheinträge die aus einer Vorgänger Version von DZCP Übernommen wurden, können Darstellungsfehler haben.
+* Grund dafür ist, das die alte DZCP Version die Kommentare mit in den Gästebucheintrag Text schreibt.
+* Dieser sollte per Hand aus dem  Originalen Gästebucheintrag Text entfernt werden und neu Kommentiert werden. <Gästebucheintrag bearbeiten>
+
+In der Gallery ist nun Seitenblättern möglich, die Gallery kann in mehrere Seiten eingeteilt werden.

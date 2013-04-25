@@ -12,8 +12,7 @@ if(_adminMenu != 'true')
     } else {
       if($_GET['do'] == "add")
       {
-        $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
-                   ORDER BY s1.name, s2.pos");
+        $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat` ORDER BY s1.name, s2.pos");
         while($get = _fetch($qry))
         {
           if($thiskat != $get['kat']) {

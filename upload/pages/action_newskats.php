@@ -18,7 +18,7 @@ else
 {
     if(permission('news') || permission('artikel'))
     {
-        $infos = show(_upload_usergallery_info, array("userpicsize" => $upicsize));
+        $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
 
         if(isset($_GET['edit'])) $action = "?action=newskats&amp;do=upload&edit=".$_GET['edit']."";
         else $action = "?action=newskats&amp;do=upload";
@@ -41,7 +41,7 @@ else
             if(!$tmpname)
             {
                 $index = error(_upload_no_data, 1);
-            } elseif($size > $upicsize."000") {
+            } elseif($size > config('upicsize')."000") {
                 $index = error(_upload_wrong_size, 1);
             } else {
                 copy($tmpname, basePath."/inc/images/newskat/".$_FILES['file']['name']."");

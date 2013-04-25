@@ -37,7 +37,7 @@ else
         {
             $img = squad($get['icon']);
             $flagge = flag($get['gcountry']);
-            $gegner = show(_cw_details_gegner, array("gegner" => re(cut($get['clantag']." - ".$get['gegner'], $lcwgegner)),
+            $gegner = show(_cw_details_gegner, array("gegner" => re(cut($get['clantag']." - ".$get['gegner'], config('l_clanwars'))),
                     "url" => '?action=details&amp;id='.$get['id']));
 
             $details = show(_cw_show_details, array("id" => $get['id']));

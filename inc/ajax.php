@@ -6,7 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+#########################
 ## OUTPUT BUFFER START ##
+#########################
 include("../inc/buffer.php");
 
 //Settings
@@ -60,7 +62,9 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
             break;
         endswitch;
     break;
+
     case 'thumbgen';
+    if(!headers_sent())
         thumbgen($_GET['file'], isset($_GET['width']) ? $_GET['width'] : '', isset($_GET['height']) ? $_GET['height'] : '');
     break;
 
@@ -78,4 +82,9 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
         endswitch;
     break;
 endswitch;
+
+#######################
+## OUTPUT BUFFER END ##
+#######################
+gz_output();
 ?>

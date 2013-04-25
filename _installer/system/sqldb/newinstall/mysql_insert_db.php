@@ -2,6 +2,7 @@
 //===============================================================
 //Insert DZCP-Database MySQL Installer
 //===============================================================
+
 function install_mysql_insert($db_infos)
 {
     global $db;
@@ -9,132 +10,160 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Downloadkategorien =========================================
     //===============================================================
-    db("INSERT INTO ".$db['dl_kat']." (`id`, `name`) VALUES
-    (NULL, 'Downloads'),
-    (NULL, 'Demos'),
-    (NULL, 'Stuff');",false,false,true);
+    db("INSERT INTO ".$db['dl_kat']." SET `name` = 'Downloads';",false,false,true);
+    db("INSERT INTO ".$db['dl_kat']." SET `name` = 'Demos';",false,false,true);
+    db("INSERT INTO ".$db['dl_kat']." SET `name` = 'Stuff';",false,false,true);
 
     //===============================================================
     //-> Downloads ==================================================
     //===============================================================
-    db("INSERT INTO ".$db['downloads']." (`id`, `download`, `url`, `beschreibung`, `hits`, `kat`, `date`, `last_dl`, `comments`) VALUES
-    (NULL, 'Testdownload', 'http://www.url.de/test.zip', '<p>Das ist ein Testdownload</p>', 0, 1, 1298817168, 0, 1);",false,false,true);
+    db("INSERT INTO ".$db['downloads']." SET
+    `download` = 'Testdownload',
+    `url` = 'http://www.url.de/test.zip',
+    `beschreibung` = '<p>Das ist ein Testdownload</p>',
+    `kat` = '1',
+    `date` = '".time()."';",false,false,true);
 
     //===============================================================
     //-> Forum ======================================================
     //===============================================================
-    db("INSERT INTO ".$db['f_kats']." (`id`, `kid`, `name`, `intern`) VALUES
-    (NULL, 1, 'Hauptforum', 0),
-    (NULL, 2, 'OFFtopic', 0),
-    (NULL, 3, 'Clanforum', 1);",false,false,true);
+    db("INSERT INTO ".$db['f_kats']." SET `kid` = 1, `name` = 'Hauptforum';",false,false,true);
+    db("INSERT INTO ".$db['f_kats']." SET `kid` = 2, `name` = 'OFFtopic';",false,false,true);
+    db("INSERT INTO ".$db['f_kats']." SET `kid` = 3, `name` = 'Clanforum', `intern` = '1';",false,false,true);
 
     //===============================================================
     //-> Newskategorien =============================================
     //===============================================================
-    db("INSERT INTO ".$db['newskat']." (`id`, `katimg`, `kategorie`) VALUES (NULL, 'hp.jpg', 'Homepage');",false,false,true);
+    db("INSERT INTO ".$db['newskat']." SET `katimg` = 'hp.jpg', `kategorie` = 'Homepage';",false,false,true);
 
     //===============================================================
     //-> Event ======================================================
     //===============================================================
-    db("INSERT INTO ".$db['events']." (`id`, `datum`, `title`, `event`) VALUES
-    (NULL, ".(time()+90000).", 'Testevent', '<p>Das ist nur ein Testevent! :)</p>');",false,false,true);
+    db("INSERT INTO ".$db['events']." SET
+    `datum` = ".(time()+90000).",
+    `title` = 'Testevent',
+    `event` = '<p>Das ist nur ein Testevent! :)</p>';",false,false,true);
 
     //===============================================================
     //-> Settings ===================================================
     //===============================================================
-    db("INSERT INTO `".$db['settings']."` (`id`, `clanname`, `reg_forum`, `reg_cwcomments`, `counter_start`, `reg_dl`, `reg_artikel`, `reg_newscomments`, `reg_dlcomments`, `tmpdir`, `wmodus`, `persinfo`, `iban`,
-    `bic`, `badwords`, `pagetitel`, `last_backup`, `i_domain`, `i_autor`, `k_nr`, `k_inhaber`, `k_blz`, `k_bank`, `k_waehrung`, `language`,  `domain`, `regcode`,  `mailfrom`,  `ts_ip`, `ts_port`, `ts_sport`, `ts_version`,
-    `ts_customicon`, `ts_showchannel`, `ts_width`, `eml_reg_subj`, `eml_pwd_subj`, `eml_nletter_subj`, `eml_reg`, `eml_pwd`, `eml_nletter`, `reg_shout`, `prev`, `eml_fabo_npost_subj`, `eml_fabo_tedit_subj`, `eml_fabo_pedit_subj`,
-    `eml_pn_subj`, `eml_fabo_npost`, `eml_fabo_tedit`, `eml_fabo_pedit`, `eml_pn`, `memcache_host`, `memcache_port`, `k_vwz`, `double_post`, `forum_vote`, `gb_activ`, `urls_linked`,`db_version`)
-     VALUES (NULL,'".up($db_infos['clanname'])."', '1', '1', '0', '1', '1', '1', '1', 'version1.5', '0', '1', '', '', 'arsch,Arsch,arschloch,Arschloch,hure,Hure', '".up($db_infos['seitentitel'])."', '0', '".$_SERVER['SERVER_NAME']."', 'Max Mustermann', '123456789',
-    'Max Mustermann', '123456789', 'Musterbank', '&euro;', 'deutsch', '".$_SERVER['SERVER_ADDR']."', '1', '".$db_infos['emailweb']."', '80.190.204.164', '7000', '10011', '3', '1', '0', '0', 'Deine Registrierung', 'Deine Zugangsdaten',
-    'Newsletter', 'Du hast dich erfolgreich auf unserer Seite registriert!\r\nDeine Logindaten lauten:\r\n\r\n##########\r\nLoginname: [user]\r\nPasswort: [pwd]\r\n##########\r\n\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]',
-    'Ein neues Passwort wurde f&uuml;r deinen Account generiert!\r\n\r\n#########\r\nLogin-Name: [user]\r\nPasswort: [pwd]\r\n#########\r\n\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]', '[text]\r\n\r\n\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]','1', '".strtolower(mkpwd(3,false))."', 'Neuer Beitrag auf abonniertes Thema im [titel]', 'Thread auf abonniertes Thema im [titel] wurde editiert', 'Beitrag auf abonniertes Thema im [titel] wurde editiert', 'Neue PN auf [domain]',
-    'Hallo [nick],<br />\r\n<br />\r\n[postuser] hat auf das Thema: [topic] auf der Website: &#34;[titel]&#34; geantwortet.<br />\r\n<br />\r\nDen neuen Beitrag erreichst Du ber folgenden Link:<br />\r\n<a href=&#34;http://[domain]/forum/?action=showthread&id=[id]&page=[page]#p[entrys]&#34;>http://[domain]/forum/?action=showthread&id=[id]&page=[page]#p[entrys]</a><br />\r\n<br />\r\n[postuser] hat folgenden Text geschrieben:<br />\r\n---------------------------------<br />\r\n[text]<br />\r\n---------------------------------<br />\r\n<br />\r\nMit freundlichen Gr&uuml;&szlig;en,<br />\r\n<br />\r\nDein [clan]<br />\r\n<br />\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]',
-    'Hallo [nick],<br />\r\n		 <br />\r\nDer Thread mit dem Titel: [topic] auf der Website: &#34;[titel]&#34; wurde soeben von [postuser] editiert.<br />\r\n<br />\r\nDen editierten Beitrag erreichst Du ber folgenden Link:<br />\r\n<a href=&#34;http://[domain]/forum/?action=showthread&id=[id]&#34;>http://[domain]/forum/?action=showthread&id=[id]</a><br />\r\n	<br />\r\n[postuser] hat folgenden neuen Text geschrieben:<br />\r\n---------------------------------<br />\r\n[text]<br />\r\n---------------------------------<br />\r\n	<br />\r\nMit freundlichen Gr&uuml;&szlig;en,<br />\r\n<br />\r\nDein [clan]<br />\r\n<br />\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]',
-    'Hallo [nick],<br />\r\n<br />\r\nEin Beitrag im Thread mit dem Titel: [topic] auf der Website: &#34;[titel]&#34; wurde soeben von [postuser] editiert.<br />\r\n<br />\r\nDen editierten Beitrag erreichst Du ber folgenden Link:<br />\r\n<a href=&#34;http://[domain]/forum/?action=showthread&id=[id]&page=[page]#p[entrys]&#34;>http://[domain]/forum/?action=showthread&id=[id]&page=[page]#p[entrys]</a><br />\r\n<br />\r\n[postuser] hat folgenden neuen Text geschrieben:<br />\r\n---------------------------------<br />\r\n[text]<br />\r\n---------------------------------<br />\r\n<br />\r\nMit freundlichen Gr&uuml;&szlig;en,<br />\r\n<br />\r\nDein [clan]<br />\r\n<br />\r\n[ Diese Email wurde automatisch generiert, bitte nicht antworten! ]',
-    '---------------------------------<br />\r\n<br />\r\nHallo [nick],<br />\r\n<br />\r\nDu hast eine neue Nachricht in deinem Postfach.<br />\r\n<br />\r\nTitel: [titel]<br />\r\n<br />\r\n<a href=&#34;http://[domain]/user/index.php?action=msg&#34;>Zum Nachrichten-Center</a><br />\r\n<br />\r\nVG<br />\r\n<br />\r\n[clan]<br />\r\n<br />\r\n---------------------------------', 'localhost', 11211, 1, 1, 1, 1, 2,'1600');",false,false,true);
+    db("INSERT INTO `".$db['settings']."` SET
+    `clanname`             = '".up($db_infos['clanname'])."',
+    `badwords`             = 'arsch,Arsch,arschloch,Arschloch,hure,Hure',
+    `pagetitel`            = '".up($db_infos['seitentitel'])."',
+    `i_domain`             = '".$_SERVER['SERVER_NAME']."',
+    `domain`               = '".$_SERVER['SERVER_ADDR']."',
+    `mailfrom`             = '".$db_infos['emailweb']."',
+    `ts_ip`                = '80.190.204.164',
+    `ts_port`              = '7000',
+    `prev`                 = '".strtolower(mkpwd(3,false))."',
+    `memcache_host`        = 'localhost',
+    `memcache_port`        = '11211',
+    `db_version`           = '1600',
+    `eml_reg_subj`         = '".emlv('eml_reg_subj')."',
+    `eml_pwd_subj`         = '".emlv('eml_pwd_subj')."',
+    `eml_reg`              = '".emlv('eml_reg')."',
+    `eml_pwd`              = '".emlv('eml_pwd')."',
+    `eml_nletter_subj`     = '".emlv('eml_nletter_subj')."',
+    `eml_nletter`          = '".emlv('eml_nletter')."',
+    `eml_fabo_npost_subj`  = '".emlv('eml_fabo_npost_subj')."',
+    `eml_fabo_tedit_subj`  = '".emlv('eml_fabo_tedit_subj')."',
+    `eml_fabo_pedit_subj`  = '".emlv('eml_fabo_pedit_subj')."',
+    `eml_pn_subj`          = '".emlv('eml_pn_subj')."',
+    `eml_fabo_npost`       = '".emlv('eml_fabo_npost')."',
+    `eml_fabo_tedit`       = '".emlv('eml_fabo_tedit')."',
+    `eml_fabo_pedit`       = '".emlv('eml_fabo_pedit')."',
+    `eml_pn`               = '".emlv('eml_pn')."';",false,false,true);
 
     //===============================================================
     //-> Forum: Kategorien ==========================================
     //===============================================================
-    db("INSERT INTO ".$db['f_skats']." (`id`, `sid`, `kattopic`, `subtopic`, `pos`) VALUES
-    (NULL, 1, 'Allgemein', 'Allgemeines...', '2'),
-    (NULL, 1, 'Homepage', 'Kritiken/Anregungen/Bugs', '3'),
-    (NULL, 1, 'Server', 'Serverseitige Themen...', '4'),
-    (NULL, 1, 'Spam', 'Spamt die Bude voll ;)', '5'),
-    (NULL, 2, 'Sonstiges', '', '6'),
-    (NULL, 2, 'OFFtopic', '', '7'),
-    (NULL, 3, 'internes Forum', 'interne Angelegenheiten', '1'),
-    (NULL, 3, 'Server intern', 'interne Serverangelegenheiten', '8'),
-    (NULL, 3, 'War Forum', 'Alles &uuml;ber und rundum Clanwars', '9');",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 1, `kattopic` = 'Allgemein', `subtopic` = 'Allgemeines...', `pos` = 2;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 1, `kattopic` = 'Homepage', `subtopic` = 'Kritiken/Anregungen/Bugs', `pos` = 3;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 1, `kattopic` = 'Server', `subtopic` = 'Serverseitige Themen...', `pos` = 4;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 1, `kattopic` = 'Spam', `subtopic` = 'Spamt die Bude voll ;)', `pos` = 5;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 2, `kattopic` = 'Sonstiges', `subtopic` = '', `pos` = 6;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 2, `kattopic` = 'OFFtopic', `subtopic` = '', `pos` = 7;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 3, `kattopic` = 'internes Forum', `subtopic` = 'interne Angelegenheiten', `pos` = 1;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 3, `kattopic` = 'Server intern', `subtopic` = 'interne Serverangelegenheiten', `pos` = 8;",false,false,true);
+    db("INSERT INTO ".$db['f_skats']." SET `sid` = 3, `kattopic` = 'War Forum', `subtopic` = 'Alles &uuml;ber und rundum Clanwars', `pos` = 9;",false,false,true);
 
     //===============================================================
     //-> Forum: Threads =============================================
     //===============================================================
-    db("INSERT INTO ".$db['f_threads']." (`id`, `kid`, `t_date`, `topic`, `subtopic`, `t_nick`, `t_reg`, `t_email`, `t_text`, `hits`, `first`, `lp`, `sticky`, `closed`, `global`, `edited`, `ip`, `t_hp`, `vote`) VALUES
-    (NULL, 1, ".(time() - 9000).", 'Testeintrag', '', '', 1, '', '<p>Testeintrag</p>', 6, 1, 1280627795, 0, 0, 0, NULL, '123.123.123.123', '', '');",false,false,true);
+    db("INSERT INTO ".$db['f_threads']." SET
+    `kid` = 1,
+    `t_date` = ".(time() - 9000).",
+    `topic` = 'Testeintrag',
+    `t_reg` = 1,
+    `t_text` = '<p>Testeintrag</p>',
+    `first` = 1,
+    `lp` = ".time().",
+    `ip` = '".visitorIp()."'",false,false,true);
+
 
     //===============================================================
     //-> Galerie ====================================================
     //===============================================================
-    db("INSERT INTO ".$db['gallery']." (`id`, `datum`, `kat`, `beschreibung`) VALUES
-    (NULL, ".time().", 'Testgalerie', '<p>Das ist die erste Testgalerie.</p>\r\n<p>Hier seht ihr ein paar Bilder die eigentlich nur als Platzhalter dienen :)</p>');",false,false,true);
+    db("INSERT INTO ".$db['gallery']." SET `datum` = ".time().", `kat` = 'Testgalerie', `beschreibung` = '<p>Das ist die erste Testgalerie.</p>\r\n<p>Hier seht ihr ein paar Bilder die eigentlich nur als Platzhalter dienen :)</p>';",false,false,true);
 
     //===============================================================
     //-> Links ======================================================
     //===============================================================
-    db("INSERT INTO ".$db['links']." (`id`, `url`, `text`, `banner`, `beschreibung`, `hits`) VALUES
-    (NULL, 'http://www.dzcp.de', 'http://www.dzcp.de/banner/dzcp.gif', 1, 'deV!L`z Clanportal', 0),
-    (NULL, 'http://www.my-starmedia.de', 'http://www.my-starmedia.de/extern/b3/b3.gif', 1, '<b>my-STARMEDIA</b><br />my-STARMEDIA.de - DZCP Mods and Coding', 0);",false,false,true);
+    db("INSERT INTO ".$db['links']." SET `url` = 'http://www.dzcp.de', `text` = 'http://www.dzcp.de/banner/dzcp.gif', `banner` = 1, `beschreibung` = 'deV!L`z Clanportal';",false,false,true);
+    db("INSERT INTO ".$db['links']." SET `url` = 'http://www.my-starmedia.de', `text` = 'http://www.my-starmedia.de/extern/b3/b3.gif', `banner` = 1, `beschreibung` = '<b>my-STARMEDIA</b><br />my-STARMEDIA.de - DZCP Mods and Coding';",false,false,true);
 
     //===============================================================
     //-> LinkUs =====================================================
     //===============================================================
-    db("INSERT INTO ".$db['linkus']." (`id`, `url`, `text`, `banner`, `beschreibung`) VALUES
-    (NULL, 'http://www.dzcp.de', 'http://www.dzcp.de/banner/button.gif', 1, 'deV!L`z Clanportal');",false,false,true);
+    db("INSERT INTO ".$db['linkus']." SET `url` = 'http://www.dzcp.de', `text` = 'http://www.dzcp.de/banner/dzcp.gif', `banner` = 1, `beschreibung` = 'deV!L`z Clanportal';",false,false,true);
 
     //===============================================================
     //-> Navigation =================================================
     //===============================================================
-    db("INSERT INTO `".$db['navi']."` (`id`, `pos`, `kat`, `shown`, `name`, `url`, `target`, `type`, `internal`, `wichtig`, `editor`, `extended_perm`) VALUES
-    (NULL, 1, 'nav_main', 1, '_news_', '../news/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 2, 'nav_main', 1, '_newsarchiv_', '../news/?action=archiv', 0, 1, 0, 0, 0, NULL),
-    (NULL, 3, 'nav_main', 1, '_artikel_', '../artikel/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 4, 'nav_main', 1, '_forum_', '../forum/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 5, 'nav_main', 1, '_gb_', '../gb/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 1, 'nav_server', 1, '_server_', '../server/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 6, 'nav_main', 1, '_kalender_', '../kalender/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 7, 'nav_main', 1, '_votes_', '../votes/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 8, 'nav_main', 1, '_links_', '../links/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 9, 'nav_main', 1, '_sponsoren_', '../sponsors/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 10, 'nav_main', 1, '_downloads_', '../downloads/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 11, 'nav_main', 1, '_userlist_', '../user/?action=userlist', 0, 1, 0, 0, 0, NULL),
-    (NULL, 12, 'nav_main', 1, '_glossar_', '../glossar/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 1, 'nav_clan', 1, '_squads_', '../squads/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 2, 'nav_clan', 1, '_membermap_', '../membermap/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 3, 'nav_clan', 1, '_cw_', '../clanwars/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 4, 'nav_clan', 1, '_awards_', '../awards/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 5, 'nav_clan', 1, '_rankings_', '../rankings/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 2, 'nav_server', 1, '_serverlist_', '../serverliste/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 3, 'nav_server', 1, '_ts_', '../teamspeak/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 1, 'nav_misc', 1, '_galerie_', '../gallery/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 2, 'nav_misc', 1, '_kontakt_', '../contact/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 3, 'nav_misc', 1, '_joinus_', '../contact/?action=joinus', 0, 1, 0, 0, 0, NULL),
-    (NULL, 4, 'nav_misc', 1, '_fightus_', '../contact/?action=fightus', 0, 1, 0, 0, 0, NULL),
-    (NULL, 5, 'nav_misc', 1, '_linkus_', '../linkus/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 6, 'nav_misc', 1, '_stats_', '../stats/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 7, 'nav_misc', 1, '_impressum_', '../impressum/', 0, 1, 0, 0, 0, NULL),
-    (NULL, 1, 'nav_admin', 1, '_admin_', '../admin/', 0, 1, 1, 1, 0, NULL),
-    (NULL, 1, 'nav_user', 1, '_lobby_', '../user/?action=userlobby', 0, 1, 0, 0, 0, NULL),
-    (NULL, 2, 'nav_user', 1, '_nachrichten_', '../user/?action=msg', 0, 1, 0, 0, 0, NULL),
-    (NULL, 3, 'nav_user', 1, '_buddys_', '../user/?action=buddys', 0, 1, 0, 0, 0, NULL),
-    (NULL, 4, 'nav_user', 1, '_edit_profile_', '../user/?action=editprofile', 0, 1, 0, 0, 0, NULL),
-    (NULL, 5, 'nav_user', 1, '_logout_', '../user/?action=logout', 0, 1, 0, 1, 0, NULL),
-    (NULL, 1, 'nav_member', 1, '_clankasse_', '../clankasse/', 0, 1, 0, 0, 0, 'clankasse'),
-    (NULL, 2, 'nav_member', 1, '_taktiken_', '../taktik/', 0, 1, 0, 0, 0, 'edittactics'),
-    (NULL, 0, 'nav_main', 1, '_news_send_', '../news/?action=send', 0, 1, 0, 0, 0, NULL),
-    (NULL, 1, 'nav_trial', 1, '_awaycal_', '../away/', 0, 2, 1, 0, 0, NULL);",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1,  `kat` = 'nav_main', `name` = '_news_', `url` = '../news/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 2,  `kat` = 'nav_main', `name` = '_newsarchiv_', `url` = '../news/?action=archiv', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 3,  `kat` = 'nav_main', `name` = '_artikel_', `url` = '../artikel/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 4,  `kat` = 'nav_main', `name` = '_forum_', `url` = '../forum/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 5,  `kat` = 'nav_main', `name` = '_gb_', `url` = '../gb/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 6,  `kat` = 'nav_main', `name` = '_kalender_', `url` = '../kalender/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 7,  `kat` = 'nav_main', `name` = '_votes_', `url` = '../votes/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 8,  `kat` = 'nav_main', `name` = '_links_', `url` = '../links/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 9,  `kat` = 'nav_main', `name` = '_sponsoren_', `url` = '../sponsors/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 10, `kat` = 'nav_main', `name` = '_downloads_', `url` = '../downloads/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 11, `kat` = 'nav_main', `name` = '_userlist_', `url` = '../user/?action=userlist', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 12, `kat` = 'nav_main', `name` = '_glossar_', `url` = '../glossar/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_clan', `name` = '_squads_', `url` = '../squads/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 2, `kat` = 'nav_clan', `name` = '_membermap_', `url` = '../membermap/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 3, `kat` = 'nav_clan', `name` = '_cw_', `url` = '../clanwars/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 4, `kat` = 'nav_clan', `name` = '_awards_', `url` = '../awards/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 5, `kat` = 'nav_clan', `name` = '_rankings_', `url` = '../rankings/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_server', `name` = '_server_', `url` = '../server/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 2, `kat` = 'nav_server', `name` = '_serverlist_', `url` = '../serverliste/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 3, `kat` = 'nav_server', `name` = '_ts_', `url` = '../teamspeak/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_misc', `name` = '_galerie_', `url` = '../gallery/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 2, `kat` = 'nav_misc', `name` = '_kontakt_', `url` = '../contact/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 3, `kat` = 'nav_misc', `name` = '_joinus_', `url` = '../contact/?action=joinus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 4, `kat` = 'nav_misc', `name` = '_fightus_', `url` = '../contact/?action=fightus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 5, `kat` = 'nav_misc', `name` = '_linkus_', `url` = '../linkus/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 6, `kat` = 'nav_misc', `name` = '_stats_', `url` = '../stats/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 7, `kat` = 'nav_misc', `name` = '_impressum_', `url` = '../impressum/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_user', `name` = '_lobby_', `url` = '../user/?action=userlobby', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 2, `kat` = 'nav_user', `name` = '_nachrichten_', `url` = '../user/?action=msg', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 3, `kat` = 'nav_user', `name` = '_buddys_', `url` = '../user/?action=buddys', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 4, `kat` = 'nav_user', `name` = '_edit_profile_', `url` = '../user/?action=editprofile', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 5, `kat` = 'nav_user', `name` = '_logout_', `url` = '../user/?action=logout', `type` = 1, `internal` = 0, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
+
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_member', `name` = '_clankasse_', `url` = '../clankasse/', `type` = 1, `internal` = 1, `wichtig` = 0, `extended_perm` = 'clankasse';",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 2, `kat` = 'nav_member', `name` = '_taktiken_', `url` = '../taktik/', `type` = 1, `internal` = 1, `wichtig` = 0, `extended_perm` = 'edittactics';",false,false,true);
+
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_main', `name` = '_news_send_', `url` = '../news/?action=send', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_trial', `name` = '_awaycal_', `url` = '../away/', `type` = 2, `internal` = 1, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".$db['navi']." SET `pos` = 1, `kat` = 'nav_admin', `name` = '_admin_', `url` = '../admin/', `type` = 1, `internal` = 1, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
 
     //===============================================================
     //-> News =======================================================
@@ -246,8 +275,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Users ======================================================
     //===============================================================
-    db("INSERT INTO `".$db['users']."` (`id`, `user`, `nick`, `pwd`, `sessid`, `pkey`, `country`, `ip`, `regdatum`, `email`, `icq`, `xfire`, `steamid`, `level`, `rlname`, `city`, `sex`, `bday`, `hobbys`, `motto`, `hp`, `cpu`, `ram`, `monitor`, `maus`, `mauspad`, `headset`, `board`, `os`, `graka`, `hdd`, `inet`, `signatur`, `position`, `status`, `ex`, `job`, `time`, `listck`, `online`, `nletter`, `whereami`, `drink`, `essen`, `film`, `musik`, `song`, `buch`, `autor`, `person`, `sport`, `sportler`, `auto`, `game`, `favoclan`, `spieler`, `map`, `waffe`, `rasse`, `url2`, `url3`, `beschreibung`, `gmaps_koord`, `pnmail`) VALUES
-    (NULL, '".$db_infos['login']."', '".up($db_infos['nick'])."', '".($pwd_hash=pass_hash($db_infos['pwd'],2))."', '', '', 'de', '', 0, '".$db_infos['email']."', '', '', '', '4', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, 1, 1, '', '', ".time().", 0, 0, 1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', 1);",false,false,true);
+    db("INSERT INTO `".$db['users']."` (`id`, `user`, `nick`, `pwd`, `sessid`, `pkey`, `country`, `ip`, `regdatum`, `email`, `icq`, `xfire`, `steamid`, `level`, `rlname`, `city`, `sex`, `bday`, `hobbys`, `motto`, `hp`, `cpu`, `ram`, `monitor`, `maus`, `mauspad`, `headset`, `board`, `os`, `graka`, `hdd`, `inet`, `signatur`, `position`, `status`, `ex`, `job`, `time`, `listck`, `online`, `nletter`, `whereami`, `drink`, `essen`, `film`, `musik`, `song`, `buch`, `autor`, `person`, `sport`, `sportler`, `auto`, `game`, `favoclan`, `spieler`, `map`, `waffe`, `rasse`, `url2`, `url3`, `beschreibung`, `gmaps_koord`, `pnmail`, `profile_access`) VALUES
+    (NULL, '".$db_infos['login']."', '".up($db_infos['nick'])."', '".($pwd_hash=pass_hash($db_infos['pwd'],2))."', '', '', 'de', '', 0, '".$db_infos['email']."', '', '', '', '4', '', '', 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, 1, 1, '', '', ".time().", 0, 0, 1, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', NULL, '', 1, 0);",false,false,true);
 
     //Login NOW
     if($db_infos['loginnow'])
@@ -301,8 +330,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Config =====================================================
     //===============================================================
-    db("INSERT INTO `".$db['config']."` (`id`, `upicsize`, `gallery`, `m_usergb`, `m_clanwars`, `maxshoutarchiv`, `m_clankasse`, `m_awards`, `m_userlist`, `m_banned`, `maxwidth`, `shout_max_zeichen`, `l_servernavi`, `m_adminnews`, `m_shout`, `m_comments`, `m_archivnews`, `m_gb`, `m_fthreads`, `m_fposts`, `m_news`, `f_forum`, `l_shoutnick`, `f_gb`, `f_membergb`, `f_shout`, `f_newscom`, `f_cwcom`, `f_artikelcom`, `f_downloadcom`, `l_newsadmin`, `l_shouttext`, `l_newsarchiv`, `l_forumtopic`, `l_forumsubtopic`, `l_clanwars`, `m_gallerypics`, `m_lnews`, `m_topdl`, `m_ftopics`, `m_lwars`, `m_nwars`, `l_topdl`, `l_ftopics`, `l_lnews`, `l_lwars`, `l_nwars`, `l_lreg`, `m_lreg`, `m_artikel`, `m_cwcomments`, `m_adminartikel`, `securelogin`, `allowhover`, `teamrow`, `l_lartikel`, `m_lartikel`, `l_team`, `m_events`, `m_away`, `cache_engine`, `cache_teamspeak`, `cache_server`, `cache_news`, `direct_refresh`, `news_feed`) VALUES
-    (NULL, 100, 4, 10, 10, 20, 20, 15, 40, 40, 400, 100, 22, 20, 10, 10, 30, 10, 20, 10, 5, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 22, 20, 20, 20, 30, 5, 6, 5, 6, 6, 6, 20, 28, 22, 12, 12, 12, 5, 15, 10, 15, ".$db_infos['loginsec'].", 1, 3, 18, 5, 7, 5, 10, 'file', 30, 30, 5, 0, 1);",false,false,true);
+    db("INSERT INTO `".$db['config']."` (`id`, `upicsize`, `gallery`, `m_gallery`, `m_usergb`, `m_clanwars`, `maxshoutarchiv`, `m_clankasse`, `m_awards`, `m_userlist`, `maxwidth`, `shout_max_zeichen`, `l_servernavi`, `m_adminnews`, `m_shout`, `m_comments`, `m_archivnews`, `m_gb`, `m_fthreads`, `m_fposts`, `m_news`, `f_forum`, `l_shoutnick`, `f_gb`, `f_membergb`, `f_shout`, `f_newscom`, `f_cwcom`, `f_artikelcom`, `f_downloadcom`, `l_newsadmin`, `l_shouttext`, `l_newsarchiv`, `l_forumtopic`, `l_forumsubtopic`, `l_clanwars`, `m_gallerypics`, `m_lnews`, `m_topdl`, `m_ftopics`, `m_lwars`, `m_nwars`, `l_topdl`, `l_ftopics`, `l_lnews`, `l_lwars`, `l_nwars`, `l_lreg`, `m_lreg`, `m_artikel`, `m_cwcomments`, `m_adminartikel`, `securelogin`, `allowhover`, `teamrow`, `l_lartikel`, `m_lartikel`, `m_events`, `m_away`, `cache_engine`, `cache_teamspeak`, `cache_server`, `cache_news`, `direct_refresh`, `news_feed`) VALUES
+    (1, 100, 4, 36, 10, 10, 20, 20, 15, 40, 400, 100, 22, 20, 10, 10, 30, 10, 20, 10, 5, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 22, 20, 20, 20, 30, 5, 6, 5, 6, 6, 6, 20, 28, 22, 12, 12, 12, 5, 15, 10, 15, ".$db_infos['loginsec'].", 1, 3, 18, 5, 5, 10, 'file', 30, 30, 5, 0, 1);",false,false,true);
 
     //===============================================================
     //-> Sponsoren ==================================================

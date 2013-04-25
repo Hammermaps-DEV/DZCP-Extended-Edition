@@ -167,7 +167,7 @@ else
         {
             $index = error(_error_unregistered,1);
         } else {
-            if(!ipcheck("fid(".$_GET['kid'].")", $flood_forum))
+            if(!ipcheck("fid(".$_GET['kid'].")", config('f_forum')))
             {
                 $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
                      LEFT JOIN ".$db['f_skats']." AS s2
@@ -396,7 +396,7 @@ else
                             "posteintrag" => ""));
                 }
             } else {
-                $index = error(show(_error_flood_post, array("sek" => $flood_forum)), 1);
+                $index = error(show(_error_flood_post, array("sek" => config('f_forum'))), 1);
             }
         }
     } elseif($_GET['do'] == "addpost") {
@@ -634,10 +634,10 @@ else
 
                         if(!empty($userid) && $userid != 0)
                         {
-                            if(convert::ToInt($userid) == $getdp['reg'] && $double_post == 1) $spam = 1;
+                            if(convert::ToInt($userid) == $getdp['reg'] && settings('double_post')) $spam = 1;
                             else $spam = 0;
                         } else {
-                            if($_POST['nick'] == $getdp['nick'] && $double_post == 1) $spam = 1;
+                            if($_POST['nick'] == $getdp['nick'] && settings('double_post')) $spam = 1;
                             else $spam = 0;
                         }
                     } else {
@@ -649,10 +649,10 @@ else
 
                         if(!empty($userid) && $userid != 0)
                         {
-                            if(convert::ToInt($userid) == $gettdp['t_reg'] && $double_post == 1) $spam = 2;
+                            if(convert::ToInt($userid) == $gettdp['t_reg'] && settings('double_post')) $spam = 2;
                             else $spam = 0;
                         } else {
-                            if($_POST['nick'] == $gettdp['t_nick'] && $double_post == 1) $spam = 2;
+                            if($_POST['nick'] == $gettdp['t_nick'] && settings('double_post')) $spam = 2;
                             else $spam = 0;
                         }
                     }

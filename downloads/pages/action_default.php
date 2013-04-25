@@ -42,6 +42,9 @@ else
         }
     }
 
+    if(empty($kats))
+        $kats = show(_no_entrys_yet_all, array("colspan" => "0"));
+
     $index = show($dir."/downloads", array("kats" => $kats));
 }
 ?>

@@ -33,25 +33,30 @@
 <tr>
   <td class="contentMainTop"><span class="fontBold">[lang_pwd]:</span></td>
   <td class="contentMainFirst" align="center">
-	<input type="password" name="pwd" class="inputField_dis"
-	onfocus="this.className='inputField_en';"
-	onblur="this.className='inputField_dis';" required />
+    <input type="password" name="pwd" class="inputField_dis"
+    onkeyup="DZCP.checkPassword(document.forms.reg.pwd.value)"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" />
   </td>
 </tr>
 <tr>
   <td class="contentMainTop"><span class="fontBold">[pwd2]:</span></td>
   <td class="contentMainFirst" align="center">
-	<input type="password" name="pwd2" class="inputField_dis"
-	onfocus="this.className='inputField_en';"
-	onblur="this.className='inputField_dis';" required />
+    <input type="password" name="pwd2" class="inputField_dis"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" />
   </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_pass_security]:</span></td>
+  <td class="contentMainFirst" align="center"><div id="Words"><table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl0.jpg" width="200" height="18" /></td></tr></table></td><td></td></tr></table></div></td>
 </tr>
 [regcode]
 <tr>
   <td class="contentMainTop" colspan="2" align="center">[lang_contact_pflichtfeld]</td>
 </tr>
 <tr>
-  <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[value]" class="submit" name="send" /></td>  
+  <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[value]" class="submit" name="send" /></td>
 </tr>
 </table>
 </form>

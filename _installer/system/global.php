@@ -1,5 +1,5 @@
 <?php
-## Charset ##
+/* Charset */
 define('_charset', 'iso-8859-1');
 
 define('_true', '<img src="html/img/true.gif" border="0" alt="" vspace="0" align="center"> ');
@@ -54,7 +54,9 @@ define('mysql_no_db', 'Die angegebene Datenbank konnte nicht gefunden werden!<br
 define('mysql_no_con_server', 'Es konnte keine Verbindung zur Datenbank aufgebaut werden!<br />&Uuml;berpr&uuml;fen Sie Host und Port des Servers.');
 define('mysql_ok', 'Die MySQL-Verbindung wurde erfolgreich getestet!<br />Klicken Sie nun auf \'Weiter\'.');
 define('mysql_no_ndb', 'Der MySQL Server ist kein Cluster!<br />Die NDB Engine kann nur auf einem MySQL Cluster verwendet werden.<br /><br />Sehe <a href="http://www.mysql.de/products/cluster/" target="_blank">MySQL Cluster</a>');
-define('mysql_setup_saved', 'Die MySQL-Daten wurden erfolgreich gespeichert!<br />Klicken Sie auf weiter um mit der Datenbankinstallation zu beginnen!.');
+define('mysql_no_aria', 'Der MySQL Server unterst&uuml;tzt kein Aria!<br />Die Aria Engine kann nur auf einem MariaDB Server verwendet werden.<br /><br />Sehe <a href="http://www.mariadb.org/" target="_blank">MariaDB</a>');
+define('mysql_setup_saved', 'Die MySQL-Daten wurden erfolgreich gespeichert!<br />Klicken Sie auf weiter um mit der Datenbankinstallation zu beginnen.');
+define('mysql_setup_created', 'Die MySQL Basisstruktur wurde angelegt!<br />Klicken Sie auf weiter um mit der Datenbankeinrichtung zu beginnen.');
 define('prepare_files_success', 'Alle notwendigen Dateirechte sind gesetzt. Klicken Sie unten rechts auf Weiter um fortzufahren.');
 define('saved_user', 'Die Datenbank Informationen wurden erfolgreich gespeichert!<br />Klicken Sie auf &quot;Weiter&quot;.');
 define('no_db_update', 'Die Datenbank ist bereits aktuell, es ist kein Update deiner Datenbank notwendig.');

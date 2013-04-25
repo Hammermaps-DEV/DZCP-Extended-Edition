@@ -24,4 +24,3 @@ else
     header("Location: ?action=userlobby");
 }
 ?>
-

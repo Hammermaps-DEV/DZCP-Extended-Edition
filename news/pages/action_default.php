@@ -35,9 +35,10 @@ else
     }
 
     //Interne News
+    $newsconfig = config(array('m_news','cache_news'));
     $qry = db("SELECT kat,id,klapptext,viewed,link1,link2,link3,url1,url2,url3,titel,intern,text,datum,autor FROM ".$db['news']."
-            WHERE sticky >= ".time()." AND datum <= ".time()." AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
-            ORDER BY datum DESC LIMIT ".($page - 1)*$maxnews.",".$maxnews."");
+               WHERE sticky >= ".time()." AND datum <= ".time()." AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
+               ORDER BY datum DESC LIMIT ".($page - 1)*$newsconfig['m_news'].",".$newsconfig['m_news']."");
 
     $show_sticky = "";
     while($get = _fetch($qry))
@@ -67,7 +68,7 @@ else
                                                           "links" => $links,
                                                           "autor" => autor($get['autor'])));
             $show_sticky .= $sticky_news;
-            Cache::set('news_sticky_id_'.$get['id'], $sticky_news, config('cache_news'));
+            Cache::set('news_sticky_id_'.$get['id'], $sticky_news, $newsconfig['cache_news']);
         }
         else
             $show_sticky .= Cache::get('news_sticky_id_'.$get['id']);
@@ -80,7 +81,7 @@ else
                         WHERE sticky < ".time()."
                         AND datum <= ".time()."
                         AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
-                        ORDER BY datum DESC LIMIT ".($page - 1)*$maxnews.",".$maxnews."");
+                        ORDER BY datum DESC LIMIT ".($page - 1)*$newsconfig['m_news'].",".$newsconfig['m_news']."");
 
         $show = "";
         while($get = _fetch($qry))
@@ -110,7 +111,7 @@ else
                                                               "autor" => autor($get['autor'])));
         }
 
-        Cache::set('news_page', $show, config('cache_news'));
+        Cache::set('news_page', $show, $newsconfig['cache_news']);
     }
     else
         $show = Cache::get('news_page');
@@ -132,6 +133,6 @@ else
         $kategorien = Cache::get('news_kat');
 
     //Output
-    $index = show($dir."/news", array('show' => $show, 'show_sticky' => $show_sticky, 'nav' => nav(cnt($db['news'],$navWhere),$maxnews,'?kat='.$navKat,false), 'kategorien' => $kategorien));
+    $index = show($dir."/news", array('show' => $show, 'show_sticky' => $show_sticky, 'nav' => nav(cnt($db['news'],$navWhere),$newsconfig['m_news'],'?kat='.$navKat,false), 'kategorien' => $kategorien));
 }
 ?>

@@ -3,7 +3,7 @@ if(!defined('IN_DZCP'))
     exit();
 
 if($_SESSION['agb'] =! true)
-    $index = show("/msg/agb_error",array());
+    $index = show("/msg/agb_error");
 else
 {
     //Updater
@@ -31,16 +31,11 @@ else
             $_SESSION['mysql_dbengine'] = $mysql_dbengine;
             #########################
 
-            if($_SESSION['mysql_dbengine'] == 0)
-                $dbe_selected0 = 'selected="selected"';
-            else if($_SESSION['mysql_dbengine'] == 1)
-                $dbe_selected1 = 'selected="selected"';
-            else if($_SESSION['mysql_dbengine'] == 2)
-                $dbe_selected2 = 'selected="selected"';
-            else if($_SESSION['mysql_dbengine'] == 3)
-                $dbe_selected4 = 'selected="selected"';
-            else
-                $dbe_selected3 = 'selected="selected"';
+            $dbe_selected0 = ($_SESSION['mysql_dbengine'] == 0 ? 'selected="selected"' : '');
+            $dbe_selected1 = ($_SESSION['mysql_dbengine'] == 1 ? 'selected="selected"' : '');
+            $dbe_selected2 = ($_SESSION['mysql_dbengine'] == 2 ? 'selected="selected"' : '');
+            $dbe_selected3 = ($_SESSION['mysql_dbengine'] == 3 ? 'selected="selected"' : '');
+            $dbe_selected4 = ($_SESSION['mysql_dbengine'] == 4 ? 'selected="selected"' : '');
 
             if($mysql_prefix != NULL)
             {
@@ -56,67 +51,43 @@ else
                             if($_SESSION['type'] == 1)
                             {
                                 $_SESSION['mysql_dbengine'] = get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], $db['settings']),true);
-
-                                if($_SESSION['mysql_dbengine'] == 0)
-                                {
-                                    $dbe_selected0 = 'selected="selected"';
-                                    $dbe_selected1 = '';
-                                    $dbe_selected2 = '';
-                                    $dbe_selected3 = '';
-                                    $dbe_selected4 = '';
-                                }
-                                else if($_SESSION['mysql_dbengine'] == 1)
-                                {
-                                    $dbe_selected0 = '';
-                                    $dbe_selected1 = 'selected="selected"';
-                                    $dbe_selected2 = '';
-                                    $dbe_selected3 = '';
-                                    $dbe_selected4 = '';
-                                }
-                                else if($_SESSION['mysql_dbengine'] == 2)
-                                {
-                                    $dbe_selected0 = '';
-                                    $dbe_selected1 = '';
-                                    $dbe_selected2 = 'selected="selected"';
-                                    $dbe_selected3 = '';
-                                    $dbe_selected4 = '';
-                                }
-                                else if($_SESSION['mysql_dbengine'] == 3)
-                                {
-                                    $dbe_selected0 = '';
-                                    $dbe_selected1 = '';
-                                    $dbe_selected2 = '';
-                                    $dbe_selected3 = '';
-                                    $dbe_selected4 = 'selected="selected"';
-                                }
-                                else
-                                {
-                                    $dbe_selected0 = '';
-                                    $dbe_selected1 = '';
-                                    $dbe_selected2 = '';
-                                    $dbe_selected3 = 'selected="selected"';
-                                    $dbe_selected4 = '';
-                                }
+                                $dbe_selected0 = ($_SESSION['mysql_dbengine'] == 0 ? 'selected="selected"' : '');
+                                $dbe_selected1 = ($_SESSION['mysql_dbengine'] == 1 ? 'selected="selected"' : '');
+                                $dbe_selected2 = ($_SESSION['mysql_dbengine'] == 2 ? 'selected="selected"' : '');
+                                $dbe_selected3 = ($_SESSION['mysql_dbengine'] == 3 ? 'selected="selected"' : '');
+                                $dbe_selected4 = ($_SESSION['mysql_dbengine'] == 4 ? 'selected="selected"' : '');
                             }
                             //End
 
-                            if($_SESSION['mysql_dbengine'] != 3)
+                            switch ($_SESSION['mysql_dbengine'])
                             {
-                                $msg = writemsg(mysql_ok,false);
-                                $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
-                                $disabled = 'disabled="disabled"';
-                            }
-                            else
-                            {
-                                //NDB
-                                if(!check_db_ndb($con))
-                                    $msg = writemsg(mysql_no_ndb,true);
-                                else
-                                {
+                                case 3:
+                                    //NDB
+                                    if(!check_db_ndb($con))
+                                        $msg = writemsg(mysql_no_ndb,true);
+                                    else
+                                    {
+                                        $msg = writemsg(mysql_ok,false);
+                                        $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
+                                        $disabled = 'disabled="disabled"';
+                                    }
+                                break;
+                                case 4:
+                                    //Aria
+                                    if(!check_db_aria($con))
+                                        $msg = writemsg(mysql_no_aria,true);
+                                    else
+                                    {
+                                        $msg = writemsg(mysql_ok,false);
+                                        $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
+                                        $disabled = 'disabled="disabled"';
+                                    }
+                                break;
+                                default:
                                     $msg = writemsg(mysql_ok,false);
                                     $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
                                     $disabled = 'disabled="disabled"';
-                                }
+                                break;
                             }
 
                             @mysql_close($con);
@@ -139,6 +110,6 @@ else
     }
 
     $index = show("mysql",array("disabled" => $disabled, "mysql_host" => $mysql_host, "mysql_database" => $mysql_database, "mysql_prefix" => $mysql_prefix, "mysql_user" => $mysql_user,
-    "mysql_pwd" => $mysql_pwd, "msg" => $msg, "next" => $nextlink, "dbe_selected0" => $dbe_selected0, "dbe_selected1" => $dbe_selected1, "dbe_selected2" => $dbe_selected2, "dbe_selected3" => $dbe_selected3));
+    "mysql_pwd" => $mysql_pwd, "msg" => $msg, "next" => $nextlink, "dbe_selected0" => $dbe_selected0, "dbe_selected1" => $dbe_selected1, "dbe_selected2" => $dbe_selected2, "dbe_selected3" => $dbe_selected3, "dbe_selected4" => $dbe_selected4));
 }
 ?>

@@ -190,7 +190,7 @@ else
                     "title" => _button_title_zitat));
             if($get['closed'] == "1")
             {
-                $add = show("page/button_closed", array());
+                $add = show("page/button_closed");
             } else {
                 $add = show(_forum_addpost, array("id" => $_GET['id'],
                         "kid" => $getw['kid']));

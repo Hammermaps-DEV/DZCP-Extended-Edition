@@ -234,7 +234,7 @@ else
                     $lpdate = "";
                     }
 
-                    $threadlink = show(_forum_thread_search_link, array("topic" => cut(re($get['topic']),$lforumtopic),
+                    $threadlink = show(_forum_thread_search_link, array("topic" => cut(re($get['topic']),config('l_forumtopic')),
                             "id" => $get['id'],
                             "sticky" => $sticky,
                             "hl" => $_GET['search'],
@@ -246,7 +246,7 @@ else
 
             $results .= show($dir."/forum_search_results", array("new" => check_new_old($get['lp']),
                         "topic" => $threadlink,
-                        "subtopic" => cut(re($get['subtopic']),$lforumsubtopic),
+                        "subtopic" => cut(re($get['subtopic']),config('l_forumsubtopic')),
                         "hits" => $get['hits'],
                         "replys" => cnt($db['f_posts'], " WHERE sid = '".$get['id']."'"),
                                 "class" => $class,

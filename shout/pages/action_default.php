@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if(!ipcheck("shout", $flood_shout))
+    if(!ipcheck("shout", ($flood_shout=config('f_shout'))))
     {
         if(($_POST['protect'] != 'nospam' || empty($_SESSION['sec_shout']) || $_POST['spam'] != $_SESSION['sec_shout'] || empty($_POST['spam'])) && !isset($userid))
             $index = error(_error_invalid_regcode,1);
@@ -37,7 +37,7 @@ else
                 `datum`  = '".time()."',
                 `nick`   = '".up($_POST['name'],'','UTF-8')."',
                 `email`  = '".up($reg,'','UTF-8')."',
-                `text`   = '".up(substr(str_replace("\n", ' ', $_POST['eintrag']),0,$shout_max_zeichen),'','UTF-8')."',
+                `text`   = '".up(substr(str_replace("\n", ' ', $_POST['eintrag']),0,config('shout_max_zeichen')),'','UTF-8')."',
                 `ip`     = '".visitorIp()."'");
 
             wire_ipcheck('shout');

@@ -42,7 +42,6 @@ else
                      WHERE id = '".convert::ToInt($_POST['vote'])."'");
 
                     wire_ipcheck($vid);
-                    wire_ipcheck("vid(".$_GET['id'].")");
 
                     if(!isset($_GET['ajax'])) $index = info(_vote_successful, "?action=show&amp;id=".$_GET['id']."");
                 }

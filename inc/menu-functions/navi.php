@@ -16,7 +16,7 @@ function navi($kat)
         {
             $qry = db("SELECT extended_perm FROM `".$db['navi']."` WHERE `extended_perm` IS NOT NULL AND `kat` = '".up($kat)."'");
             if(_rows($qry) >= 1)
-            while($get = _fetch($qry)) { $extended_perms .= permission($get['extended_perm']) ? " OR s1.`extended_perm` = '".$get['extended_perm']."'" : ""; }
+            while($get = _fetch($qry)) { if(!empty($get['extended_perm'])) $extended_perms .= permission($get['extended_perm']) ? " OR s1.`extended_perm` = '".$get['extended_perm']."'" : ""; }
         }
 
         $qry = db("SELECT s1.* FROM ".$db['navi']." AS s1 LEFT JOIN ".$db['navi_kats']." AS s2 ON s1.kat = s2.placeholder WHERE s1.kat = '".up($kat)."' AND s1.`shown` = '1' ".$permissions."".$extended_perms." ORDER BY s1.pos");
@@ -32,7 +32,6 @@ function navi($kat)
                     if(file_exists($designpath.'/menu/'.$get['kat'].'.html'))
                         $link = show("menu/".$get['kat']."", array("target" => $target, "href" => re($get['url']), "title" => strip_tags($name), "css" => ucfirst(str_replace('nav_', '', re($get['kat']))), "link" => $name));
                     else
-
                         $link = show("menu/nav_link", array("target" => $target, "href" => re($get['url']), "title" => strip_tags($name), "css" => ucfirst(str_replace('nav_', '', re($get['kat']))), "link" => $name));
 
                     $table = strstr($link, '<tr>') ? true : false;
