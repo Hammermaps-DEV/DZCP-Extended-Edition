@@ -198,4 +198,5 @@ Der Teamspeak 3 Viewer wurde auch gegen GameQ ersetzt und ins DZCP intigriert.
 Erkennung und Blockierung von Trashmail Servern, Trashmail Server können in der config.php zugelassen werden.
 Verwendung von einer Globalen IP Banlist für Spamming Bots, verwendet www.stopforumspam.com
 IP-Bans können vom Administrator selber eingetragen werden. *Localban*
+
 Das MySQL Backend wurde gegen ein MySQLi Backend ausgetauscht und es wird standardmäßig 'mysqli_real_connect' verwendet.
