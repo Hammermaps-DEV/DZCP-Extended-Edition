@@ -115,6 +115,7 @@ Die Thumbgen verwendet wenn vorhanden die Imagick PHP Erweiterung, diese ist deu
 Alle Einstellungen betreffend der Thumbgen Funktion sind über die config.php einstellbar.
 
 Der Cache kann Binary Code ohne Verluste speichern und erkennt *optional Änderungen an den Original Daten und aktualisiert den Cache automatisch.
+
 Userprofile können nun auch nur für Registrierte User zugänglich gemacht werden. *Privatsphärenschutz*
 * Es kann unter *Profil editieren* Aktiviert oder Deaktiviert werden.
 
