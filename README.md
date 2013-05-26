@@ -126,7 +126,7 @@ Das Gästebuch wurde überarbeitet, nun können die User Kommentare gelöscht od
 In der Gallery ist nun Seitenblättern möglich, die Gallery kann in mehrere Seiten eingeteilt werden.
 
 Die Anzeige für TS3 und die Gameserver von DZCP wurde gegen GameQ ausgetauscht und grundliegend überarbeitet.
-Es können damit nun um die 60 Spiele Live angezeit werden:
+Es können damit nun um die 60 Spiele Live angezeit werden.
 
 Alien Swarm
 Half Life 2: Deathmatch
