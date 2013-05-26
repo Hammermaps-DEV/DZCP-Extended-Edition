@@ -129,7 +129,7 @@ In der Gallery ist nun Seitenblättern möglich, die Gallery kann in mehrere Sei
 Die Anzeige für TS3 und die Gameserver von DZCP wurde gegen GameQ ausgetauscht und grundliegend überarbeitet.
 Es können damit nun um die 60 Spiele Live angezeit werden:
 
-Alien Swarm, Half Life 2: Deathmatch
+Alien Swarm, Half Life 2: Deathmatch, 
 Sven Co-op, 
 Garry's Mod, 
 Counter-Strike: Global Offensive, 
