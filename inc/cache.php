@@ -20,6 +20,8 @@ class Cache
      */
     public static function loadClasses()
     {
+        DebugConsole::insert_initialize('Cache::loadClasses()', 'DZCP Cache-Core');
+
         ## Include Classes ##
         $files = get_files(basePath . '/inc/additional-kernel/cache',false,true,array("php"));
         if($files && count($files) >= 1)
@@ -49,7 +51,12 @@ class Cache
         if(!array_key_exists($typeShort, self::$cacheInstalled))
         {
             if(empty($install['Required']) || !extension_loaded(!$install['Required']))
+            {
+                if(show_cache_debug)
+                    DebugConsole::insert_loaded('inc/additional-kernel/cache/class_'.$install['Class'].'.php', $install['TypeName']);
+
                 self::$cacheInstalled[$typeShort] = $install;
+            }
             else if((!empty($install['Required']) || !extension_loaded($install['Required'])) && show_cache_debug)
                 DebugConsole::insert_info('inc/cache.php', 'PHP-Extension: "'.$install['Required'].'" not loaded, required for Cache Type: "'.$install['TypeName'].'"');
         }
@@ -147,6 +154,17 @@ class Cache
         }
         else if(show_cache_debug)
             DebugConsole::insert_error('inc/cache.php', 'Use Cache Dummy-Overwrite! Cache Type: "'.self::$cacheType.'" not loaded!');
+    }
+
+    /**
+     * Prüft ob ein Memory Cache verwendet wird
+     */
+    public static function is_mem()
+    {
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy' || empty(self::$cacheType))
+            return false;
+
+        return self::$cacheInstalled[self::$cacheType]['CacheType'] == 'mem' ? true : false;
     }
 
     /**
@@ -421,4 +439,3 @@ class Cache
         }
     }
 }
-?>

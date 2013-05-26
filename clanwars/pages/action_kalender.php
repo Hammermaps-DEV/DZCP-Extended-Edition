@@ -21,14 +21,14 @@ else
 
     $qry = db("SELECT s1.id,s1.datum,s1.clantag,s1.gegner,s1.url,s1.xonx,s1.liga,s1.punkte,s1.gpunkte,s1.maps,s1.serverip,
                     s1.servername,s1.serverpwd,s1.bericht,s1.squad_id,s1.gametype,s1.gcountry,s2.icon,s2.name
-             FROM ".$db['cw']." AS s1
-             LEFT JOIN ".$db['squads']." AS s2 ON s1.squad_id = s2.id
+             FROM ".dba::get('cw')." AS s1
+             LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
              WHERE DATE_FORMAT(FROM_UNIXTIME(s1.datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'
              ORDER BY s1.datum DESC
              LIMIT ".($page - 1)*$maxcw.",".$maxcw."");
 
     $i = $entrys-($page - 1)*$maxcw;
-    $entrys = cnt($db['cw'], " WHERE DATE_FORMAT(FROM_UNIXTIME('".$get['datum']."'), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'");
+    $entrys = cnt(dba::get('cw'), " WHERE DATE_FORMAT(FROM_UNIXTIME('".$get['datum']."'), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'");
 
     if(_rows($qry))
     {
@@ -56,10 +56,10 @@ else
         }
         if(_rows($qry))
         {
-            $anz_wo_wars = cnt($db['cw'], " WHERE punkte > gpunkte");
-            $anz_lo_wars = cnt($db['cw'], " WHERE punkte < gpunkte");
-            $anz_dr_wars = cnt($db['cw'], " WHERE datum < ".time()." && punkte = gpunkte");
-            $anz_ge_wars = cnt($db['cw'], "  WHERE datum < ".time()."");
+            $anz_wo_wars = cnt(dba::get('cw'), " WHERE punkte > gpunkte");
+            $anz_lo_wars = cnt(dba::get('cw'), " WHERE punkte < gpunkte");
+            $anz_dr_wars = cnt(dba::get('cw'), " WHERE datum < ".time()." && punkte = gpunkte");
+            $anz_ge_wars = cnt(dba::get('cw'), "  WHERE datum < ".time()."");
 
             if(!$_GET['time'])
             {
@@ -73,16 +73,16 @@ else
             }
 
             $anz_ges_wars = show(_cw_stats_ges_wars, array("ge_wars" => $anz_ge_wars));
-            $anz_ges_points = show(_cw_stats_ges_points, array("ges_won" => sum($db['cw'],"","punkte"),
-                    "ges_lost" => sum($db['cw'],"","gpunkte")));
+            $anz_ges_points = show(_cw_stats_ges_points, array("ges_won" => sum(dba::get('cw'),"","punkte"),
+                    "ges_lost" => sum(dba::get('cw'),"","gpunkte")));
 
-            $anz_squads = cnt($db['squads'], " WHERE status = '1'");
+            $anz_squads = cnt(dba::get('squads'), " WHERE status = '1'");
 
-            $qry = db("SELECT game FROM ".$db['squads']."
+            $qry = db("SELECT game FROM ".dba::get('squads')."
                  WHERE status = '1'");
-            while($row = mysql_fetch_object($qry))
+            while($row = _fetch($qry))
             {
-                $cwid = $row->id; }
+                $cwid = $row['id']; }
                 $results = _rows($qry);
                 $anz_games= $results;
 
@@ -122,7 +122,7 @@ else
                     "anz_spiele_squads" => $anz_spiele_squads));
         }
 
-        $qry = db("SELECT game,icon FROM ".$db['squads']."
+        $qry = db("SELECT game,icon FROM ".dba::get('squads')."
                  WHERE status = '1'
                  GROUP BY game
                  ORDER BY game ASC");

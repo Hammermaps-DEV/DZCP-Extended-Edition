@@ -1,0 +1,19 @@
+Alle zusätzlichen Dateien die bei jedem Seitenaufruf zum Kernel geladen werden sollen, 
+wird eine besondere Syntax im Datennamen vorausgesetzt:
+
+zbs.
+/inc/additional-kernel/class.meine_datei.inc.php
+
+
+##############################################
+
+
+Alle Klassen die "nicht Statisch / non static" sind und nur selten gebraucht werden,
+können als /inc/additional-kernel/meinclassname.php gespeichert werden,
+wenn der Klassenaufruf wie folgt lautet:
+
+$test = new meinclassname;
+$test->test_function();
+
+Die Klasse wird dann automatisch zur PHP-Laufzeit hinzugefügt.
+Verwendet wird dafür spl_autoload_register() sehe kernel.php

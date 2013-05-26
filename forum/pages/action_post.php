@@ -18,7 +18,7 @@ else
 {
     if($_GET['do'] == "edit")
     {
-        $qry = db("SELECT * FROM ".$db['f_posts']."
+        $qry = db("SELECT * FROM ".dba::get('f_posts')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -53,7 +53,7 @@ else
             $index = error(_error_wrong_permissions, 1);
         }
     } elseif($_GET['do'] == "editpost") {
-        $qry = db("SELECT reg FROM ".$db['f_posts']."
+        $qry = db("SELECT reg FROM ".dba::get('f_posts')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
         if($get['reg'] == convert::ToInt($userid) || permission("forum"))
@@ -76,6 +76,7 @@ else
                     elseif(empty($_POST['nick'])) $error = _empty_nick;
                     elseif(empty($_POST['email'])) $error = _empty_email;
                     elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
+                    else if(check_email_trash_mail($_POST['email'])) $error = _error_trash_mail;
                     elseif(empty($_POST['eintrag']))$error = _empty_eintrag;
                     $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
                 }
@@ -102,14 +103,14 @@ else
                         "error" => $error,
                         "eintraghead" => _eintrag));
             } else {
-                $qryp = db("SELECT * FROM ".$db['f_posts']."
+                $qryp = db("SELECT * FROM ".dba::get('f_posts')."
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $getp = _fetch($qryp);
 
                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                         "time" => date("d.m.Y H:i", time())._uhr));
 
-                $qry = db("UPDATE ".$db['f_posts']."
+                $qry = db("UPDATE ".dba::get('f_posts')."
                    SET `nick`   = '".up($_POST['nick'])."',
                        `email`  = '".up($_POST['email'])."',
                        `text`   = '".up($_POST['eintrag'],1)."',
@@ -117,17 +118,17 @@ else
                        `edited` = '".addslashes($editedby)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-                $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".$db['f_abo']." AS s1
-                        LEFT JOIN ".$db['users']." AS s2 ON s2.id = s1.user
+                $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".dba::get('f_abo')." AS s1
+                        LEFT JOIN ".dba::get('users')." AS s2 ON s2.id = s1.user
                       WHERE s1.fid = '".$getp['sid']."'");
                 while($getabo = _fetch($checkabo))
                 {
                     if(convert::ToInt($userid) != $getabo['user'])
                     {
-                        $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".$getp['sid']."'");
+                        $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".$getp['sid']."'");
                         $gettopic = _fetch($topic);
 
-                        $entrys = cnt($db['f_posts'], " WHERE `sid` = ".$getp['sid']);
+                        $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$getp['sid']);
 
                         if($entrys == "0") $pagenr = "1";
                         else $pagenr = ceil($entrys/$maxfposts);
@@ -148,7 +149,7 @@ else
                         sendMail(re($getabo['email']),$subj,$message);
                     }
                 }
-                $entrys = cnt($db['f_posts'], " WHERE `sid` = ".$getp['sid']);
+                $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$getp['sid']);
 
                 if($entrys == "0") $pagenr = "1";
                 else $pagenr = ceil($entrys/$maxfposts);
@@ -169,8 +170,8 @@ else
         } else {
             if(!ipcheck("fid(".$_GET['kid'].")", config('f_forum')))
             {
-                $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
-                     LEFT JOIN ".$db['f_skats']." AS s2
+                $check = db("SELECT s2.id,s1.intern FROM ".dba::get('f_kats')." AS s1
+                     LEFT JOIN ".dba::get('f_skats')." AS s2
                      ON s2.sid = s1.id
                      WHERE s2.id = '".convert::ToInt($_GET['kid'])."'");
                 $checks = _fetch($check);
@@ -190,7 +191,7 @@ else
                     }
                     if($_GET['zitat'])
                     {
-                        $qryzitat = db("SELECT nick,reg,text FROM ".$db['f_posts']."
+                        $qryzitat = db("SELECT nick,reg,text FROM ".dba::get('f_posts')."
                             WHERE id = '".convert::ToInt($_GET['zitat'])."'");
                         $getzitat = _fetch($qryzitat);
 
@@ -199,7 +200,7 @@ else
 
                         $zitat = zitat($nick, $getzitat['text']);
                     } elseif($_GET['zitatt']) {
-                        $qryzitat = db("SELECT t_nick,t_reg,t_text FROM ".$db['f_threads']."
+                        $qryzitat = db("SELECT t_nick,t_reg,t_text FROM ".dba::get('f_threads')."
                             WHERE id = '".convert::ToInt($_GET['zitatt'])."'");
                         $getzitat = _fetch($qryzitat);
 
@@ -214,7 +215,7 @@ else
                     $dowhat = show(_forum_dowhat_add_post, array("id" => $_GET['id'],
                             "kid" => $_GET['kid']));
 
-                    $qryl = db("SELECT * FROM ".$db['f_posts']."
+                    $qryl = db("SELECT * FROM ".dba::get('f_posts')."
                       WHERE kid = '".convert::ToInt($_GET['kid'])."'
                       AND sid = '".convert::ToInt($_GET['id'])."'
                       ORDER BY date DESC");
@@ -236,7 +237,7 @@ else
                         if($chkMe == "4") $posted_ip = $getl['ip'];
                         else              $posted_ip = _logged;
 
-                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt($db['f_posts'], " WHERE sid =".convert::ToInt($_GET['id']))+1),
+                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt(dba::get('f_posts'), " WHERE sid =".convert::ToInt($_GET['id']))+1),
                                 "datum" => date("d.m.Y", $getl['date']),
                                 "zeit" => date("H:i", $getl['date'])._uhr,
                                 "url" => '#',
@@ -244,7 +245,7 @@ else
                                 "delete" => ""));
                         if($getl['reg'] != 0)
                         {
-                            $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+                            $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                           WHERE id = '".$getl['reg']."'");
                             $getu = _fetch($qryu);
 
@@ -286,9 +287,9 @@ else
                                 "zitat" => _forum_zitat_preview,
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
+                                "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     } else {
-                        $qryt = db("SELECT * FROM ".$db['f_threads']."
+                        $qryt = db("SELECT * FROM ".dba::get('f_threads')."
                         WHERE kid = '".convert::ToInt($_GET['kid'])."'
                         AND id = '".convert::ToInt($_GET['id'])."'");
                         $gett = _fetch($qryt);
@@ -318,7 +319,7 @@ else
                                 "delete" => ""));
                         if($gett['t_reg'] != 0)
                         {
-                            $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+                            $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                           WHERE id = '".$gett['t_reg']."'");
                             $getu = _fetch($qryu);
 
@@ -361,7 +362,7 @@ else
                                 "zitat" => "",
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
+                                "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     }
 
                     if(!empty($userid) && $userid != 0)
@@ -400,7 +401,7 @@ else
             }
         }
     } elseif($_GET['do'] == "addpost") {
-        $qry_thread = db("SELECT `id`,`kid` FROM ".$db['f_threads']." WHERE `id` = '".convert::ToInt($_GET['id'])."'");
+        $qry_thread = db("SELECT `id`,`kid` FROM ".dba::get('f_threads')." WHERE `id` = '".convert::ToInt($_GET['id'])."'");
         if(_rows($qry_thread) == 0)
         {
             $index = error(_id_dont_exist,1);
@@ -410,8 +411,8 @@ else
                 $index = error(_error_unregistered,1);
             } else {
                 $get_threadkid = _fetch($qry_thread);
-                $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
-                                         LEFT JOIN ".$db['f_skats']." AS s2
+                $check = db("SELECT s2.id,s1.intern FROM ".dba::get('f_kats')." AS s1
+                                         LEFT JOIN ".dba::get('f_skats')." AS s2
                                          ON s2.sid = s1.id
                                          WHERE s2.id = '".convert::ToInt($_GET['kid'])."'");
                 $checks = _fetch($check);
@@ -433,6 +434,7 @@ else
                         elseif(empty($_POST['nick'])) $error = _empty_nick;
                         elseif(empty($_POST['email'])) $error = _empty_email;
                         elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
+                        else if(check_email_trash_mail($_POST['email'])) $error = _error_trash_mail;
                         elseif(empty($_POST['eintrag'])) $error = _empty_eintrag;
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
                     }
@@ -440,7 +442,7 @@ else
                     $error = show("errors/errortable", array("error" => $error));
                     $dowhat = show(_forum_dowhat_add_post, array("id" => $_GET['id'],
                             "kid" => $get_threadkid['kid']));
-                    $qryl = db("SELECT * FROM ".$db['f_posts']."
+                    $qryl = db("SELECT * FROM ".dba::get('f_posts')."
                                             WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
                                             AND sid = '".convert::ToInt($_GET['id'])."'
                                             ORDER BY date DESC");
@@ -464,7 +466,7 @@ else
                         if($chkMe == "4") $posted_ip = $getl['ip'];
                         else $posted_ip = _logged;
 
-                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt($db['f_posts'], " WHERE sid = ".convert::ToInt($_GET['id']))+1),
+                        $titel = show(_eintrag_titel_forum, array("postid" => (cnt(dba::get('f_posts'), " WHERE sid = ".convert::ToInt($_GET['id']))+1),
                                 "datum" => date("d.m.Y", $getl['date']),
                                 "zeit" => date("H:i", $getl['date'])._uhr,
                                 "url" => '#',
@@ -473,7 +475,7 @@ else
 
                         if($getl['reg'] != 0)
                         {
-                            $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+                            $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                                                     WHERE id = '".$getl['reg']."'");
                             $getu = _fetch($qryu);
 
@@ -521,9 +523,9 @@ else
                                 "zitat" => "",
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
+                                "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     } else {
-                        $qryt = db("SELECT * FROM ".$db['f_threads']."
+                        $qryt = db("SELECT * FROM ".dba::get('f_threads')."
                                                 WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
                                                 AND id = '".convert::ToInt($_GET['id'])."'");
                         $gett = _fetch($qryt);
@@ -546,7 +548,7 @@ else
 
                         if($gett['t_reg'] != 0)
                         {
-                            $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+                            $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                                                     WHERE id = '".$gett['t_reg']."'");
                             $getu = _fetch($qryu);
 
@@ -596,7 +598,7 @@ else
                                 "zitat" => "",
                                 "onoff" => $onoff,
                                 "top" => "",
-                                "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
+                                "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     }
 
                     $index = show($dir."/post", array("titel" => _forum_new_post_head,
@@ -623,7 +625,7 @@ else
                             "eintraghead" => _eintrag));
                 } else {
                     $spam = 0;
-                    $qrydp = db("SELECT * FROM ".$db['f_posts']."
+                    $qrydp = db("SELECT * FROM ".dba::get('f_posts')."
                                              WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
                                              AND sid = '".convert::ToInt($_GET['id'])."'
                                              ORDER BY date DESC
@@ -642,7 +644,7 @@ else
                         }
                     } else {
 
-                        $qrytdp = db("SELECT * FROM ".$db['f_threads']."
+                        $qrytdp = db("SELECT * FROM ".dba::get('f_threads')."
                                     WHERE kid = '".convert::ToInt($get_threadkid['kid'])."'
                                     AND id = '".convert::ToInt($_GET['id'])."'");
                         $gettdp = _fetch($qrytdp);
@@ -666,12 +668,12 @@ else
                                 "ltext" => addslashes($getdp['text']),
                                 "ntext" => up($_POST['eintrag'],1)));
 
-                        $qry = db("UPDATE ".$db['f_threads']."
+                        $qry = db("UPDATE ".dba::get('f_threads')."
                                                                                          SET `lp` = '".time()."'
                                     WHERE kid = '".convert::ToInt($_GET['kid'])."'
                                     AND id = '".convert::ToInt($_GET['id'])."'");
 
-                        $qry = db("UPDATE ".$db['f_posts']."
+                        $qry = db("UPDATE ".dba::get('f_posts')."
                                                  SET `date`   = '".time()."',
                                                          `text`   = '".$text."'
                                                  WHERE id = '".$getdp['id']."'");
@@ -683,12 +685,12 @@ else
                                 "ltext" => addslashes($gettdp['t_text']),
                                 "ntext" => up($_POST['eintrag'],1)));
 
-                        $qry = db("UPDATE ".$db['f_threads']."
+                        $qry = db("UPDATE ".dba::get('f_threads')."
                                                  SET `lp`   = '".time()."',
                                                  `t_text`   = '".$text."'
                                                  WHERE id = '".$gettdp['id']."'");
                     } else {
-                        $qry = db("INSERT INTO ".$db['f_posts']."
+                        $qry = db("INSERT INTO ".dba::get('f_posts')."
                                          SET `kid`   = '".convert::ToInt($get_threadkid['kid'])."',
                                                  `sid`   = '".convert::ToInt($_GET['id'])."',
                                                  `date`  = '".time()."',
@@ -699,26 +701,26 @@ else
                                                  `text`  = '".up($_POST['eintrag'],1)."',
                                                  `ip`    = '".visitorIp()."'");
 
-                       db("UPDATE ".$db['f_threads']." SET `lp`    = '".time()."', `first` = '0' WHERE id    = '".convert::ToInt($_GET['id'])."'");
+                       db("UPDATE ".dba::get('f_threads')." SET `lp`    = '".time()."', `first` = '0' WHERE id    = '".convert::ToInt($_GET['id'])."'");
                     }
 
                     wire_ipcheck("fid(".$get_threadkid['kid'].")");
 
-                    $update = db("UPDATE ".$db['userstats']."
+                    $update = db("UPDATE ".dba::get('userstats')."
                                                 SET `forumposts` = forumposts+1
                                                 WHERE `user`       = '".convert::ToInt($userid)."'");
 
-                    $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".$db['f_abo']." AS s1
-                                    LEFT JOIN ".$db['users']." AS s2 ON s2.id = s1.user
+                    $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".dba::get('f_abo')." AS s1
+                                    LEFT JOIN ".dba::get('users')." AS s2 ON s2.id = s1.user
                                                     WHERE s1.fid = '".convert::ToInt($_GET['id'])."'");
                     while($getabo = _fetch($checkabo))
                     {
                         if(convert::ToInt($userid) != $getabo['user'])
                         {
-                            $topic = db("SELECT topic FROM ".$db['f_threads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+                            $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
                             $gettopic = _fetch($topic);
 
-                            $entrys = cnt($db['f_posts'], " WHERE `sid` = ".convert::ToInt($_GET['id']));
+                            $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".convert::ToInt($_GET['id']));
 
                             if($entrys == "0") $pagenr = "1";
                             else $pagenr = ceil($entrys/$maxfposts);
@@ -740,7 +742,7 @@ else
                         }
                     }
 
-                    $entrys = cnt($db['f_posts'], " WHERE `sid` = ".convert::ToInt($_GET['id']));
+                    $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".convert::ToInt($_GET['id']));
 
                     if($entrys == "0") $pagenr = "1";
                     else $pagenr = ceil($entrys/$maxfposts);
@@ -754,26 +756,26 @@ else
             }
         }
     } elseif($_GET['do'] == "delete") {
-        $qry = db("SELECT * FROM ".$db['f_posts']."
+        $qry = db("SELECT * FROM ".dba::get('f_posts')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         if($get['reg'] == convert::ToInt($userid) OR permission("forum"))
         {
-            $del = db("DELETE FROM ".$db['f_posts']."
+            $del = db("DELETE FROM ".dba::get('f_posts')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             $fposts = userstats($get['reg'], "forumposts")-1;
-            $upd = db("UPDATE ".$db['userstats']."
+            $upd = db("UPDATE ".dba::get('userstats')."
                  SET `forumposts` = '".convert::ToInt($fposts)."'
                  WHERE user = '".$get['reg']."'");
 
-            $entrys = cnt($db['f_posts'], " WHERE `sid` = ".$get['sid']);
+            $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$get['sid']);
 
             if($entrys == "0")
             {
                 $pagenr = "1";
-                $update = db("UPDATE ".$db['f_threads']."
+                $update = db("UPDATE ".dba::get('f_threads')."
                       SET `first` = '1'
                       WHERE kid = '".$get['kid']."'");
             } else {

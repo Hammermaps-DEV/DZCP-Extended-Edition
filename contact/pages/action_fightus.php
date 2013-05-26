@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT id,name,game FROM ".$db['squads']."
+    $qry = db("SELECT id,name,game FROM ".dba::get('squads')."
              WHERE status = 1
              ORDER BY name");
     while($get = _fetch($qry))

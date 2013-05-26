@@ -13,7 +13,7 @@ if(_adminMenu != 'true')
       if($_GET['do'] == "new")
       {
 
-        $qry = db("SELECT * FROM ".$db['sponsoren']."
+        $qry = db("SELECT * FROM ".dba::get('sponsoren')."
                    ORDER BY pos");
         while($get = _fetch($qry))
         {
@@ -67,13 +67,13 @@ if(_adminMenu != 'true')
               if(empty($_POST['link']))         $error = show("errors/errortable", array("error" => _sponsors_empty_link));
               if(empty($_POST['name']))         $error = show("errors/errortable", array("error" => _sponsors_empty_name));
 
-          $pos = db("SELECT pos,name FROM ".$db['sponsoren']."
+          $pos = db("SELECT pos,name FROM ".dba::get('sponsoren')."
                      ORDER BY pos");
           while($getpos = _fetch($pos))
           {
             if($getpos['name'] != $_POST['posname'])
             {
-              $mpos = db("SELECT pos FROM ".$db['sponsoren']."
+              $mpos = db("SELECT pos FROM ".dba::get('sponsoren')."
                           WHERE name != '".$_POST['posname']."'
                           AND pos = '".convert::ToInt(($_POST['position']-1))."'");
               $mp = _fetch($mpos);
@@ -155,11 +155,11 @@ if(_adminMenu != 'true')
           if($_POST['position'] == 1 || $_POST['position'] == 2) $sign = ">= ";
           else $sign = "> ";
 
-          $posi = db("UPDATE ".$db['sponsoren']."
+          $posi = db("UPDATE ".dba::get('sponsoren')."
                       SET `pos` = pos+1
                       WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
 
-          $qry = db("INSERT INTO ".$db['sponsoren']."
+          $qry = db("INSERT INTO ".dba::get('sponsoren')."
                      SET `name`         = '".up($_POST['name'])."',
                                      `link`         = '".links($_POST['link'])."',
                                      `beschreibung` = '".up($_POST['beschreibung'],1)."',
@@ -171,7 +171,7 @@ if(_adminMenu != 'true')
                          `xlink` 		= '".up($_POST['xlink'])."',
                                      `pos`    		= '".convert::ToInt($_POST['position'])."'");
 
-          $id = mysql_insert_id();
+          $id = database::get_insert_id();
 
           $tmp1 = $_FILES['sdata']['tmp_name'];
           $type1 = $_FILES['sdata']['type'];
@@ -186,7 +186,7 @@ if(_adminMenu != 'true')
               @copy($tmp1, basePath."/banner/sponsors/site_".$id.".".strtolower($end1));
               @unlink($_FILES['sdata']['tmp_name']);
             }
-                    db("UPDATE ".$db['sponsoren']." SET `send` = '".$end1."' WHERE id = '".convert::ToInt($id)."'");
+                    db("UPDATE ".dba::get('sponsoren')." SET `send` = '".$end1."' WHERE id = '".convert::ToInt($id)."'");
           }
 
                   $tmp2 = $_FILES['bdata']['tmp_name'];
@@ -201,7 +201,7 @@ if(_adminMenu != 'true')
               @copy($tmp2, basePath."/banner/sponsors/banner_".$id.".".strtolower($end2));
               @unlink($_FILES['bdata']['tmp_name']);
             }
-                    db("UPDATE ".$db['sponsoren']." SET `bend` = '".$end2."' WHERE id = '".convert::ToInt($id)."'");
+                    db("UPDATE ".dba::get('sponsoren')." SET `bend` = '".$end2."' WHERE id = '".convert::ToInt($id)."'");
           }
 
                   $tmp3 = $_FILES['xdata']['tmp_name'];
@@ -217,24 +217,24 @@ if(_adminMenu != 'true')
               @copy($tmp3, basePath."/banner/sponsors/box_".$id.".".strtolower($end3));
               @unlink($_FILES['xdata']['tmp_name']);
             }
-                    db("UPDATE ".$db['sponsoren']." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
+                    db("UPDATE ".dba::get('sponsoren')." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
           }
 
           $show = info(_sponsor_added, "?admin=sponsors");
         }
       } elseif($_GET['do'] == "edit") {
 
-        $qry = db("SELECT * FROM ".$db['sponsoren']."
+        $qry = db("SELECT * FROM ".dba::get('sponsoren')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-          $pos = db("SELECT pos,name FROM ".$db['sponsoren']."
+          $pos = db("SELECT pos,name FROM ".dba::get('sponsoren')."
                      ORDER BY pos");
           while($getpos = _fetch($pos))
           {
             if($getpos['name'] != $get['name'])
             {
-              $mpos = db("SELECT pos FROM ".$db['sponsoren']."
+              $mpos = db("SELECT pos FROM ".dba::get('sponsoren')."
                           WHERE name != '".$get['name']."'
                           AND pos = '".convert::ToInt(($get['pos']-1))."'");
               $mp = _fetch($mpos);
@@ -345,17 +345,17 @@ if(_adminMenu != 'true')
           if(empty($_POST['link']))         $error = show("errors/errortable", array("error" => _sponsors_empty_link));
           if(empty($_POST['name']))         $error = show("errors/errortable", array("error" => _sponsors_empty_name));
 
-          $qry = db("SELECT * FROM ".$db['sponsoren']."
+          $qry = db("SELECT * FROM ".dba::get('sponsoren')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
           $get = _fetch($qry);
 
-          $pos = db("SELECT pos,name FROM ".$db['sponsoren']."
+          $pos = db("SELECT pos,name FROM ".dba::get('sponsoren')."
                      ORDER BY pos");
           while($getpos = _fetch($pos))
           {
             if($getpos['name'] != $get['name'])
             {
-              $mpos = db("SELECT pos FROM ".$db['sponsoren']."
+              $mpos = db("SELECT pos FROM ".dba::get('sponsoren')."
                           WHERE name != '".$get['name']."'
                           AND pos = '".convert::ToInt(($_POST['position']-1))."'");
               $mp = _fetch($mpos);
@@ -462,7 +462,7 @@ if(_adminMenu != 'true')
 
 
         } else {
-          $ask = db("SELECT pos FROM ".$db['sponsoren']."
+          $ask = db("SELECT pos FROM ".dba::get('sponsoren')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
           $get = _fetch($ask);
 
@@ -471,7 +471,7 @@ if(_adminMenu != 'true')
             if($_POST['position'] == 1 || $_POST['position'] == 2) $sign = ">= ";
             else $sign = "> ";
 
-            $posi = db("UPDATE ".$db['sponsoren']."
+            $posi = db("UPDATE ".dba::get('sponsoren')."
                         SET `pos` = pos+1
                         WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
           }
@@ -479,7 +479,7 @@ if(_adminMenu != 'true')
           if($_POST['position'] == "lazy") $newpos = "";
           else $newpos = "`pos` = '".convert::ToInt($_POST['position'])."'";
 
-            $qry = db("UPDATE ".$db['sponsoren']."
+            $qry = db("UPDATE ".dba::get('sponsoren')."
                        SET 	 `name`         = '".up($_POST['name'])."',
                              `link`         = '".links($_POST['link'])."',
                              `beschreibung` = '".up($_POST['beschreibung'],1)."',
@@ -514,7 +514,7 @@ if(_adminMenu != 'true')
               @copy($tmp1, basePath."/banner/sponsors/site_".$id.".".strtolower($end1));
               @unlink($_FILES['sdata']['tmp_name']);
             }
-                    db("UPDATE ".$db['sponsoren']." SET `send` = '".$end1."' WHERE id = '".convert::ToInt($id)."'");
+                    db("UPDATE ".dba::get('sponsoren')." SET `send` = '".$end1."' WHERE id = '".convert::ToInt($id)."'");
           }
 
                   $tmp2 = $_FILES['bdata']['tmp_name'];
@@ -537,7 +537,7 @@ if(_adminMenu != 'true')
                           @copy($tmp2, basePath."/banner/sponsors/banner_".$id.".".strtolower($end2));
               @unlink($_FILES['bdata']['tmp_name']);
             }
-                    db("UPDATE ".$db['sponsoren']." SET `bend` = '".$end2."' WHERE id = '".convert::ToInt($id)."'");
+                    db("UPDATE ".dba::get('sponsoren')." SET `bend` = '".$end2."' WHERE id = '".convert::ToInt($id)."'");
           }
 
                   $tmp3 = $_FILES['xdata']['tmp_name'];
@@ -560,18 +560,18 @@ if(_adminMenu != 'true')
                           @copy($tmp3, basePath."/banner/sponsors/box_".$id.".".strtolower($end3));
               @unlink($_FILES['xdata']['tmp_name']);
             }
-                    db("UPDATE ".$db['sponsoren']." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
+                    db("UPDATE ".dba::get('sponsoren')." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
           }
 
           $show = info(_sponsor_edited, "?admin=sponsors");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['sponsoren']."
+        $qry = db("DELETE FROM ".dba::get('sponsoren')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_sponsor_deleted, "?admin=sponsors");
       } else {
-        $qry = db("SELECT * FROM ".$db['sponsoren']."
+        $qry = db("SELECT * FROM ".dba::get('sponsoren')."
                    ORDER BY pos");
         while($get = _fetch($qry))
         {

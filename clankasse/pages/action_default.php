@@ -21,8 +21,8 @@ else
     else
     {
         $has_permission = permission("clankasse");
-        $entrys = cnt($db['clankasse']);
-        $qry = db("SELECT * FROM ".$db['clankasse']." ORDER BY datum DESC LIMIT ".($page - 1)*($maxclankasse = config('m_clankasse')).",".$maxclankasse."");
+        $entrys = cnt(dba::get('clankasse'));
+        $qry = db("SELECT * FROM ".dba::get('clankasse')." ORDER BY datum DESC LIMIT ".($page - 1)*($maxclankasse = config('m_clankasse')).",".$maxclankasse."");
 
         $show = ''; $color = 1;
         while ($get = _fetch($qry))
@@ -48,8 +48,8 @@ else
                     "datum" => date("d.m.Y",$get['datum'])));
         }
 
-        $getp = db("SELECT sum(betrag) AS gesamt FROM ".$db['clankasse']." WHERE pm = 0",false,true);
-        $getc = db("SELECT sum(betrag) AS gesamt FROM ".$db['clankasse']." WHERE pm = 1",false,true);
+        $getp = db("SELECT sum(betrag) AS gesamt FROM ".dba::get('clankasse')." WHERE pm = 0",false,true);
+        $getc = db("SELECT sum(betrag) AS gesamt FROM ".dba::get('clankasse')." WHERE pm = 1",false,true);
 
         $ges = $getp['gesamt'] - $getc['gesamt'];
         $ges = @round($ges,2);
@@ -63,8 +63,8 @@ else
         $new = ($has_permission ? _clankasse_new : '');
 
         $qrys = db("SELECT tbl1.id,tbl1.nick,tbl2.user,tbl2.payed
-               FROM ".$db['users']." AS tbl1
-               LEFT JOIN ".$db['c_payed']." AS tbl2 ON tbl2.user = tbl1.id
+               FROM ".dba::get('users')." AS tbl1
+               LEFT JOIN ".dba::get('c_payed')." AS tbl2 ON tbl2.user = tbl1.id
                WHERE tbl1.listck = '1'
                OR tbl1.level = '4'
                ORDER BY tbl1.nick");
@@ -94,7 +94,7 @@ else
         }
 
         unset($getp,$getc);
-        $get = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".$db['settings'],false,true);
+        $get = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".dba::get('settings'),false,true);
         $seiten = nav($entrys,$maxclankasse,"?action=nav");
         $index = show($dir."/clankasse", array("show" => $show,
                 "showstatus" => $showstatus,

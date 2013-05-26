@@ -23,20 +23,20 @@ if(isset($_GET['do']) && $_GET['do'] == "clear")
 
         if(isset($_POST['news']))
         {
-            db("DELETE FROM ".$db['news']." WHERE datum <= '".$time."'");
-            db("DELETE FROM ".$db['newscomments']." WHERE datum <= '".$time."'");
+            db("DELETE FROM ".dba::get('news')." WHERE datum <= '".$time."'");
+            db("DELETE FROM ".dba::get('newscomments')." WHERE datum <= '".$time."'");
         }
 
         if(isset($_POST['away']))
-            db("DELETE FROM ".$db['away']." WHERE date <= '".$time."'");
+            db("DELETE FROM ".dba::get('away')." WHERE date <= '".$time."'");
 
         if(isset($_POST['forum']))
         {
-            $qry = db("SELECT id FROM ".$db['f_threads']." WHERE t_date <= '".$time."' AND sticky != 1");
+            $qry = db("SELECT id FROM ".dba::get('f_threads')." WHERE t_date <= '".$time."' AND sticky != 1");
             while($get = _fetch($qry))
             {
-                db("DELETE FROM ".$db['f_threads']." WHERE id = '".$get['id']."'");
-                db("DELETE FROM ".$db['f_posts']." WHERE sid = '".$get['id']."'");
+                db("DELETE FROM ".dba::get('f_threads')." WHERE id = '".$get['id']."'");
+                db("DELETE FROM ".dba::get('f_posts')." WHERE sid = '".$get['id']."'");
             }
         }
 

@@ -14,7 +14,7 @@ $where = $where.': '._config_useradd_head;
 
 /* DO */
 $error = "";
-if(isset($_GET['do']))
+if(!empty($do))
 {
     ## Get POST ##
     $username = $_POST['user'];
@@ -34,11 +34,13 @@ if(isset($_GET['do']))
         $error = _empty_email;
     else if(!check_email($email))
         $error = _error_invalid_email;
-    else if(db("SELECT id FROM ".$db['users']." WHERE user = '".$username."'",true))
+    else if(check_email_trash_mail($email))
+        $error = _error_trash_mail;
+    else if(db("SELECT id FROM ".dba::get('users')." WHERE user = '".$username."'",true))
         $error = _error_user_exists;
-    else if(db("SELECT id FROM ".$db['users']." WHERE nick = '".$nickname."'",true))
+    else if(db("SELECT id FROM ".dba::get('users')." WHERE nick = '".$nickname."'",true))
         $error = _error_nick_exists;
-    else if(db("SELECT id FROM ".$db['users']." WHERE email = '".$email."'",true))
+    else if(db("SELECT id FROM ".dba::get('users')." WHERE email = '".$email."'",true))
         $error = _error_email_exists;
     else
     {
@@ -48,7 +50,7 @@ if(isset($_GET['do']))
             $mkpwd = pass_hash($_POST['pwd'],settings('default_pwd_encoder'));
 
         $bday = ($_POST['t'] && $_POST['m'] && $_POST['j'] ? cal($_POST['t']).".".cal($_POST['m']).".".$_POST['j'] : '');
-        db("INSERT INTO ".$db['users']." SET
+        db("INSERT INTO ".dba::get('users')." SET
                 `user`     = '".convert::ToString($username)."',
                 `nick`     = '".convert::ToString($nickname)."',
                 `email`    = '".convert::ToString($email)."',
@@ -61,13 +63,15 @@ if(isset($_GET['do']))
                 `country`  = '".convert::ToString($land)."',
                 `regdatum` = '".time()."',
                 `level`    = '".convert::ToInt($level)."',
+                `rss_key`  = '".md5(mkpwd())."',
                 `time`     = '".time()."',
                 `status`   = '1'");
 
-        $insert_id = mysql_insert_id();
+        $insert_id = database::get_insert_id();
 
-        //User Stats
-        db("INSERT INTO `".$db['userstats']."` SET `user` = '".$insert_id."', `lastvisit` = '".time()."';");
+        //User Stats & RSS Config
+        db("INSERT INTO `".dba::get('userstats')."` SET `user` = '".$insert_id."', `lastvisit` = '".time()."';");
+        db("INSERT INTO `".dba::get('rss')."` SET `userid` = '".$insert_id."';");
 
         wire_ipcheck("createuser(".$_SESSION['id']."_".$insert_id.")");
 
@@ -83,26 +87,26 @@ if(isset($_GET['do']))
         }
 
         // User Permissions insert
-        db("INSERT INTO ".$db['permissions']." SET `user` = '".convert::ToInt($insert_id)."'".$p);
+        db("INSERT INTO ".dba::get('permissions')." SET `user` = '".convert::ToInt($insert_id)."'".$p);
 
         ## Internal boardpermissions ##
         if(!empty($_POST['board']))
         {
             foreach($_POST['board'] AS $v)
             {
-                db("INSERT INTO ".$db['f_access']." SET `user` = '".convert::ToInt($insert_id)."', `forum` = '".$v."'");
+                db("INSERT INTO ".dba::get('f_access')." SET `user` = '".convert::ToInt($insert_id)."', `forum` = '".$v."'");
             }
         }
 
         ## Squads ##
-        $sq = db("SELECT * FROM ".$db['squads']."");
+        $sq = db("SELECT * FROM ".dba::get('squads')."");
         while($getsq = _fetch($sq))
         {
             if(isset($_POST['squad'.$getsq['id']]))
-                db("INSERT INTO ".$db['squaduser']." SET `user`  = '".convert::ToInt($insert_id)."', `squad` = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
+                db("INSERT INTO ".dba::get('squaduser')." SET `user`  = '".convert::ToInt($insert_id)."', `squad` = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
 
             if(isset($_POST['squad'.$getsq['id']]))
-                db("INSERT INTO ".$db['userpos']." SET `user` = '".convert::ToInt($insert_id)."', `posi` = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad` = '".convert::ToInt($getsq['id'])."'");
+                db("INSERT INTO ".dba::get('userpos')." SET `user` = '".convert::ToInt($insert_id)."', `posi` = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad` = '".convert::ToInt($getsq['id'])."'");
         }
 
         ## UserPic ##
@@ -127,7 +131,7 @@ if(isset($_GET['do']))
         }
 
         ## User Stats ##
-        db("INSERT INTO ".$db['userstats']." SET `user` = '".convert::ToInt($insert_id)."', `lastvisit`	= '".time()."'");
+        db("INSERT INTO ".dba::get('userstats')." SET `user` = '".convert::ToInt($insert_id)."', `lastvisit`	= '".time()."'");
 
         ## E-Mail senden ##
         $message = show(settings('eml_reg'), array("user" => up($username), "pwd" => $mkpwd));
@@ -143,13 +147,13 @@ if(empty($show))
     ## Show ##
     $dropdown_age = show(_dropdown_date, array("day" => dropdown("day",(isset($_POST['t']) ? $_POST['t'] : null),1), "month" => dropdown("month",(isset($_POST['m']) ? $_POST['m'] : null),1), "year" => dropdown("year",(isset($_POST['j']) ? $_POST['j'] : null),1)));
 
-    $qrysq = db("SELECT id,name FROM ".$db['squads']." ORDER BY pos");  $esquads = '';
+    $qrysq = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY pos");  $esquads = '';
     while($getsq = _fetch($qrysq))
     {
-        $qrypos = db("SELECT id,position FROM ".$db['pos']." ORDER BY pid"); $posi = '';
+        $qrypos = db("SELECT id,position FROM ".dba::get('pos')." ORDER BY pid"); $posi = '';
         while($getpos = _fetch($qrypos))
         {
-            if(db("SELECT * FROM ".$db['userpos']." WHERE posi = '".convert::ToInt($getpos['id'])."' AND squad = '".convert::ToInt($getsq['id'])."' AND user = '".(isset($_GET['edit']) ? convert::ToInt($_GET['edit']) : '')."'",true))
+            if(db("SELECT * FROM ".dba::get('userpos')." WHERE posi = '".convert::ToInt($getpos['id'])."' AND squad = '".convert::ToInt($getsq['id'])."' AND user = '".(isset($_GET['edit']) ? convert::ToInt($_GET['edit']) : '')."'",true))
                    $sel = "selected=\"selected\"";
                else
                    $sel = "";
@@ -189,4 +193,3 @@ if(empty($show))
                                          "error" => (!empty($error) ? show("errors/errortable", array("error" => $error)) : ""),
                                          "value" => _button_value_reg));
 }
-?>

@@ -1,9 +1,9 @@
 <?php
 function navi($kat)
 {
-    global $db,$chkMe,$userid,$designpath;
+    global $chkMe,$userid,$designpath;
 
-    $navi=''; $kats_qry = db("SELECT `level` FROM ".$db['navi_kats']." WHERE `placeholder` = '".up($kat)."'");
+    $navi=''; $kats_qry = db("SELECT `level` FROM ".dba::get('navi_kats')." WHERE `placeholder` = '".up($kat)."'");
     if(_rows($kats_qry))
     {
         $k = _fetch($kats_qry);
@@ -14,12 +14,12 @@ function navi($kat)
         $extended_perms = '';
         if($chkMe <= 3 && $chkMe != 5)
         {
-            $qry = db("SELECT extended_perm FROM `".$db['navi']."` WHERE `extended_perm` IS NOT NULL AND `kat` = '".up($kat)."'");
+            $qry = db("SELECT extended_perm FROM `".dba::get('navi')."` WHERE `extended_perm` IS NOT NULL AND `kat` = '".up($kat)."'");
             if(_rows($qry) >= 1)
             while($get = _fetch($qry)) { if(!empty($get['extended_perm'])) $extended_perms .= permission($get['extended_perm']) ? " OR s1.`extended_perm` = '".$get['extended_perm']."'" : ""; }
         }
 
-        $qry = db("SELECT s1.* FROM ".$db['navi']." AS s1 LEFT JOIN ".$db['navi_kats']." AS s2 ON s1.kat = s2.placeholder WHERE s1.kat = '".up($kat)."' AND s1.`shown` = '1' ".$permissions."".$extended_perms." ORDER BY s1.pos");
+        $qry = db("SELECT s1.* FROM ".dba::get('navi')." AS s1 LEFT JOIN ".dba::get('navi_kats')." AS s2 ON s1.kat = s2.placeholder WHERE s1.kat = '".up($kat)."' AND s1.`shown` = '1' ".$permissions."".$extended_perms." ORDER BY s1.pos");
         if(_rows($qry) >= 1)
         {
               while($get = _fetch($qry))
@@ -41,6 +41,5 @@ function navi($kat)
         }
     }
 
-      return empty($navi) ? '' : ($table ? '<table class="navContent" cellspacing="0">'.$navi.'</table>' : $navi);
+    return empty($navi) ? '' : ($table ? '<table class="navContent" cellspacing="0">'.$navi.'</table>' : $navi);
 }
-?>

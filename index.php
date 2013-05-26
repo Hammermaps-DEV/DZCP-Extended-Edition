@@ -21,4 +21,3 @@ else
     require_once(basePath."/inc/bbcode.php");
     header('Location: '.(cookie::get('id') != false && cookie::get('pkey') != false ? 'user/?action=userlobby' : 'news/'));
 }
-?>

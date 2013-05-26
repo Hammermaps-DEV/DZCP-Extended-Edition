@@ -75,12 +75,18 @@ ob_start();
       $spamcode = $z[rand(0,8)];
       $w = (16 * $f) + $space;
 
+      switch(rand(0, 1))
+      {
+          case 0: $font = "./inc/images/fonts/verdana.ttf"; break;
+          case 1: $font = "./inc/images/fonts/leoarrow.ttf"; break;
+      }
+
       if(function_exists('imagettftext'))
         imagettftext($im, rand($sizeMin,$sizeMax), rand($rectMin,$rectMax), $w, 20,
-          imagecolorallocate ($im,
+          imagecolorallocate($im,
                               hex2rgb($textColor,'r'),
                               hex2rgb($textColor,'g'),
-                              hex2rgb($textColor,'b')), "./inc/images/fonts/verdana.ttf", $spamcode);
+                              hex2rgb($textColor,'b')), $font, $spamcode);
       $code .= $spamcode;
     }
     if(!function_exists('imagettftext'))
@@ -100,4 +106,3 @@ ob_start();
   } else echo '<a href="http://www.libgd.org" target="_blank">GDLib</a> is not installed!';
 ## OUTPUT BUFFER END ##
 ob_end_flush();
-?>

@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if(permission("clanwars")) {
-        db("DELETE FROM ".$db['cw_player']." WHERE `cwid` = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('cw_player')." WHERE `cwid` = '".convert::ToInt($_GET['id'])."'");
     }
 
     $index = info(_cw_players_reset, '?action=details&id='.convert::ToInt($_GET['id']));

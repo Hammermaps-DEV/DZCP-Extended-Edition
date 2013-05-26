@@ -6,18 +6,12 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._news_admin_head;
-    if(permission("news"))
-    {
       $wysiwyg = '_word';
       if($_GET['do'] == "add")
       {
-        $qryk = db("SELECT * FROM ".$db['newskat']."");
+        $qryk = db("SELECT * FROM ".dba::get('newskat')."");
         while($getk = _fetch($qryk))
-        {
-          $kat .= show(_select_field, array("value" => $getk['id'],
-                                            "sel" => "",
-                                            "what" => re($getk['kategorie'])));
-        }
+        { $kat .= show(_select_field, array("value" => $getk['id'], "sel" => "", "what" => re($getk['kategorie']))); }
         $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
                                                               "month" => dropdown("month",date("m",time())),
                                                       "year" => dropdown("year",date("Y",time()))));
@@ -35,7 +29,6 @@ if(_adminMenu != 'true')
                                                                                                                 "hour" => dropdown("hour",date("H",time())),
                                                                                                                 "minute" => dropdown("minute",date("i",time())),
                                                                                                                 "uhr" => _uhr));
-
                 $show = show($dir."/news_form", array("head" => _admin_news_head,
                                               "nautor" => _autor,
                                               "autor" => autor(convert::ToInt($userid)),
@@ -45,6 +38,7 @@ if(_adminMenu != 'true')
                                               "ntitel" => _titel,
                                               "do" => "insert",
                                               "ntext" => _eintrag,
+                                              "selr_nc" => 'selected="selected"',
                                               "error" => "",
                                               "titel" => "",
                                               "newstext" => "",
@@ -62,8 +56,8 @@ if(_adminMenu != 'true')
                                               "nklapptitel" => _news_admin_klapptitel,
                                               "nmore" => _news_admin_more,
                                               "linkname" => _linkname,
-                                                                    "interna" => _news_admin_intern,
-                                                                    "intern" => "",
+                                              "interna" => _news_admin_intern,
+                                              "intern" => "",
                                               "till" => _news_sticky_till,
                                               "dropdown_time" => $dropdown_time,
                                               "dropdown_date" => $dropdown_date,
@@ -79,7 +73,7 @@ if(_adminMenu != 'true')
               if(empty($_POST['titel'])) $error = _empty_news_title;
               elseif(empty($_POST['newstext'])) $error = _empty_news;
 
-          $qryk = db("SELECT * FROM ".$db['newskat']."");
+          $qryk = db("SELECT * FROM ".dba::get('newskat')."");
           while($getk = _fetch($qryk))
           {
             if($_POST['kat'] == $getk['id']) $sel = "selected=\"selected\"";
@@ -113,7 +107,7 @@ if(_adminMenu != 'true')
                                                                                                                     "hour" => dropdown("hour",$_POST['h_ts']),
                                                                                                                     "minute" => dropdown("minute",$_POST['min_ts']),
                                                                                                                     "uhr" => _uhr));
-
+                    $selr_nc = ($_POST['comments'] ? 'selected="selected"' : '');
                     $show = show($dir."/news_form", array("head" => _admin_news_head,
                                                 "nautor" => _autor,
                                                 "autor" => autor(convert::ToInt($userid)),
@@ -122,6 +116,7 @@ if(_adminMenu != 'true')
                                                 "preview" => _preview,
                                                 "do" => "insert",
                                                 "ntitel" => _titel,
+                                                "selr_nc" => $selr_nc,
                                                 "titel" => re($_POST['titel']),
                                                 "newstext" => re_bbcode($_POST['newstext']),
                                                 "morenews" => re_bbcode($_POST['morenews']),
@@ -166,7 +161,7 @@ if(_adminMenu != 'true')
                     }
 
 
-                $qry = db("INSERT INTO ".$db['news']."
+                $qry = db("INSERT INTO ".dba::get('news')."
                      SET `autor`      = '".convert::ToInt($userid)."',
                          `kat`        = '".convert::ToInt($_POST['kat'])."',
                          `titel`      = '".up($_POST['titel'])."',
@@ -179,6 +174,7 @@ if(_adminMenu != 'true')
                          `url1`       = '".links($_POST['url1'])."',
                          `url2`       = '".links($_POST['url2'])."',
                          `url3`       = '".links($_POST['url3'])."',
+                         `comments`   = '".convert::ToInt($_POST['comments'])."',
                          `intern`     = '".convert::ToInt($_POST['intern'])."',
                          ".$timeshift."
                                                  ".$public."
@@ -188,11 +184,11 @@ if(_adminMenu != 'true')
           $show = info(_news_sended, "?admin=newsadmin");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['news']."
+        $qry = db("SELECT * FROM ".dba::get('news')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $qryk = db("SELECT * FROM ".$db['newskat']."");
+        $qryk = db("SELECT * FROM ".dba::get('newskat')."");
         while($getk = _fetch($qryk))
         {
           if($get['kat'] == $getk['id']) $sel = "selected=\"selected\"";
@@ -251,7 +247,7 @@ if(_adminMenu != 'true')
                                                                                                                     "uhr" => _uhr));
                 }
 
-
+        $selr_nc = ($get['comments'] ? 'selected="selected"' : '');
         $show = show($dir."/news_form", array("head" => _admin_news_edit_head,
                                               "nautor" => _autor,
                                               "autor" => autor($get['autor']),
@@ -270,6 +266,7 @@ if(_adminMenu != 'true')
                                               "url2" => $get['url2'],
                                               "url3" => $get['url3'],
                                               "klapplink" => re($get['klapplink']),
+                                              "selr_nc" => $selr_nc,
                                               "dropdown_date" => $dropdown_date,
                                               "dropdown_time" => $dropdown_time,
                                                                                             "timeshift_date" => $timeshift_date,
@@ -310,7 +307,7 @@ if(_adminMenu != 'true')
                         $datum = '';
                     }
 
-          $qry = db("UPDATE ".$db['news']."
+          $qry = db("UPDATE ".dba::get('news')."
                      SET `kat`        = '".convert::ToInt($_POST['kat'])."',
                          `titel`      = '".up($_POST['titel'])."',
                          `text`       = '".up($_POST['newstext'],1)."',
@@ -326,6 +323,7 @@ if(_adminMenu != 'true')
                                                  ".$timeshift."
                                                  ".$public."
                                                  ".$datum."
+                         `comments`   = '".convert::ToInt($_POST['comments'])."',
                          `sticky`     = '".convert::ToInt($stickytime)."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
@@ -333,21 +331,21 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == 'public') {
         if($_GET['what'] == 'set')
         {
-          $upd = db("UPDATE ".$db['news']."
+          $upd = db("UPDATE ".dba::get('news')."
                      SET `public` = '1',
                                       `datum`  = '".time()."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
-          $upd = db("UPDATE ".$db['news']."
+          $upd = db("UPDATE ".dba::get('news')."
                      SET `public` = '0'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
 
         header("Location: ?admin=newsadmin");
       } elseif($_GET['do'] == "delete") {
-        $del = db("DELETE FROM ".$db['news']."
+        $del = db("DELETE FROM ".dba::get('news')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $del = db("DELETE FROM ".$db['newscomments']."
+        $del = db("DELETE FROM ".dba::get('newscomments')."
                    WHERE news = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_news_deleted, "?admin=newsadmin");
@@ -355,8 +353,8 @@ if(_adminMenu != 'true')
         if(isset($_GET['page'])) $page = $_GET['page'];
         else $page = 1;
 
-        $entrys = cnt($db['news']);
-        $qry = db("SELECT * FROM ".$db['news']." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminnews=config('m_adminnews')).",".$maxadminnews."");
+        $entrys = cnt(dba::get('news'));
+        $qry = db("SELECT * FROM ".dba::get('news')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminnews=config('m_adminnews')).",".$maxadminnews."");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -404,7 +402,4 @@ if(_adminMenu != 'true')
                                                "delete" => _deleteicon_blank,
                                                "add" => _admin_news_head));
       }
-    } else {
-      $show = error(_error_wrong_permissions, 1);
-    }
 ?>

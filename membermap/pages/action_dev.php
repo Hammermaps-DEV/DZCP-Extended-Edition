@@ -24,11 +24,10 @@ class geocoder
 
     static private function searchLocation($address)
     {
-        global $db;
         self::$address = $address;
         if(self::ConnectAPI())
         {
-            if(!db("SELECT id FROM `".$db['geometry']."` WHERE `location` LIKE '".$address."' LIMIT 1;",true))
+            if(!db("SELECT id FROM `".dba::get('geometry')."` WHERE `location` LIKE '".$address."' LIMIT 1;",true))
             {
                 switch(count(self::$resp['address_components']))
                 {
@@ -59,7 +58,7 @@ class geocoder
                 }
 
 
-                db("INSERT INTO `".$db['geometry']."` SET
+                db("INSERT INTO `".dba::get('geometry')."` SET
                 `location` = '".self::$resp['address_components'][0]['long_name']."',
                 `lat` = '".self::$resp['geometry']['location']['lat']."',
                 `lng` = '".self::$resp['geometry']['location']['lng']."',

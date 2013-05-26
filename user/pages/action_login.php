@@ -39,7 +39,7 @@ else
                     if(isset($_POST['user']))
                     {
                         ## User Login war fehlerhaft ##
-                        $qry = db("SELECT id FROM ".$db['users']." WHERE user = '".$_POST['user']."'");
+                        $qry = db("SELECT id FROM ".dba::get('users')." WHERE user = '".$_POST['user']."'");
 
                         if(_rows($qry))
                         {
@@ -72,4 +72,3 @@ else
         break;
     }
 }
-?>

@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT hits,download,url FROM ".$db['downloads']."");
+    $qry = db("SELECT hits,download,url FROM ".dba::get('downloads')."");
     $allhits = 0; $allsize = 0;
     while($get = _fetch($qry))
     {
@@ -45,7 +45,7 @@ else
 
     $stats = show($dir."/downloads", array("head" => _site_dl,
             "files" => _site_stats_files,
-            "nfiles" => cnt($db['downloads']),
+            "nfiles" => cnt(dba::get('downloads')),
             "size" => _stats_dl_size,
             "hosted" => _stats_hosted,
             "allsize" => $allsize,

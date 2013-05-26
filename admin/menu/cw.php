@@ -10,7 +10,7 @@ if(_adminMenu != 'true')
     $maxadmincw = 10;
       if($_GET['do'] == "new")
       {
-        $qry = db("SELECT * FROM ".$db['squads']."
+        $qry = db("SELECT * FROM ".dba::get('squads')."
 WHERE status = '1'
 ORDER BY game ASC");
         while($get = _fetch($qry))
@@ -90,12 +90,12 @@ ORDER BY game ASC");
    "cw_gametype" => ""));
       } elseif($_GET['do'] == "edit") {
 
-        $qry = db("SELECT * FROM ".$db['cw']."
+        $qry = db("SELECT * FROM ".dba::get('cw')."
 WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         list($xonx1,$xonx2) = explode('on', $get['xonx']);
-   $qrym = db("SELECT * FROM ".$db['squads']."
+   $qrym = db("SELECT * FROM ".dba::get('squads')."
 WHERE status = '1'
 ORDER BY game");
         while($gets = _fetch($qrym))
@@ -195,7 +195,7 @@ ORDER BY game");
           if($_POST['land'] == "lazy") $kid = "";
    else $kid = "`gcountry` = '".$_POST['land']."',";
 
-          $qry = db("INSERT INTO ".$db['cw']."
+          $qry = db("INSERT INTO ".dba::get('cw')."
 SET ".$kid."
 ".$xonx."
 `datum` = '".convert::ToInt($datum)."',
@@ -216,7 +216,7 @@ SET ".$kid."
 `matchadmins` = '".up($_POST['match_admins'])."',
 `bericht` = '".up($_POST['bericht'],1)."'");
 
-          $cwid = mysql_insert_id();
+          $cwid = database::get_insert_id();
 
           $tmp = $_FILES['logo']['tmp_name'];
           $type = $_FILES['logo']['type'];
@@ -228,7 +228,7 @@ SET ".$kid."
             $img = @getimagesize($tmp);
 if($img1[0])
             {
-              @copy($tmp, basePath."/inc/images/uploads/clanwars/".mysql_insert_id()."_logo.".strtolower($end));
+              @copy($tmp, basePath."/inc/images/uploads/clanwars/".database::get_insert_id()."_logo.".strtolower($end));
               @unlink($tmp);
             }
           }
@@ -243,7 +243,7 @@ if($img1[0])
             $img1 = @getimagesize($tmp1);
 if($img1[0])
             {
-              @copy($tmp1, basePath."/inc/images/uploads/clanwars/".mysql_insert_id()."_1.".strtolower($end1));
+              @copy($tmp1, basePath."/inc/images/uploads/clanwars/".database::get_insert_id()."_1.".strtolower($end1));
               @unlink($tmp1);
             }
           }
@@ -258,7 +258,7 @@ if($img1[0])
             $img2 = @getimagesize($tmp2);
 if($img2[0])
             {
-              @copy($tmp2, basePath."/inc/images/uploads/clanwars/".mysql_insert_id()."_2.".strtolower($end2));
+              @copy($tmp2, basePath."/inc/images/uploads/clanwars/".database::get_insert_id()."_2.".strtolower($end2));
               @unlink($tmp2);
             }
           }
@@ -273,7 +273,7 @@ if($img2[0])
             $img3 = @getimagesize($tmp3);
 if($img3[0])
             {
-              @copy($tmp3, basePath."/inc/images/uploads/clanwars/".mysql_insert_id()."_3.".strtolower($end3));
+              @copy($tmp3, basePath."/inc/images/uploads/clanwars/".database::get_insert_id()."_3.".strtolower($end3));
               @unlink($tmp3);
             }
           }
@@ -288,7 +288,7 @@ if($img3[0])
             $img4 = @getimagesize($tmp4);
 if($img4[0])
             {
-              @copy($tmp4, basePath."/inc/images/uploads/clanwars/".mysql_insert_id()."_4.".strtolower($end4));
+              @copy($tmp4, basePath."/inc/images/uploads/clanwars/".database::get_insert_id()."_4.".strtolower($end4));
               @unlink($tmp4);
             }
           }
@@ -311,7 +311,7 @@ if($img4[0])
           if($_POST['land'] == "lazy") $kid = "";
    else $kid = "`gcountry` = '".$_POST['land']."',";
 
-          $qry = db("UPDATE ".$db['cw']."
+          $qry = db("UPDATE ".dba::get('cw')."
 SET ".$xonx."
 ".$kid."
 `datum` = '".convert::ToInt($datum)."',
@@ -454,15 +454,15 @@ foreach($picformat AS $endun4)
           $show = info(_cw_admin_edited, "?admin=cw");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['cw']."
+        $qry = db("DELETE FROM ".dba::get('cw')."
 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $qry = db("DELETE FROM ".$db['cw_comments']."
+        $qry = db("DELETE FROM ".dba::get('cw_comments')."
 WHERE cw = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_cw_admin_deleted, "?admin=cw");
       } elseif($_GET['do'] == "top") {
-        $qry = db("UPDATE ".$db['cw']."
+        $qry = db("UPDATE ".dba::get('cw')."
 SET `top` = '".convert::ToInt($_GET['set'])."'
 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
@@ -475,15 +475,15 @@ if(is_numeric($_GET['squad']))	{
 $whereqry = ' WHERE squad_id = '.$_GET['squad'].' ';
 }
 
-        $qry = db("SELECT * FROM ".$db['cw']." ".$whereqry."
+        $qry = db("SELECT * FROM ".dba::get('cw')." ".$whereqry."
 ORDER BY datum DESC
 LIMIT ".($page - 1)*$maxadmincw.",".$maxadmincw."");
-        $entrys = cnt($db['cw']);
+        $entrys = cnt(dba::get('cw'));
          $squads .= show(_cw_edit_select_field_squads, array("name" => _all,
 "sel" => "",
 "id" => "?admin=cw"));
 
-$qrys = db("SELECT * FROM ".$db['squads']."
+$qrys = db("SELECT * FROM ".dba::get('squads')."
 WHERE status = '1'
 ORDER BY game ASC");
 

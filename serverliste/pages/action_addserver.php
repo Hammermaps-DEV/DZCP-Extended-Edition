@@ -29,14 +29,14 @@ else
     else {
         $msg = _slist_added_msg;
         $title = _slist_title;
-        $send = db("INSERT INTO ".$db['msg']."
+        $send = db("INSERT INTO ".dba::get('acomments')."
                 SET `datum`     = '".time()."',
                     `von`       = '0',
                     `an`        = '1',
                     `titel`     = '".up($title)."',
                     `nachricht` = '".up($msg)."'");
 
-        $insert = db("INSERT INTO ".$db['serverliste']."
+        $insert = db("INSERT INTO ".dba::get('serverliste')."
                   SET `datum`     = '".time()."',
                       `clanname`  = '".up($_POST['clanname'])."',
                       `clanurl`   = '".links($_POST['clanurl'])."',

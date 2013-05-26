@@ -31,7 +31,7 @@ else
         $index = show($dir."/register", array("error" => "", "r_name" => "", "r_nick" => "", "r_email" => "", "value" => _button_value_reg, "regcode" => $regcode, "pwd2" => _pwd2));
     }
     else
-        $index = error(_error_user_already_in, 1); //Error, User ist angemeldet
+        $index = error(_error_user_already_in, 1); //Error, User ist bereits angemeldet
 
     ## Registrierung ausführen ##
     if($do == "add")
@@ -41,9 +41,9 @@ else
         $_POST['nick'] = trim($_POST['nick']);
 
         ## Prüfung ob Username, Usernick oder E-Mail bereits existiert ##
-        $check_user = db("SELECT id FROM ".$db['users']." WHERE user = '".$_POST['user']."'");
-        $check_nick = db("SELECT id FROM ".$db['users']." WHERE nick = '".$_POST['nick']."'");
-        $check_email = db("SELECT id FROM ".$db['users']." WHERE email = '".$_POST['email']."'");
+        $check_user = db("SELECT id FROM ".dba::get('users')." WHERE user = '".$_POST['user']."'");
+        $check_nick = db("SELECT id FROM ".dba::get('users')." WHERE nick = '".$_POST['nick']."'");
+        $check_email = db("SELECT id FROM ".dba::get('users')." WHERE email = '".$_POST['email']."'");
 
         ## Gibt es einen Fehler ? ##
         if(empty($_POST['user']) || empty($_POST['nick']) || empty($_POST['email']) || ($_POST['pwd'] != $_POST['pwd2']) || (settings("regcode") == 1 && ($_POST['confirm'] != $_SESSION['sec_reg'] || $_SESSION['sec_reg'] == NULL)) || _rows($check_user) || _rows($check_nick) || _rows($check_email))
@@ -52,6 +52,7 @@ else
             if(settings("regcode") && ($_POST['confirm'] != $_SESSION['sec_reg'] || $_SESSION['sec_reg'] == NULL)) $error = show("errors/errortable", array("error" => _error_invalid_regcode));
             else if($_POST['pwd2'] != $_POST['pwd']) $error = show("errors/errortable", array("error" => _wrong_pwd));
             else if(!check_email($_POST['email'])) $error = show("errors/errortable", array("error" => _error_invalid_email));
+            else if(check_email_trash_mail($_POST['email'])) $error = show("errors/errortable", array("error" => _error_trash_mail));
             else if(empty($_POST['email'])) $error = show("errors/errortable", array("error" => _empty_email));
             else if(_rows($check_email)) $error = show("errors/errortable", array("error" => _error_email_exists));
             else if(empty($_POST['nick'])) $error = show("errors/errortable", array("error" => _empty_nick));
@@ -78,7 +79,7 @@ else
             }
 
             ## Neuen User in die Datenbank schreiben ##
-            db("INSERT INTO ".$db['users']." SET
+            db("INSERT INTO ".dba::get('users')." SET
             `user` = '".up($_POST['user'])."',
             `nick` = '".up($_POST['nick'])."',
             `email` = '".up($_POST['email'])."',
@@ -86,16 +87,20 @@ else
             `regdatum` = '".($time=time())."',
             `level`    = '1',
             `time`     = '".$time."',
+            `rss_key`  = '".md5(mkpwd())."',
             `status`   = '1'");
 
             ## Lese letzte ID aus ##
-            $insert_id = mysql_insert_id();
+            $insert_id = database::get_insert_id();
 
             ## Lege User in der Permissions Tabelle an ##
-            db("INSERT INTO ".$db['permissions']." SET `user` = '".$insert_id."'");
+            db("INSERT INTO ".dba::get('permissions')." SET `user` = '".$insert_id."'");
 
             ## Lege User in der User-Statistik Tabelle an ##
-            db("INSERT INTO ".$db['userstats']." SET `user` = '".$insert_id."', `lastvisit`	= '".$time."'");
+            db("INSERT INTO ".dba::get('userstats')." SET `user` = '".$insert_id."', `lastvisit`	= '".$time."'");
+
+            ## Lege User in der RSS Config Tabelle an ##
+            db("INSERT INTO ".dba::get('rss')." SET `userid` = '".$insert_id."'");
 
             ## Ereignis in den Adminlog schreiben ##
             wire_ipcheck("reg(".$insert_id.")");
@@ -108,4 +113,3 @@ else
         }
     }
 }
-?>

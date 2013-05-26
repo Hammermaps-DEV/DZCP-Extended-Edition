@@ -37,15 +37,19 @@ if(_adminMenu != 'true')
       } else {
         $time = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-        $insert = db("INSERT INTO ".$db['events']."
+        db("INSERT INTO ".dba::get('events')."
                       SET `datum` = '".convert::ToInt($time)."',
                           `title` = '".up($_POST['title'])."',
                           `event` = '".up($_POST['event'],1)."'");
 
+        //Recache
+        if(Cache::is_mem())
+            Cache::delete('nav_eventbox');
+
         $show = info(_kalender_successful_added,"?admin=kalender");
       }
     } elseif($_GET['do'] == "edit") {
-      $qry = db("SELECT * FROM ".$db['events']."
+      $qry = db("SELECT * FROM ".dba::get('events')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
@@ -74,21 +78,28 @@ if(_adminMenu != 'true')
       } else {
         $time = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-        $update = db("UPDATE ".$db['events']."
+        db("UPDATE ".dba::get('events')."
                       SET `datum` = '".convert::ToInt($time)."',
                           `title` = '".up($_POST['title'])."',
                           `event` = '".up($_POST['event'],1)."'
                       WHERE id = '".convert::ToInt($_GET['id'])."'");
 
+        //Recache
+        if(Cache::is_mem())
+            Cache::delete('nav_eventbox');
+
         $show = info(_kalender_successful_edited,"?admin=kalender");
       }
     } elseif($_GET['do'] == "delete") {
-      $del = db("DELETE FROM ".$db['events']."
-                 WHERE id = '".convert::ToInt($_GET['id'])."'");
+      db("DELETE FROM ".dba::get('events')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+
+      //Recache
+      if(Cache::is_mem())
+          Cache::delete('nav_eventbox');
 
       $show = info(_kalender_deleted,"?admin=kalender");
     } else {
-      $qry = db("SELECT * FROM ".$db['events']."
+      $qry = db("SELECT * FROM ".dba::get('events')."
                  ORDER BY datum DESC");
         while($get = _fetch($qry))
         {

@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     header("Content-type: text/html; charset=utf-8");
-    $qry = db("SELECT * FROM ".$db['squads']."
+    $qry = db("SELECT * FROM ".dba::get('squads')."
              WHERE id = '".convert::ToInt($_POST['squad'])."'");
     $get = _fetch($qry);
 

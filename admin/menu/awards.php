@@ -12,7 +12,7 @@ if(_adminMenu != 'true')
     } else {
         if($_GET['do'] == "new")
       {
-          $qry = db("SELECT * FROM ".$db['squads']."
+          $qry = db("SELECT * FROM ".dba::get('awards')."
                    ORDER BY game ASC");
           while($get = _fetch($qry))
         {
@@ -42,11 +42,11 @@ if(_adminMenu != 'true')
                                                 "award_place" => "",
                                                 "award_prize" => ""));
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['awards']."
+        $qry = db("SELECT * FROM ".dba::get('awards')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-          $qrym = db("SELECT * FROM ".$db['squads']."
+          $qrym = db("SELECT * FROM ".dba::get('awards')."
                     ORDER BY game");
           while($gets = _fetch($qrym))
           {
@@ -97,14 +97,14 @@ if(_adminMenu != 'true')
 
           $datum = mktime(0,0,0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-          $qry = db("INSERT INTO ".$db['awards']."
+          $qry = db("INSERT INTO ".dba::get('awards')."
                      SET `date`     = '".convert::ToInt($datum)."',
                          `postdate` = '".time()."',
-                                   `squad`    = '".convert::ToInt($_POST['squad'])."',
-                                 `event`    = '".up($_POST['event'])."',
+                         `squad`    = '".convert::ToInt($_POST['squad'])."',
+                         `event`    = '".up($_POST['event'])."',
                          `url`      = '".links($_POST['url'])."',
-                                   `place`    = '".up($place)."',
-                                   `prize`    = '".up($prize)."'");
+                         `place`    = '".up($place)."',
+                         `prize`    = '".up($prize)."'");
 
           $show = info(_awards_admin_added, "?admin=awards");
         }
@@ -127,7 +127,7 @@ if(_adminMenu != 'true')
 
             $datum = mktime(0,0,0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-            $qry = db("UPDATE ".$db['awards']."
+            $qry = db("UPDATE ".dba::get('awards')."
                    SET `date`   = '".convert::ToInt($datum)."',
                                  `squad`  = '".convert::ToInt($_POST['squad'])."',
                                  `event`  = '".up($_POST['event'])."',
@@ -138,12 +138,12 @@ if(_adminMenu != 'true')
 
         $show = info(_awards_admin_edited, "?admin=awards");
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['awards']."
+        $qry = db("DELETE FROM ".dba::get('awards')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_awards_admin_deleted, "?admin=awards");
       } else {
-        $qry = db("SELECT * FROM ".$db['awards']."
+        $qry = db("SELECT * FROM ".dba::get('awards')."
                    ORDER BY date DESC");
         while($get = _fetch($qry))
         {

@@ -30,4 +30,3 @@ else
     ## Zur News Seite weiterleiten ##
     header("Location: ../news/");
 }
-?>

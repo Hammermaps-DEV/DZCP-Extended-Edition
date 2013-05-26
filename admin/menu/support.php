@@ -28,6 +28,12 @@ if(_adminMenu != 'true')
     $support .= "\r\n";
 
     $support .= "#####################\r\n";
+    $support .= "DZCP Erweiterungen \r\n";
+    $support .= "#####################\r\n";
+    $support .= "GameQ: ".GameQ::VERSION."\r\n";
+    $support .= "\r\n";
+
+    $support .= "#####################\r\n";
     $support .= "Domain & User\r\n";
     $support .= "#####################\r\n";
     $support .= "Domain: http://".$_SERVER['HTTP_HOST'].str_replace('/admin','/',dirname($_SERVER['PHP_SELF']))."\r\n";
@@ -40,8 +46,8 @@ if(_adminMenu != 'true')
     $support .= "Server OS: ".@php_uname()."\r\n";
     $support .= "Webserver: ".(array_key_exists('apache2handler', $PhpInfo) ? (array_key_exists('Apache Version', $PhpInfo['apache2handler']) ? $PhpInfo['apache2handler']['Apache Version'] : 'PHP l&auml;uft als CGI <Keine Info>' ) : 'PHP l&auml;uft als CGI <Keine Info>')."\r\n";
     $support .= "PHP-Version: ".phpversion()." (".php_sapi_type().")"."\r\n";
-    $support .= "MySQL-Server Version: ".mysql_get_server_info()."\r\n";
-    $support .= "MySQL-Erweiterung: MySQL\r\n";
+    $support .= "MySQL-Server Version: ".database::version()."\r\n";
+    $support .= "MySQL-Erweiterung: MySQLi\r\n";
     $support .= "MySQL-Client Version: ".$PhpInfo['mysql']['Client API version']."\r\n";
 
     if(function_exists("zend_version"))

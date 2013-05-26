@@ -12,55 +12,69 @@
 if (!defined('IS_DZCP'))
     exit();
 
+//-> Checkt ob ein Ereignis neu ist
+# DEPRECATED #
+function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
+{
+    global $userid;
+
+    if($userid != 0 && !empty($userid))
+    {
+        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
+        { if(empty($new)) return _newicon; }
+    }
+
+    return '';
+}
+
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".$db['f_kats']." ORDER BY kid");
+    $qry = db("SELECT * FROM ".dba::get('f_kats')." ORDER BY kid"); $show = '';
     while($get = _fetch($qry))
     {
-        $showt = "";
-        $qrys = db("SELECT * FROM ".$db['f_skats']."
-                WHERE sid = '".$get['id']."'
-                ORDER BY pos");
+        $showt = ''; $lpost = ''; $color = 1; $lpost = '';
+        $qrys = db("SELECT * FROM ".dba::get('f_skats')." WHERE sid = '".$get['id']."' ORDER BY pos");
         while($gets = _fetch($qrys))
         {
-            if($get['intern'] == 0 || ($get['intern'] == 1 && fintern($gets['id'])))
+            if(!$get['intern'] || ($get['intern'] && fintern($gets['id'])))
             {
                 unset($lpost);
-                $qrylt = db("SELECT t_date,t_nick,t_email,t_reg,lp,first,topic
-                     FROM ".$db['f_threads']."
+                $getlt = db("SELECT t_date,t_nick,t_email,t_reg,lp,first,topic
+                     FROM ".dba::get('f_threads')."
                      WHERE kid = '".$gets['id']."'
-                     ORDER BY lp DESC");
-                $getlt = _fetch($qrylt);
+                     ORDER BY lp DESC",false,true);
 
-                $qrylp = db("SELECT s1.date,s1.nick,s1.reg,s1.email,s2.t_date,s2.lp,s2.first
-                     FROM ".$db['f_posts']." AS s1
-                     LEFT JOIN ".$db['f_threads']." AS s2
+                $getlp = db("SELECT s1.date,s1.nick,s1.reg,s1.email,s2.t_date,s2.lp,s2.first
+                     FROM ".dba::get('f_posts')." AS s1
+                     LEFT JOIN ".dba::get('f_threads')." AS s2
                      ON s2.lp = s1.date
                      WHERE s2.kid = '".$gets['id']."'
-                     ORDER BY s1.date DESC");
-                $getlp = _fetch($qrylp);
+                     ORDER BY s1.date DESC",false,true);
 
-                if(cnt($db['f_threads'], " WHERE kid = '".$gets['id']."'") == "0")
+                if(cnt(dba::get('f_threads'), " WHERE kid = '".$gets['id']."'") == "0")
                 {
                     $lpost = "-";
                     $lpdate = "";
-                } elseif($getlt['first'] == "1") {
-                    $lpost .= show(_forum_thread_lpost, array("nick" => autor($getlt['t_reg'], '', $getlt['t_nick'], $getlt['t_email']),
-                            "date" => date("d.m.y H:i", $getlt['t_date'])._uhr));
+                }
+                elseif($getlt['first'] == "1")
+                {
+                    $lpost .= show(_forum_thread_lpost, array("nick" => autor($getlt['t_reg'], '', $getlt['t_nick'], $getlt['t_email']), "date" => date("d.m.y H:i", $getlt['t_date'])._uhr));
 
                     $lpdate = $getlt['t_date'];
-                } elseif($getlt['first'] == "0") {
+                }
+                elseif($getlt['first'] == "0")
+                {
                     $lpost .= show(_forum_thread_lpost, array("nick" => autor($getlp['reg'], '', $getlp['nick'], $getlp['email']),
                             "date" => date("d.m.y H:i", $getlp['date'])._uhr));
                     $lpdate = $getlp['date'];
                 }
 
-                $threads = cnt($db['f_threads'], " WHERE kid = '".$gets['id']."'");
-                $posts = cnt($db['f_posts'], " WHERE kid = '".$gets['id']."'");
+                $threads = cnt(dba::get('f_threads'), " WHERE kid = '".$gets['id']."'");
+                $posts = cnt(dba::get('f_posts'), " WHERE kid = '".$gets['id']."'");
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-
                 $showt .= show($dir."/kats_show", array("topic" => re($gets['kattopic']),
                         "subtopic" => re($gets['subtopic']),
                         "lpost" => $lpost,
@@ -86,36 +100,31 @@ else
                     "showt" => $showt));
         }
     }
-    $threads = show(_forum_cnt_threads, array("threads" => cnt($db['f_threads'])));
-    $posts = show(_forum_cnt_posts, array("posts" => cnt($db['f_posts'])+cnt($db['f_threads'])));
 
-    $qrytp = db("SELECT id,user,forumposts FROM ".$db['userstats']."
-               ORDER BY forumposts DESC, id
-               LIMIT 5");
+    $threads = show(_forum_cnt_threads, array("threads" => cnt(dba::get('f_threads'))));
+    $posts = show(_forum_cnt_posts, array("posts" => cnt(dba::get('f_posts'))+cnt(dba::get('f_threads'))));
+    $qrytp = db("SELECT id,user,forumposts FROM ".dba::get('userstats')." ORDER BY forumposts DESC, id LIMIT 5");
 
+    $show_top = ''; $color = 1;
     while($gettp = _fetch($qrytp))
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-        $show_top .= show($dir."/top_posts_show", array("nick" => autor($gettp['user']),
-                "posts" => $gettp['forumposts'],
-                "class" => $class));
+        $show_top .= show($dir."/top_posts_show", array("nick" => autor($gettp['user']), "posts" => $gettp['forumposts'], "class" => $class));
     }
-
 
     $top_posts = show($dir."/top_posts", array("head" => _forum_top_posts,
             "show" => $show_top,
             "nick" => _nick,
             "posts" => _forum_posts));
 
-    $qryo = db("SELECT id FROM ".$db['users']."
+    $qryo = db("SELECT id FROM ".dba::get('users')."
               WHERE whereami = 'Forum'
               AND time+'".users_online."'>'".time()."'
               AND id != '".convert::ToInt($userid)."'");
     if(_rows($qryo))
     {
-        $i=0;
-        $check = 1;
-        $cnto = cnt($db['users'], " WHERE time+'".users_online."'>'".time()."' AND whereami = 'Forum' AND id != '".convert::ToInt($userid)."'");
+        $check = 1; $nick = ''; $i=0;
+        $cnto = cnt(dba::get('users'), " WHERE time+'".users_online."'>'".time()."' AND whereami = 'Forum' AND id != '".convert::ToInt($userid)."'");
         while($geto = _fetch($qryo))
         {
             if($i == 5)

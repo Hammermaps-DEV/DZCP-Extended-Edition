@@ -51,7 +51,7 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['beschreibung'])) $show = error(_links_empty_beschreibung, 1);
           elseif(empty($_POST['text']))         $show = error(_links_empty_text, 1);
         } else {
-          $qry = db("INSERT INTO ".$db['links']."
+          $qry = db("INSERT INTO ".dba::get('links')."
                      SET `url`          = '".links($_POST['link'])."',
                          `text`         = '".up($_POST['text'])."',
                          `banner`       = '".up($_POST['banner'])."',
@@ -61,8 +61,7 @@ if(_adminMenu != 'true')
         }
       } elseif($_GET['do'] == "edit") {
 
-        $qry = db("SELECT * FROM ".$db[$_GET['type']]."
-                   WHERE id = '".convert::ToInt($_GET['id'])."'");
+        $qry = db("SELECT * FROM ".dba::get($_GET['type'])." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         if($get['banner'] == 1){
@@ -98,7 +97,7 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['beschreibung'])) $show = error(_links_empty_beschreibung, 1);
           elseif(empty($_POST['text']))         $show = error(_links_empty_text, 1);
         } else {
-            $qry = db("UPDATE ".$db['links']."
+            $qry = db("UPDATE ".dba::get('links')."
                        SET `url`          = '".links($_POST['link'])."',
                            `text`         = '".up($_POST['text'])."',
                            `banner`       = '".up($_POST['banner'])."',
@@ -108,12 +107,12 @@ if(_adminMenu != 'true')
           $show = info(_link_edited, "?admin=links");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db[$_GET['type']]."
+        $qry = db("DELETE FROM ".dba::get($_GET['type'])."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_link_deleted, "?admin=links");
       } else {
-        $qry = db("SELECT * FROM ".$db['links']."
+        $qry = db("SELECT * FROM ".dba::get('links')."
                    ORDER BY banner DESC");
         while($get = _fetch($qry))
         {

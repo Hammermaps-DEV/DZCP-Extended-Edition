@@ -35,14 +35,14 @@ else
     $narchivconfig = config(array('m_archivnews','l_newsarchiv'));
     $page = (isset($_GET['page']) ? $_GET['page'] : 1);
     $n_kat = (empty($kat) ? '' : "AND kat = '".$kat."'");
-    $qry = db("SELECT id,titel,autor,datum,kat,text FROM ".$db['news']." ".$intern2." ".$n_kat." ORDER BY datum DESC LIMIT ".($page - 1)*$narchivconfig['m_archivnews'].",".$narchivconfig['m_archivnews']."");
-    $entrys = cnt($db['news'], " ".$intern2." ".$n_kat);
+    $qry = db("SELECT id,titel,autor,datum,kat,text FROM ".dba::get('news')." ".$intern2." ".$n_kat." ORDER BY datum DESC LIMIT ".($page - 1)*$narchivconfig['m_archivnews'].",".$narchivconfig['m_archivnews']."");
+    $entrys = cnt(dba::get('news'), " ".$intern2." ".$n_kat);
 
     $color = 1; $show = '';
     while($get = _fetch($qry))
     {
-        $getk = db("SELECT kategorie FROM ".$db['newskat']." WHERE id = '".$get['kat']."'",false,true);
-        $comments = cnt($db['newscomments'], " WHERE news = ".$get['id']."");
+        $getk = db("SELECT kategorie FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
+        $comments = cnt(dba::get('newscomments'), " WHERE news = ".$get['id']."");
         $titel = show(_news_show_link, array("titel" => cut(re($get['titel']),$narchivconfig['l_newsarchiv']), "id" => $get['id']));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $show .= show($dir."/archiv_show", array("autor" => autor($get['autor']),
@@ -62,4 +62,3 @@ else
                                             "show" => $show,
                                             "autor" => _autor));
 }
-?>

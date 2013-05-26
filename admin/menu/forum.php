@@ -11,8 +11,8 @@ if(_adminMenu != 'true')
         if($_GET['show'] == "subkats")
         {
           $qryk = db("SELECT s1.name,s2.id,s2.kattopic,s2.subtopic,s2.pos
-                      FROM ".$db['f_kats']." AS s1
-                      LEFT JOIN ".$db['f_skats']." AS s2
+                      FROM ".dba::get('f_kats')." AS s1
+                      LEFT JOIN ".dba::get('f_skats')." AS s2
                       ON s1.id = s2.sid
                       WHERE s1.id = '".convert::ToInt($_GET['id'])."'
                       ORDER BY s2.pos");
@@ -51,7 +51,7 @@ if(_adminMenu != 'true')
                                                            "edit" => _editicon_blank));
           }
         } else {
-          $qry = db("SELECT * FROM ".$db['f_kats']."
+          $qry = db("SELECT * FROM ".dba::get('f_kats')."
                      ORDER BY kid");
         while($get = _fetch($qry))
         {
@@ -76,7 +76,7 @@ if(_adminMenu != 'true')
           $kats .= show($dir."/forum_show_kats", array("class" => $class,
                                                        "kat" => $kat,
                                                        "status" => $status,
-                                                       "skats" => cnt($db['f_skats'], " WHERE sid = '".convert::ToInt($get['id'])."'"),
+                                                       "skats" => cnt(dba::get('f_skats'), " WHERE sid = '".convert::ToInt($get['id'])."'"),
                                                        "edit" => $edit,
                                                        "delete" => $delete));
         }
@@ -90,7 +90,7 @@ if(_adminMenu != 'true')
                                           "kats" => $kats));
         if($_GET['do'] == "newkat")
         {
-          $qry = db("SELECT * FROM ".$db['f_kats']."
+          $qry = db("SELECT * FROM ".dba::get('f_kats')."
                      ORDER BY kid");
           while($get = _fetch($qry))
           {
@@ -114,11 +114,11 @@ if(_adminMenu != 'true')
             if($_POST['kid'] == "1" || "2") $sign = ">= ";
             else  $sign = "> ";
 
-            $posi = db("UPDATE ".$db['f_kats']."
+            $posi = db("UPDATE ".dba::get('f_kats')."
                         SET `kid` = kid+1
                         WHERE kid ".$sign." '".convert::ToInt($_POST['kid'])."'");
 
-            $qry = db("INSERT INTO ".$db['f_kats']."
+            $qry = db("INSERT INTO ".dba::get('f_kats')."
                        SET `kid`    = '".convert::ToInt($_POST['kid'])."',
                            `name`   = '".up($_POST['kat'])."',
                            `intern` = '".convert::ToInt($_POST['intern'])."'");
@@ -128,29 +128,29 @@ if(_adminMenu != 'true')
             $show = error(_config_empty_katname, 1);
           }
         } elseif($_GET['do'] == "delete") {
-          $what = db("SELECT id FROM ".$db['f_skats']."
+          $what = db("SELECT id FROM ".dba::get('f_skats')."
                       WHERE sid = '".convert::ToInt($_GET['id'])."'");
           $get = _fetch($what);
 
-          $qry = db("DELETE FROM ".$db['f_kats']."
+          $qry = db("DELETE FROM ".dba::get('f_kats')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          $qry = db("DELETE FROM ".$db['f_threads']."
+          $qry = db("DELETE FROM ".dba::get('f_threads')."
                      WHERE kid = '".convert::ToInt($get['id'])."'");
 
-          $qry = db("DELETE FROM ".$db['f_posts']."
+          $qry = db("DELETE FROM ".dba::get('f_posts')."
                      WHERE kid = '".convert::ToInt($get['id'])."'");
 
-          $qry = db("DELETE FROM ".$db['f_skats']."
+          $qry = db("DELETE FROM ".dba::get('f_skats')."
                      WHERE sid = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_config_forum_kat_deleted, "?admin=forum");
         } elseif($_GET['do'] == "edit") {
-          $qry = db("SELECT * FROM ".$db['f_kats']."
+          $qry = db("SELECT * FROM ".dba::get('f_kats')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
           while($get = _fetch($qry))
           {
-            $pos = db("SELECT * FROM ".$db['f_kats']."
+            $pos = db("SELECT * FROM ".dba::get('f_kats')."
                        ORDER BY kid");
             while($getpos = _fetch($pos))
             {
@@ -188,13 +188,13 @@ if(_adminMenu != 'true')
 
               if($_POST['kid'] == "1" || "2") $sign = ">= ";
               else  $sign = "> ";
-              $posi = db("UPDATE ".$db['f_kats']."
+              $posi = db("UPDATE ".dba::get('f_kats')."
                         SET `kid` = kid+1
                         WHERE `kid` ".$sign." '".convert::ToInt($_POST['kid'])."'");
             }
 
 
-            $qry = db("UPDATE ".$db['f_kats']."
+            $qry = db("UPDATE ".dba::get('f_kats')."
                        SET `name`    = '".up($_POST['kat'])."',
                            ".$kid."
                            `intern`  = '".convert::ToInt($_POST['intern'])."'
@@ -203,7 +203,7 @@ if(_adminMenu != 'true')
             $show = info(_config_forum_kat_edited, "?admin=forum");
           }
         } elseif($_GET['do'] == "newskat") {
-          $qry = db("SELECT * FROM ".$db['f_skats']." WHERE sid = " . convert::ToInt($_GET['id']) .
+          $qry = db("SELECT * FROM ".dba::get('f_skats')." WHERE sid = " . convert::ToInt($_GET['id']) .
                      " ORDER BY pos");
           while($get = _fetch($qry))
           {
@@ -230,11 +230,11 @@ if(_adminMenu != 'true')
             if($_POST['order'] == "1" || "2") $sign = ">= ";
             else  $sign = "> ";
 
-            $posi = db("UPDATE ".$db['f_skats']."
+            $posi = db("UPDATE ".dba::get('f_skats')."
                         SET `pos` = pos+1
                         WHERE `pos` ".$sign." '".convert::ToInt($_POST['order'])."'");
 
-            $qry = db("INSERT INTO ".$db['f_skats']."
+            $qry = db("INSERT INTO ".dba::get('f_skats')."
                        SET `sid`      = '".convert::ToInt($_GET['id'])."',
                            `pos`    = '".convert::ToInt($_POST['order'])."',
                            `kattopic` = '".up($_POST['skat'])."',
@@ -243,11 +243,11 @@ if(_adminMenu != 'true')
             $show = info(_config_forum_skat_added, "?admin=forum&show=subkats&amp;id=".$_GET['id']."");
           }
         } elseif($_GET['do'] == "editsubkat") {
-          $qry = db("SELECT * FROM ".$db['f_skats']."
+          $qry = db("SELECT * FROM ".dba::get('f_skats')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
           while($get = _fetch($qry)) //--> Start while subkat sort
           {
-            $pos = db("SELECT * FROM ".$db['f_skats']." WHERE sid = ".$get['sid']."
+            $pos = db("SELECT * FROM ".dba::get('f_skats')." WHERE sid = ".$get['sid']."
                        ORDER BY pos");
             while($getpos = _fetch($pos))
             {
@@ -284,12 +284,12 @@ if(_adminMenu != 'true')
 
               if($_POST['order'] == "1" || "2") $sign = ">= ";
               else  $sign = "> ";
-              $posi = db("UPDATE ".$db['f_skats']."
+              $posi = db("UPDATE ".dba::get('f_skats')."
                         SET `pos` = pos+1
                         WHERE `pos` ".$sign." '".convert::ToInt($_POST['order'])."'");
             }
 
-            $qry = db("UPDATE ".$db['f_skats']."
+            $qry = db("UPDATE ".dba::get('f_skats')."
                        SET `kattopic` = '".up($_POST['skat'])."',
                            ".$order."
                            `subtopic` = '".up($_POST['stopic'])."'
@@ -298,17 +298,17 @@ if(_adminMenu != 'true')
             $show = info(_config_forum_skat_edited, "?admin=forum&show=subkats&amp;id=".$_POST['sid']."");
           }
         } elseif($_GET['do'] == "deletesubkat") {
-          $qry = db("SELECT sid FROM ".$db['f_skats']."
+          $qry = db("SELECT sid FROM ".dba::get('f_skats')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
           $get = _fetch($qry);
 
-          $del = db("DELETE FROM ".$db['f_skats']."
+          $del = db("DELETE FROM ".dba::get('f_skats')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          $del = db("DELETE FROM ".$db['f_threads']."
+          $del = db("DELETE FROM ".dba::get('f_threads')."
                      WHERE kid = '".convert::ToInt($_GET['id'])."'");
 
-          $del = db("DELETE FROM ".$db['f_posts']."
+          $del = db("DELETE FROM ".dba::get('f_posts')."
                      WHERE kid = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_config_forum_skat_deleted, "?admin=forum&show=subkats&amp;id=".$get['sid']."");

@@ -22,7 +22,7 @@ else
     {
         if(isset($_GET['do']) ? ($_GET['do'] == "delete") : false)
         {
-            db("DELETE FROM ".$db['shout']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+            db("DELETE FROM ".dba::get('shout')." WHERE id = '".convert::ToInt($_GET['id'])."'");
             header("Location: ".$_SERVER['HTTP_REFERER'].'#shoutbox');
         }
     }

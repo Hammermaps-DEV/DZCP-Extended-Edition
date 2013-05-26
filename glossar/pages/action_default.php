@@ -27,7 +27,7 @@ else
     $a = $_GET['bst'];
   }
 
-  $qry = db("SELECT * FROM ".$db['glossar']." ".$glword." ORDER BY word");
+  $qry = db("SELECT * FROM ".dba::get('glossar')." ".$glword." ORDER BY word");
   while($get = _fetch($qry))
   {
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

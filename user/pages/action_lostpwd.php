@@ -31,7 +31,7 @@ else
             if(isset($_POST['user']) && isset($_POST['email']) && !empty($_POST['user']) && !empty($_POST['email']))
             {
                 ## Userdaten aus der Datenbank abrufen ##
-                $qry = db("SELECT id,user,level,pwd FROM ".$db['users']." WHERE user= '".$_POST['user']."' AND email = '".$_POST['email']."'");
+                $qry = db("SELECT id,user,level,pwd FROM ".dba::get('users')." WHERE user= '".$_POST['user']."' AND email = '".$_POST['email']."'");
 
                 ## Der Secure Code richtig und wurde ein Account gefunden ##
                 if(_rows($qry) && ($_POST['secure'] == $_SESSION['sec_lostpwd'] && $_SESSION['sec_lostpwd'] != NULL))
@@ -42,7 +42,7 @@ else
                     $pwd = mkpwd();
 
                     ## Neues Passwort MD5 verschlüsseln und Speichern ##
-                    db("UPDATE ".$db['users']." SET `pwd` = '".pass_hash($pwd,settings('default_pwd_encoder'))."', `pwd_encoder` = 2 WHERE user = '".$_POST['user']."' AND email = '".$_POST['email']."'");
+                    db("UPDATE ".dba::get('users')." SET `pwd` = '".pass_hash($pwd,settings('default_pwd_encoder'))."', `pwd_encoder` = 2 WHERE user = '".$_POST['user']."' AND email = '".$_POST['email']."'");
 
                     ## Ereignis in den Adminlog schreiben ##
                     wire_ipcheck("pwd(".$get['id'].")");
@@ -75,4 +75,3 @@ else
         $index = error(_error_user_already_in, 1);
     }
 }
-?>

@@ -345,8 +345,14 @@ Parts of the attributes of the navigations votebox
 menu/server.html
 server/server_show.html
 ---------------------------------------------*/
-img.navServerPic,img.ServerPic {
-  width: 155px;
+img.ServerPic {
+  width: 160px;
+  height: 120px;
+}
+
+img.navServerPic {
+  width: 144px;
+  height: 110px;
 }
 
 /*---------------------------------------------
@@ -1532,6 +1538,7 @@ input.searchSubmit:hover {
 img.border {
   border: 1px solid #777;
 }
+
 /*TeamSpeak Channeltree*/
 .tstree_left {
     float:left;

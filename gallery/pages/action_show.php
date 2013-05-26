@@ -28,7 +28,8 @@ else
 
         $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => convSpace(_confirm_del_galpic))) : '');
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-        $show .= show($dir."/show_gallery", array("img" => "<a href=\"../inc/images/uploads/gallery/".$file."\" rel=\"lightbox[gallery_".$cnt."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=gallery/".$file."&width=160\" alt=\"\" /></a>",
+        $show .= show($dir."/show_gallery", array("img" => $file,
+                                                  "cnt" => $cnt,
                                                   "tr1" => $tr1,
                                                   "max" => $galleryconfig['gallery'],
                                                   "width" => convert::ToInt(round(100/$galleryconfig['gallery'])),
@@ -47,7 +48,6 @@ else
     }
 
     $seiten = nav(count($files),$galleryconfig['m_gallery'],"?action=show&amp;id=".convert::ToString($_GET['id']).""); unset($files_foreach,$files);
-    $get = db("SELECT kat,beschreibung FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+    $get = db("SELECT kat,beschreibung FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
     $index = show($dir."/show", array("gallery" => re($get['kat']), "show" => $show, "beschreibung" => bbcode($get['beschreibung']), "end" => $end, "seiten" => $seiten));
 }
-?>

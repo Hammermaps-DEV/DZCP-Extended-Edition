@@ -16,8 +16,8 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             for($i=1;$i<=$_POST['anzahl'];$i++)
             { $addfile .= show($dir."/form_gallery_addfile", array("file" => _gallery_image, "i" => $i)); }
 
-            db("INSERT INTO ".$db['gallery']." SET `kat` = '".up($_POST['gallery'])."', `beschreibung` = '".up($_POST['beschreibung'], 1)."', `datum` = '".time()."'");
-            $show = show($dir."/form_gallery_step2", array("what" => re($_POST['gallery']), "addfile" => $addfile, "id" => mysql_insert_id(), "do" => "add"));
+            db("INSERT INTO ".dba::get('gallery')." SET `kat` = '".up($_POST['gallery'])."', `beschreibung` = '".up($_POST['beschreibung'], 1)."', `datum` = '".time()."'");
+            $show = show($dir."/form_gallery_step2", array("what" => re($_POST['gallery']), "addfile" => $addfile, "id" => database::get_insert_id(), "do" => "add"));
         }
     break;
     case 'add':
@@ -50,7 +50,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             }
         }
 
-        db("DELETE FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $show = info(_gallery_deleted, "?admin=gallery");
     break;
     case 'delete':
@@ -68,22 +68,22 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
         }
     break;
     case 'edit':
-        $get = db("SELECT * FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);;
+        $get = db("SELECT * FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);;
         $show = show($dir."/form_gallery_edit", array("id" => $get['id'], "e_gal" => re($get['kat']), "e_beschr" => re($get['beschreibung'])));
     break;
     case 'editgallery':
-        db("UPDATE ".$db['gallery']." SET `kat` = '".up($_POST['gallery'])."', `beschreibung` = '".up($_POST['beschreibung'], 1)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("UPDATE ".dba::get('gallery')." SET `kat` = '".up($_POST['gallery'])."', `beschreibung` = '".up($_POST['beschreibung'], 1)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
         $show = info(_gallery_edited, "?admin=gallery");
     break;
     case 'new':
-        $get = db("SELECT * FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true); $option = '';
+        $get = db("SELECT * FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true); $option = '';
         for($i=1;$i<=100;$i++)
         { $option .= "<option value=\"".$i."\">".$i."</option>"; }
 
         $show = show($dir."/form_gallery_new", array("gal" => re($get['kat']), "id" => $get['id'], "option" => $option));
     break;
     case 'editstep2':
-        $get = db("SELECT * FROM ".$db['gallery']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true); $addfile = '';
+        $get = db("SELECT * FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true); $addfile = '';
         for($i=1;$i<=$_POST['anzahl'];$i++)
         { $addfile .= show($dir."/form_gallery_addfile", array("file" => _gallery_image, "i" => $i)); }
 
@@ -118,7 +118,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
         $show = show($dir."/form_gallery", array("option" => $option));
     break;
     default:
-        $qry = db("SELECT * FROM ".$db['gallery']." ORDER BY id DESC"); $color = 1; $show = '';
+        $qry = db("SELECT * FROM ".dba::get('gallery')." ORDER BY id DESC"); $color = 1; $show = '';
         while($get = _fetch($qry))
         {
             $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat,"#".$get['id']."_(.*?).(gif|GIF|JPG|jpg|JPEG|jpeg|png)#");

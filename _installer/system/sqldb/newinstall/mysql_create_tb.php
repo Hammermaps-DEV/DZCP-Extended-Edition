@@ -6,14 +6,13 @@
 //Neuinstallation
 function install_mysql_create()
 {
-    global $db;
     @ignore_user_abort(true);
 
     //===============================================================
     //-> Artikelkommentare ==========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['acomments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['acomments']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('acomments')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('acomments')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `artikel` int(10) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -30,8 +29,8 @@ function install_mysql_create()
     //===============================================================
     //-> Artikel ====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['artikel']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['artikel']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('artikel')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('artikel')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `autor` varchar(5) NOT NULL DEFAULT '',
       `datum` varchar(20) NOT NULL DEFAULT '',
@@ -46,14 +45,15 @@ function install_mysql_create()
       `url3` varchar(200) NOT NULL DEFAULT '',
       `viewed` int(11) NOT NULL DEFAULT '0',
       `public` int(1) NOT NULL DEFAULT '0',
+      `comments` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Awards =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['awards']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['awards']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('awards')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('awards')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `squad` int(10) NOT NULL,
       `date` varchar(20) NOT NULL DEFAULT '',
@@ -68,8 +68,8 @@ function install_mysql_create()
     //===============================================================
     //-> Away =======================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['away']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['away']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('away')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('away')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `userid` int(14) NOT NULL DEFAULT '0',
       `titel` varchar(30) NOT NULL,
@@ -82,10 +82,21 @@ function install_mysql_create()
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
+    //-> Buddys =====================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('buddys')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('buddys')."` (
+      `id` int(10) NOT NULL AUTO_INCREMENT,
+      `user` int(5) NOT NULL DEFAULT '0',
+      `buddy` int(5) NOT NULL DEFAULT '0',
+      PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
     //-> Cache ======================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['cache']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['cache']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('cache')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('cache')."` (
       `qry` varchar(32) NOT NULL DEFAULT '',
       `data` longblob,
       `timestamp` varchar(16) DEFAULT NULL,
@@ -99,8 +110,8 @@ function install_mysql_create()
     //===============================================================
     //-> Clankasse ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['clankasse']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['clankasse']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('clankasse')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('clankasse')."` (
       `id` int(20) NOT NULL AUTO_INCREMENT,
       `datum` varchar(20) NOT NULL DEFAULT '',
       `member` varchar(50) NOT NULL DEFAULT '0',
@@ -113,8 +124,8 @@ function install_mysql_create()
     //===============================================================
     //-> Clankassenkategorien =======================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['c_kats']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['c_kats']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('c_kats')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('c_kats')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `kat` varchar(30) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
@@ -123,8 +134,8 @@ function install_mysql_create()
     //===============================================================
     //-> Clankassenzahlungen ========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['c_payed']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['c_payed']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('c_payed')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('c_payed')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `payed` varchar(20) NOT NULL DEFAULT '0',
@@ -134,8 +145,8 @@ function install_mysql_create()
     //===============================================================
     //-> Clanwars ===================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['cw']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['cw']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('cw')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('cw')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `squad_id` int(19) NOT NULL,
       `gametype` varchar(249) NOT NULL DEFAULT '',
@@ -155,7 +166,7 @@ function install_mysql_create()
       `serverip` varchar(50) NOT NULL DEFAULT '',
       `servername` varchar(249) NOT NULL DEFAULT '',
       `serverpwd` varchar(20) NOT NULL DEFAULT '',
-      `bericht` text NOT NULL,
+      `bericht` text,
       `top` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
@@ -163,8 +174,8 @@ function install_mysql_create()
     //===============================================================
     //-> Clanwarplayers =============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['cw_player']."`",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['cw_player']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('cw_player')."`",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('cw_player')."` (
       `cwid` int(5) NOT NULL DEFAULT '0',
       `member` int(5) NOT NULL DEFAULT '0',
       `status` int(5) NOT NULL DEFAULT '0',
@@ -174,8 +185,8 @@ function install_mysql_create()
     //===============================================================
     //-> Click IP Counter ===========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['clicks_ips']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['clicks_ips']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('clicks_ips')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('clicks_ips')."` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `ip` varchar(15) NOT NULL DEFAULT '000.000.000.000',
     `uid` int(11) NOT NULL DEFAULT '0',
@@ -189,8 +200,8 @@ function install_mysql_create()
     //===============================================================
     //-> Clanwarkommentare ==========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['cw_comments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['cw_comments']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('cw_comments')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('cw_comments')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `cw` int(10) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -207,8 +218,8 @@ function install_mysql_create()
     //===============================================================
     //-> Config =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['config']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['config']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('config')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('config')."` (
       `id` int(1) NOT NULL AUTO_INCREMENT,
       `upicsize` int(5) NOT NULL DEFAULT '100',
       `gallery` int(5) NOT NULL DEFAULT '4',
@@ -280,8 +291,8 @@ function install_mysql_create()
     //===============================================================
     //-> Counter ====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['counter']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['counter']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('counter')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('counter')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `visitors` int(20) NOT NULL DEFAULT '0',
       `today` varchar(50) NOT NULL DEFAULT '0',
@@ -292,8 +303,8 @@ function install_mysql_create()
     //===============================================================
     //-> Counter IPs ================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['c_ips']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['c_ips']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('c_ips')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('c_ips')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `ip` varchar(30) NOT NULL DEFAULT '0',
       `datum` int(20) NOT NULL DEFAULT '0',
@@ -303,8 +314,8 @@ function install_mysql_create()
     //===============================================================
     //-> Counter whoison ============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['c_who']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['c_who']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('c_who')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('c_who')."` (
       `id` int(50) NOT NULL AUTO_INCREMENT,
       `ip` char(50) NOT NULL DEFAULT '',
       `online` int(20) NOT NULL DEFAULT '0',
@@ -317,8 +328,8 @@ function install_mysql_create()
     //===============================================================
     //-> Downloads ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['downloads']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['downloads']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('downloads')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('downloads')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `download` varchar(249) NOT NULL DEFAULT '',
       `url` varchar(249) NOT NULL DEFAULT '',
@@ -334,8 +345,8 @@ function install_mysql_create()
     //===============================================================
     //-> Downloadkategorien =========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['dl_kat']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['dl_kat']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('dl_kat')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('dl_kat')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `name` varchar(249) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
@@ -344,8 +355,8 @@ function install_mysql_create()
     //===============================================================
     //-> Downloadkommentare =========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['dl_comments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['dl_comments']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('dl_comments')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('dl_comments')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `download` int(10) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -362,8 +373,8 @@ function install_mysql_create()
     //===============================================================
     //-> Events (Kalender) ==========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['events']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['events']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('events')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('events')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
       `title` varchar(30) NOT NULL DEFAULT '',
@@ -374,8 +385,8 @@ function install_mysql_create()
     //===============================================================
     //-> Forum: Access ==============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['f_access']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['f_access']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('f_access')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('f_access')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(11) NOT NULL DEFAULT '0',
       `pos` int(5) NOT NULL DEFAULT '0',
@@ -388,8 +399,8 @@ function install_mysql_create()
     //===============================================================
     //-> Forum: Kategorien ==========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['f_kats']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['f_kats']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('f_kats')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('f_kats')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `kid` int(10) NOT NULL DEFAULT '0',
       `name` varchar(50) NOT NULL DEFAULT '',
@@ -400,8 +411,8 @@ function install_mysql_create()
     //===============================================================
     //-> Forumposts =================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['f_posts']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['f_posts']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('f_posts')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('f_posts')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `kid` int(2) NOT NULL DEFAULT '0',
       `sid` int(2) NOT NULL DEFAULT '0',
@@ -421,8 +432,8 @@ function install_mysql_create()
     //===============================================================
     //-> Forumthreads ===============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['f_threads']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['f_threads']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('f_threads')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('f_threads')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `kid` int(10) NOT NULL DEFAULT '0',
       `t_date` int(20) NOT NULL DEFAULT '0',
@@ -452,8 +463,8 @@ function install_mysql_create()
     //===============================================================
     //-> Forum Unterkategorien ======================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['f_skats']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['f_skats']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('f_skats')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('f_skats')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `sid` int(10) NOT NULL DEFAULT '0',
       `kattopic` varchar(150) NOT NULL DEFAULT '',
@@ -465,8 +476,8 @@ function install_mysql_create()
     //===============================================================
     //-> Forum ABO ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['f_abo']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['f_abo']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('f_abo')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('f_abo')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `fid` int(10) NOT NULL,
       `datum` int(20) NOT NULL,
@@ -477,8 +488,8 @@ function install_mysql_create()
     //===============================================================
     //-> Galerie ====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['gallery']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['gallery']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('gallery')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('gallery')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
       `kat` varchar(200) NOT NULL DEFAULT '',
@@ -489,8 +500,8 @@ function install_mysql_create()
     //===============================================================
     //-> Gaestebuch =================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['gb']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['gb']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('gb')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('gb')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -507,8 +518,8 @@ function install_mysql_create()
     //===============================================================
     //-> Gästebuchkommentare ========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['gb_comments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['gb_comments']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('gb_comments')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('gb_comments')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `gbe` int(10) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -525,8 +536,8 @@ function install_mysql_create()
     //===============================================================
     //-> Glossar ====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['glossar']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['glossar']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('glossar')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('glossar')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `word` varchar(200) NOT NULL,
       `glossar` text NOT NULL,
@@ -536,8 +547,8 @@ function install_mysql_create()
     //===============================================================
     //-> Ipcheck & Admin Log ========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['ipcheck']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['ipcheck']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('ipcheck')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('ipcheck')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `ip` varchar(100) NOT NULL DEFAULT '',
       `what` varchar(40) NOT NULL DEFAULT '',
@@ -546,10 +557,26 @@ function install_mysql_create()
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
+    //-> IP-Ban & Spam Blocker ======================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('ipban')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('ipban')."` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `ip` varchar(15) NOT NULL DEFAULT '255.255.255.255',
+        `time` int(11) NOT NULL DEFAULT '0',
+        `data` text,
+        `typ` int(1) NOT NULL DEFAULT '0',
+        `enable` int(1) NOT NULL DEFAULT '1',
+        PRIMARY KEY (`id`),
+        UNIQUE KEY `id` (`id`),
+        KEY `ip` (`ip`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
     //-> Links ======================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['links']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['links']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('links')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('links')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `url` varchar(249) NOT NULL DEFAULT '',
       `text` varchar(249) NOT NULL DEFAULT '',
@@ -562,8 +589,8 @@ function install_mysql_create()
     //===============================================================
     //-> LinkUs =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['linkus']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['linkus']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('linkus')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('linkus')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `url` varchar(249) NOT NULL DEFAULT '',
       `text` varchar(249) NOT NULL DEFAULT '',
@@ -575,8 +602,8 @@ function install_mysql_create()
     //===============================================================
     //-> Nachrichten ================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['msg']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['msg']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('msg')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('msg')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
       `von` int(5) NOT NULL DEFAULT '0',
@@ -597,8 +624,8 @@ function install_mysql_create()
     //===============================================================
     //-> Navigation =================================================
     //===============================================================
-     db("DROP TABLE IF EXISTS `".$db['navi']."`;",false,false,true);
-     db("CREATE TABLE IF NOT EXISTS `".$db['navi']."` (
+     db("DROP TABLE IF EXISTS `".dba::get('navi')."`;",false,false,true);
+     db("CREATE TABLE IF NOT EXISTS `".dba::get('navi')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `pos` int(20) NOT NULL DEFAULT '0',
       `kat` varchar(20) DEFAULT '',
@@ -617,8 +644,8 @@ function install_mysql_create()
     //===============================================================
     //-> Navigation Kategorien ======================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['navi_kats']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['navi_kats']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('navi_kats')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('navi_kats')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `name` varchar(200) NOT NULL,
       `placeholder` varchar(200) NOT NULL,
@@ -629,8 +656,8 @@ function install_mysql_create()
     //===============================================================
     //-> News =======================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['news']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['news']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('news')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('news')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `autor` varchar(11) NOT NULL DEFAULT '',
       `datum` varchar(20) NOT NULL DEFAULT '',
@@ -650,14 +677,15 @@ function install_mysql_create()
       `viewed` int(10) NOT NULL DEFAULT '0',
       `public` int(1) NOT NULL DEFAULT '0',
       `timeshift` int(14) NOT NULL DEFAULT '0',
+      `comments` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Newskategorien =============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['newskat']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['newskat']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('newskat')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('newskat')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `katimg` varchar(100) NOT NULL DEFAULT '',
       `kategorie` varchar(60) NOT NULL DEFAULT '',
@@ -667,8 +695,8 @@ function install_mysql_create()
     //===============================================================
     //-> Newskommentare =============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['newscomments']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['newscomments']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('newscomments')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('newscomments')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `news` int(10) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -685,8 +713,8 @@ function install_mysql_create()
     //===============================================================
     //-> Partnerbuttons =============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['partners']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['partners']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('partners')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('partners')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `link` varchar(100) NOT NULL DEFAULT '',
       `banner` varchar(100) NOT NULL DEFAULT '',
@@ -697,8 +725,8 @@ function install_mysql_create()
     //===============================================================
     //-> Rechte =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['permissions']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['permissions']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('permissions')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('permissions')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(11) NOT NULL DEFAULT '0',
       `pos` int(1) NOT NULL DEFAULT '0',
@@ -713,6 +741,7 @@ function install_mysql_create()
       `downloads` int(1) NOT NULL DEFAULT '0',
       `editkalender` int(1) NOT NULL DEFAULT '0',
       `editserver` int(1) NOT NULL DEFAULT '0',
+      `editteamspeak` int(1) NOT NULL DEFAULT '0',
       `edittactics` int(1) NOT NULL DEFAULT '0',
       `editsquads` int(1) NOT NULL DEFAULT '0',
       `editusers` int(1) NOT NULL DEFAULT '0',
@@ -747,8 +776,8 @@ function install_mysql_create()
     //===============================================================
     //-> Positionen =================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['pos']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['pos']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('pos')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('pos')."` (
       `id` int(2) NOT NULL AUTO_INCREMENT,
       `pid` int(2) NOT NULL DEFAULT '0',
       `position` varchar(30) NOT NULL DEFAULT '',
@@ -759,8 +788,8 @@ function install_mysql_create()
     //===============================================================
     //-> Profilfelder ===============================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['profile']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['profile']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('profile')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('profile')."` (
       `id` int(5) unsigned NOT NULL AUTO_INCREMENT,
       `kid` int(11) NOT NULL DEFAULT '0',
       `name` varchar(200) NOT NULL,
@@ -773,8 +802,8 @@ function install_mysql_create()
     //===============================================================
     //-> Rankings ===================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['rankings']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['rankings']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('rankings')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('rankings')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `league` varchar(50) NOT NULL,
       `lastranking` int(10) NOT NULL DEFAULT '0',
@@ -786,28 +815,47 @@ function install_mysql_create()
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
-    //-> Server =====================================================
+    //-> RSS Feeds ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['server']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['server']."` (
-      `id` int(5) NOT NULL AUTO_INCREMENT,
-      `status` varchar(100) NOT NULL DEFAULT '',
-      `shown` int(1) NOT NULL DEFAULT '1',
-      `navi` int(1) NOT NULL DEFAULT '0',
-      `name` text,
-      `ip` varchar(50) NOT NULL DEFAULT '0',
-      `port` int(10) NOT NULL DEFAULT '0',
-      `pwd` varchar(20) NOT NULL DEFAULT '',
-      `game` varchar(30) NOT NULL DEFAULT '',
-      `qport` varchar(10) NOT NULL DEFAULT '',
+    db("DROP TABLE IF EXISTS `".dba::get('rss')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('rss')."` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `userid` int(11) NOT NULL,
+      `show_public_news` int(1) NOT NULL DEFAULT '1',
+      `show_public_news_max` int(11) NOT NULL DEFAULT '4',
+      `show_intern_news` int(1) NOT NULL DEFAULT '1',
+      `show_intern_news_max` int(11) NOT NULL DEFAULT '4',
+      `show_artikel` int(1) NOT NULL DEFAULT '1',
+      `show_artikel_max` int(11) NOT NULL DEFAULT '4',
+      `show_downloads` int(1) NOT NULL DEFAULT '1',
+      `show_downloads_max` int(11) NOT NULL DEFAULT '2',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
+    //-> Server =====================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('server')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('server')."` (
+    `id` int(5) NOT NULL AUTO_INCREMENT,
+    `game` varchar(100) NOT NULL DEFAULT '',
+    `shown` int(1) NOT NULL DEFAULT '1',
+    `navi` int(1) NOT NULL DEFAULT '0',
+    `name` text,
+    `ip` varchar(50) NOT NULL DEFAULT '0',
+    `port` int(10) NOT NULL DEFAULT '0',
+    `pwd` varchar(20) NOT NULL DEFAULT '',
+    `qport` varchar(10) NOT NULL DEFAULT '',
+    `custom_icon` varchar(30) NOT NULL DEFAULT '',
+    PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+
+    //===============================================================
     //-> Serverliste ================================================
     //===============================================================
-        db("DROP TABLE IF EXISTS `".$db['serverliste']."`;",false,false,true);
-        db("CREATE TABLE IF NOT EXISTS `".$db['serverliste']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('serverliste')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('serverliste')."` (
       `id` int(20) NOT NULL AUTO_INCREMENT,
       `datum` int(11) NOT NULL DEFAULT '0',
       `clanname` varchar(50) NOT NULL DEFAULT '',
@@ -823,13 +871,12 @@ function install_mysql_create()
     //===============================================================
     //-> Settings ===================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['settings']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['settings']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('settings')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('settings')."` (
       `id` int(1) NOT NULL AUTO_INCREMENT,
       `clanname` varchar(50) NOT NULL DEFAULT 'Dein Clanname hier!',
       `reg_forum` int(1) NOT NULL DEFAULT '1',
       `reg_cwcomments` int(1) NOT NULL DEFAULT '1',
-      `counter_start` int(10) NOT NULL DEFAULT '0',
       `reg_dl` int(1) NOT NULL DEFAULT '1',
       `reg_artikel` int(1) NOT NULL DEFAULT '1',
       `reg_newscomments` int(1) NOT NULL DEFAULT '1',
@@ -853,13 +900,6 @@ function install_mysql_create()
       `domain` varchar(200) NOT NULL DEFAULT '127.0.0.1',
       `regcode` int(1) NOT NULL DEFAULT '1',
       `mailfrom` varchar(200) NOT NULL DEFAULT 'info@127.0.0.1',
-      `ts_ip` varchar(200) NOT NULL DEFAULT '',
-      `ts_port` int(10) NOT NULL DEFAULT '0',
-      `ts_sport` int(10) NOT NULL DEFAULT '0',
-      `ts_version` int(1) NOT NULL DEFAULT '3',
-      `ts_customicon` int(1) NOT NULL DEFAULT '1',
-      `ts_showchannel` int(1) NOT NULL DEFAULT '0',
-      `ts_width` int(10) NOT NULL DEFAULT '0',
       `eml_reg_subj` varchar(200) NOT NULL DEFAULT '',
       `eml_pwd_subj` varchar(200) NOT NULL DEFAULT '',
       `eml_nletter_subj` varchar(200) NOT NULL DEFAULT '',
@@ -892,8 +932,8 @@ function install_mysql_create()
     //===============================================================
     //-> Shoutbox ===================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['shout']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['shout']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('shout')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('shout')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `datum` int(30) NOT NULL DEFAULT '0',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -906,8 +946,8 @@ function install_mysql_create()
     //===============================================================
     //-> Seiten =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['sites']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['sites']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('sites')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('sites')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `titel` varchar(50) NOT NULL DEFAULT '',
       `text` text NOT NULL,
@@ -918,21 +958,21 @@ function install_mysql_create()
     //===============================================================
     //-> Sponsoren ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['sponsoren']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['sponsoren']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('sponsoren')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('sponsoren')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
-      `name` varchar(249) NOT NULL,
-      `link` varchar(249) NOT NULL,
-      `beschreibung` text NOT NULL,
+      `name` varchar(249) NOT NULL DEFAULT '',
+      `link` varchar(249) NOT NULL DEFAULT '',
+      `beschreibung` text,
       `site` int(1) NOT NULL DEFAULT '0',
-      `send` varchar(5) NOT NULL,
-      `slink` varchar(249) NOT NULL,
+      `send` varchar(5) NOT NULL DEFAULT '',
+      `slink` varchar(249) NOT NULL DEFAULT '',
       `banner` int(1) NOT NULL DEFAULT '0',
-      `bend` varchar(5) NOT NULL,
-      `blink` varchar(249) NOT NULL,
+      `bend` varchar(5) NOT NULL DEFAULT '',
+      `blink` varchar(249) NOT NULL DEFAULT '',
       `box` int(1) NOT NULL DEFAULT '0',
-      `xend` varchar(5) NOT NULL,
-      `xlink` varchar(255) NOT NULL,
+      `xend` varchar(5) NOT NULL DEFAULT 'gif',
+      `xlink` varchar(255) NOT NULL DEFAULT '',
       `pos` int(5) NOT NULL,
       `hits` int(50) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
@@ -941,8 +981,8 @@ function install_mysql_create()
     //===============================================================
     //-> Squads =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['squads']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['squads']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('squads')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('squads')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `name` varchar(40) NOT NULL DEFAULT '',
       `game` varchar(40) NOT NULL DEFAULT '',
@@ -959,8 +999,8 @@ function install_mysql_create()
     //===============================================================
     //-> Squadusers =================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['squaduser']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['squaduser']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('squaduser')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('squaduser')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `squad` int(2) NOT NULL DEFAULT '0',
@@ -970,8 +1010,8 @@ function install_mysql_create()
     //===============================================================
     //-> Taktiken ===================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['taktik']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['taktik']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('taktik')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('taktik')."` (
       `id` int(10) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
       `map` varchar(20) NOT NULL DEFAULT '',
@@ -984,21 +1024,29 @@ function install_mysql_create()
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
-    //-> Buddys =====================================================
+    //-> Teamspeak ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['buddys']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['buddys']."` (
-      `id` int(10) NOT NULL AUTO_INCREMENT,
-      `user` int(5) NOT NULL DEFAULT '0',
-      `buddy` int(5) NOT NULL DEFAULT '0',
+    db("DROP TABLE IF EXISTS `".dba::get('ts')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('ts')."` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `host_ip_dns` varchar(200) NOT NULL DEFAULT '',
+      `server_port` int(8) NOT NULL DEFAULT '9987',
+      `query_port` int(8) NOT NULL DEFAULT '10011',
+      `file_port` int(8) NOT NULL DEFAULT '30033',
+      `username` varchar(100) NOT NULL DEFAULT '',
+      `passwort` varchar(100) NOT NULL DEFAULT '',
+      `customicon` int(1) NOT NULL DEFAULT '1',
+      `showchannel` int(1) NOT NULL DEFAULT '0',
+      `default_server` int(1) NOT NULL DEFAULT '0',
+      `show_navi` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Usergallery ================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['usergallery']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['usergallery']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('usergallery')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('usergallery')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `beschreibung` text,
@@ -1009,8 +1057,8 @@ function install_mysql_create()
     //===============================================================
     //-> UserGB =====================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['usergb']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['usergb']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('usergb')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('usergb')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `datum` int(20) NOT NULL DEFAULT '0',
@@ -1028,8 +1076,8 @@ function install_mysql_create()
     //===============================================================
     //-> Userposis ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['userpos']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['userpos']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('userpos')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('userpos')."` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `posi` int(5) NOT NULL DEFAULT '0',
@@ -1040,8 +1088,8 @@ function install_mysql_create()
     //===============================================================
     //-> Users ======================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['users']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['users']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('users')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('users')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` varchar(200) NOT NULL DEFAULT '',
       `nick` varchar(50) NOT NULL DEFAULT '',
@@ -1050,6 +1098,7 @@ function install_mysql_create()
       `sessid` varchar(32) DEFAULT NULL,
       `pkey` varchar(50) NOT NULL DEFAULT '',
       `country` varchar(20) NOT NULL DEFAULT 'de',
+      `language` varchar(15) NOT NULL DEFAULT 'default',
       `ip` varchar(50) NOT NULL DEFAULT '',
       `regdatum` int(20) NOT NULL DEFAULT '0',
       `email` varchar(200) NOT NULL DEFAULT '',
@@ -1108,14 +1157,15 @@ function install_mysql_create()
       `gmaps_koord` varchar(255) NOT NULL DEFAULT '',
       `pnmail` int(1) NOT NULL DEFAULT '1',
       `profile_access` int(1) NOT NULL DEFAULT '0',
+      `rss_key` varchar(50) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Userstats ==================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['userstats']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['userstats']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('userstats')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('userstats')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `user` int(10) NOT NULL DEFAULT '0',
       `logins` int(100) NOT NULL DEFAULT '0',
@@ -1132,8 +1182,8 @@ function install_mysql_create()
     //===============================================================
     //-> Votes ======================================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['votes']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['votes']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('votes')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('votes')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `datum` int(20) NOT NULL DEFAULT '0',
       `titel` varchar(249) NOT NULL DEFAULT '',
@@ -1148,8 +1198,8 @@ function install_mysql_create()
     //===============================================================
     //-> Vote Möglichkeit ==========================================
     //===============================================================
-    db("DROP TABLE IF EXISTS `".$db['vote_results']."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".$db['vote_results']."` (
+    db("DROP TABLE IF EXISTS `".dba::get('vote_results')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('vote_results')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `vid` int(5) NOT NULL DEFAULT '0',
       `what` varchar(5) NOT NULL DEFAULT '',
@@ -1158,4 +1208,3 @@ function install_mysql_create()
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 }
-?>

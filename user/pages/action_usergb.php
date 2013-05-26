@@ -20,7 +20,7 @@ else
     ## Usergätebuch ##
     ##################
     $where = _site_user_profil;
-    if(db("SELECT id FROM ".$db['users']." WHERE `id` = '".convert::ToInt($_GET['id'])."'",true) != 0)
+    if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = '".convert::ToInt($_GET['id'])."'",true) != 0)
     {
         switch($do)
         {
@@ -49,6 +49,8 @@ else
                             $error = _empty_email;
                         else if(!check_email($_POST['email']))
                             $error = _error_invalid_email;
+                        else if(check_email_trash_mail($_POST['email']))
+                            $error = _error_trash_mail;
                         else if(empty($_POST['eintrag']))
                             $error = _empty_eintrag;
 
@@ -70,7 +72,7 @@ else
                     if(!empty($userid) && $userid != 0 && convert::ToInt($userid) != 0)
                     {
                         $userdata = data(convert::ToInt($userid), array('email','nick','hp'));
-                        db("INSERT INTO ".$db['usergb']." SET
+                        db("INSERT INTO ".dba::get('usergb')." SET
                                `user`       = '".convert::ToInt($_GET['id'])."',
                                `datum`      = '".time()."',
                                `nick`       = '".convert::ToString(up($userdata['nick']))."',
@@ -83,7 +85,7 @@ else
                     }
                     else
                     {
-                        db("INSERT INTO ".$db['usergb']." SET
+                        db("INSERT INTO ".dba::get('usergb')." SET
                                `user`       = '".convert::ToInt($_GET['id'])."',
                                `datum`      = '".time()."',
                                `nick`       = '".convert::ToString(up($_POST['nick']))."',
@@ -103,7 +105,7 @@ else
                 {
                     $addme = (!$_POST['reg'] ? "`nick` = '".up($_POST['nick'])."', `email` = '".up($_POST['email'])."', `hp` = '".links($_POST['hp'])."'," : '');
                     $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                    db("UPDATE ".$db['usergb']." SET ".$addme." `nachricht` = '".convert::ToString(up($_POST['eintrag'],1))."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".convert::ToString(addslashes($editedby))."' WHERE id = '".convert::ToInt($_GET['gbid'])."'");
+                    db("UPDATE ".dba::get('usergb')." SET ".$addme." `nachricht` = '".convert::ToString(up($_POST['eintrag'],1))."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".convert::ToString(addslashes($editedby))."' WHERE id = '".convert::ToInt($_GET['gbid'])."'");
                     $index = info(_gb_edited, "?action=user&show=gb&id=".$_GET['id']);
                 }
                 else
@@ -114,4 +116,3 @@ else
     else
         $index = error(_user_dont_exist,1);
 }
-?>

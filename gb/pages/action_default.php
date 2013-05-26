@@ -43,6 +43,8 @@ else
                     $error = _empty_email;
                 elseif(!check_email($_POST['email']))
                     $error = _error_invalid_email;
+                else if(check_email_trash_mail($_POST['email']))
+                    $error = _error_trash_mail;
                 elseif(empty($_POST['eintrag']))
                     $error = _empty_eintrag;
 
@@ -53,7 +55,7 @@ else
         }
         else
         {
-            db("INSERT INTO ".$db['gb']." SET
+            db("INSERT INTO ".dba::get('gb')." SET
                      `datum`      = '".time()."',
                      `editby`     = '',
                      `public`     = 0,
@@ -73,8 +75,8 @@ else
     {
         $gb_config = config(array('m_gb','f_gb'));
         $activ = (($gb_activ=settings('gb_activ')) && !permission("gb")) ? "WHERE public = 1" : "";
-        $qry = db("SELECT * FROM ".$db['gb']." ".$activ." ORDER BY datum DESC LIMIT " . ($page - 1) * $gb_config['m_gb'].",".$gb_config['m_gb']."");
-        $entrys = cnt($db['gb']); $i = $entrys - ($page - 1) * $gb_config['m_gb'];
+        $qry = db("SELECT * FROM ".dba::get('gb')." ".$activ." ORDER BY datum DESC LIMIT " . ($page - 1) * $gb_config['m_gb'].",".$gb_config['m_gb']."");
+        $entrys = cnt(dba::get('gb')); $i = $entrys - ($page - 1) * $gb_config['m_gb'];
         $seiten = nav($entrys,$gb_config['m_gb'],"?action=nav");
 
         if(_rows($qry))
@@ -129,7 +131,7 @@ else
                                                      "hp" => $gbhp));
                 }
 
-                $qryc = db("SELECT * FROM ".$db['gb_comments']." WHERE gbe = ".$get['id']." ORDER BY datum DESC"); $comments = '';
+                $qryc = db("SELECT * FROM ".dba::get('gb_comments')." WHERE gbe = ".$get['id']." ORDER BY datum DESC"); $comments = '';
                 if(_rows($qryc))
                 {
                     while($getc = _fetch($qryc))

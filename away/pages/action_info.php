@@ -21,7 +21,7 @@ $where = $where.' - '._info;
   {
     $index = error(_error_wrong_permissions, 1);
   } else {
-    $qry = db("SELECT * FROM ".$db['away']."
+    $qry = db("SELECT * FROM ".dba::get('away')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
      $get = _fetch($qry);
 

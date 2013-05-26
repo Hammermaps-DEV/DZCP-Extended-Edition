@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $qry = db("SELECT ip,port,clanname,clanurl,pwd,checked,slots
-             FROM ".$db['serverliste']."
+             FROM ".dba::get('serverliste')."
              WHERE checked = 1");
     if(_rows($qry))
     {

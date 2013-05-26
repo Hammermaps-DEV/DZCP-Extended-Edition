@@ -36,7 +36,7 @@ define('_pwd_encoder_algorithm', 'Algorithm');
 define('_pwd_encoder', 'Password-Hash Algorithm');
 define('_pwd_encoder_info', 'Which password hash algorithm to use, default is * SHA256');
 define('_user_cant_delete_radmin', 'Root admins can not be deleted!');
-define('_no_connect_to_ts', 'Teamspeak server is offline!');
+define('_no_connect_to_ts', 'Teamspeak 3 Server is offline!');
 define('_sec_format_day', 'day|s');
 define('_sec_format_hour', 'hour|s');
 define('_sec_format_minute', 'minute|s');
@@ -58,6 +58,70 @@ define('_gb_comment_edited', 'The guestbook comment has been edited successfully
 define('_pass_security', 'Password Security');
 define("_pwd_repeat", 'Repeat password');
 define('_config_c_gallery', 'Galerie');
+define('_profil_edit_rss_link' , '<a href="?action=editprofile&amp;show=rss">Edit users RSS-Feed</a>');
+define('_server_gtype', '<span class="fontBold">Gamemode:</span> [type]<br />');
+define('_server_bots', '<span class="fontBold">Bots:</span> [bots]<br />');
+define('_error_trash_mail', 'Please do not use Trashmail!');
+define('_custom_game_icon', 'Custom-Icon');
+define('_custom_game_icon_none', 'Not use custom icon');
+define('_profil_language', 'Language');
+define('_default', 'Default');
+define('_no_entrys', 'No entrys');
+
+//TS
+define('_ts_fport', 'File Port');
+define('_ts_port', 'Voice Port');
+define('_ts_version', 'Version');
+define('_ts_ip_dns', 'IP oder DNS');
+define('_ts_sport', 'Query Port');
+define('_config_teamspeak', 'Teamspeak');
+define('_perm_editteamspeak', 'Teamspeak Server management');
+define('_teamspekadmin_head', 'Teamspeak Server');
+define('_ts_head_extra', 'Teamspeak 3 Zusatzeinstellungen');
+define('_teamspeak_admin_head', 'Admin: Teamspeak Server');
+define('_ts_empty_fport', 'Du hast keinen Server File Port angegeben!');
+define('_ts_empty_port', 'Du hast keinen Server Voice Port angegeben!');
+define('_ts_empty_qport', 'Du hast keinen Server Query Port angegeben!');
+define('_ts_empty_ip_dns', 'IP oder DNS fehlt!');
+define('_ts_settings_default_server', 'Standard Server');
+define('_ts_settings_default_server_desc', 'Diesen Server als Standard eintragen, der aktuelle Standard Server wird mit dem neuen &uuml;berschrieben.');
+define('_teamspeak_legendemenu', 'Server ist im Menu eingetragen? (auf das Icon klicken um den Status zu &auml;ndern)');
+define('_teamspeak_default_legendemenu', 'Server als Standard eingetragen? (auf das Icon klicken um den Status zu &auml;ndern)');
+define('_config_ts_updated', 'Der Teamspeak Server wurde erfogreich editiert!');
+define('_config_ts_added', 'Der Teamspeak Server wurde erfogreich eingetragen!');
+define('_no_ts_page', 'Es ist kein Teamspeak 3 Server eingetragen');
+
+//RSS
+define('_profil_rss', 'Persönliche RSS-Feed Einstellungen');
+define('_info_edit_rss_done', 'Du hast deinen Persönlichen RSS-Feed erfolgreich editiert!');
+define('_rss_public_news', 'Public News im RSS-Feed anzeigen');
+define('_rss_public_news_max', 'Anzahl der Public News');
+define('_rss_intern_news', 'Interne News im RSS-Feed anzeigen');
+define('_rss_intern_news_max', 'Anzahl der Interne News');
+define('_rss_artikel', 'Artikel im RSS-Feed anzeigen');
+define('_rss_artikel_max', 'Anzahl der Interne News');
+define('_rss_downloads', 'Downloads im RSS-Feed anzeigen');
+define('_rss_downloads_max', 'Anzahl der Downloads');
+
+//IP Blocker
+define("_ipban_admin_head", 'IP Blocker');
+define("_config_ipban", 'IP Blocker');
+define("_confirm_del_ipban", 'Eintrag l&ouml;schen');
+define("_ipban_admin_deleted", 'Der IP Bann wurde erfolgreich gel&ouml;scht!');
+define("_ipban_new_head", 'Neuen IP Bann hinzuf&uuml;gen');
+define("_ipban_admin_added", 'Der neue IP Bann wurde erfolgreich hinzugef&uuml;gt!');
+define("_ipban_edit_head", 'IP Bann editieren');
+define("_ipban_admin_edited", 'IP Bann wurde erfolgreich editiert!');
+define('_ipban_dis', 'Grund / Beschreibung');
+define('_ipban_add_new', 'Neuer Eintrag');
+define('_ipban_assuredness', 'Zuversichtlichkeit');
+define('_ipban_reports', 'Reports');
+define('_ipban_lastten_global', 'Letzten 10 gebanten IPs by Stopforumspam.com');
+define('_ipban_lastten_sys', 'Letzten 10 gebanten IPs by System');
+define('_ipban_lastten_user', 'Letzten 10 gebanten IPs by User');
+define('_ipban_search', 'IP Suche');
+define('_ipban_error_pip', 'Du kannst keine privaten IP-Adressen sperren!');
+define("_ip_empty", 'Keine IP eingegeben!');
 
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
@@ -159,7 +223,7 @@ define('_perm_awards' , 'manage awards');
 define('_perm_clankasse' , 'manage Clancash');
 define('_perm_contact' , 'receive contact form');
 define('_perm_editkalender' , 'manage calendar entries');
-define('_perm_editserver' , 'manage server');
+define('_perm_editserver' , 'manage gameserver');
 define('_perm_edittactics' , 'manage tactics');
 define('_perm_forum' , 'board admin');
 define('_perm_gb' , 'guestbook admin');
@@ -332,7 +396,6 @@ define('_msg_answer' , '
       <input id="contentSubmit" type="submit" class="submit" value="Answer" />
     </form>');
 define('_user_new_erase' , '<form method="get" action="" onsubmit="DZCP.submitButton()"><input type="hidden" name="action" value="erase" /><input id="contentSubmit" type="submit" name="submit" class="submit" value="Mark all as readed" /></form>');
-define('_klapptext_server_link' , '<a href="javascript:DZCP.toggle(\'[id]\')"><img src="../inc/images/[moreicon].gif" alt="" id="img[id]">[link]</a>');
 define('_target' , 'New window');
 define('_profile_add' , '<form action="" method="get" onsubmit="return(DZCP.submitButton())">
       <input type="hidden" name="admin" value="profile" />
@@ -1133,7 +1196,7 @@ define('_server_frags' , 'Frags');
 define('_server_time' , 'Time played');
 define('_server_noplayers' , '
 <tr>
-  <td class="contentMainFirst" align="center" colspan="2"><span class="fontBold">No players on the server</span></td>
+  <td class="contentMainFirst" align="center" colspan="99"><span class="fontBold">No players on the server</span></td>
 </tr>');
 define('_server_no_connection' , '
 <tr>
@@ -1494,7 +1557,7 @@ define('_upload_newskats_head' , 'Category pictures');
 define('_config_maxwidth' , 'Resize pictures automatically');
 define('_config_maxwidth_info' , 'Here you can adjust at which width a picture will be resized!');
 define('_forum_top_posts' , 'Top 5 poster');
-define('_error_no_teamspeak' , 'The teamspeak server is not reachable at the moment!');
+define('_error_no_teamspeak' , 'The teamspeak 3 server is not reachable at the moment!');
 define('_user_cant_delete_admin' , 'You can`t delete members or admins!');
 define('_no_entrys_yet' , '
 <tr>
@@ -1648,9 +1711,6 @@ define('_backup_head' , 'DDatabase backup');
 define('_backup_info_head' , 'Note');
 define('_backup_info' , 'The backup process can take some minutes.');
 define('_backup_link' , 'Make new backup!');
-define('_backup_successful' , 'The database backup was successfully made!');
-define('_backup_last_head' , 'Last backup');
-
 define('_news_admin_head' , 'Newsarea');
 define('_admin_news_add' , '<a href="?admin=newsadmin&amp;do=add">Insert news</a>');
 define('_admin_news_head' , 'Insert news');
@@ -1685,7 +1745,7 @@ define('_server_add_new' , '<a href="?admin=server&amp;do=new">Insert server</a>
 define('_admin_server_edit' , 'Edit server');
 define('_empty_ip' , 'You have to indicate an ip address!');
 define('_server_admin_edited' , 'The server was successfully edited!');
-define('_server_admin_deleted' , 'The server was successfully deleted!');
+define('_server_admin_deleted' , 'The server "[host]" was successfully deleted!');
 define('_admin_server_new' , 'Insert server');
 define('_server_admin_added' , 'The server was successfully registered!');
 define('_empty_game' , 'You have to choose an icon!');
@@ -1752,11 +1812,7 @@ define('_clankasse_kat_edited' , 'The in-/outpayment label was successfully edit
 define('_clankasse_kat_deleted' , 'The in-/outpayment label was successfully deleted!');
 define('_config_c_gallery_user' , 'User Gallery');
 define('_config_info_gallery' , 'Amount of pictures which will be maximum shown in a row');
-define('_config_server_ts_updated' , 'The teamspeak`s ip was successfully updated!');
-define('_ts_sport' , 'Server queryport');
 define('_config_c_awards' , 'Awards');
-define('_counter_start' , 'Counter');
-define('_counter_start_info' , 'Here you can enter a number which will be added to the counter.');
 define('_admin_nc' , 'Newscomments');
 define('_admin_reg_info' , 'Here you can djust, if users have to be registered to do stuff (write comments, download things, etc)');
 define('_admin_reg_head' , 'Registration required');
@@ -2127,4 +2183,3 @@ define('_upload_partners_info' , 'Only jpg, gif or png files. Recommended dimens
 define('_select_field_ranking_add' , '<option value="[value]" [sel]>[what]</option>');
 define('_user_list_ck' , 'List in clan cash?');
 define('_fightus_squad' , 'Wanted team');
-?>

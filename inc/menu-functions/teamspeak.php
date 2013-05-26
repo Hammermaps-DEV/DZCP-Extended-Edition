@@ -2,8 +2,7 @@
 //-> Teamspeak statusscript
 function teamspeak()
 {
-    global $db, $ajaxJob, $language;
-
+    global $ajaxJob;
     header('Content-Type: text/html; charset=iso-8859-1');
     if(!$ajaxJob)
     {
@@ -13,26 +12,39 @@ function teamspeak()
     }
     else
     {
-        $settings = settings(array('ts_ip','ts_sport','ts_port','ts_version'));
-        if(!empty($settings['ts_ip']) && !empty($settings['ts_sport']) && !empty($settings['ts_port']))
+        $qry = db("SELECT * FROM ".dba::get('ts')." WHERE show_navi = 1 LIMIT 1");
+        if(!_rows($qry)) return '<br /><center>'._no_ts.'</center><br />';
+            $get = _fetch($qry);
+
+        if(!empty($get['host_ip_dns']) && !empty($get['server_port']) && !empty($get['query_port']))
         {
-            if(!fsockopen_support())
-                return error2(_fopen);
+            if(!fsockopen_support()) return error(_fopen, false, false);
 
-            if(Cache::check('nav_teamspeak_'.$language))
+            $ip_port = TS3Renderer::tsdns($get['host_ip_dns']);
+            $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : $get['host_ip_dns']);
+            $port = ($ip_port != false && is_array($ip_port) ? $ip_port['port'] : $get['server_port']);
+
+            if(!ping_port($host,$get['query_port'],1))
+                return '<br /><center>'._no_connect_to_ts.'</center><br />';
+
+            $cache_hash = md5($host.':'.$port);
+            if(Cache::check('teamspeak_'.$cache_hash))
             {
-                if(!ping_port($settings['ts_ip'],$settings['ts_sport'],0.3))
-                    return '<br /><center>'._no_connect_to_ts.'</center><br />';
+                GameQ::addServers(array(array('id' => 'ts3' ,'type' => 'teamspeak3', 'host' => $host.':'.$port, 'query_port' => $get['query_port'])));
+                GameQ::setOption('timeout', 6);
+                $results = GameQ::requestData();
 
-                $teamspeak = teamspeakViewer($settings);
-                Cache::set('nav_teamspeak_'.$language, $teamspeak, config('cache_teamspeak'));
-                return $teamspeak;
+                if(!empty($results))
+                    Cache::set('teamspeak_'.$cache_hash,$results,config('cache_teamspeak'));
             }
             else
-                return Cache::get('nav_teamspeak_'.$language);
+                $results = Cache::get('teamspeak_'.$cache_hash);
+
+            TS3Renderer::set_data($results,$get);
+            unset($results,$get);
+            return show("menu/teamspeak", array("hostname" => '',"channels" => TS3Renderer::render()));
         }
         else
             return '<br /><center>'._no_ts.'</center><br />';
     }
 }
-?>

@@ -2,23 +2,22 @@
 //-> Teamausgabe in der Navigation
 function team($tID = '')
 {
-  global $db;
   $teamRow = config('teamrow');
 
 //SQL
     if(!empty($tID)) $where = "WHERE id = '".convert::ToInt($tID)."' AND navi = 1";
     else             $where = "WHERE navi = '1' ORDER BY RAND()";
 
-    $get = _fetch(db("SELECT * FROM ".$db['squads']." ".$where.""));
+    $get = db("SELECT * FROM ".dba::get('squads')." ".$where."",false,true);
 
 //Members
     $qrym = db("SELECT s1.squad,s2.id,s2.level,s2.nick,s2.status,s2.rlname,s2.bday,s4.position
-                FROM ".$db['squaduser']." AS s1
-                LEFT JOIN ".$db['users']." AS s2
+                FROM ".dba::get('squaduser')." AS s1
+                LEFT JOIN ".dba::get('users')." AS s2
                 ON s2.id=s1.user
-                LEFT JOIN ".$db['userpos']." AS s3
+                LEFT JOIN ".dba::get('userpos')." AS s3
                 ON s3.squad=s1.squad AND s3.user=s1.user
-                LEFT JOIN ".$db['pos']." AS s4
+                LEFT JOIN ".dba::get('pos')." AS s4
                 ON s4.id=s3.posi
                 WHERE s1.squad='".$get['id']."'
                 AND s2.level != 0
@@ -51,9 +50,9 @@ function team($tID = '')
       $cnt++;
     }
 
+    $end = '';
     if(is_float($cnt/$teamRow))
     {
-        $end = "";
         for($e=$i;$e<=$teamRow;$e++)
         {
             $end .= '<td></td>';
@@ -62,11 +61,11 @@ function team($tID = '')
     }
 
 // Next / last ID
-    $all = cnt($db['squads'], "WHERE `navi` = '1'");
-    $next = _fetch(db("SELECT id FROM ".$db['squads']." WHERE `navi` = '1' AND `id` > '".$get['id']."' ORDER BY `id` ASC LIMIT 1"));
-    if(empty($next)) $next = _fetch(db("SELECT id FROM ".$db['squads']." WHERE `navi` = '1' ORDER BY `id` ASC LIMIT 1"));
-    $last = _fetch(db("SELECT id FROM ".$db['squads']." WHERE `navi` = '1' AND `id` < '".$get['id']."' ORDER BY `id` DESC LIMIT 1"));
-    if(empty($last)) $last = _fetch(db("SELECT id FROM ".$db['squads']." WHERE `navi` = '1' ORDER BY `id` DESC LIMIT 1"));
+    $all = cnt(dba::get('squads'), "WHERE `navi` = '1'");
+    $next = _fetch(db("SELECT id FROM ".dba::get('squads')." WHERE `navi` = '1' AND `id` > '".$get['id']."' ORDER BY `id` ASC LIMIT 1"));
+    if(empty($next)) $next = _fetch(db("SELECT id FROM ".dba::get('squads')." WHERE `navi` = '1' ORDER BY `id` ASC LIMIT 1"));
+    $last = _fetch(db("SELECT id FROM ".dba::get('squads')." WHERE `navi` = '1' AND `id` < '".$get['id']."' ORDER BY `id` DESC LIMIT 1"));
+    if(empty($last)) $last = _fetch(db("SELECT id FROM ".dba::get('squads')." WHERE `navi` = '1' ORDER BY `id` DESC LIMIT 1"));
 
 
 //Output
@@ -79,6 +78,6 @@ function team($tID = '')
                                     "br2" => ($all <= 1 ? '-->' : ''),
                                     "member" => $member,
                                     "end" => $end));
+
   return '<div id="navTeam">'.$team.'</div>';
 }
-?>

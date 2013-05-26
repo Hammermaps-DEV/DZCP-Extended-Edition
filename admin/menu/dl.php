@@ -10,8 +10,7 @@ if(_adminMenu != 'true')
     {
       $show = error(_error_wrong_permissions, 1);
     } else {
-      $qry = db("SELECT * FROM ".$db['dl_kat']."
-                 ORDER BY name");
+      $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
       while($get = _fetch($qry))
       {
         $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -40,7 +39,7 @@ if(_adminMenu != 'true')
 
       if($_GET['do'] == "edit")
       {
-        $qry = db("SELECT * FROM ".$db['dl_kat']."
+        $qry = db("SELECT * FROM ".dba::get('dl_kat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -54,14 +53,14 @@ if(_adminMenu != 'true')
         {
           $show = error(_dl_empty_kat,1);
         } else {
-          $qry = db("UPDATE ".$db['dl_kat']."
+          $qry = db("UPDATE ".dba::get('dl_kat')."
                      SET `name` = '".up($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_dl_admin_edited, "?admin=dl");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['dl_kat']."
+        $qry = db("DELETE FROM ".dba::get('dl_kat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_dl_admin_deleted, "?admin=dl");
@@ -77,11 +76,10 @@ if(_adminMenu != 'true')
         {
           $show = error(_dl_empty_kat,1);
         } else {
-          $qry = db("INSERT INTO ".$db['dl_kat']."
+          $qry = db("INSERT INTO ".dba::get('dl_kat')."
                      SET `name` = '".up($_POST['kat'])."'");
 
           $show = info(_dl_admin_added, "?admin=dl");
         }
       }
     }
-?>

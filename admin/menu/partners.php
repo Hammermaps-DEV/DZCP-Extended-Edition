@@ -30,7 +30,7 @@ if(_adminMenu != 'true')
         {
           $show = error(_empty_url, 1);
         } else {
-          $qry = db("INSERT INTO ".$db['partners']."
+          $qry = db("INSERT INTO ".dba::get('partners')."
                      SET `link`     = '".links($_POST['link'])."',
                          `banner`   = '".up(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
                          `textlink` = '".convert::ToInt(empty($_POST['textlink']) ? 0 : 1)."'");
@@ -38,7 +38,7 @@ if(_adminMenu != 'true')
           $show = info(_partners_added, "?admin=partners");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['partners']."
+        $qry = db("SELECT * FROM ".dba::get('partners')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -67,7 +67,7 @@ if(_adminMenu != 'true')
         {
           $show = error(_empty_url, 1);
         } else {
-          $qry = db("UPDATE ".$db['partners']."
+          $qry = db("UPDATE ".dba::get('partners')."
                      SET `link`     = '".links($_POST['link'])."',
                          `banner`   = '".up(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
                          `textlink` = '".convert::ToInt(empty($_POST['textlink']) ? 0 : 1)."'
@@ -76,12 +76,12 @@ if(_adminMenu != 'true')
           $show = info(_partners_edited, "?admin=partners");
         }
       } elseif($_GET['do'] == "delete") {
-        $del = db("DELETE FROM ".$db['partners']."
+        $del = db("DELETE FROM ".dba::get('partners')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_partners_deleted,"?admin=partners");
       } else {
-        $qry = db("SELECT * FROM ".$db['partners']."
+        $qry = db("SELECT * FROM ".dba::get('partners')."
                    ORDER BY id");
         while($get = _fetch($qry))
         {

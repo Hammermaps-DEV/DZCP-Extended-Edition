@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT id,nick,whereami FROM ".$db['users']." WHERE time+'".users_online."'>'".time()."' AND online = 1 ORDER BY nick");
+    $qry = db("SELECT id,nick,whereami FROM ".dba::get('users')." WHERE time+'".users_online."'>'".time()."' AND online = 1 ORDER BY nick");
     while($get = _fetch($qry))
     {
         if(!preg_match("#autor_#is",$get['whereami'])) $whereami = re($get['whereami']);
@@ -28,7 +28,7 @@ else
                 "class" => $class));
     }
 
-    $qry = db("SELECT * FROM ".$db['c_who']."
+    $qry = db("SELECT * FROM ".dba::get('c_who')."
              WHERE online+'".users_online."'>'".time()."'
              AND login = 0
              ORDER BY whereami");

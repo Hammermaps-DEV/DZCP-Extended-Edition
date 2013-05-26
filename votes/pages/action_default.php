@@ -16,46 +16,35 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
+    $vote_permission = permission('votes');
     $fvote = (!settings('forum_vote') ? ' AND forum = 0 ' : '');
-    $whereIntern = (!permission('votes') ? ' WHERE intern = 0 ' : '');
-    $orderIntern = (!permission('votes') ? '' : ' intern DESC,');
+    $whereIntern = (!$vote_permission ? ' WHERE intern = 0 ' : '');
+    $orderIntern = (!$vote_permission ? '' : ' intern DESC,');
 
-    $qry = db('SELECT * FROM ' . $db['votes'] . $whereIntern . $fvote . ' ORDER BY ' . $orderIntern . ' datum DESC'); $show = ''; $color2 = 1;
+    $qry = db('SELECT * FROM ' . dba::get('votes') . $whereIntern . $fvote . ' ORDER BY ' . $orderIntern . ' datum DESC'); $show = ''; $color2 = 1;
     while($get = _fetch($qry))
     {
-        $qryv = db('SELECT * FROM ' . $db['vote_results'] . ' WHERE vid = ' . convert::ToInt($get['id']) . ' ORDER BY id');
-        $check = ''; $vid = 'vid_' . convert::ToInt($get['id']);
-        if($get['intern'] == 1)
-        {
-            $showVoted = '';
-            $check = db('SELECT * FROM ' . $db['ipcheck'] . ' WHERE what = "' . $vid . '" AND ip = ' . convert::ToInt($userid) . '');
-            $ipcheck = _rows($check) == 1;
-            $intern = _votes_intern;
-        }
-        else
-        {
-            $ipcheck = false;
-            $intern = '';
-        }
+        $qryv = db('SELECT * FROM ' . dba::get('vote_results') . ' WHERE vid = ' . $get['id'] . ' ORDER BY id');
+        $vid = 'vid_' . convert::ToInt($get['id']); $intern = ''; if($get['intern']) $intern = _votes_intern;
 
-        $hostIpcheck = ipcheck($vid);
-        $stimmen = sum($db['vote_results']," WHERE vid = '".$get['id']."'","stimmen"); $color = 1; $results ='';
+        $ipcheck = !count_clicks('vote',$get['id'],0,false);
+        $stimmen_summe = sum(dba::get('vote_results')," WHERE vid = '".$get['id']."'","stimmen"); $color = 1; $results ='';
+
         while($getv = _fetch($qryv))
         {
-            $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            if($hostIpcheck || $ipcheck || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1) {
-                $percent = @round($getv['stimmen']/$stimmen*100,2);
-                $rawpercent = @round($getv['stimmen']/$stimmen*100,0);
+            $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++; $votebutton = '';
+            if($ipcheck || cookie::get('vid_'.$get['id']) != false || $get['closed'])
+            {
+                $percent = $stimmen_summe && $getv['stimmen'] ? round($getv['stimmen']/$stimmen_summe*100,2) : 0;
+                $rawpercent = $stimmen_summe && $getv['stimmen'] ? round($getv['stimmen']/$stimmen_summe*100,0) : 0;
                 $balken = show(_votes_balken, array("width" => $rawpercent));
-
                 $result_head = _votes_results_head;
-                $votebutton = "";
                 $results .= show($dir."/votes_results", array("answer" => re($getv['sel']),
-                        "percent" => $percent,
-                        "lng_stimmen" => _votes_stimmen,
-                        "class" => $class,
-                        "stimmen" => $getv['stimmen'],
-                        "balken" => $balken));
+                                                              "percent" => $percent,
+                                                              "lng_stimmen" => _votes_stimmen,
+                                                              "class" => $class,
+                                                              "stimmen" => $getv['stimmen'],
+                                                              "balken" => $balken));
             }
             else
             {
@@ -65,14 +54,13 @@ else
             }
         }
 
-        if($get['intern'] == 1 && $stimmen != 0 && ($get['von'] == convert::ToInt($userid) || permission('votes')))
+        if($get['intern'] && $stimmen_summe && ($get['von'] == convert::ToInt($userid) || permission('votes')))
         {
-            $showVoted = ' <a href="?action=showvote&amp;id=' . convert::ToInt($get['id']) .
-            '"><img src="../inc/images/lupe.gif" alt="" title="' .
-            _show_who_voted . '" class="icon" /></a>';
+            $showVoted = ' <a href="?action=show&amp;id=' . convert::ToInt($get['id']) .
+            '"><img src="../inc/images/lupe.gif" alt="" title="' . _show_who_voted . '" class="icon" /></a>';
         }
 
-        if(($_GET['action'] == "show" && $get['id'] == $_GET['id']) || isset($_GET['show']) && $get['id'] == $_GET['show'])
+        if($get['id'] == (isset($_GET['id']) ? $_GET['id'] : 0))
         {
             $moreicon = "collapse";
             $display = "";
@@ -104,7 +92,7 @@ else
                 "menu" => $menu,
                 "class" => $class,
                 "votebutton" => $votebutton,
-                "stimmen" => $stimmen));
+                "stimmen" => $stimmen_summe));
     }
 
     $index = show($dir."/votes", array("head" => _votes_head,
@@ -114,4 +102,3 @@ else
             "datum" => _datum,
             "stimmen" => _votes_stimmen));
 }
-?>

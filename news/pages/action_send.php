@@ -43,6 +43,8 @@ else
             $error = show("errors/errortable", array("error" => _empty_email));
         else if(!$fromUser && !check_email($email))
             $error = show("errors/errortable", array("error" => _error_invalid_email));
+        else if(check_email_trash_mail($_POST['email']))
+            $error = show("errors/errortable", array("error" => _error_trash_mail));
         else if(!$fromUser && empty($nick))
             $error = show("errors/errortable", array("error" => _empty_nick));
         else
@@ -56,11 +58,11 @@ else
             $user = !$fromUser ? $nick : convert::ToInt($userid);
 
             $text = show(_contact_text_sendnews, array("hp" => $hp, "email" => $email, "titel" => up($titel), "text" => up($text), "info" => up($info), "nick" => $nick));
-            $qry = db("SELECT id,level FROM ".$db['users']."");
+            $qry = db("SELECT id,level FROM ".dba::get('users')."");
             while($get = _fetch($qry))
             {
                 if(perm_sendnews($get['id']) || $get['level'] == 4)
-                    db("INSERT INTO ".$db['msg']." SET `datum` = '".time()."', `von` = '".$von_nick."', `an` = '".convert::ToInt($get['id'])."', `titel` = '".up($titel)."', `nachricht` = '".up($text, 1)."', `sendnews` = '".$sendnews."', `senduser` = '".$user."'");
+                    db("INSERT INTO ".dba::get('acomments')." SET `datum` = '".time()."', `von` = '".$von_nick."', `an` = '".convert::ToInt($get['id'])."', `titel` = '".up($titel)."', `nachricht` = '".up($text, 1)."', `sendnews` = '".$sendnews."', `senduser` = '".$user."'");
             }
 
             $index = info(_news_send_done, "../news/");
@@ -82,4 +84,3 @@ else
         $index = show($dir."/send", array("error" => $error, "form" => $form));
     }
 }
-?>

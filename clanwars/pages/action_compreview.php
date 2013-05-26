@@ -19,7 +19,7 @@ else
     header("Content-type: text/html; charset=utf-8");
     if($_GET['do'] == 'edit')
     {
-        $qry = db("SELECT * FROM ".$db['cw_comments']."
+        $qry = db("SELECT * FROM ".dba::get('cw_comments')."
                WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
@@ -37,7 +37,7 @@ else
                 "time" => date("d.m.Y H:i", time())._uhr));
     } else {
 
-        $get_id = cnt($db['cw_comments'], " WHERE cw = ".convert::ToInt($_GET['id'])."")+1;
+        $get_id = cnt(dba::get('cw_comments'), " WHERE cw = ".convert::ToInt($_GET['id'])."")+1;
         $get_userid = convert::ToInt($userid);
         $get_date = time();
 

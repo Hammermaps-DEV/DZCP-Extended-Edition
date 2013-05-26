@@ -47,4 +47,3 @@ ob_start();
         $_SESSION['installer'] = false;
 
 ob_end_flush();
-?>

@@ -30,7 +30,7 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['beschreibung'])) $show = error(_linkus_empty_beschreibung, 1);
           elseif(empty($_POST['text']))         $show = error(_linkus_empty_text, 1);
         } else {
-          $qry = db("INSERT INTO ".$db['linkus']."
+          $qry = db("INSERT INTO ".dba::get('linkus')."
                      SET `url`          = '".links($_POST['link'])."',
                          `text`         = '".up($_POST['text'])."',
                          `banner`       = '".up($_POST['banner'])."',
@@ -39,7 +39,7 @@ if(_adminMenu != 'true')
           $show = info(_linkus_added, "?admin=linkus");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['linkus']."
+        $qry = db("SELECT * FROM ".dba::get('linkus')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -62,7 +62,7 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['beschreibung'])) $show = error(_linkus_empty_beschreibung, 1);
           elseif(empty($_POST['text']))         $show = error(_linkus_empty_text, 1);
         } else {
-          $qry = db("UPDATE ".$db['linkus']."
+          $qry = db("UPDATE ".dba::get('linkus')."
                      SET `url`          = '".links($_POST['link'])."',
                          `text`         = '".up($_POST['text'])."',
                          `banner`       = '".up($_POST['banner'])."',
@@ -72,12 +72,12 @@ if(_adminMenu != 'true')
           $show = info(_linkus_edited, "?admin=linkus");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['linkus']."
+        $qry = db("DELETE FROM ".dba::get('linkus')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_linkus_deleted, "?admin=linkus");
       } else {
-        $qry = db("SELECT * FROM ".$db['linkus']."
+        $qry = db("SELECT * FROM ".dba::get('linkus')."
                    ORDER BY banner DESC");
         $cnt = 1;
         while($get = _fetch($qry))

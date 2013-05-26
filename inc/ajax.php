@@ -11,6 +11,12 @@
 #########################
 include("../inc/buffer.php");
 
+if(isset($_GET['loader']) && $_GET['loader'] == 'thumbgen')
+{
+    ini_set('display_errors', 0);
+    error_reporting(0);
+}
+
 //Settings
 $ajaxJob = true;
 $ajaxThumbgen = ((isset($_GET['loader']) ? $_GET['loader'] : false) == 'thumbgen' ? true : false);
@@ -31,6 +37,9 @@ if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,a
         {
             if(file_exists(basePath.'/inc/menu-functions/'.$func))
             {
+                if(@file_exists(basePath.'/inc/menu-functions/'.$func.'.xml')) //XML Extension
+                    xml::openXMLfile('menu_'.$func,'inc/menu-functions/'.$func.'.xml');
+
                 $func_name = str_replace('.php', '', $func);
                 $menu_index[md5_file(basePath.'/inc/menu-functions/'.$func)] = $func_name;
                 require_once(basePath.'/inc/menu-functions/'.$func);
@@ -87,4 +96,3 @@ endswitch;
 ## OUTPUT BUFFER END ##
 #######################
 gz_output();
-?>

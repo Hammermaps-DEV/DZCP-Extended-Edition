@@ -15,12 +15,12 @@ if(_adminMenu != 'true')
 $where = $where.': '._protocol;
 if(isset($_GET['do']) ? ($_GET['do'] == 'deletesingle' ? true : false) : false)
 {
-    db("DELETE FROM ".$db['ipcheck']." WHERE id = '".$_GET['id']."'");
+    db("DELETE FROM ".dba::get('ipcheck')." WHERE id = '".$_GET['id']."'");
     header("Location: ".$_SERVER['HTTP_REFERER']);
 }
 elseif(isset($_GET['do']) ? ($_GET['do'] == 'delete' ? true : false) : false)
 {
-    db("DELETE FROM ".$db['ipcheck']." WHERE time != 0");
+    db("DELETE FROM ".dba::get('ipcheck')." WHERE time != 0");
     $show = info(_protocol_deleted,'?admin=protocol');
 }
 else
@@ -37,9 +37,9 @@ else
     }
 
     $maxprot = 30; $color = 1; $show = '';
-    $entrys = cnt($db['ipcheck'], $search);
+    $entrys = cnt(dba::get('ipcheck'), $search);
     $page = (isset($_GET['page']) ? $_GET['page'] : 1);
-    $qry = db("SELECT * FROM ".$db['ipcheck']." ".$search." ORDER BY id DESC LIMIT ".($page - 1)*$maxprot.",".$maxprot."");
+    $qry = db("SELECT * FROM ".dba::get('ipcheck')." ".$search." ORDER BY id DESC LIMIT ".($page - 1)*$maxprot.",".$maxprot."");
     while($get = _fetch($qry))
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

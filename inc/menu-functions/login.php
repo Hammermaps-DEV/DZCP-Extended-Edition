@@ -6,4 +6,3 @@ $login = show("menu/login", array("register" => _register,
                                   "signup" => _login_signup,
                                   "permanent" => _login_permanent,
                                   "lostpwd" => _login_lostpwd));
-?>

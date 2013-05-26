@@ -27,17 +27,17 @@ else
             $index = error(_error_edit_admin, 1);
         else if(isset($_GET['edit']) && convert::ToInt($_GET['edit']) == convert::ToInt($userid))
         {
-            $qrysq = db("SELECT id,name FROM ".$db['squads']." ORDER BY pos"); $esquads = '';
+            $qrysq = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY pos"); $esquads = '';
             while($getsq = _fetch($qrysq))
             {
-                $qrypos = db("SELECT id,position FROM ".$db['pos']." ORDER BY pid"); $posi = '';
+                $qrypos = db("SELECT id,position FROM ".dba::get('pos')." ORDER BY pid"); $posi = '';
                 while($getpos = _fetch($qrypos))
                 {
-                    $sel = (db("SELECT id FROM ".$db['userpos']." WHERE posi = '".$getpos['id']."' AND squad = '".$getsq['id']."' AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '');
+                    $sel = (db("SELECT id FROM ".dba::get('userpos')." WHERE posi = '".$getpos['id']."' AND squad = '".$getsq['id']."' AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '');
                     $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
                 }
 
-                $check = (db("SELECT squad FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '');
+                $check = (db("SELECT squad FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '');
                 $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
                 unset($posi,$check);
             }
@@ -62,7 +62,7 @@ else
                         ## User aus der Datenbank suchen ##
                         if(!empty($_GET['id']))
                         {
-                            $sql = db("SELECT id,pwd,time FROM ".$db['users']." WHERE id = '".convert::ToInt($_GET['id'])."' AND level != '0'");
+                            $sql = db("SELECT id,pwd,time FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_GET['id'])."' AND level != '0'");
                             if(_rows($sql))
                             {
                                 $get = _fetch($sql);
@@ -74,7 +74,7 @@ else
                                 $_SESSION['ip']         = visitorIp();
 
                                 ## Aktualisiere Datenbank ##
-                                db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '' WHERE id = '".$get['id']."'");
+                                db("UPDATE ".dba::get('users')." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '' WHERE id = '".$get['id']."'");
                             }
                         }
                     }
@@ -88,7 +88,7 @@ else
                         if(empty($_POST['perm']))
                             $_POST['perm'] = array();
 
-                        $qry_fields = db("SHOW FIELDS FROM ".$db['permissions']); $sql_update = '';
+                        $qry_fields = db("SHOW FIELDS FROM ".dba::get('permissions')); $sql_update = '';
                         while($get = _fetch($qry_fields))
                         {
                             if($get['Field'] != 'id' && $get['Field'] != 'user' && $get['Field'] != 'pos' && $get['Field'] != 'intforum')
@@ -99,43 +99,43 @@ else
                         }
 
                         // Check User Permissions is exists
-                        if(!db('SELECT id FROM `'.$db['permissions'].'` WHERE `user` = '.$edituser.' LIMIT 1',true))
-                            db("INSERT INTO ".$db['permissions']." SET `user` = '".convert::ToInt($edituser)."';");
+                        if(!db('SELECT id FROM `'.dba::get('permissions').'` WHERE `user` = '.$edituser.' LIMIT 1',true))
+                            db("INSERT INTO ".dba::get('permissions')." SET `user` = '".convert::ToInt($edituser)."';");
 
                         // Update Permissions
-                        db('UPDATE '.$db['permissions'].' SET '.substr($sql_update, 0, -2).' WHERE user = '.$edituser);
+                        db('UPDATE '.dba::get('permissions').' SET '.substr($sql_update, 0, -2).' WHERE user = '.$edituser);
 
                         // Internal Boardpermissions Update
                         if(empty($_POST['board']))
                             $_POST['board'] = array();
 
                         // Cleanup
-                        $sql = db('SELECT id,forum FROM `'.$db['f_access'].'` WHERE `user` = '.$edituser);
+                        $sql = db('SELECT id,forum FROM `'.dba::get('f_access').'` WHERE `user` = '.$edituser);
                         while($get = _fetch($sql))
-                        { if(!array_var_exists($get['forum'],$_POST['board'])) db('DELETE FROM `'.$db['f_access'].'` WHERE `id` = '.$get['id']); }
+                        { if(!array_var_exists($get['forum'],$_POST['board'])) db('DELETE FROM `'.dba::get('f_access').'` WHERE `id` = '.$get['id']); }
 
                         //Neuer Eintrag
                         if(count($_POST['board']) >= 1)
                         {
                             foreach($_POST['board'] AS $boardpem)
-                            { if(!db("SELECT * FROM `".$db['f_access']."` WHERE `user` = ".$edituser." AND `forum` = ".$boardpem,true)) db("INSERT INTO ".$db['f_access']." SET `user` = '".$edituser."', `forum` = '".$boardpem."'"); }
+                            { if(!db("SELECT * FROM `".dba::get('f_access')."` WHERE `user` = ".$edituser." AND `forum` = ".$boardpem,true)) db("INSERT INTO ".dba::get('f_access')." SET `user` = '".$edituser."', `forum` = '".$boardpem."'"); }
                         }
 
                         //intforum gegen f_access tabelle tauschen *intforum entfernen
-                        //db("UPDATE `".$db['permissions']."` SET `intforum` = '".(!count($_POST['board']) ? '0' : '1')."' WHERE `id` =".$edituser);
+                        //db("UPDATE `".dba::get('permissions')."` SET `intforum` = '".(!count($_POST['board']) ? '0' : '1')."' WHERE `id` =".$edituser);
 
                         // Squads Update
-                        db("DELETE FROM ".$db['squaduser']." WHERE user = '".$edituser."'");
-                        db("DELETE FROM ".$db['userpos']." WHERE user = '".$edituser."'");
+                        db("DELETE FROM ".dba::get('squaduser')." WHERE user = '".$edituser."'");
+                        db("DELETE FROM ".dba::get('userpos')." WHERE user = '".$edituser."'");
 
-                        $sq = db("SELECT id FROM ".$db['squads']."");
+                        $sq = db("SELECT id FROM ".dba::get('squads')."");
                         while($getsq = _fetch($sq))
                         {
                             if(isset($_POST['squad'.$getsq['id']]))
-                               db("INSERT INTO ".$db['squaduser']." SET `user` = '".$edituser."', `squad`  = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
+                               db("INSERT INTO ".dba::get('squaduser')." SET `user` = '".$edituser."', `squad`  = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
 
                             if(isset($_POST['squad'.$getsq['id']]))
-                                db("INSERT INTO ".$db['userpos']." SET `user` = '".$edituser."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
+                                db("INSERT INTO ".dba::get('userpos')." SET `user` = '".$edituser."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
                         }
 
                         if(isset($_POST['passwd']) && !empty($_POST['passwd']))
@@ -145,7 +145,7 @@ else
                         }
 
                         $level_sql = ($_POST['level'] == 4 ? (data(convert::ToInt($userid), "level") == 4 || convert::ToInt($userid) == convert::ToInt($rootAdmin) ? ", `level`  = '".convert::ToInt($_POST['level'])."' " : '') : ", `level`  = '".convert::ToInt($_POST['level'])."' ");
-                        db("UPDATE ".$db['users']." SET ".(isset($_POST['passwd']) && !empty($_POST['passwd']) ? $newpwd : '')."
+                        db("UPDATE ".dba::get('users')." SET ".(isset($_POST['passwd']) && !empty($_POST['passwd']) ? $newpwd : '')."
                            `nick`   = '".convert::ToString(up($_POST['nick']))."',
                            `email`  = '".convert::ToString($_POST['email'])."',
                            `user`   = '".convert::ToString($_POST['loginname'])."',
@@ -161,17 +161,17 @@ else
                 break;
                 case 'updateme':
                     // Squads Update
-                    db("DELETE FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($userid)."'");
-                    db("DELETE FROM ".$db['userpos']." WHERE user = '".convert::ToInt($userid)."'");
+                    db("DELETE FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($userid)."'");
+                    db("DELETE FROM ".dba::get('userpos')." WHERE user = '".convert::ToInt($userid)."'");
 
-                    $sq = db("SELECT id FROM ".$db['squads']."");
+                    $sq = db("SELECT id FROM ".dba::get('squads')."");
                     while($getsq = _fetch($sq))
                     {
                         if(isset($_POST['squad'.$getsq['id']]))
-                            db("INSERT INTO ".$db['squaduser']." SET `user` = '".convert::ToInt($userid)."', `squad`  = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
+                            db("INSERT INTO ".dba::get('squaduser')." SET `user` = '".convert::ToInt($userid)."', `squad`  = '".convert::ToInt($_POST['squad'.$getsq['id']])."'");
 
                         if(isset($_POST['squad'.$getsq['id']]))
-                            db("INSERT INTO ".$db['userpos']." SET `user` = '".convert::ToInt($userid)."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
+                            db("INSERT INTO ".dba::get('userpos')." SET `user` = '".convert::ToInt($userid)."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
                     }
 
                     $index = info(_admin_user_edited, "?action=admin&amp;edit=".convert::ToInt($userid)."");
@@ -190,28 +190,29 @@ else
                             ## Ereignis in den Adminlog schreiben ##
                             wire_ipcheck("deluser(".convert::ToInt($userid)."_".convert::ToInt($_GET['id']).")");
 
-                            $getdel = db("SELECT id,nick,email,hp FROM ".$db['users']." WHERE id = '".convert::ToInt(convert::ToInt($_GET['id']))."'",false,true);
+                            $getdel = db("SELECT id,nick,email,hp FROM ".dba::get('users')." WHERE id = '".convert::ToInt(convert::ToInt($_GET['id']))."'",false,true);
 
                             Cache::delete('xfire_'.$getdel['user']);
 
-                            db("UPDATE ".$db['f_threads']." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
-                            db("UPDATE ".$db['f_posts']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
-                            db("UPDATE ".$db['newscomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
-                            db("UPDATE ".$db['acomments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
-                            db("UPDATE ".$db['dl_comments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
-                            db("UPDATE ".$db['gb_comments']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
-                            db("UPDATE ".$db['gb']." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('f_threads')." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('f_posts')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('newscomments')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('acomments')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('dl_comments')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('gb_comments')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('gb')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
 
-                            db("DELETE FROM ".$db['clicks_ips']." WHERE `uid` = ".$getdel['id']);
+                            db("DELETE FROM ".dba::get('clicks_ips')." WHERE `uid` = ".$getdel['id']);
 
-                            db("DELETE FROM ".$db['msg']." WHERE von = '".$getdel['id']."' OR an = '".$getdel['id']."'");
-                            db("DELETE FROM ".$db['news']." WHERE autor = '".$getdel['id']."'");
-                            db("DELETE FROM ".$db['permissions']." WHERE user = '".$getdel['id']."'");
-                            db("DELETE FROM ".$db['squaduser']." WHERE user = '".$getdel['id']."'");
-                            db("DELETE FROM ".$db['buddys']." WHERE user = '".$getdel['id']."' OR buddy = '".$getdel['id']."'");
-                            db("UPDATE ".$db['usergb']." SET `reg` = 0 WHERE reg = ".$getdel['id']."");
-                            db("DELETE FROM ".$db['userpos']." WHERE user = '".$getdel['id']."'");
-                            db("DELETE FROM ".$db['userstats']." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('acomments')." WHERE von = '".$getdel['id']."' OR an = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('news')." WHERE autor = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('permissions')." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('squaduser')." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('buddys')." WHERE user = '".$getdel['id']."' OR buddy = '".$getdel['id']."'");
+                            db("UPDATE ".dba::get('usergb')." SET `reg` = 0 WHERE reg = ".$getdel['id']."");
+                            db("DELETE FROM ".dba::get('userpos')." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('userstats')." WHERE user = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('rss')." WHERE `userid` = '".$getdel['id']."'");
 
                             foreach($picformat as $tmpendung)
                             {
@@ -222,7 +223,7 @@ else
                                     @unlink(basePath."/inc/images/uploads/useravatare/".$getdel['id'].".".$tmpendung);
                             }
 
-                            $qrygl = db("SELECT pic FROM ".$db['usergallery']." WHERE user = '".$getdel['id']."'");
+                            $qrygl = db("SELECT pic FROM ".dba::get('usergallery')." WHERE user = '".$getdel['id']."'");
                             if(_rows($qrygl) >= 1)
                             {
                                 while($getgl = _fetch($qrygl))
@@ -230,32 +231,32 @@ else
                                     @unlink(basePath."inc/images/uploads/usergallery/".$getdel['id']."_".$getgl['pic']);
                                 } //while end
 
-                                db("DELETE FROM ".$db['usergallery']." WHERE user = '".$getdel['id']."'");
+                                db("DELETE FROM ".dba::get('usergallery')." WHERE user = '".$getdel['id']."'");
                             }
 
-                            db("DELETE FROM ".$db['users']." WHERE id = '".$getdel['id']."'");
+                            db("DELETE FROM ".dba::get('users')." WHERE id = '".$getdel['id']."'");
                             $index = info(_user_deleted, "?action=userlist");
                         }
                     }
                 break;
                 default:
-                    $qry = db("SELECT id,user,nick,pwd,email,level,position,listck FROM ".$db['users']." WHERE id = '".convert::ToInt($_GET['edit'])."'");
+                    $qry = db("SELECT id,user,nick,pwd,email,level,position,listck FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_GET['edit'])."'");
                     while($get = _fetch($qry))
                     {
-                        $qrysq = db("SELECT id,name FROM ".$db['squads']." ORDER BY pos"); $esquads = '';
+                        $qrysq = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY pos"); $esquads = '';
                         while($getsq = _fetch($qrysq))
                         {
-                            $qrypos = db("SELECT id,position FROM ".$db['pos']." ORDER BY pid"); $posi = "";
+                            $qrypos = db("SELECT id,position FROM ".dba::get('pos')." ORDER BY pid"); $posi = "";
                             while($getpos = _fetch($qrypos))
                             {
-                                $sel = db("SELECT id FROM ".$db['userpos']."
+                                $sel = db("SELECT id FROM ".dba::get('userpos')."
                                 WHERE posi = '".$getpos['id']."'
                                 AND squad = '".$getsq['id']."'
                                 AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '';
                                 $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
                             }
 
-                            $check = db("SELECT squad FROM ".$db['squaduser']." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
+                            $check = db("SELECT squad FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
                             $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
                         }
 
@@ -283,4 +284,3 @@ else
         }
     }
 }
-?>

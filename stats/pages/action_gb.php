@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     // First
-    $get = db("SELECT email,reg,nick,datum FROM ".$db['gb']." ORDER BY datum ASC LIMIT 1",false,true);
+    $get = db("SELECT email,reg,nick,datum FROM ".dba::get('gb')." ORDER BY datum ASC LIMIT 1",false,true);
 
     if($get['reg'] != "0")
         $first = date("d.m.Y H:i", $get['datum'])."h "._from." ".autor($get['reg']);
@@ -25,7 +25,7 @@ else
         $first = date("d.m.Y H:i", $get['datum'])."h "._from." ".autor($get['reg'],'',$get['nick'],$get['email']);
 
     // Last
-    $get = db("SELECT email,reg,nick,datum FROM ".$db['gb']." ORDER BY datum DESC LIMIT 1",false,true);
+    $get = db("SELECT email,reg,nick,datum FROM ".dba::get('gb')." ORDER BY datum DESC LIMIT 1",false,true);
 
     if($get['reg'] != "0")
         $last = date("d.m.Y H:i", $get['datum'])."h "._from." ".autor($get['reg']);
@@ -35,8 +35,8 @@ else
     $stats = show($dir."/gb", array("head" => _site_gb,
             "all" => _stats_gb_all,
             "poster" => _stats_gb_poster,
-            "nposter" => cnt($db['gb']," WHERE reg = 0")."/".cnt($db['gb']," WHERE reg != 0"),
-            "nall" => cnt($db['gb']),
+            "nposter" => cnt(dba::get('gb')," WHERE reg = 0")."/".cnt(dba::get('gb')," WHERE reg != 0"),
+            "nall" => cnt(dba::get('gb')),
             "first" => _stats_gb_first,
             "nfirst" => $first,
             "last" => _stats_gb_last,

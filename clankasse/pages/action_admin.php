@@ -20,7 +20,7 @@ else
     {
         if ($_GET['do'] == "new")
         {
-            $qry = db("SELECT * FROM ".$db['c_kats']."");
+            $qry = db("SELECT * FROM ".dba::get('c_kats')."");
             while($get = _fetch($qry))
             {
                 $trans .= show(_select_field, array("value" => re($get['kat']),
@@ -65,7 +65,7 @@ else
                 $betrag = preg_replace("#,#iUs",".",$betrag);
                 $datum = mktime(0,0,0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-                $qry = db("INSERT INTO ".$db['clankasse']."
+                $qry = db("INSERT INTO ".dba::get('clankasse')."
                    SET `datum`        = '".convert::ToInt($datum)."',
                        `member`       = '".$_POST['member']."',
                        `transaktion`  = '".up($_POST['transaktion'])."',
@@ -75,7 +75,7 @@ else
                 $index = info(_clankasse_saved, "../clankasse/");
             }
         } elseif ($_GET['do'] == "delete" && $_GET['id']) {
-            $qry = db("DELETE FROM ".$db['clankasse']."
+            $qry = db("DELETE FROM ".dba::get('clankasse')."
                  WHERE id = ".convert::ToInt($_GET['id']));
 
             $index = info(_clankasse_deleted, "../clankasse/");
@@ -88,7 +88,7 @@ else
             } elseif(!$_POST['transaktion']) {
                 $index = error(_error_clankasse_empty_transaktion, 1);
             } else {
-                $res = db("UPDATE ".$db['clankasse']."
+                $res = db("UPDATE ".dba::get('clankasse')."
                      SET `datum`        = '".convert::ToInt($_POST['datum'])."',
                          `transaktion`  = '".up($_POST['transaktion'])."',
                          `pm`           = '".convert::ToInt($_POST['pm'])."',
@@ -98,7 +98,7 @@ else
                 $index = info(_clankasse_edited, "../clankasse/");
             }
         } elseif ($_GET['do'] == "edit") {
-            $qry = db("SELECT * FROM ".$db['clankasse']."
+            $qry = db("SELECT * FROM ".dba::get('clankasse')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
@@ -109,7 +109,7 @@ else
             if($get['pm'] == "0") $psel = "selected=\"selected\"";
             else $msel = "selected=\"selected\"";
 
-            $qryk = db("SELECT * FROM ".$db['c_kats']."");
+            $qryk = db("SELECT * FROM ".dba::get('c_kats')."");
             while($getk = _fetch($qryk))
             {
                 if($getk['kat'] == $get['transaktion']) $sel = "selected=\"selected\"";
@@ -159,7 +159,7 @@ else
                 $betrag = preg_replace("#,#iUs",".",$betrag);
                 $datum = mktime(0,0,0,$_POST['m'],$_POST['t'],$_POST['j']);
 
-                $qry = db("UPDATE ".$db['clankasse']."
+                $qry = db("UPDATE ".dba::get('clankasse')."
                    SET `datum`        = '".convert::ToInt($datum)."',
                        `member`       = '".up($_POST['member'])."',
                        `transaktion`  = '".up($_POST['transaktion'])."',
@@ -170,7 +170,7 @@ else
                 $index = info(_clankasse_edited, "../clankasse/");
             }
         } elseif($_GET['do'] == "paycheck") {
-            $qry = db("SELECT payed FROM ".$db['c_payed']."
+            $qry = db("SELECT payed FROM ".dba::get('c_payed')."
                  WHERE user = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
@@ -194,17 +194,17 @@ else
                     "m" => $monat,
                     "j" => $jahr));
         } elseif($_GET['do'] == "editpaycheck") {
-            $qry = db("SELECT payed FROM ".$db['c_payed']."
+            $qry = db("SELECT payed FROM ".dba::get('c_payed')."
                  WHERE user = '".convert::ToInt($_GET['id'])."'");
 
             $datum = mktime(0,0,0,$_POST['m'],$_POST['t'],$_POST['j']);
             if(_rows($qry))
             {
-                $update = db("UPDATE ".$db['c_payed']."
+                $update = db("UPDATE ".dba::get('c_payed')."
                       SET `payed` = '".convert::ToInt($datum)."'
                       WHERE user = '".convert::ToInt($_GET['id'])."'");
             } else {
-                $insert = db("INSERT INTO ".$db['c_payed']."
+                $insert = db("INSERT INTO ".dba::get('c_payed')."
                       SET `user`  = '".convert::ToInt($_GET['id'])."',
                           `payed` = '".convert::ToInt($datum)."'");
             }

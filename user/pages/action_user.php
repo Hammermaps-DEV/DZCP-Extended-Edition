@@ -27,13 +27,12 @@ else
     //Generate custom profil fields
     function custom_fields($userid,$kid,$get_array)
     {
-        global $db;
-        $qry = db("SELECT * FROM ".$db['profile']." WHERE kid = ".convert::ToInt($kid)." AND shown = '1' ORDER BY id ASC"); $custom = ''; $count=0;
+        $qry = db("SELECT * FROM ".dba::get('profile')." WHERE kid = ".convert::ToInt($kid)." AND shown = '1' ORDER BY id ASC"); $custom = ''; $count=0;
         if(_rows($qry))
         {
             while($getcustom = _fetch($qry))
             {
-                $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".$db['users']." WHERE `id` = '".convert::ToInt($userid)."' LIMIT 1",false,true);
+                $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".dba::get('users')." WHERE `id` = '".convert::ToInt($userid)."' LIMIT 1",false,true);
                 if(!empty($getcontent[$getcustom['feldname']]))
                 {
                     switch($getcustom['type'])
@@ -64,9 +63,9 @@ else
         $where = _user_profile_of.'autor_'.$view_userID;
 
         if(count_clicks('userprofil',$view_userID))
-            db("UPDATE ".$db['userstats']." SET `profilhits` = profilhits+1 WHERE user = '".convert::ToInt($view_userID)."'"); //Update Userstats
+            db("UPDATE ".dba::get('userstats')." SET `profilhits` = profilhits+1 WHERE user = '".convert::ToInt($view_userID)."'"); //Update Userstats
 
-        $get = db("SELECT * FROM ".$db['users']." WHERE id = '".convert::ToInt($view_userID)."'",false,true); // Get User
+        $get = db("SELECT * FROM ".dba::get('users')." WHERE id = '".convert::ToInt($view_userID)."'",false,true); // Get User
 
         if($get['profile_access'] && $chkMe == 'unlogged')
             $index = error(_profile_access_error,1);
@@ -80,14 +79,14 @@ else
                 case 'delete':
                     if($chkMe == 4 || $view_userID == convert::ToInt($userid))
                     {
-                        db("DELETE FROM ".$db['usergb']." WHERE user = '".convert::ToInt($view_userID)."' AND id = '".convert::ToInt($_GET['gbid'])."'");
+                        db("DELETE FROM ".dba::get('usergb')." WHERE user = '".convert::ToInt($view_userID)."' AND id = '".convert::ToInt($_GET['gbid'])."'");
                         $index = info(_gb_delete_successful, "?action=user&amp;id=".$view_userID."&show=gb");
                     }
                     else
                         $index = error(_error_wrong_permissions, 1);
                 break;
                 case 'edit':
-                    $get = db("SELECT * FROM ".$db['usergb']." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
+                    $get = db("SELECT * FROM ".dba::get('usergb')." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('editusers'))
                     {
                         if($get['reg'] != 0)
@@ -127,7 +126,7 @@ else
                 switch(isset($_GET['show']) ? $_GET['show'] : false)
                 {
                     case 'gallery':
-                        $qrygl = db("SELECT * FROM ".$db['usergallery']." WHERE user = '".convert::ToInt($view_userID)."' ORDER BY id DESC"); $color = 1; $gal = '';
+                        $qrygl = db("SELECT * FROM ".dba::get('usergallery')." WHERE user = '".convert::ToInt($view_userID)."' ORDER BY id DESC"); $color = 1; $gal = '';
                         if(_rows($qrygl) >= 1)
                         {
                             while($getgl = _fetch($qrygl))
@@ -142,8 +141,8 @@ else
 
                     case 'gb':
                         $addgb = show(_usergb_eintragen, array("id" => $view_userID));
-                        $qrygb = db("SELECT * FROM ".$db['usergb']." WHERE user = ".convert::ToInt($view_userID)." ORDER BY datum DESC LIMIT ".($page - 1)*($maxusergb=config('m_usergb')).",".$maxusergb."");
-                        $entrys = cnt($db['usergb'], " WHERE user = ".$view_userID);
+                        $qrygb = db("SELECT * FROM ".dba::get('usergb')." WHERE user = ".convert::ToInt($view_userID)." ORDER BY datum DESC LIMIT ".($page - 1)*($maxusergb=config('m_usergb')).",".$maxusergb."");
+                        $entrys = cnt(dba::get('usergb'), " WHERE user = ".$view_userID);
                         $i = $entrys-($page - 1)*$maxusergb; $membergb = '';
 
                         if(_rows($qrygb) >= 1)
@@ -247,8 +246,8 @@ else
                         $clan = "";
                         if($get['level'] != 1 || isset($_GET['sq']))
                         {
-                            $sq = db("SELECT * FROM ".$db['userpos']." WHERE user = '".convert::ToInt($view_userID)."'");
-                            $cnt = cnt($db['userpos'], " WHERE user = '".$get['id']."'"); $i=1;
+                            $sq = db("SELECT * FROM ".dba::get('userpos')." WHERE user = '".convert::ToInt($view_userID)."'");
+                            $cnt = cnt(dba::get('userpos'), " WHERE user = '".$get['id']."'"); $i=1;
                             if(_rows($sq) && !isset($_GET['sq']))
                             {
                                 while($getsq = _fetch($sq))
@@ -285,9 +284,11 @@ else
                         unset($custom_favos_data,$custom_hardware_data);
                         //Custom profil fields
 
+                        $city = re($get['city']);
+                        $beschreibung = bbcode($get['beschreibung']);
                         $show = show($dir."/profil_show",array(
                                 "hardware_head" => $hardware_head,
-                                "city" => re($get['city']),
+                                "city" => (!empty($city) ? $city : '-') ,
                                 "logins" => userstats($_GET['id'], "logins"),
                                 "hits" => userstats($_GET['id'], "hits"),
                                 "msgs" => userstats($_GET['id'], "writtenmsg"),
@@ -314,7 +315,7 @@ else
                                 "favos_head" => $favos_head,
                                 "position" => getrank($view_userID),
                                 "status" => $status,
-                                "ich" => bbcode($get['beschreibung']),
+                                "ich" => (empty($beschreibung) ? '-' : $beschreibung),
                                 "custom_about" => $custom_about,
                                 "custom_contact" => $custom_contact,
                                 "custom_favos" => $custom_favos,
@@ -331,4 +332,3 @@ else
         }
     }
 }
-?>

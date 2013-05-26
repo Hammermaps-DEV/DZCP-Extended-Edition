@@ -124,3 +124,78 @@ Das Gästebuch wurde überarbeitet, nun können die User Kommentare gelöscht od
 * Dieser sollte per Hand aus dem  Originalen Gästebucheintrag Text entfernt werden und neu Kommentiert werden. <Gästebucheintrag bearbeiten>
 
 In der Gallery ist nun Seitenblättern möglich, die Gallery kann in mehrere Seiten eingeteilt werden.
+
+Die Anzeige für TS3 und die Gameserver von DZCP wurde gegen GameQ ausgetauscht und grundliegend überarbeitet.
+Es können damit nun um die 60 Spiele Live angezeit werden:
+
+Alien Swarm
+Half Life 2: Deathmatch
+Sven Co-op
+Garry's Mod
+Counter-Strike: Global Offensive
+Counter-Strike 1.6
+Counter-Strike: Condition Zero
+Counter-Strike: Source
+Day of Defeat
+Day of Defeat: Source
+Half Life
+Half Life 2: Insurgency
+Left 4 Dead
+Left 4 Dead 2
+Natural Selection
+Natural Selection 2
+Team Fortress Classic
+Team Fortress 2
+Zombie Master
+Zombie Panic Source
+Homefront
+America's Army 3
+Unreal Tournament 3
+Age of Chivalry
+Armed Assault 2
+Armed Assault 3
+Battlefield 1942
+Battlefield 2
+Battlefield 2142
+Battlefield 3
+Battlefield Bad Company 2
+Battlefield Vietnam
+Brink
+Call of Duty: Modern Warfare 3
+Call of Duty
+Call of Duty 2
+Call of Duty 4
+CoD:United Offensive
+Call of Duty: World at War
+Unreal Tournament
+Crysis
+Crysis 2
+Crysis Wars
+DayZ
+Doom 3
+Wolfenstein Enemy Territory
+Enemy Territory: Quake Wars
+F.E.A.R.
+Minecraft
+Medal of Honor: Allied Assault
+Medal of Honor: Spearhead
+Medal of Honor Warfighter
+Quake 2
+Quake 3
+Quake 4
+Red Orchestra: Ostfront 41-45
+Red Orchestra 2
+
+Der Teamspeak 3 Viewer wurde auch gegen GameQ ersetzt und ins DZCP intigriert.
+* Automatischer Download von Custom Icons für User,Channels und Server.
+* Anzeige mehrere TS3 Server ist auf der Teamspeak Server Seite möglich.
+* TS2 Viewer wurde entfernt ,sry
+* Die Teamspeak Server Seite wird per Ajax geladen.
+* Auf und zuklappen der einzelden TS3 Channel geht nun perfect.
+* Auf und Zuklappen der einzelden TS3 Server ist auf der Teamspeak Server Seite möglich.
+* Unterstüzung und Erkennung von TS3-DNS Servern.
+
+Erkennung und Blockierung von Trashmail Servern, Trashmail Server können in der config.php zugelassen werden.
+Verwendung von einer Globalen IP Banlist für Spamming Bots, verwendet www.stopforumspam.com
+IP-Bans können vom Administrator selber eingetragen werden. *Localban*
+Das MySQL Backend wurde gegen ein MySQLi Backend ausgetauscht und es wird standardmäßig 'mysqli_real_connect' verwendet.

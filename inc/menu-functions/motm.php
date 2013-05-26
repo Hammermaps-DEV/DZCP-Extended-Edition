@@ -1,37 +1,44 @@
 <?php
-if(IS_DZCP != 'true') exit();
 function motm()
 {
-    global $db, $allowHover;
-    if(!$userpics=get_files(basePath.'/inc/images/uploads/userpics/',false,true))
-        return '';
-
-    $qry = db("SELECT id FROM ".$db['users']." WHERE level >= 2");
-    while($rs = _fetch($qry))
+    global $allowHover;
+    $menu_xml = get_menu_xml('motm');
+    if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_motm'))
     {
-        foreach($userpics AS $userpic)
+        if(!$userpics=get_files(basePath.'/inc/images/uploads/userpics/',false,true))
+            return '';
+
+        $qry = db("SELECT id FROM ".dba::get('users')." WHERE level >= 2");
+        while($rs = _fetch($qry))
         {
-            $tmpId = convert::ToInt($userpic);
-            if($tmpId == $rs['id'])
+            foreach($userpics AS $userpic)
             {
-                $temparr[] = $rs['id'];
-                break;
+                $tmpId = convert::ToInt($userpic);
+                if($tmpId == $rs['id'])
+                {
+                    $temparr[] = $rs['id'];
+                    break;
+                }
             }
         }
-    }
 
-    $arrayID = rand(0, count($temparr) - 1);
-    $uid = $temparr[$arrayID]; $member = '';
+        $arrayID = rand(0, count($temparr) - 1);
+        $uid = $temparr[$arrayID]; $member = '';
 
-    $sql = db("SELECT id,status,level FROM ".$db['users']." WHERE id = '".$uid."'");
-    if(!_rows($sql) && !empty($temparr))
-    {
-        $get=_fetch($sql);
-        $status = ($get['status'] == 1 || $get['level'] == 1) ? "aktiv" : "inaktiv";
-        $info = ($allowHover ? 'onmouseover="DZCP.showInfo(\''.fabo_autor($get['id']).'\', \''._posi.';'._status.';'._age.'\', \''.getrank($get['id']).';'.$status.';'.getAge($get['bday']).'\', \''.hoveruserpic($get['id']).'\')" onmouseout="DZCP.hideInfo()"' : '');
-        $member = show("menu/motm", array("uid" => $get['id'], "upic" => userpic($get['id'], 130, 161), "info" => $info));
+        $sql = db("SELECT id,status,level FROM ".dba::get('users')." WHERE id = '".$uid."'");
+        if(!_rows($sql) && !empty($temparr))
+        {
+            $get=_fetch($sql);
+            $status = ($get['status'] == 1 || $get['level'] == 1) ? "aktiv" : "inaktiv";
+            $info = ($allowHover ? 'onmouseover="DZCP.showInfo(\''.fabo_autor($get['id']).'\', \''._posi.';'._status.';'._age.'\', \''.getrank($get['id']).';'.$status.';'.getAge($get['bday']).'\', \''.hoveruserpic($get['id']).'\')" onmouseout="DZCP.hideInfo()"' : '');
+            $member = show("menu/motm", array("uid" => $get['id'], "upic" => userpic($get['id'], 130, 161), "info" => $info));
+
+            if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache
+                Cache::set('nav_motm',$member,$menu_xml['config']['update']);
+        }
     }
+    else
+        $member = Cache::get('nav_motm');
 
     return empty($member) ? '' : '<table class="navContent" cellspacing="0">'.$member.'</table>';
 }
-?>

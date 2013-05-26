@@ -7,7 +7,7 @@
  */
 
 ## Install ##
-Cache::installType('memcache',array('TypeName' => 'Memcache','CallTag' => 'mem_','Class' => 'cache_memcache','InitCache' => true,'SetServer' => true,'Required' => 'memcache'));
+Cache::installType('memcache',array('TypeName' => 'Memcache','CallTag' => 'mem_','Class' => 'cache_memcache','InitCache' => true,'SetServer' => true,'Required' => 'memcache', 'CacheType' => 'mem'));
 
 class cache_memcache extends Cache
 {
@@ -99,6 +99,7 @@ class cache_memcache extends Cache
     public static function mem_set_binary($key, $binary, $original_file=false, $ttl = 86400)
     {
         $key = 'bin_'.$key;
+        $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $data = bin2hex($binary);
         self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));
 
@@ -241,4 +242,3 @@ class cache_memcache extends Cache
     public static function mem_clean()
     { return @memcache_flush(self::$_memcached); }
 }
-?>

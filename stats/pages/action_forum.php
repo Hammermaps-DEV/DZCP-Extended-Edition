@@ -16,17 +16,17 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $allthreads = cnt($db['f_threads']);
-    $allposts = cnt($db['f_posts']);
+    $allthreads = cnt(dba::get('f_threads'));
+    $allposts = cnt(dba::get('f_posts'));
 
     if($allthreads > 0 && $allposts >= 0)
     {
 
         $ppert = round($allposts/$allthreads,2);
-        $get = db("SELECT id,forumposts FROM ".$db['userstats']." ORDER BY forumposts DESC",false,true);
+        $get = db("SELECT id,forumposts FROM ".dba::get('userstats')." ORDER BY forumposts DESC",false,true);
 
         $topposter = autor($get['id'])." (".$get['forumposts']." Posts)";
-        $get = db("SELECT t_date FROM ".$db['f_threads']." ORDER BY t_date ASC",false,true);
+        $get = db("SELECT t_date FROM ".dba::get('f_threads')." ORDER BY t_date ASC",false,true);
 
         $time = time()-$get['t_date'];
         $days = @round($time/86400);

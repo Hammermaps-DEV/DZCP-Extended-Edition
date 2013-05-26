@@ -32,7 +32,7 @@ else
     switch (isset($_GET['do']) ? $_GET['do'] : '')
     {
         case 'edit':
-            $get = db("SELECT * FROM ".$db['newscomments']." WHERE id = '".$cid."'",false,true);
+            $get = db("SELECT * FROM ".dba::get('newscomments')." WHERE id = '".$cid."'",false,true);
 
             $get_id = '?';
             $get_userid = $get['reg'];
@@ -50,7 +50,7 @@ else
         break;
         default:
             $editedby = '';
-            $get_id = cnt($db['newscomments'], " WHERE news = ".$id."")+1;
+            $get_id = cnt(dba::get('newscomments'), " WHERE news = ".$id."")+1;
             $get_userid = convert::ToInt($userid);
             $get_date = time();
 
@@ -89,4 +89,3 @@ else
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
 }
-?>

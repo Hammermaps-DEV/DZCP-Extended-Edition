@@ -41,7 +41,7 @@ else
                     $index = error(_error_taktik_empty_map, 1);
                 else
                 {
-                    db("INSERT INTO ".$db['taktik']." SET
+                    db("INSERT INTO ".dba::get('taktik')." SET
                            `datum`      = '".time()."',
                            `map`        = '".up($_POST['map'])."',
                            `spart`      = '".up($_POST['spart'], 1)."',
@@ -56,14 +56,14 @@ else
             case 'delete':
                 if(isset($_GET['id']) && !empty($_GET['id']))
                 {
-                    db("DELETE FROM ".$db['taktik']." WHERE id = ".convert::ToInt($_GET['id']));
+                    db("DELETE FROM ".dba::get('taktik')." WHERE id = ".convert::ToInt($_GET['id']));
                     $index = info(_taktik_deleted, "../taktik/");
                 }
                 break;
             case 'edit':
                 if(isset($_GET['id']) && !empty($_GET['id']))
                 {
-                    $get = db("SELECT * FROM ".$db['taktik']." WHERE id = ".convert::ToInt($_GET['id']),false,true);
+                    $get = db("SELECT * FROM ".dba::get('taktik')." WHERE id = ".convert::ToInt($_GET['id']),false,true);
                     $index = show($dir."/edit", array("id" => $_GET['id'],
                             "map" => re($get['map']),
                             "autor" => autor($get['autor']),
@@ -89,7 +89,7 @@ else
                         $index = error(_error_taktik_empty_map, 1);
                     else
                     {
-                        db("UPDATE ".$db['taktik']." SET
+                        db("UPDATE ".dba::get('taktik')." SET
                                `map`        = '".up($_POST['map'])."',
                                `sparct`     = '".up($_POST['sparct'], 1)."',
                                `spart`      = '".up($_POST['spart'], 1)."',

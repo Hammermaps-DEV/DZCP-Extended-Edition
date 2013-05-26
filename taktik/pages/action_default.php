@@ -20,7 +20,7 @@ else
         $index = error(_error_wrong_permissions, 1);
     else
     {
-        $qry = db("SELECT id,datum,map,spart,sparct,standardt,standardct,autor FROM ".$db['taktik']." ORDER BY id DESC");
+        $qry = db("SELECT id,datum,map,spart,sparct,standardt,standardct,autor FROM ".dba::get('taktik')." ORDER BY id DESC");
         $color = 1; $show = '';
         while ($get = _fetch($qry))
         {

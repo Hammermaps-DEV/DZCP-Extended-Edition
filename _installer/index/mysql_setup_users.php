@@ -23,21 +23,26 @@ if(isset($_POST['save']))
             {
                 if($email != '')
                 {
-                    if($clanname != '')
+                    if(check_email($_POST['email']))
                     {
-                        if($emailweb != '')
+                        if($clanname != '')
                         {
-                            $db_infos = array("login" => $login, "pwd" => $pwd, "nick" => $nick, "email" => $email, "clanname" => $clanname, "seitentitel" => $seitentitel, "emailweb" => $emailweb, "loginsec" => $loginsec, "loginnow" => $loginnow );
-                            sql_installer(true,$db_infos);
-                            $nextlink = show("/msg/nextlink",array("ac" => 'action=done'));
-                            $msg = writemsg(saved_user,false);
-                            $disabled = 'disabled="disabled"';
+                            if($emailweb != '')
+                            {
+                                $db_infos = array("login" => $login, "pwd" => $pwd, "nick" => $nick, "email" => $email, "clanname" => $clanname, "seitentitel" => $seitentitel, "emailweb" => $emailweb, "loginsec" => $loginsec, "loginnow" => $loginnow );
+                                sql_installer(true,$db_infos);
+                                $nextlink = show("/msg/nextlink",array("ac" => 'action=done'));
+                                $msg = writemsg(saved_user,false);
+                                $disabled = 'disabled="disabled"';
+                            }
+                            else
+                                $msg = writemsg(no_webmail,true);
                         }
                         else
-                            $msg = writemsg(no_webmail,true);
+                            $msg = writemsg(no_clanname,true);
                     }
                     else
-                        $msg = writemsg(no_clanname,true);
+                        $msg = writemsg(_error_invalid_email,true);
                 }
                 else
                     $msg = writemsg(no_email,true);
@@ -53,4 +58,3 @@ if(isset($_POST['save']))
 }
 
 $index = show("mysql_conf",array("login" => $login, "pwd" => $pwd, "email" => $email, "nick" => $nick, "msg" => $msg, "disabled" => $disabled, "clanname" => $clanname, "seitentitel" => $seitentitel, "emailweb" => $emailweb, "loginsec" => ($loginsec ? 'checked="checked"' : ''), "loginnowsec" => ($loginnow ? 'checked="checked"' : ''), "next" => $nextlink));
-?>

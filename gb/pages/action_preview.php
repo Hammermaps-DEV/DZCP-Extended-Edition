@@ -22,7 +22,7 @@ else
     {
         if(isset($_GET['edit']) && !empty($_GET['edit']))
         {
-            $get = db("SELECT reg,datum FROM ".$db['gb_comments']." WHERE id = '".convert::ToInt($_GET['edit'])."'",false,true);
+            $get = db("SELECT reg,datum FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['edit'])."'",false,true);
             $get_id = (isset($_GET['postid']) ? $_GET['postid'] : '?');
             $get_userid = $get['reg']; $get_date = $get['datum'];
 
@@ -33,7 +33,7 @@ else
         }
         else
         {
-            $get_id = cnt($db['gb'])+1;
+            $get_id = cnt(dba::get('gb'))+1;
             $get_userid = convert::ToInt($userid);
             $get_date = time();
 
@@ -54,7 +54,7 @@ else
     {
         if(isset($_GET['edit']) && !empty($_GET['edit']))
         {
-            $get = db("SELECT reg,datum FROM ".$db['gb']." WHERE id = '".convert::ToInt($_GET['edit'])."'",false,true);
+            $get = db("SELECT reg,datum FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['edit'])."'",false,true);
             $get_id = (isset($_GET['id']) ? $_GET['id'] : '?');
             $get_userid = $get['reg']; $get_date = $get['datum'];
 
@@ -65,7 +65,7 @@ else
         }
         else
         {
-            $get_id = cnt($db['gb'])+1;
+            $get_id = cnt(dba::get('gb'))+1;
             $get_userid = convert::ToInt($userid);
             $get_date = time();
 

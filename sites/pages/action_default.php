@@ -16,23 +16,25 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT s1.*,s2.internal FROM ".$db['sites']." AS s1
-             LEFT JOIN ".$db['navi']." AS s2
+    $qry = db("SELECT s1.*,s2.internal FROM ".dba::get('sites')." AS s1
+             LEFT JOIN ".dba::get('navi')." AS s2
              ON s1.id = s2.editor
              WHERE s1.id = '".convert::ToInt($_GET['show'])."'");
-			 
+
     if(_rows($qry))
     {
-		$get = _fetch($qry);
+        $get = _fetch($qry);
         if($get['internal'] == 1 && ($chkMe == 1 || $chkMe == "unlogged"))
             $index = error(_error_wrong_permissions, 1);
-        else {
+        else
+        {
             $where = re($get['titel']);
             $title = $pagetitle." - ".$where."";
-
             $inhalt = ($get['html'] ? bbcode_html($get['text']) : bbcode($get['text']));
             $index = show($dir."/sites", array("titel" => re($get['titel']), "inhalt" => $inhalt));
         }
-    } else $index = error(_sites_not_available,1);
+    }
+    else
+        $index = error(_sites_not_available,1);
 }
 ?>

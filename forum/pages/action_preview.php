@@ -21,7 +21,7 @@ else
   {
     if($_GET['do'] == 'editthread')
     {
-      $qry = db("SELECT * FROM ".$db['f_threads']."
+      $qry = db("SELECT * FROM ".dba::get('f_threads')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
@@ -54,7 +54,7 @@ else
                                         "delete" => ""));
     if($guestCheck)
     {
-      $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+      $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                   WHERE id = '".$pUId."'");
       $getu = _fetch($qryu);
 
@@ -83,13 +83,13 @@ else
 
 
     $qryw = db("SELECT s1.kid,s1.topic,s2.kattopic,s2.sid
-                FROM ".$db['f_threads']." AS s1
-                LEFT JOIN ".$db['f_skats']." AS s2
+                FROM ".dba::get('f_threads')." AS s1
+                LEFT JOIN ".dba::get('f_skats')." AS s2
                 ON s1.kid = s2.id
                 WHERE s1.id = '".convert::ToInt($tID)."'");
     $getw = _fetch($qryw);
 
-    $qrykat = db("SELECT name FROM ".$db['f_kats']."
+    $qrykat = db("SELECT name FROM ".dba::get('f_kats')."
                   WHERE id = '".$getw['sid']."'");
     $kat = _fetch($qrykat);
 
@@ -140,7 +140,7 @@ else
   } else {
     if($_GET['do'] == 'editpost')
     {
-      $qry = db("SELECT * FROM ".$db['f_posts']."
+      $qry = db("SELECT * FROM ".dba::get('f_posts')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
       $get = _fetch($qry);
 
@@ -164,7 +164,7 @@ else
         $pUId = convert::ToInt($userid);
       }
       $tID = $_GET['id'];
-      $cnt = cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+2;
+      $cnt = cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+2;
     }
 
     $titel = show(_eintrag_titel_forum, array("postid" => $cnt,
@@ -175,7 +175,7 @@ else
                                         "delete" => ""));
     if($guestCheck)
     {
-      $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+      $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                   WHERE id = '".convert::ToInt($pUId)."'");
       $getu = _fetch($qryu);
 

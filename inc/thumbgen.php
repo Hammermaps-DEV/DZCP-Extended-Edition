@@ -6,20 +6,17 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-ini_set('display_errors', 0);
-error_reporting(0);
-
 function thumbgen($filename,$width,$height)
 {
     if(!isset($filename) || empty($filename) || !extension_loaded('gd'))
         die();
 
-    if(!file_exists(basePath.'/inc/images/uploads/'.$filename))
+    if(!file_exists(basePath.'/inc/images/'.$filename))
         die();
 
-    list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/uploads/'.$filename);
+    list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/'.$filename);
     $neueBreite = empty($width) || $width <= 1 ? $breite : convert::ToInt($width);
-    $neueHoehe = empty($height) || $height <= 1 ? intval($hoehe*$neueBreite/$breite) : convert::ToInt($height);
+    $neueHoehe = empty($height) || $height <= 1 ? $hoehe*$neueBreite/$breite : convert::ToInt($height);
 
     if(!cache_thumbgen || Cache::check_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
     {
@@ -46,8 +43,17 @@ function thumbgen($filename,$width,$height)
             }
 
             $imagick = new Imagick(); //New Objekt
-            $imagick->readImage(basePath.'/inc/images/uploads/'.$filename);
-            list($newX,$newY)=scaleImage($imagick->getImageWidth(), $imagick->getImageHeight(), $neueBreite, $neueHoehe);
+            $imagick->readImage(basePath.'/inc/images/'.$filename);
+
+            if(empty($height) || $height <= 1 || empty($width) || $width <= 1)
+                list($newX,$newY)=scaleImage($imagick->getImageWidth(), $imagick->getImageHeight(), $neueBreite, $neueHoehe);
+            else
+            {
+                $newX = $neueBreite;
+                $newY = $neueHoehe;
+            }
+
+
             $imagick->thumbnailImage($newX,$newY);
 
             switch($type)
@@ -70,7 +76,7 @@ function thumbgen($filename,$width,$height)
             $bin=$imagick->getimage();
 
             if(cache_thumbgen)
-                @Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/uploads/'.$filename);
+                @Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/'.$filename);
 
             $imagick->clear(); unset($imagick);
             exit($bin);
@@ -82,7 +88,7 @@ function thumbgen($filename,$width,$height)
             {
                 case 1: ## GIF ##
                     header("Content-Type: image/gif");
-                    $altesBild = imagecreatefromgif(basePath.'/inc/images/uploads/'.$filename);
+                    $altesBild = imagecreatefromgif(basePath.'/inc/images/'.$filename);
                     imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
 
                     ob_start();
@@ -93,7 +99,7 @@ function thumbgen($filename,$width,$height)
                 default:
                 case 2: ## JPEG ##
                     header("Content-Type: image/jpeg");
-                    $altesBild = imagecreatefromjpeg(basePath.'/inc/images/uploads/'.$filename);
+                    $altesBild = imagecreatefromjpeg(basePath.'/inc/images/'.$filename);
                     imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
 
                     ob_start();
@@ -103,7 +109,7 @@ function thumbgen($filename,$width,$height)
                 break;
                 case 3: ## PNG ##
                     header("Content-Type: image/png");
-                    $altesBild = imagecreatefrompng(basePath.'/inc/images/uploads/'.$filename);
+                    $altesBild = imagecreatefrompng(basePath.'/inc/images/'.$filename);
                     imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
 
                     ob_start();
@@ -114,7 +120,7 @@ function thumbgen($filename,$width,$height)
             }
 
             if(cache_thumbgen)
-                Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/uploads/'.$filename);
+                Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/'.$filename);
 
             if(is_resource($altesBild))
                 imagedestroy($altesBild);
@@ -144,4 +150,3 @@ function thumbgen($filename,$width,$height)
         exit(Cache::get_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type));
     }
 }
-?>

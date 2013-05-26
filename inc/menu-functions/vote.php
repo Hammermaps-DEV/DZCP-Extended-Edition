@@ -1,22 +1,19 @@
 <?php
-//-> Votemenu
 function vote($ajax = false)
 {
-  global $db;
-    $qry = db("SELECT * FROM ".$db['votes']." WHERE menu = '1' AND forum = 0");
-    $get = _fetch($qry);
-
+    $qry = db("SELECT * FROM ".dba::get('votes')." WHERE menu = '1' AND forum = 0");
     if(_rows($qry))
     {
-      $qryv = db("SELECT * FROM ".$db['vote_results']." WHERE vid = '".$get['id']."' ORDER BY what");
+      $get = _fetch($qry);
+      $qryv = db("SELECT * FROM ".dba::get('vote_results')." WHERE vid = '".$get['id']."' ORDER BY what");
       $results = "";
       while ($getv = _fetch($qryv))
       {
-        $stimmen = sum($db['vote_results'], " WHERE vid = '".$get['id']."'", "stimmen");
+        $stimmen = sum(dba::get('vote_results'), " WHERE vid = '".$get['id']."'", "stimmen");
 
         if($stimmen != 0)
         {
-          if(ipcheck("vid_".$get['id']) || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1)
+          if(ipcheck("vid_".$get['id']) /*|| cookie::get('vid_'.$get['id']) != false*/ || $get['closed'] == 1)
           {
             $percent = round($getv['stimmen']/$stimmen*100,1);
             $rawpercent = round($getv['stimmen']/$stimmen*100,0);
@@ -49,5 +46,3 @@ function vote($ajax = false)
 
   return empty($vote) ? '<center style="margin:2px 0">'._vote_menu_no_vote.'</center>' : ($ajax ? $vote : '<div id="navVote">'.$vote.'</div>');
 }
-
-?>

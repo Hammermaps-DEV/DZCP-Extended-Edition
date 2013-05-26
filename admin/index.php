@@ -114,6 +114,7 @@ else
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
+            $do = (isset($_GET['do']) ? $_GET['do'] : '');
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                 require_once(basePath."/admin/menu/".$inc_file);
@@ -152,4 +153,3 @@ if($cache_cleanup)
 
 ## OUTPUT BUFFER END ##
 gz_output();
-?>

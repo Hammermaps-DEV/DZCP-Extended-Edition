@@ -14,11 +14,10 @@
 */
 function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
 {
-    global $db;
     $bdays = ""; $cws = ""; $event = ""; $i = cal(convert::ToInt($i));
 
     //Geburtstage
-    $qry = db("SELECT id,bday,nick FROM ".$db['users']." WHERE bday LIKE '".$i.".".$monat.".____"."'");
+    $qry = db("SELECT id,bday,nick FROM ".dba::get('users')." WHERE bday LIKE '".$i.".".$monat.".____"."'");
     if(($bday_count=_rows($qry)))
     {
         $infoBday = ''; $i_bday = 1;
@@ -34,13 +33,13 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
     }
 
     //Clanwars
-    $qry = db("SELECT datum,gegner,squad_id FROM ".$db['cw']." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'");
+    $qry = db("SELECT datum,gegner,squad_id FROM ".dba::get('cw')." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'");
     if(($cw_count=_rows($qry)))
     {
         $infoCW = ''; $i_cw = 1;
         while($get = _fetch($qry))
         {
-            $get_squad_icon = db("SELECT icon FROM `".$db['squads']."` WHERE `id` = '".$get['squad_id']."' LIMIT 1",false,true);
+            $get_squad_icon = db("SELECT icon FROM `".dba::get('squads')."` WHERE `id` = '".$get['squad_id']."' LIMIT 1",false,true);
             $p_tag = ($cw_count >= 2 && $i_cw != $cw_count ? '<p>' : '');
             $test = '<img align="absmiddle" src="../inc/images/gameicons/'.re($get_squad_icon['icon']).'" alt="" /> ';
             $infoCW .= jsconvert($test._kal_cw.re($get['gegner']).$p_tag); $i_cw++;
@@ -52,7 +51,7 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
     }
 
     //Events
-    $qry = db("SELECT datum,title FROM ".$db['events']." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'");
+    $qry = db("SELECT datum,title FROM ".dba::get('events')." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".$i.".".$monat.".".$jahr."'");
     if(($event_count=_rows($qry)))
     {
         $infoEvent = ''; $i_event = 1;
@@ -63,7 +62,7 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
         }
 
         $info = ' onmouseover="DZCP.showInfo(\''.$infoEvent.'\')" onmouseout="DZCP.hideInfo()"';
-        $event = '<a href="?action=show&amp;time='.$datum.'"'.$info.'><img src="../inc/images/event.gif" alt="" /></a>';
+        $event = '<a href="?action=show&amp;time='.$datum.'"'.$info.'><img src="../inc/images/event.png" alt="" /></a>';
         unset($qry,$event_count,$get,$p_tag,$infoEvent,$i_event,$info);
     }
 

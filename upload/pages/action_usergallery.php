@@ -41,7 +41,7 @@ else
                 $index = error(_upload_no_data, 1);
             } elseif($size > config('upicsize')."000") {
                 $index = error(_upload_wrong_size, 1);
-            } elseif(cnt($db['usergallery'], " WHERE user = ".convert::ToInt($userid)) == config('m_gallerypics')) {
+            } elseif(cnt(dba::get('usergallery'), " WHERE user = ".convert::ToInt($userid)) == config('m_gallerypics')) {
                 $index = error(_upload_over_limit, 2);
             } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name'])) {
                 $index = error(_upload_file_exists, 1);
@@ -49,7 +49,7 @@ else
                 copy($tmpname, basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name']);
                 @unlink($_FILES['file']['tmp_name']);
 
-                $qry = db("INSERT INTO ".$db['usergallery']."
+                $qry = db("INSERT INTO ".dba::get('usergallery')."
                    SET `user`         = '".convert::ToInt($userid)."',
                        `beschreibung` = '".up($_POST['beschreibung'],1)."',
                        `pic`          = '".up($_FILES['file']['name'])."'");
@@ -57,7 +57,7 @@ else
                 $index = info(_info_upload_success, "../user/?action=editprofile&show=gallery");
             }
         } elseif($_GET['do'] == "edit") {
-            $qry = db("SELECT * FROM ".$db['usergallery']."
+            $qry = db("SELECT * FROM ".dba::get('usergallery')."
                  WHERE id = '".convert::ToInt($_GET['gid'])."'");
             $get = _fetch($qry);
 
@@ -87,7 +87,7 @@ else
             $endung = explode(".", $_FILES['file']['name']);
             $endung = strtolower($endung[count($endung)-1]);
 
-            $qry = db("SELECT pic FROM ".$db['usergallery']."
+            $qry = db("SELECT pic FROM ".dba::get('usergallery')."
                  WHERE id = '".convert::ToInt($_POST['id'])."'");
             $get = _fetch($qry);
 
@@ -103,7 +103,7 @@ else
                 $pic = "`pic` = '".$_FILES['file']['name']."',";
             }
 
-            $qry = db("UPDATE ".$db['usergallery']."
+            $qry = db("UPDATE ".dba::get('usergallery')."
                  SET ".$pic."
                      `beschreibung` = '".up($_POST['beschreibung'],1)."'
                  WHERE id = '".convert::ToInt($_POST['id'])."'

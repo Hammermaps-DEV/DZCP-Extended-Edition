@@ -22,7 +22,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     header("Content-type: text/html; charset=utf-8");
-    $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".(isset($_POST['kat']) ? convert::ToInt($_POST['kat']) : 0)."'",false,true);
+    $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".(isset($_POST['kat']) ? convert::ToInt($_POST['kat']) : 0)."'",false,true);
     $klapp = (isset($_POST['klapptitel']) && !empty($_POST['klapptitel']) ? show(_news_klapplink, array("klapplink" => re($_POST['klapptitel']), "which" => "collapse", "id" => 0)) : '');
     $links1 = (isset($_POST['url1']) && !empty($_POST['url1']) ? show(_news_link, array("link" => re($_POST['link1']), "url" => links($_POST['url1']))) : '');
     $links2 = (isset($_POST['url2']) && !empty($_POST['url2']) ? show(_news_link, array("link" => re($_POST['link2']), "url" => links($_POST['url2']))) : '');
@@ -46,4 +46,3 @@ else
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
 }
-?>

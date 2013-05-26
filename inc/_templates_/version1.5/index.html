@@ -1,4 +1,4 @@
-<!--[ DZCP � by Frank "deV!L" Herrmann - www.dzcp.de & Patrick "Richy" Richert - www.my-starmedia.de]-->
+<!--[ DZCP by Frank "deV!L" Herrmann - www.dzcp.de & Patrick "Richy" Richert - www.my-starmedia.de]-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
@@ -9,17 +9,19 @@
     <meta http-equiv="Content-Style-Type" content="text/css" />
     <meta http-equiv="Content-Script-Type" content="text/javascript" />
     <meta http-equiv="Content-Type" content="text/html; charset=[charset]" />
+[lng_meta]
     <link rel="stylesheet" type="text/css" href="[dir]/_css/stylesheet.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="[dir]/_css/icons.php" media="screen" />
-    <link rel="alternate" type="application/rss+xml" href="../rss.xml" title="[rss] RSS-Feed" />
+    <link rel="alternate" type="application/rss+xml" href="<logged_in>../rss.php?key=[ukrss]</logged_in><logged_out>../rss.php</logged_out>" title="[rss] RSS-Feed" />
     <link rel="shortcut icon" href="../favicon.ico" type="image/ico" />
     <link rel="home" href="/" title="Home" />
     <link rel="top" href="#toplink" title="TOP" />
-    <script language="javascript" type="text/javascript" src="../inc/tinymce/tiny_mce.js"></script>
+    <script language="javascript" type="text/javascript" src="[dir]/_js/jquery.js"></script>
+    <script language="javascript" type="text/javascript" src="../inc/tinymce/tiny_mce_gzip.js"></script>
     [java_vars]
-    <script language="javascript" type="text/javascript" src="[dir]/_js/lib.js"></script>
     <script language="javascript" type="text/javascript" src="[dir]/_js/lightbox.js"></script>
     <script language="javascript" type="text/javascript" src="[dir]/_js/dzcp.js"></script>
+    <script language="javascript" type="text/javascript" src="[dir]/_js/swfobject.js"></script>
   </head>
   <body>
     <a name="toplink"></a>
@@ -36,7 +38,7 @@
             <tr>
               <td style="padding-left:10px;height:100%;color:#FFF;vertical-align:middle">[welcome]</td>
               <td style="text-align:right;padding-right:10px">[search]</td>
-              <td style="width:1%;padding-right:10px;text-align:right;vertical-align:middle;white-space:nowrap">[languages]</td>
+              <td style="width:1%;padding-right:10px;text-align:right;vertical-align:middle;white-space:nowrap">[languages] | <a href="<logged_in>../rss.php?key=[ukrss]</logged_in><logged_out>../rss.php</logged_out>"><img src="../inc/images/rss.png" class="icon" width="16" height="16" border="0" /></a></td>
             </tr>
           </table>
 <!--/welcome & languagechanger-->
@@ -151,11 +153,6 @@
                     <td><br />[template_switch]<br /></td>
                   </tr>
 <!--/template switch-->
-<!--Validator Button-->
-                  <tr>
-                    <td align="center"><p><a href="http://validator.w3.org/check?uri=referer" target="_blank"><img src="../inc/images/valid-xhtml10.png" alt="Valid XHTML 1.0 Transitional" height="31" width="88" /></a></p><br /></td>
-                  </tr>
-<!--/Validator Button-->
                 </table>
               </td>
               <td style="width:681px">
@@ -290,6 +287,15 @@
         <td><img src="[dir]/images/footer.jpg" alt="" /></td>
       </tr>
     </table>
+
+
+    <script type="text/javascript">
+AC_SW_RunContent( 'codebase','http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=10,1,1,0','width','130','height','90','src','file:///C|/Users/masterbee/Desktop/de_piranesi','pluginspage','http://www.adobe.com/shockwave/download/' ); //end AC code
+</script><noscript><object classid="clsid:166B1BCA-3F9C-11CF-8075-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/director/sw.cab#version=10,1,1,0" width="130" height="90">
+  <param name="src" value="../inc/images/maps/source/cstrike/de_dust2.swf" />
+  <embed src="../inc/images/maps/source/cstrike/de_dust2.swf" pluginspage="http://www.adobe.com/shockwave/download/" width="130" height="90"></embed>
+</object></noscript>
+
   </body>
 </html>
 <!--/ [time] -->

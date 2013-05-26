@@ -29,7 +29,7 @@ else
                 }
                 else
                 {
-                    db("INSERT INTO ".$db['gb_comments']." SET
+                    db("INSERT INTO ".dba::get('gb_comments')." SET
                             `gbe`     = '".convert::ToInt($_GET['id'])."',
                             `datum`    = '".time()."',
                             `editby`   = '',
@@ -42,7 +42,7 @@ else
 
             if(empty($index))
             {
-                $get = db("SELECT * FROM ".$db['gb']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+                $get = db("SELECT * FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
                 $gbhp = ($get['hp'] ? show(_hpicon, array("hp" => $get['hp'])) : '');
                 $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
 
@@ -82,7 +82,7 @@ else
         case 'set':
             if(permission('gb'))
             {
-                db("UPDATE ".$db['gb']." SET `public` = '1' WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("UPDATE ".dba::get('gb')." SET `public` = '1' WHERE id = '".convert::ToInt($_GET['id'])."'");
                 header("Location: ../gb/");
             }
             else
@@ -91,35 +91,35 @@ else
         case 'unset':
             if(permission('gb'))
             {
-                db("UPDATE ".$db['gb']." SET `public` = '0' WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("UPDATE ".dba::get('gb')." SET `public` = '0' WHERE id = '".convert::ToInt($_GET['id'])."'");
                 header("Location: ../gb/");
             }
             else
                 $index = error(_error_edit_post,1);
         break;
         case 'delete':
-            $get = db("SELECT reg FROM ".$db['gb']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            $get = db("SELECT reg FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" || permission('gb'))
             {
-                db("DELETE FROM ".$db['gb']." WHERE id = '".convert::ToInt($_GET['id'])."'");
-                db("DELETE FROM ".$db['gb_comments']." WHERE gbe = '".convert::ToInt($_GET['id'])."'");
+                db("DELETE FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("DELETE FROM ".dba::get('gb_comments')." WHERE gbe = '".convert::ToInt($_GET['id'])."'");
                 $index = info(_gb_delete_successful, "../gb/");
             }
             else
                 $index = error(_error_edit_post,1);
         break;
         case 'cdelete':
-            $get = db("SELECT reg FROM ".$db['gb_comments']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            $get = db("SELECT reg FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" || permission('gb'))
             {
-                db("DELETE FROM ".$db['gb_comments']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("DELETE FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $index = info(_comment_deleted, "../gb/");
             }
             else
                 $index = error(_error_edit_post,1);
         break;
         case 'cedit':
-            $get = db("SELECT * FROM ".$db['gb_comments']."  WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            $get = db("SELECT * FROM ".dba::get('gb_comments')."  WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" || permission('gb'))
             {
                 if($get['reg'] != 0)
@@ -138,7 +138,7 @@ else
                 $index = error(_error_edit_post,1);
         break;
         case 'edit':
-            $get = db("SELECT * FROM ".$db['gb']."  WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            $get = db("SELECT * FROM ".dba::get('gb')."  WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             if($get['reg'] == convert::ToInt($userid) && $chkMe != "unlogged" || permission('gb'))
             {
                 if($get['reg'] != 0)
@@ -167,18 +167,18 @@ else
                     $addme = "`nick` = '".up($_POST['nick'])."', `email` = '".up($_POST['email'])."', `hp` = '".up($_POST['hp'])."',";
 
                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                db("UPDATE ".$db['gb']." SET ".$addme." `nachricht`  = '".up($_POST['eintrag'], 1)."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".addslashes($editedby)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("UPDATE ".dba::get('gb')." SET ".$addme." `nachricht`  = '".up($_POST['eintrag'], 1)."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".addslashes($editedby)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $index = info(_gb_edited, "../gb/");
             }
             else
                 $index = error(_error_edit_post,1);
         break;
         case 'editgbc':
-            $get = db("SELECT reg FROM ".$db['gb_comments']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            $get = db("SELECT reg FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             if($get['reg'] == convert::ToInt($userid) || permission('gb'))
             {
                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                db("UPDATE ".$db['gb_comments']." SET
+                db("UPDATE ".dba::get('gb_comments')." SET
                     ".(isset($_POST['nick']) ? " `nick`     = '".up($_POST['nick'])."'," : "")."
                     ".(isset($_POST['email']) ? " `email`   = '".up($_POST['email'])."'," : "")."
                     ".(isset($_POST['hp']) ? " `hp`         = '".up($_POST['hp'])."'," : "")."

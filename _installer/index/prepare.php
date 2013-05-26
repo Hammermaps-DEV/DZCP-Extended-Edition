@@ -13,7 +13,6 @@ else
     $ftp_pwd = isset($_POST['pwd']) ? $_POST['pwd'] : '';
 
     $array_script = array(
-            'rss.xml',
             'admin',
             'banner',
             'banner/partners',
@@ -23,6 +22,7 @@ else
             'inc',
             'inc/_cache',
             'inc/_cache/binary',
+            'inc/_cache/tinymce',
             'inc/images',
             'inc/images/gameicons',
             'inc/images/maps',
@@ -118,4 +118,3 @@ else
 
     $index = show("prepare",array("script" => $script, "disabled" => $disabled, "install" => $install, "success_status" => $success_status, "next" => $nextlink, "ftp_host" => $ftp_host, "ftp_pfad" => $ftp_pfad, "ftp_user" => $ftp_user, "ftp_pwd" => $ftp_pwd));
 }
-?>

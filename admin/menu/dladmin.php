@@ -6,14 +6,9 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._dl;
-    if(!permission("downloads"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       if($_GET['do'] == "new")
       {
-        $qry = db("SELECT * FROM ".$db['dl_kat']."
-                   ORDER BY name");
+        $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
         while($get = _fetch($qry))
         {
           $kats .= show(_select_field, array("value" => $get['id'], "what" => re($get['name']), "sel" => ""));
@@ -29,7 +24,7 @@ if(_adminMenu != 'true')
                                              "oder" => _or,
                                              "file" => $dl,
                                              "nothing" => "",
-                                             "selr_dc" => '',
+                                             "selr_dc" => 'selected="selected"',
                                              "nofile" => _downloads_nofile,
                                              "lokal" => _downloads_lokal,
                                              "what" => _button_value_add,
@@ -51,7 +46,7 @@ if(_adminMenu != 'true')
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
           else                                    $dl = up($_POST['url']);
 
-          $qry = db("INSERT INTO ".$db['downloads']."
+          $qry = db("INSERT INTO ".dba::get('downloads')."
                      SET `download`     = '".up($_POST['download'])."',
                          `url`          = '".$dl."',
                          `date`         = '".time()."',
@@ -64,10 +59,10 @@ if(_adminMenu != 'true')
       }
       elseif($_GET['do'] == "edit")
       {
-        $qry  = db("SELECT * FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        $qry  = db("SELECT * FROM ".dba::get('downloads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $qryk = db("SELECT * FROM ".$db['dl_kat']." ORDER BY name");
+        $qryk = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
         while($getk = _fetch($qryk))
         {
           if($getk['id'] == $get['kat']) $sel = "selected=\"selected\"";
@@ -104,7 +99,7 @@ if(_adminMenu != 'true')
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
           else                                    $dl = up($_POST['url']);
 
-          $qry = db("UPDATE ".$db['downloads']."
+          $qry = db("UPDATE ".dba::get('downloads')."
                      SET `download`     = '".up($_POST['download'])."',
                          `url`          = '".$dl."',
                          `comments`     = '".convert::ToInt($_POST['comments'])."',
@@ -118,13 +113,13 @@ if(_adminMenu != 'true')
       }
       elseif($_GET['do'] == "delete")
       {
-        db("DELETE FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        db("DELETE FROM ".$db['dl_comments']." WHERE download = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('downloads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('dl_comments')." WHERE download = '".convert::ToInt($_GET['id'])."'");
         $show = info(_downloads_deleted, "?admin=dladmin");
       }
       else
       {
-        $qry = db("SELECT * FROM ".$db['downloads']." ORDER BY id");
+        $qry = db("SELECT * FROM ".dba::get('downloads')." ORDER BY id");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -150,5 +145,3 @@ if(_adminMenu != 'true')
                                               "add" => _downloads_admin_head,
                                               "show" => $show_));
       }
-    }
-?>

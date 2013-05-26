@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $maxawards = config('m_awards');
-    $qry = db("SELECT * FROM ".$db['squads']." ORDER BY pos");
+    $qry = db("SELECT * FROM ".dba::get('awards')." ORDER BY pos");
     while($get = _fetch($qry))
     {
         if(!empty($_GET['showsquad']) || !empty($_GET['show']))
@@ -42,13 +42,13 @@ else
         $img = show(_gameicon, array("icon" => $get['icon']));
 
         $qrym = db("SELECT s1.id,s1.squad,s1.date,s1.place,s1.prize,s1.url,s1.event,s2.icon,s2.name
-                FROM ".$db['awards']." AS s1
-                LEFT JOIN ".$db['squads']." AS s2 ON s1.squad = s2.id
+                FROM ".dba::get('awards')." AS s1
+                LEFT JOIN ".dba::get('awards')." AS s2 ON s1.squad = s2.id
                 WHERE s1.squad='".$get['id']."'
                 ORDER BY s1.date DESC
                     LIMIT ".$maxawards."");
 
-        $entrys = cnt($db['awards'], " WHERE squad = ".$get['id']);
+        $entrys = cnt(dba::get('awards'), " WHERE squad = ".$get['id']);
         $i = $entrys-($page - 1)*$maxawards;
 
         $awards = "";
@@ -71,7 +71,7 @@ else
                     "event" => $event));
         }
 
-        if(cnt($db['awards'], " WHERE squad = ".$get['id']) > $maxawards)
+        if(cnt(dba::get('awards'), " WHERE squad = ".$get['id']) > $maxawards)
             $show_all = show(_list_all_link, array("id" => $get['id']));
         else
             $show_all = "";
@@ -84,18 +84,18 @@ else
                 "awards" => $awards,
                 "show_all" => $show_all));
 
-        if(cnt($db['awards'], " WHERE squad = ".$get['id']) != 0)
+        if(cnt(dba::get('awards'), " WHERE squad = ".$get['id']) != 0)
         {
             $show .= show($dir."/squads_show", array("id" => $get['id'],
                     "shown" => $shown,
                     "display" => $display,
                     "awards" => $showawards,
-                    "squad" => $squad." (".cnt($db['awards'], " WHERE squad = ".$get['id']).")",
+                    "squad" => $squad." (".cnt(dba::get('awards'), " WHERE squad = ".$get['id']).")",
                     "img" => $img));
         }
     }
 
-    $qry = db("SELECT game,icon FROM ".$db['squads']."
+    $qry = db("SELECT game,icon FROM ".dba::get('awards')."
              GROUP BY game
              ORDER BY game ASC");
     while($get = _fetch($qry))
@@ -110,10 +110,10 @@ else
     $legende = show($dir."/legende", array("legende_head" => _awards_head_legende,
             "legende" => $legende));
 
-    $anz_awards = cnt($db['awards']);
-    $anz_place_1 = cnt($db['awards'], " WHERE place = 1 ");
-    $anz_place_2 = cnt($db['awards'], " WHERE place = 2 ");
-    $anz_place_3 = cnt($db['awards'], " WHERE place = 3 ");
+    $anz_awards = cnt(dba::get('awards'));
+    $anz_place_1 = cnt(dba::get('awards'), " WHERE place = 1 ");
+    $anz_place_2 = cnt(dba::get('awards'), " WHERE place = 2 ");
+    $anz_place_3 = cnt(dba::get('awards'), " WHERE place = 3 ");
 
     $place1_percent = @round($anz_place_1*100/$anz_awards, 1);
     $place2_percent = @round($anz_place_2*100/$anz_awards, 1);
@@ -161,7 +161,7 @@ else
             "2_balken" => $place2_balken,
             "3_balken" => $place3_balken));
 
-    if(cnt($db['awards']) != 0) $show_ = $show;
+    if(cnt(dba::get('awards')) != 0) $show_ = $show;
     else $show_ = show(_no_entrys_yet, array("colspan" => "10"));
 
     $index = show($dir."/main", array("head" => _awards_head,

@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".$db['squads']." WHERE team_show = 1 ORDER BY pos");
+    $qry = db("SELECT * FROM ".dba::get('squads')." WHERE team_show = 1 ORDER BY pos");
     while($get = _fetch($qry))
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -41,9 +41,9 @@ else
         ));
     }
 
-    $cntm = db("SELECT * FROM ".$db['squaduser']." GROUP BY user");
+    $cntm = db("SELECT * FROM ".dba::get('squaduser')." GROUP BY user");
     $weare = show(_member_squad_weare, array("cm" => _rows($cntm),
-            "cs" => cnt($db['squads'], "WHERE team_show = 1")));
+            "cs" => cnt(dba::get('squads'), "WHERE team_show = 1")));
 
     $index = show($dir."/squads", array("squadhead" => _member_squad_head,
             "weare" => $weare,

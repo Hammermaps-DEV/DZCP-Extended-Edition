@@ -16,19 +16,19 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if(cnt($db['cw'], " WHERE datum < ".time()."") != "0")
+    if(cnt(dba::get('cw'), " WHERE datum < ".time()."") != "0")
     {
-        $won = cnt($db['cw'], " WHERE punkte > gpunkte");
-        $lost = cnt($db['cw'], " WHERE punkte < gpunkte");
-        $draw = cnt($db['cw'], " WHERE datum < ".time()." && punkte = gpunkte");
-        $ges = cnt($db['cw'], " WHERE datum < ".time()."");
+        $won = cnt(dba::get('cw'), " WHERE punkte > gpunkte");
+        $lost = cnt(dba::get('cw'), " WHERE punkte < gpunkte");
+        $draw = cnt(dba::get('cw'), " WHERE datum < ".time()." && punkte = gpunkte");
+        $ges = cnt(dba::get('cw'), " WHERE datum < ".time()."");
 
         $wo_p = @round($won*100/$ges, 1);
         $lo_p = @round($lost*100/$ges, 1);
         $dr_p = @round($draw*100/$ges, 1);
     }
 
-    $allp = '<span class="CwWon">'.sum($db['cw'],'',"punkte").'</span> : <span class="CwLost">'.sum($db['cw'],'',"gpunkte").'</span>';
+    $allp = '<span class="CwWon">'.sum(dba::get('cw'),'',"punkte").'</span> : <span class="CwLost">'.sum(dba::get('cw'),'',"gpunkte").'</span>';
     $stats = show($dir."/cw", array("head" => _site_clanwars,
             "played" => _stats_cw_played,
             "nplayed" => $ges,

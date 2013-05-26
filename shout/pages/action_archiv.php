@@ -19,11 +19,11 @@ else
     $where = _site_shoutbox;
     $title = $pagetitle." - ".$where."";
     $page = (isset($_GET['page']) ? convert::ToInt($_GET['page']) : 1);
-    $entrys = cnt($db['shout']);
+    $entrys = cnt(dba::get('shout'));
     $i = $entrys-($page - 1)*($maxshoutarchiv=config('maxshoutarchiv'));
 
     $show = ''; $color = 1;
-    $qry = db("SELECT * FROM ".$db['shout']." ORDER BY datum DESC LIMIT ".($page - 1)*$maxshoutarchiv.",".$maxshoutarchiv."");
+    $qry = db("SELECT * FROM ".dba::get('shout')." ORDER BY datum DESC LIMIT ".($page - 1)*$maxshoutarchiv.",".$maxshoutarchiv."");
     while($get = _fetch($qry))
     {
         $is_num = preg_match("#\d#", $get['email']);

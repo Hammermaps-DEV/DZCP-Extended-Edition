@@ -18,7 +18,7 @@ else
 {
     if(isset($_GET['time']))
     {
-        $qry = db("SELECT * FROM ".$db['events']." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."' ORDER BY datum"); $events = '';
+        $qry = db("SELECT * FROM ".dba::get('events')." WHERE DATE_FORMAT(FROM_UNIXTIME(datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."' ORDER BY datum"); $events = '';
         while($get = _fetch($qry))
         {
             $edit = (permission("editkalender") ? show("page/button_edit_nolink", array("action" => "../admin/?admin=kalender&amp;do=edit&amp;id=".$get['id'], "title" => _button_title_edit)) : '');

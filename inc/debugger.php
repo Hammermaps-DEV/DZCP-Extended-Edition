@@ -19,7 +19,7 @@ class DebugConsole // Class by DZCP-Extended Edition
     private static $file_data = '';
 
     public static final function initCon()
-    { self::$log_array=array(array()); self::$file_data=''; self::insert_initialize('inc/debugger.php','Debugger'); }
+    { self::$log_array=array(array()); self::$file_data=''; self::insert_initialize('DebugConsole::initCon()','Debugger'); }
 
     public static final function insert_log($file,$msg,$back=false,$func="",$line=0)
     { self::$log_array[$file][] = ($line != 0 ? 'Line:"'.$line.'" => ' : "").($back ? $msg.$func : $func.$msg); }
@@ -42,8 +42,8 @@ class DebugConsole // Class by DZCP-Extended Edition
     public static final function insert_warning($file,$func)
     { if(show_warning) self::$log_array[$file][] = '<font color="#FFFF00">'.$func.'</font>'; }
 
-    public static final function sql_error_handler($sqlmsg, $sqldb, $query, $file, $line)
-    { self::$log_array[$file][] = ($line != 0 ? 'Line:"'.$line.'" => ' : "").'SQL DB: '.$sqldb.' => SQL Query: '.$query.' : '.'<font color="#FF0000">'.$sqlmsg.'</font>'; }
+    public static final function sql_error_handler($query)
+    { self::$log_array['WARNUNG: MySQL Query'][] = 'Fail MySQL Query: <font color="#FF0000">'.$query.'</font>'; }
 
     public static final function save_log()
     {
@@ -94,4 +94,3 @@ function dzcp_error_handler($code, $msg, $file, $line, $context)
 
     return true;
 }
-?>

@@ -20,7 +20,7 @@ else
         $index = error(_error_unregistered,1);
     else
     {
-        $get = db("SELECT url,id FROM ".$db['downloads']." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+        $get = db("SELECT url,id FROM ".dba::get('downloads')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
         $file = preg_replace("#added...#Uis", "", $get['url']);
 
         if(preg_match("=added...=Uis",$get['url']) !== FALSE)
@@ -29,7 +29,7 @@ else
             $dlFile = $get['url'];
 
         if(count_clicks('download',$get['id']))
-            db("UPDATE ".$db['downloads']." SET `hits` = hits+1, `last_dl` = '".time()."' WHERE id = '".$get['id']."'");
+            db("UPDATE ".dba::get('downloads')." SET `hits` = hits+1, `last_dl` = '".time()."' WHERE id = '".$get['id']."'");
 
         //download file
         header("Location: ".$dlFile);

@@ -28,31 +28,31 @@ if(_adminMenu != 'true')
         } else {
           $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
 
-          $add = db("INSERT INTO ".$db['profile']."
+          $add = db("INSERT INTO ".dba::get('profile')."
                      SET `name` = '".up($name)."',
                                    `type` = '".convert::ToInt($_POST['type'])."',
                          `kid`  = '".convert::ToInt($_POST['kat'])."'");
-              $insID = mysql_insert_id();
+              $insID = database::get_insert_id();
 
           $feldname = "custom_".$insID;
-              $add = db("UPDATE ".$db['profile']."
+              $add = db("UPDATE ".dba::get('profile')."
                      SET `feldname` = '".$feldname."'
                              WHERE id = '".convert::ToInt($insID)."'");
 
-              $add = db("ALTER TABLE `".$db['users']."` ADD `".$feldname."` VARCHAR( 249 ) NOT NULL");
+              $add = db("ALTER TABLE `".dba::get('users')."` ADD `".$feldname."` VARCHAR( 249 ) NOT NULL");
 
               $show = info(_profile_added,"?admin=profile");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("SELECT feldname FROM ".$db['profile']."
+        $qry = db("SELECT feldname FROM ".dba::get('profile')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
-          $del = db("ALTER TABLE ".$db['users']." DROP `".$get['feldname']."`");
-        $del = db("DELETE FROM ".$db['profile']."
+          $del = db("ALTER TABLE ".dba::get('users')." DROP `".$get['feldname']."`");
+        $del = db("DELETE FROM ".dba::get('profile')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $show = info(_profil_deleted, "?admin=profile");
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['profile']."
+        $qry = db("SELECT * FROM ".dba::get('profile')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -78,7 +78,7 @@ if(_adminMenu != 'true')
         } else {
           $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
 
-              $add = db("UPDATE ".$db['profile']."
+              $add = db("UPDATE ".dba::get('profile')."
                      SET `name`  = '".up($name)."',
                                    `kid`   = '".convert::ToInt($_POST['kat'])."',
                                    `type`  = '".convert::ToInt($_POST['type'])."',
@@ -90,17 +90,17 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "shown") {
           if($_GET['what'] == 'set')
         {
-          $upd = db("UPDATE ".$db['profile']."
+          $upd = db("UPDATE ".dba::get('profile')."
                      SET `shown` = '1'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
-          $upd = db("UPDATE ".$db['profile']."
+          $upd = db("UPDATE ".dba::get('profile')."
                      SET `shown` = '0'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
         header("Location: ?admin=profile");
       } else {
-        $qry = db("SELECT * FROM ".$db['profile']."
+        $qry = db("SELECT * FROM ".dba::get('profile')."
                    WHERE kid = '1'
                          ORDER BY name");
         while($get = _fetch($qry))
@@ -129,7 +129,7 @@ if(_adminMenu != 'true')
                                                          "del" => $delete));
         }
 
-        $qry = db("SELECT * FROM ".$db['profile']."
+        $qry = db("SELECT * FROM ".dba::get('profile')."
                    WHERE kid = '2'
                          ORDER BY name");
         while($get = _fetch($qry))
@@ -157,7 +157,7 @@ if(_adminMenu != 'true')
                                                         "edit" => $edit,
                                                         "del" => $delete));
         }
-        $qry = db("SELECT * FROM ".$db['profile']."
+        $qry = db("SELECT * FROM ".dba::get('profile')."
                    WHERE kid = '3'
                          ORDER BY name");
         while($get = _fetch($qry))
@@ -185,7 +185,7 @@ if(_adminMenu != 'true')
                                                            "edit" => $edit,
                                                            "del" => $delete));
         }
-          $qry = db("SELECT * FROM ".$db['profile']."
+          $qry = db("SELECT * FROM ".dba::get('profile')."
                    WHERE kid = '4'
                          ORDER BY name");
         while($get = _fetch($qry))
@@ -213,7 +213,7 @@ if(_adminMenu != 'true')
                                                          "edit" => $edit,
                                                          "del" => $delete));
         }
-        $qry = db("SELECT * FROM ".$db['profile']."
+        $qry = db("SELECT * FROM ".dba::get('profile')."
                    WHERE kid = '5'
                          ORDER BY name");
         while($get = _fetch($qry))
@@ -254,7 +254,6 @@ if(_adminMenu != 'true')
                                                              "hardware" => _profile_hardware,
                                            "name" => _profile_name,
                                            "info" => _navi_info,
-                                           "standard" => _standard_link_do,
                                            "head" => _profile_head,
                                            "add" => _profile_add,
                                            "type" => _profile_type,

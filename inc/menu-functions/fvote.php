@@ -2,18 +2,16 @@
 //-> Forum Vote
 function fvote($id, $ajax=false)
 {
-  global $db;
-
         if(!permission("votes")) $intern = ' AND intern = 0';
-        $qry = db("SELECT * FROM ".$db['votes']."  WHERE id = '".$id."' ".$intern."");
+        $qry = db("SELECT * FROM ".dba::get('votes')."  WHERE id = '".$id."' ".$intern."");
     $get = _fetch($qry);
 
     if(_rows($qry))
     {
-      $qryv = db("SELECT * FROM ".$db['vote_results']." WHERE vid = '".$get['id']."' ORDER BY id ASC");
+      $qryv = db("SELECT * FROM ".dba::get('vote_results')." WHERE vid = '".$get['id']."' ORDER BY id ASC");
       while($getv = _fetch($qryv))
       {
-        $stimmen = sum($db['vote_results'], " WHERE vid = '".$get['id']."'", "stimmen");
+        $stimmen = sum(dba::get('vote_results'), " WHERE vid = '".$get['id']."'", "stimmen");
 
         if($stimmen != 0)
         {
@@ -41,7 +39,7 @@ function fvote($id, $ajax=false)
         }
       }
 
-      $qryf = db("SELECT id,kid FROM ".$db['f_threads']." WHERE vote = '".$get['id']."'");
+      $qryf = db("SELECT id,kid FROM ".dba::get('f_threads')." WHERE vote = '".$get['id']."'");
       $getf = _fetch($qryf);
 
       $vote = show("forum/vote", array("titel" => re($get['titel']),
@@ -56,4 +54,3 @@ function fvote($id, $ajax=false)
 
   return empty($vote) ? '' : ($ajax ? $vote : '<div id="navFVote">'.$vote.'</div>');
 }
-?>

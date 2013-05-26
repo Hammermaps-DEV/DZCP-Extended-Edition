@@ -7,7 +7,7 @@ if($_SESSION['agb'] =! true)
 else
 {
     //Updater
-    $use_mysql_config = (file_exists(basePath."/inc/mysql.php") && $_SESSION['type'] == 1 && !empty($db['host']) && !empty($db['user']) && !empty($db['pass']) && !empty($db['db'])) ? true : false;
+    $use_mysql_config = (file_exists(basePath."/inc/mysql.php") && $_SESSION['type'] == 1 && !empty($db_array['host']) && !empty($db_array['user']) && !empty($db_array['pass']) && !empty($db_array['db'])) ? true : false;
     //End
 
     $mysql_host = isset($_POST['host']) ? $_POST['host'] : ($use_mysql_config ? $sql_host : 'localhost');
@@ -16,7 +16,7 @@ else
     $mysql_user = isset($_POST['user']) ? $_POST['user'] : ($use_mysql_config ? $sql_user : '');
     $mysql_pwd = isset($_POST['pwd']) ? $_POST['pwd'] : ($use_mysql_config ? $sql_pass : '');
     $mysql_dbengine = isset($_POST['dbEngine']) ? $_POST['dbEngine'] : 0;
-    $msg=''; $nextlink=''; $dbe_selected0 = ''; $dbe_selected1 = ''; $dbe_selected2 = ''; $dbe_selected3 = ''; $disabled = '';
+    $msg=''; $nextlink=''; $dbe_selected0 = ''; $dbe_selected1 = ''; $dbe_selected2 = ''; $dbe_selected3 = ''; $dbe_selected4 = ''; $disabled = '';
 
     if(isset($_GET['do']) || $use_mysql_config)
     {
@@ -50,7 +50,7 @@ else
                             //Updater
                             if($_SESSION['type'] == 1)
                             {
-                                $_SESSION['mysql_dbengine'] = get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], $db['settings']),true);
+                                $_SESSION['mysql_dbengine'] = get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], dba::get('settings')),true);
                                 $dbe_selected0 = ($_SESSION['mysql_dbengine'] == 0 ? 'selected="selected"' : '');
                                 $dbe_selected1 = ($_SESSION['mysql_dbengine'] == 1 ? 'selected="selected"' : '');
                                 $dbe_selected2 = ($_SESSION['mysql_dbengine'] == 2 ? 'selected="selected"' : '');
@@ -112,4 +112,3 @@ else
     $index = show("mysql",array("disabled" => $disabled, "mysql_host" => $mysql_host, "mysql_database" => $mysql_database, "mysql_prefix" => $mysql_prefix, "mysql_user" => $mysql_user,
     "mysql_pwd" => $mysql_pwd, "msg" => $msg, "next" => $nextlink, "dbe_selected0" => $dbe_selected0, "dbe_selected1" => $dbe_selected1, "dbe_selected2" => $dbe_selected2, "dbe_selected3" => $dbe_selected3, "dbe_selected4" => $dbe_selected4));
 }
-?>

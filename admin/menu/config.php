@@ -13,7 +13,7 @@ if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_global_head; $show = '';
-switch (isset($_GET['do']) ? $_GET['do'] : '')
+switch ($do)
 {
     case 'update':
         if(isset($_POST))
@@ -21,7 +21,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
             if(convert::ToString($_POST['cache_engine']) != $cache_engine)
                 $cache_cleanup = true;
 
-            db("UPDATE ".$db['config']." SET
+            db("UPDATE ".dba::get('config')." SET
                 `upicsize`           = '".convert::ToInt($_POST['m_upicsize'])."',
                 `m_gallery`          = '".convert::ToInt($_POST['m_gallery'])."',
                 `m_gallerypics`      = '".convert::ToInt($_POST['m_gallerypics'])."',
@@ -88,7 +88,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
                 `news_feed`   	     = '".convert::ToInt($_POST['feed'])."'
             WHERE id = 1");
 
-            db("UPDATE ".$db['settings']." SET
+            db("UPDATE ".dba::get('settings')." SET
                 `clanname`            = '".up($_POST['clanname'])."',
                 `pagetitel`           = '".up($_POST['pagetitel'])."',
                 `badwords`            = '".up($_POST['badwords'])."',
@@ -100,7 +100,6 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
                 `reg_artikel`         = '".convert::ToInt($_POST['reg_artikel'])."',
                 `reg_shout`           = '".convert::ToInt($_POST['reg_shout'])."',
                 `reg_cwcomments`      = '".convert::ToInt($_POST['reg_cwcomments'])."',
-                `counter_start`       = '".convert::ToInt($_POST['counter_start'])."',
                 `reg_newscomments`    = '".convert::ToInt($_POST['reg_nc'])."',
                 `reg_dl`              = '".convert::ToInt($_POST['reg_dl'])."',
                 `reg_dlcomments`      = '".convert::ToInt($_POST['reg_dlcomments'])."',
@@ -136,8 +135,8 @@ switch (isset($_GET['do']) ? $_GET['do'] : '')
 
 if(empty($show))
 {
-    $get = db("SELECT * FROM ".$db['config'],false,true);
-    $gets = db("SELECT * FROM ".$db['settings'],false,true);
+    $get = db("SELECT * FROM ".dba::get('config'),false,true);
+    $gets = db("SELECT * FROM ".dba::get('settings'),false,true);
 
     $files = get_files(basePath.'/inc/lang/languages/',false,true,array('php')); $lang = '';
     foreach($files as $file)
@@ -258,8 +257,6 @@ if(empty($show))
                                              "m_news" => $get['m_news'],
                                              "m_gallerypics" => $get['m_gallerypics'],
                                              "m_upicsize" => $get['upicsize'],
-                                             "counter_start" => _counter_start,
-                                             "c_start" => $gets['counter_start'],
                                              "f_forum" => $get['f_forum'],
                                              "f_gb" => $get['f_gb'],
                                              "f_membergb" => $get['f_membergb'],
@@ -304,4 +301,3 @@ if(empty($show))
 
     $show = show($dir."/form", array("head" => _config_global_head, "what" => "config", "value" => _button_value_config, "show" => $show_));
 }
-?>

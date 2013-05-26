@@ -82,4 +82,3 @@ for(reset($_FILES);list($key,$value)=each($_FILES);)
         }
     }
 }
-?>

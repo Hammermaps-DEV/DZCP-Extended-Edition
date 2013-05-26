@@ -9,4 +9,3 @@ if(isset($_POST['agb_checkbox']))
 }
 else
     $index = show("/msg/agb_error"); //AGB nicht akzeptiert!
-?>

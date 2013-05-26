@@ -11,9 +11,8 @@ else
         if(!isset($_GET['ajax']))
         {
             return '<table width="100%" cellpadding="3" cellspacing="1"><tr><td class="head">&raquo; Datenbank Installation</td>
-                    </tr><tr><td class="head"><div id="mysql"><div style="width:100%;padding:10px 0;text-align:center">
-                    <p>Datenbank Installation l&auml;uft..<br /><br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></p>
-                    </div><script language="JavaScript" type="text/javascript">DZCP.initDynLoader();</script></div></td></tr></table>';
+                    </tr><tr><td class="head"><div id="mysql"><div style="width:100%;padding:10px 0;text-align:center"><p>Einen Moment bitte..<br>
+                    <br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></p></div><script language="JavaScript" type="text/javascript">DZCP.initDynLoader();</script></div></td></tr></table>';
         }
         else
         {
@@ -40,9 +39,8 @@ else
         else if(isset($_POST['update']) && empty($_POST['version']))
             $msg = writemsg(no_db_update_selected,true);
 
-        $settings_tb = db("SELECT * FROM `".$db['settings']."` WHERE `id` = 1 LIMIT 0 , 1",false,true);
+        $settings_tb = db("SELECT * FROM `".dba::get('settings')."` WHERE `id` = 1 LIMIT 0 , 1",false,true);
         $version = versions((array_key_exists('db_version',$settings_tb) ? $settings_tb['db_version'] : false));
         $index = show("update_version",array("versions" => $version['version'], "msg" => (!empty($msg) ? $msg : $version['msg']) ,"disabled" => $version['disabled']));
     }
 }
-?>

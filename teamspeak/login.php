@@ -7,7 +7,7 @@ include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
 ## SECTIONS ##
 
-$settings = db("SELECT * FROM ".$db['settings'],false,true);
+$settings = db("SELECT * FROM ".dba::get('settings'),false,true);
     $uip 		= $settings['ts_ip'];
     $tPort 	= $settings['ts_sport'];
     $port 	= $settings['ts_port'];

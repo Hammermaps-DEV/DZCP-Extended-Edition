@@ -10,7 +10,7 @@ if(_adminMenu != 'true')
     {
       $show = error(_error_wrong_permissions, 1);
     } else {
-      $qry = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".$db['settings']."");
+      $qry = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".dba::get('settings')."");
       $get = _fetch($qry);
 
       $waehrung = re($get['k_waehrung']);
@@ -39,7 +39,7 @@ if(_adminMenu != 'true')
                                         "value" => _button_value_save,
                                         "show" => $konto_show));
 
-      $qryk = db("SELECT * FROM ".$db['c_kats']."");
+      $qryk = db("SELECT * FROM ".dba::get('c_kats')."");
       while($getk = _fetch($qryk))
       {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -67,7 +67,7 @@ if(_adminMenu != 'true')
                                             "konto" => $konto));
       if($_GET['do'] == "update")
       {
-        $qry = db("UPDATE ".$db['settings']."
+        $qry = db("UPDATE ".dba::get('settings')."
                    SET `k_inhaber`    = '".up($_POST['inhaber'])."',
                        `k_nr`         = '".up($_POST['kontonr'])."',
                        `k_waehrung`   = '".up($_POST['waehrung'])."',
@@ -89,13 +89,13 @@ if(_adminMenu != 'true')
         {
           $show = error(_clankasse_empty_kat, 1);
         } else {
-          $qry = db("INSERT INTO ".$db['c_kats']."
+          $qry = db("INSERT INTO ".dba::get('c_kats')."
                      SET `kat` = '".up($_POST['kat'])."'");
 
           $show = info(_clankasse_kat_added, "?admin=konto");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['c_kats']."
+        $qry = db("SELECT * FROM ".dba::get('c_kats')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -110,14 +110,14 @@ if(_adminMenu != 'true')
         {
           $show = error(_clankasse_empty_kat, 1);
         } else {
-          $qry = db("UPDATE ".$db['c_kats']."
+          $qry = db("UPDATE ".dba::get('c_kats')."
                      SET `kat` = '".up($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_clankasse_kat_edited, "?admin=konto");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['c_kats']."
+        $qry = db("DELETE FROM ".dba::get('c_kats')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_clankasse_kat_deleted, "?admin=konto");

@@ -10,7 +10,7 @@ if(_adminMenu != 'true')
     {
       $show = error(_error_wrong_permissions, 1);
     } else {
-      $qry = db("SELECT * FROM ".$db['squads']." ORDER BY pos");
+      $qry = db("SELECT * FROM ".dba::get('squads')." ORDER BY pos");
       while($get = _fetch($qry))
       {
         $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -40,7 +40,7 @@ if(_adminMenu != 'true')
                                          "squads" => $squads));
       if($_GET['do'] == "add")
       {
-        $qrynav = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
+        $qrynav = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
                            ORDER BY s1.name, s2.pos");
         while($getnav = _fetch($qrynav))
         {
@@ -55,7 +55,7 @@ if(_adminMenu != 'true')
           $navigation .= empty($getnav['name']) ? '' : '<option value="'.re($getnav['placeholder']).'-'.($getnav['pos']+1).'">'._nach.' -> '.navi_name(re($getnav['name'])).'</option>';
         }
 
-        $qry = db("SELECT * FROM ".$db['squads']." ORDER BY pos");
+        $qry = db("SELECT * FROM ".dba::get('squads')." ORDER BY pos");
         while($get = _fetch($qry))
         {
           $positions .= show(_select_field, array("value" => $get['pos']+1,
@@ -111,8 +111,8 @@ if(_adminMenu != 'true')
           if($_POST['position'] == 1 || $_POST['position'] == 2) $sign = ">= ";
           else $sign = "> ";
 
-          db("UPDATE ".$db['squads']." SET `pos` = pos+1 WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
-          $qry = db("INSERT INTO ".$db['squads']."
+          db("UPDATE ".dba::get('squads')." SET `pos` = pos+1 WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
+          $qry = db("INSERT INTO ".dba::get('squads')."
                      SET `name`         = '".up($_POST['squad'])."',
                          `game`         = '".up($_POST['game'])."',
                          `icon`         = '".up($_POST['icon'])."',
@@ -123,7 +123,7 @@ if(_adminMenu != 'true')
                          `status`       = '".convert::ToInt($_POST['status'])."',
                          `pos`          = '".convert::ToInt($_POST['position'])."'");
 
-                    $insert_id = mysql_insert_id();
+                    $insert_id = database::get_insert_id();
 
                     if($_POST['navi'] != "lazy") {
                         if($_POST['navi'] == "1" || "2") $signnav = ">= ";
@@ -132,9 +132,9 @@ if(_adminMenu != 'true')
                         $kat = preg_replace('/-(\d+)/','',$_POST['navi']);
                         $pos = preg_replace("=nav_(.*?)-=","",$_POST['navi']);
 
-                        db("UPDATE ".$db['navi']." SET `pos` = pos+1 WHERE pos ".$signnav." '".convert::ToInt($pos)."'");
+                        db("UPDATE ".dba::get('navi')." SET `pos` = pos+1 WHERE pos ".$signnav." '".convert::ToInt($pos)."'");
 
-                        db("INSERT INTO ".$db['navi']."
+                        db("INSERT INTO ".dba::get('navi')."
                                 SET `pos`       = '".convert::ToInt($pos)."',
                                         `kat`       = '".up($kat)."',
                                         `name`      = '".up($_POST['squad'])."',
@@ -176,16 +176,16 @@ if(_adminMenu != 'true')
           $show = info(_admin_squad_add_successful, "?admin=squads");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['squads']."
+        $qry = db("SELECT * FROM ".dba::get('squads')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $pos = db("SELECT pos,name FROM ".$db['squads']." ORDER BY pos");
+        $pos = db("SELECT pos,name FROM ".dba::get('squads')." ORDER BY pos");
         while($getpos = _fetch($pos))
         {
           if($getpos['name'] != $get['name'])
           {
-            $mpos = db("SELECT pos FROM ".$db['squads']."
+            $mpos = db("SELECT pos FROM ".dba::get('squads')."
                         WHERE id != '".convert::ToInt($get['id'])."'
                         AND pos = '".convert::ToInt(($get['pos']-1))."'");
             $mp = _fetch($mpos);
@@ -199,7 +199,7 @@ if(_adminMenu != 'true')
           }
         }
 
-        $qrynav = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
+        $qrynav = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
                            ORDER BY s1.name, s2.pos");
         $i = 1;
         $thiskat = '';
@@ -301,7 +301,7 @@ if(_adminMenu != 'true')
         {
           $show = error(_admin_squad_no_game, 1);
         } else {
-          $ask = db("SELECT pos FROM ".$db['squads']."
+          $ask = db("SELECT pos FROM ".dba::get('squads')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
           $get = _fetch($ask);
 
@@ -310,7 +310,7 @@ if(_adminMenu != 'true')
             if($_POST['position'] == 1 || $_POST['position'] == 2) $sign = ">= ";
             else $sign = "> ";
 
-            $posi = db("UPDATE ".$db['squads']."
+            $posi = db("UPDATE ".dba::get('squads')."
                         SET `pos` = pos+1
                         WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
           }
@@ -320,7 +320,7 @@ if(_adminMenu != 'true')
               if($_POST['icon'] == "lazy") $newicon = "";
               else $newicon = "`icon` = '".up($_POST['icon'])."',";
 
-          $qry = db("UPDATE ".$db['squads']."
+          $qry = db("UPDATE ".dba::get('squads')."
                      SET `name`         = '".up($_POST['squad'])."',
                          `game`         = '".up($_POST['game'])."',
                          ".$newpos."
@@ -334,7 +334,7 @@ if(_adminMenu != 'true')
 
                if($_POST['navi'] != "lazy")
                     {
-                        $qry = db("SELECT * FROM ".$db['navi']." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+                        $qry = db("SELECT * FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
                 $get = _fetch($qry);
                         if(_rows($qry))
                     {
@@ -344,11 +344,11 @@ if(_adminMenu != 'true')
                             $kat = preg_replace('/-(\d+)/','',$_POST['navi']);
                             $pos = preg_replace("=nav_(.+)-=","",$_POST['navi']);
 
-                            $posi = db("UPDATE ".$db['navi']."
+                            $posi = db("UPDATE ".dba::get('navi')."
                                                     SET pos = pos+1
                                                     WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
-                            $posi = db("UPDATE ".$db['navi']."
+                            $posi = db("UPDATE ".dba::get('navi')."
                                                     SET `pos`       = '".convert::ToInt($pos)."',
                                                             `kat`       = '".up($kat)."',
                                                             `name`      = '".up($_POST['squad'])."',
@@ -361,9 +361,9 @@ if(_adminMenu != 'true')
                             $kat = preg_replace('/-(\d+)/','',$_POST['navi']);
                             $pos = preg_replace("=nav_(.*?)-=","",$_POST['navi']);
 
-                            db("UPDATE ".$db['navi']." SET `pos` = pos+1 WHERE pos ".$signnav." '".convert::ToInt($pos)."'");
+                            db("UPDATE ".dba::get('navi')." SET `pos` = pos+1 WHERE pos ".$signnav." '".convert::ToInt($pos)."'");
 
-                            db("INSERT INTO ".$db['navi']."
+                            db("INSERT INTO ".dba::get('navi')."
                                     SET `pos`       = '".convert::ToInt($pos)."',
                                             `kat`       = '".up($kat)."',
                                             `name`      = '".up($_POST['squad'])."',
@@ -372,8 +372,8 @@ if(_adminMenu != 'true')
                                             `type`      = '2'");
                         }
                     } else {
-                        $qry = db("SELECT * FROM ".$db['navi']." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
-                        if(_rows($qry))	db("DELETE FROM ".$db['navi']." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+                        $qry = db("SELECT * FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+                        if(_rows($qry))	db("DELETE FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
                     }
 
           $tmp = $_FILES['banner']['tmp_name'];
@@ -425,8 +425,8 @@ if(_adminMenu != 'true')
           $show = info(_admin_squad_edit_successful, "?admin=squads");
         }
       } elseif($_GET['do'] == "delete") {
-        db("DELETE FROM ".$db['squads']." WHERE id = '".convert::ToInt($_GET['id'])."'");
-                db("DELETE FROM ".$db['navi']." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('squads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("DELETE FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
         $show = info(_admin_squad_deleted, "?admin=squads");
       }
     }

@@ -14,7 +14,7 @@ if (!defined('IS_DZCP'))
 
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
-else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".$db['downloads']." WHERE id = ".$dl_id=convert::ToInt($_GET['id']),true))
+else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::get('downloads')." WHERE id = ".$dl_id=convert::ToInt($_GET['id']),true))
     $index = error(show(_id_dont_exist_dl,array('id' => $dl_id)), 1);
 else
 {
@@ -25,14 +25,13 @@ else
         $downloadcomconfig = config(array('f_downloadcom','m_comments'));
         #################################### do case ####################################
         $error = '';
-
-        $get = db("SELECT comments FROM ".$db['downloads']." WHERE id = '".$dl_id."'",false,true);
+        $get = db("SELECT comments FROM ".dba::get('downloads')." WHERE id = '".$dl_id."'",false,true);
         if($get['comments'])
         {
             switch($do)
             {
                 case 'add':
-                    if(db("SELECT `id` FROM ".$db['downloads']." WHERE `id` = '".$dl_id."'",true) != 0)
+                    if(db("SELECT `id` FROM ".dba::get('downloads')." WHERE `id` = '".$dl_id."'",true) != 0)
                     {
                         if(settings("reg_dlcomments") && $chkMe == "unlogged")
                             $index = error(_error_have_to_be_logged, 1);
@@ -62,13 +61,15 @@ else
                                             $error = show("errors/errortable", array("error" => _empty_email));
                                         else if(!check_email($_POST['email']))
                                             $error = show("errors/errortable", array("error" => _error_invalid_email));
+                                        else if(check_email_trash_mail($_POST['email']))
+                                            $error = show("errors/errortable", array("error" => _error_trash_mail));
                                         else if(empty($_POST['eintrag']))
                                             $error = show("errors/errortable", array("error" => _empty_eintrag));
                                     }
                                 }
                                 else
                                 {
-                                    db("INSERT INTO ".$db['dl_comments']."
+                                    db("INSERT INTO ".dba::get('dl_comments')."
                                        SET `download`     = '".$dl_id."',
                                            `datum`    = '".time()."',
                                            ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : '')."
@@ -91,7 +92,7 @@ else
                         $index = error(_id_dont_exist,1);
                     break;
                 case 'edit':
-                    $get = db("SELECT * FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    $get = db("SELECT * FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
                         if($get['reg'] != 0)
@@ -121,11 +122,11 @@ else
                         $index = error(_error_edit_post,1);
                     break;
                 case 'editcom':
-                    $get = db("SELECT reg FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    $get = db("SELECT reg FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
                         $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                        db("UPDATE ".$db['dl_comments']." SET
+                        db("UPDATE ".dba::get('dl_comments')." SET
                                 ".(isset($_POST['nick']) ? " `nick`     = '".up($_POST['nick'])."'," : "")."
                                 ".(isset($_POST['email']) ? " `email`   = '".up($_POST['email'])."'," : "")."
                                 ".(isset($_POST['hp']) ? " `hp`         = '".links($_POST['hp'])."'," : "")."
@@ -139,10 +140,10 @@ else
                         $index = error(_error_edit_post,1);
                     break;
                 case 'delete':
-                    $get = db("SELECT reg FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
+                    $get = db("SELECT reg FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
                     if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
                     {
-                        db("DELETE FROM ".$db['dl_comments']." WHERE id = '".convert::ToInt($_GET['cid'])."'");
+                        db("DELETE FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'");
                         $index = info(_comment_deleted, "?action=download&amp;id=".$dl_id."");
                     }
                     else
@@ -154,7 +155,7 @@ else
         #################################### SHOW ####################################
         if(empty($index))
         {
-            $get = db("SELECT * FROM ".$db['downloads']." WHERE id = '".$dl_id."'",false,true);
+            $get = db("SELECT * FROM ".dba::get('downloads')." WHERE id = '".$dl_id."'",false,true);
             $file = preg_replace("#added...#Uis", "files/", $get['url']);
             $size = filesize_extended($file);
             $getfile = show(_dl_getfile, array("file" => re($get['download'])));
@@ -177,10 +178,10 @@ else
 
             if($get['comments'])
             {
-                $entrys = cnt($db['dl_comments'], " WHERE download = ".$dl_id);
+                $entrys = cnt(dba::get('dl_comments'), " WHERE download = ".$dl_id);
                 $i = $entrys-($page - 1)*$downloadcomconfig['m_comments'];
 
-                $qryc = db("SELECT * FROM ".$db['dl_comments']." WHERE download = ".$dl_id." ORDER BY datum DESC LIMIT ".($page - 1)*$downloadcomconfig['m_comments'].",".$downloadcomconfig['m_comments'].""); $comments = '';
+                $qryc = db("SELECT * FROM ".dba::get('dl_comments')." WHERE download = ".$dl_id." ORDER BY datum DESC LIMIT ".($page - 1)*$downloadcomconfig['m_comments'].",".$downloadcomconfig['m_comments'].""); $comments = '';
                 while($getc = _fetch($qryc))
                 {
                     $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";

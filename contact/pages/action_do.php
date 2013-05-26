@@ -26,6 +26,8 @@ else
         $index = error(_empty_email, 1);
         elseif(!check_email($_POST['email']))
         $index = error(_error_invalid_email, 1);
+        else if(check_email_trash_mail($_POST['email']))
+        $index = error(_error_trash_mail, 1);
         elseif(empty($_POST['nick']))
         $index = error(_empty_nick, 1);
         else {
@@ -36,15 +38,15 @@ else
                     "text" => $_POST['text'],
                     "nick" => $_POST['nick']));
 
-            $qry = db("SELECT s1.id FROM ".$db['users']." AS s1
-                 LEFT JOIN ".$db['permissions']." AS s2
+            $qry = db("SELECT s1.id FROM ".dba::get('users')." AS s1
+                 LEFT JOIN ".dba::get('permissions')." AS s2
                  ON s1.id = s2.user
                  WHERE s2.contact = '1' AND s1.`user` != '0 GROUP BY s1.`id`'");
             $sqlAnd = '';
             while($get = _fetch($qry))
             {
                 $sqlAnd .= " AND s2.`user` != '".convert::ToInt($get['id'])."'";
-                $qrys = db("INSERT INTO ".$db['msg']."
+                $qrys = db("INSERT INTO ".dba::get('acomments')."
                     SET `datum`     = '".time()."',
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['id'])."',
@@ -52,12 +54,12 @@ else
                         `nachricht` = '".up($text, 1)."'");
             }
 
-            $qry = db("SELECT s2.`user` FROM ".$db['permissions']." AS s1
-                 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi`
+            $qry = db("SELECT s2.`user` FROM ".dba::get('permissions')." AS s1
+                 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.`pos` = s2.`posi`
                  WHERE s1.`contact` = '1' AND s2.`posi` != '0'".$sqlAnd." GROUP BY s2.`user`");
             while($get = _fetch($qry))
             {
-                $qrys = db("INSERT INTO ".$db['msg']."
+                $qrys = db("INSERT INTO ".dba::get('acomments')."
                     SET `datum`     = '".time()."',
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['user'])."',
@@ -77,6 +79,8 @@ else
         $index = error(_empty_email, 1);
         elseif(!check_email($_POST['email']))
         $index = error(_error_invalid_email, 1);
+        else if(check_email_trash_mail($_POST['email']))
+        $index = error(_error_trash_mail, 1);
         elseif(empty($_POST['nick']))
         $index = error(_empty_nick, 1);
         else {
@@ -88,15 +92,15 @@ else
                     "text" => $_POST['text'],
                     "nick" => $_POST['nick']));
 
-            $qry = db("SELECT s1.id FROM ".$db['users']." AS s1
-                 LEFT JOIN ".$db['permissions']." AS s2  ON s1.id = s2.user
+            $qry = db("SELECT s1.id FROM ".dba::get('users')." AS s1
+                 LEFT JOIN ".dba::get('permissions')." AS s2  ON s1.id = s2.user
                  WHERE s2.joinus = '1' AND s1.`user` != '0' GROUP BY s1.`id`");
             $sqlAnd = '';
             while($get = _fetch($qry))
             {
                 $sqlAnd .= " AND s2.`user` != '".convert::ToInt($get['id'])."'";
 
-                $qrys = db("INSERT INTO ".$db['msg']."
+                $qrys = db("INSERT INTO ".dba::get('acomments')."
                     SET `datum`     = '".time()."',
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['id'])."',
@@ -104,12 +108,12 @@ else
                         `nachricht` = '".up($text, 1)."'");
             }
 
-            $qry = db("SELECT s2.`user` FROM ".$db['permissions']." AS s1
-                 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi`
+            $qry = db("SELECT s2.`user` FROM ".dba::get('permissions')." AS s1
+                 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.`pos` = s2.`posi`
                  WHERE s1.`joinus` = '1' AND s2.`posi` != '0'".$sqlAnd." GROUP BY s2.`user`");
             while($get = _fetch($qry))
             {
-                $qrys = db("INSERT INTO ".$db['msg']."
+                $qrys = db("INSERT INTO ".dba::get('acomments')."
                     SET `datum`     = '".time()."',
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['user'])."',
@@ -130,6 +134,8 @@ else
         $index = error(_empty_fightus_map, 1);
         elseif(!check_email($_POST['email']))
         $index = error(_error_invalid_email, 1);
+        else if(check_email_trash_mail($_POST['email']))
+        $index = error(_error_trash_mail, 1);
         elseif(empty($_POST['nick']))
         $index = error(_empty_nick, 1);
         else {
@@ -142,7 +148,7 @@ else
                 $date = $_POST['t'].".".$_POST['m'].".".$_POST['j']."&nbsp;".$_POST['h'].":".$_POST['min']._uhr;
             }
 
-            $qrysq = db("SELECT name FROM ".$db['squads']."
+            $qrysq = db("SELECT name FROM ".dba::get('squads')."
                    WHERE id = '".convert::ToInt($_POST['squad'])."'");
             $getsq = _fetch($qrysq);
 
@@ -160,8 +166,8 @@ else
                     "nick" => $_POST['nick']));
 
             if($chkMe != 4) $add = " AND s2.squad = '".convert::ToInt($_POST['squad'])."'";
-            $who = db("SELECT s1.user FROM ".$db['permissions']." AS s1
-                 LEFT JOIN ".$db['squaduser']." AS s2
+            $who = db("SELECT s1.user FROM ".dba::get('permissions')." AS s1
+                 LEFT JOIN ".dba::get('squaduser')." AS s2
                  ON s1.user = s2.user
                  WHERE s1.receivecws = '1' AND s1.`user` != '0'
                  ".$add." GROUP BY s1.`user`");
@@ -170,7 +176,7 @@ else
             while($get = _fetch($who))
             {
                 $sqlAnd .= " AND s2.`user` != '".convert::ToInt($get['user'])."'";
-                $qry = db("INSERT INTO ".$db['msg']."
+                $qry = db("INSERT INTO ".dba::get('acomments')."
                    SET `datum`      = '".time()."',
                        `von`        = '0',
                        `an`         = '".convert::ToInt($get['user'])."',
@@ -179,14 +185,14 @@ else
 
             }
 
-            $qry = db("SELECT s3.`user` FROM ".$db['permissions']." AS s1
-                 LEFT JOIN ".$db['userpos']." AS s2 ON s1.`pos` = s2.`posi`
-                 LEFT JOIN ".$db['squaduser']." AS s3 ON s2.user = s3.user
+            $qry = db("SELECT s3.`user` FROM ".dba::get('permissions')." AS s1
+                 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.`pos` = s2.`posi`
+                 LEFT JOIN ".dba::get('squaduser')." AS s3 ON s2.user = s3.user
                                  WHERE s1.`receivecws` = '1' AND s2.`posi` != '0'".$sqlAnd.$add." GROUP BY s2.`user`");
             var_dump($qry);
             while($get === _fetch($qry))
             {
-                $qry = db("INSERT INTO ".$db['msg']."
+                $qry = db("INSERT INTO ".dba::get('acomments')."
                    SET `datum`      = '".time()."',
                        `von`        = '0',
                        `an`         = '".convert::ToInt($get['user'])."',

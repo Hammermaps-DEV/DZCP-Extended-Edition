@@ -7,7 +7,7 @@
  */
 
 ## Install ##
-Cache::installType('shm',array('TypeName' => 'ZEND Server - Shared Memory Cache','CallTag' => 'shm_','Class' => 'cache_zend_shm','InitCache' => false,'SetServer' => false,'Required' => 'Zend Data Cache'));
+Cache::installType('shm',array('TypeName' => 'ZEND Server - Shared Memory Cache','CallTag' => 'shm_','Class' => 'cache_zend_shm','InitCache' => false,'SetServer' => false,'Required' => 'Zend Data Cache', 'CacheType' => 'mem'));
 
 class cache_zend_shm extends Cache
 {
@@ -39,6 +39,7 @@ class cache_zend_shm extends Cache
     public static function shm_set_binary($key, $binary, $original_file=false, $ttl = 86400)
     {
         $key = 'bin_'.$key;
+        $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $binary = bin2hex($binary);
         self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));
         return (zend_shm_cache_store(md5($key), $binary, $ttl) === true ? true : false);
@@ -166,4 +167,3 @@ class cache_zend_shm extends Cache
     public static function shm_clean()
     { return zend_shm_cache_clear(); }
 }
-?>

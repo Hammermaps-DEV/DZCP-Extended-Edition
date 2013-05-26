@@ -26,6 +26,8 @@ else
             $index = error(_empty_email, 1);
         else if($userid == 0 && !check_email($_POST['email']))
             $index = error(_error_invalid_email, 1);
+        else if(check_email_trash_mail($_POST['email']))
+            $index = error(_error_trash_mail, 1);
         else if(empty($_POST['eintrag']))
             $index = error(_error_empty_shout, 1);
         else if(settings('reg_shout') == 1 && $chkMe == 'unlogged')
@@ -33,7 +35,7 @@ else
         else
         {
             $reg = ($userid == 0 ? $_POST['email'] : convert::ToInt($userid));
-            db("INSERT INTO ".$db['shout']." SET
+            db("INSERT INTO ".dba::get('shout')." SET
                 `datum`  = '".time()."',
                 `nick`   = '".up($_POST['name'],'','UTF-8')."',
                 `email`  = '".up($reg,'','UTF-8')."',

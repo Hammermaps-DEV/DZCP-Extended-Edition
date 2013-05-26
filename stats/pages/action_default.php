@@ -16,11 +16,11 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $allcomments = cnt($db['newscomments']);
-    $allnews = cnt($db['news']);
-    $allkats = cnt($db['newskat']);
+    $allcomments = cnt(dba::get('newscomments'));
+    $allnews = cnt(dba::get('news'));
+    $allkats = cnt(dba::get('newskat'));
 
-    $qry = db("SELECT * FROM ".$db['newskat']."");
+    $qry = db("SELECT * FROM ".dba::get('newskat')."");
     $kats = ''; $i = 1;
     while($get = _fetch($qry))
     {
@@ -28,7 +28,7 @@ else
         $i++;
     }
 
-    $get = db("SELECT datum FROM ".$db['news']." ORDER BY datum ASC",false,true);
+    $get = db("SELECT datum FROM ".dba::get('news')." ORDER BY datum ASC",false,true);
 
     $time = (time()-$get['datum']);
     $days = @round($time/86400);

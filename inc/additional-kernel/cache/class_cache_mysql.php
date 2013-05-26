@@ -7,7 +7,7 @@
  */
 
 ## Install ##
-Cache::installType('mysql',array('TypeName' => 'MySQL Cache','CallTag' => 'mysqlc_','Class' => 'cache_mysql','InitCache' => false,'SetServer' => false,'Required' => 'mysql'));
+Cache::installType('mysql',array('TypeName' => 'MySQL Cache','CallTag' => 'mysqlc_','Class' => 'cache_mysql','InitCache' => false,'SetServer' => false,'Required' => 'mysql', 'CacheType' => 'mem'));
 
 class cache_mysql extends Cache
 {
@@ -20,7 +20,6 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_set($key, $data, $ttl = 3600)
     {
-        global $db;
         //Array Erkennung
         $is_array = '0';
         if(is_array($data))
@@ -30,14 +29,14 @@ class cache_mysql extends Cache
         }
 
         $data = base64_encode(convert::UTF8($data));
-        if(db("SELECT qry FROM `".$db['cache']."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
+        if(db("SELECT qry FROM `".dba::get('cache')."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
         {
-            if(db("UPDATE `".$db['cache']."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '".$is_array."' WHERE `qry` = '".md5($key)."'"))
+            if(db("UPDATE `".dba::get('cache')."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '".$is_array."' WHERE `qry` = '".md5($key)."'"))
                 return true;
         }
         else
         {
-            if(db("INSERT INTO `".$db['cache']."` (`qry` ,`data` ,`timestamp` ,`cacheTime` ,`array`, `stream_hash`, `original_file`) VALUES ( '".md5($key)."', '".$data."', '".time()."', '".$ttl."', '".$is_array."', '', '');"))
+            if(db("INSERT INTO `".dba::get('cache')."` (`qry` ,`data` ,`timestamp` ,`cacheTime` ,`array`, `stream_hash`, `original_file`) VALUES ( '".md5($key)."', '".$data."', '".time()."', '".$ttl."', '".$is_array."', '', '');"))
                 return true;
         }
 
@@ -51,18 +50,17 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_set_binary($key, $binary, $original_file=false, $ttl = 0)
     {
-        global $db;
-
         $key = 'bin_'.$key;
+        $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $data = bin2hex($binary);
-        if(db("SELECT qry FROM `".$db['cache']."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
+        if(db("SELECT qry FROM `".dba::get('cache')."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
         {
-            if(db("UPDATE `".$db['cache']."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '0', `stream_hash` = '".$file_hash."', `original_file` = '".$original_file."' WHERE `qry` = '".md5($key)."'"))
+            if(db("UPDATE `".dba::get('cache')."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '0', `stream_hash` = '".$file_hash."', `original_file` = '".$original_file."' WHERE `qry` = '".md5($key)."'"))
                 return true;
         }
         else
         {
-            if(db("INSERT INTO `".$db['cache']."` (`qry` ,`data` ,`timestamp` ,`cacheTime` ,`array`, `stream_hash`, `original_file`) VALUES ( '".md5($key)."', '".$data."', '".time()."', '".$ttl."', '0', '".$file_hash."', '".$original_file."');"))
+            if(db("INSERT INTO `".dba::get('cache')."` (`qry` ,`data` ,`timestamp` ,`cacheTime` ,`array`, `stream_hash`, `original_file`) VALUES ( '".md5($key)."', '".$data."', '".time()."', '".$ttl."', '0', '".$file_hash."', '".$original_file."');"))
                 return true;
         }
 
@@ -76,9 +74,7 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_get($key)
     {
-        global $db;
-
-        $GetCache=db('SELECT data,array FROM '.$db['cache'].' WHERE qry="'.md5($key).'" LIMIT 1', false, true);
+        $GetCache=db('SELECT data,array FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" LIMIT 1', false, true);
 
         if(!isset($GetCache['data']))
             return false;
@@ -103,10 +99,8 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_get_binary($key)
     {
-        global $db;
-
         $key = 'bin_'.$key;
-        $GetCache=db('SELECT data FROM '.$db['cache'].' WHERE qry="'.md5($key).'" LIMIT 1', false, true);
+        $GetCache=db('SELECT data FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" LIMIT 1', false, true);
 
         if(!isset($GetCache['data']))
             return false;
@@ -129,8 +123,7 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_check($key)
     {
-        global $db;
-        $sqlCache=db('SELECT cacheTime FROM '.$db['cache'].' WHERE qry="'.md5($key).'" LIMIT 1');
+        $sqlCache=db('SELECT cacheTime FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" LIMIT 1');
 
         if(!_rows($sqlCache))
             return true;
@@ -139,7 +132,7 @@ class cache_mysql extends Cache
         if(!isset($GetCache['cacheTime']))
             return true;
 
-        $IsValid=db('SELECT qry FROM '.$db['cache'].' WHERE qry="'.md5($key).'" AND timestamp>'.(time()-$GetCache['cacheTime']).' LIMIT 1', true);
+        $IsValid=db('SELECT qry FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" AND timestamp>'.(time()-$GetCache['cacheTime']).' LIMIT 1', true);
         return ($IsValid ? false : true);
     }
 
@@ -150,10 +143,8 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_check_binary($key)
     {
-        global $db;
-
         $key = 'bin_'.$key;
-        $sqlCache=db('SELECT cacheTime,stream_hash,original_file FROM '.$db['cache'].' WHERE qry="'.md5($key).'" LIMIT 1');
+        $sqlCache=db('SELECT cacheTime,stream_hash,original_file FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" LIMIT 1');
 
         if(!_rows($sqlCache))
             return true;
@@ -174,7 +165,7 @@ class cache_mysql extends Cache
 
         if($GetCache['cacheTime'] != 0)
         {
-            $IsValid=db('SELECT qry FROM '.$db['cache'].' WHERE qry="'.md5($key).'" AND timestamp>'.(time()-$GetCache['cacheTime']).' LIMIT 1', true);
+            $IsValid=db('SELECT qry FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" AND timestamp>'.(time()-$GetCache['cacheTime']).' LIMIT 1', true);
             return ($IsValid ? false : true);
         }
         else
@@ -188,8 +179,7 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_delete($key)
     {
-        global $db;
-        return db('DELETE FROM '.$db['cache'].' WHERE qry="'.md5($key).'" LIMIT 1') ? true : false;
+        return db('DELETE FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" LIMIT 1') ? true : false;
     }
 
     /**
@@ -199,9 +189,8 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_delete_binary($key)
     {
-        global $db;
         $key = 'bin_'.$key;
-        return db('DELETE FROM '.$db['cache'].' WHERE qry="'.md5($key).'" LIMIT 1') ? true : false;
+        return db('DELETE FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" LIMIT 1') ? true : false;
     }
 
     /**
@@ -211,8 +200,6 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_clean()
     {
-        global $db;
-        return db('TRUNCATE TABLE '.$db['cache']) ? true : false;
+        return db('TRUNCATE TABLE '.dba::get('cache')) ? true : false;
     }
 }
-?>

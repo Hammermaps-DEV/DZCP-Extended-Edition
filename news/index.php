@@ -6,9 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 #########################
 ## OUTPUT BUFFER START ##
 #########################
@@ -20,11 +17,11 @@ include("../inc/buffer.php");
 include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
+include(basePath."/news/helper.php");
 
 ##############
 ## SETTINGS ##
 ##############
-feed();
 $where = _site_news;
 $title = $pagetitle." - ".$where."";
 $dir = "news";
@@ -55,4 +52,3 @@ page($index, $title, $where, $time);
 ## OUTPUT BUFFER END ##
 #######################
 gz_output();
-?>

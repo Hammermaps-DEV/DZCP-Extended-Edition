@@ -20,7 +20,7 @@ else
     if(!($level == 0 || $level == 1)) {
         $level = 0;
     }
-    $mm_qry = db('SELECT u.`id`, u.`nick`, u.`city`, u.`gmaps_koord` FROM ' .  $db['users'] .
+    $mm_qry = db('SELECT u.`id`, u.`nick`, u.`city`, u.`gmaps_koord` FROM ' .  dba::get('users') .
             ' u WHERE u.`gmaps_koord` != "" AND u.`level` > ' . $level . ' ORDER BY u.gmaps_koord, u.id');
     $mm_coords = '';
     $mm_infos = "'<tr>";

@@ -7,7 +7,7 @@
  */
 
 ## Install ##
-Cache::installType('file',array('TypeName' => 'File Cache','CallTag' => 'file_','Class' => 'cache_file','InitCache' => true,'SetServer' => false,'Required' => ''));
+Cache::installType('file',array('TypeName' => 'File Cache','CallTag' => 'file_','Class' => 'cache_file','InitCache' => true,'SetServer' => false,'Required' => '', 'CacheType' => 'file'));
 
 class cache_file extends Cache
 {
@@ -79,6 +79,8 @@ class cache_file extends Cache
     {
         global $prev;
         $hash = md5($key.$prev);
+
+        $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : '';
         $file_hash_check = convert::ToString(xml::getXMLvalue('cache_index_binary', '/cache_index_binary/file[@hash="'.$hash.'"]/stream_hash'));
 
@@ -119,6 +121,9 @@ class cache_file extends Cache
 
         if(!file_exists(self::$_file))
             return true;
+
+        if($ttl == '-1')
+            return false;
 
         if($ttl != 0)
             return ((time()-@filemtime(self::$_file)) > $ttl ? true : false);
@@ -275,4 +280,3 @@ class cache_file extends Cache
         }
     }
 }
-?>

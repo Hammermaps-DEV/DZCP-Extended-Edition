@@ -36,7 +36,7 @@ else
 
     //Interne News
     $newsconfig = config(array('m_news','cache_news'));
-    $qry = db("SELECT kat,id,klapptext,viewed,link1,link2,link3,url1,url2,url3,titel,intern,text,datum,autor FROM ".$db['news']."
+    $qry = db("SELECT kat,id,klapptext,viewed,link1,link2,link3,url1,url2,url3,titel,intern,text,datum,autor FROM ".dba::get('news')."
                WHERE sticky >= ".time()." AND datum <= ".time()." AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
                ORDER BY datum DESC LIMIT ".($page - 1)*$newsconfig['m_news'].",".$newsconfig['m_news']."");
 
@@ -45,8 +45,8 @@ else
     {
         if(Cache::check('news_sticky_id_'.$get['id']))
         {
-            $getkat = db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".$get['kat']."'",false,true);
-            $c = cnt($db['newscomments'], " WHERE news = '".$get['id']."'");
+            $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
+            $c = cnt(dba::get('newscomments'), " WHERE news = '".$get['id']."'");
             $comments = ($c == 1 ? show(_news_comment, array("comments" => "1", "id" => $get['id'])) : show(_news_comments, array("comments" => $c, "id" => $get['id'])));
             $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
             $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => re($get['link1']), "url" => $get['url1'])) : '');
@@ -77,7 +77,7 @@ else
     //Public News
     if(Cache::check('news_page'))
     {
-        $qry = db("SELECT id,url1,url2,url3,link1,link2,link3,titel,klapptext,klapplink,text,datum,autor,viewed,intern,kat FROM ".$db['news']."
+        $qry = db("SELECT id,url1,url2,url3,link1,link2,link3,titel,klapptext,klapplink,text,datum,autor,viewed,intern,kat FROM ".dba::get('news')."
                         WHERE sticky < ".time()."
                         AND datum <= ".time()."
                         AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
@@ -86,8 +86,8 @@ else
         $show = "";
         while($get = _fetch($qry))
         {
-                $getkat = _fetch(db("SELECT katimg FROM ".$db['newskat']." WHERE id = '".$get['kat']."'"));
-                $c = cnt($db['newscomments'], " WHERE news = '".$get['id']."'");
+                $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
+                $c = cnt(dba::get('newscomments'), " WHERE news = '".$get['id']."'");
                 $comments = ($c == 1 ? show(_news_comment, array("comments" => "1", "id" => $get['id'])) : show(_news_comments, array("comments" => $c, "id" => $get['id'])));
                 $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
                 $viewed = show(_news_viewed, array("viewed" => $get['viewed']));
@@ -120,7 +120,7 @@ else
     if(Cache::check('news_kat') || isset($_GET['kat']))
     {
         $kategorien = "";
-        $qrykat = db("SELECT * FROM ".$db['newskat']."");
+        $qrykat = db("SELECT * FROM ".dba::get('newskat')."");
         while($getkat = _fetch($qrykat))
         {
             $sel = (isset($_GET['kat']) && $_GET['kat'] == $getkat['id'] ? 'selected' : '');
@@ -133,6 +133,5 @@ else
         $kategorien = Cache::get('news_kat');
 
     //Output
-    $index = show($dir."/news", array('show' => $show, 'show_sticky' => $show_sticky, 'nav' => nav(cnt($db['news'],$navWhere),$newsconfig['m_news'],'?kat='.$navKat,false), 'kategorien' => $kategorien));
+    $index = show($dir."/news", array('show' => $show, 'show_sticky' => $show_sticky, 'nav' => nav(cnt(dba::get('news'),$navWhere),$newsconfig['m_news'],'?kat='.$navKat,false), 'kategorien' => $kategorien));
 }
-?>

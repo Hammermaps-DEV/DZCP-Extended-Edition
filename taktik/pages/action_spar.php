@@ -22,7 +22,7 @@ else
     {
         if(isset($_GET['what']) && !empty($_GET['what']))
         {
-            $get = db("SELECT * FROM ".$db['taktik']." WHERE id = ".convert::ToInt($_GET['id']),false,true);
+            $get = db("SELECT * FROM ".dba::get('taktik')." WHERE id = ".convert::ToInt($_GET['id']),false,true);
             if($_GET['what'] == "ct")
             {
                 $what = _taktik_tspar_ct;

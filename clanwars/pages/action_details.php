@@ -18,8 +18,8 @@ else
 {
     $qry = db("SELECT s1.id,s1.datum,s1.clantag,s1.gegner,s1.url,s1.xonx,s1.liga,s1.punkte,s1.gpunkte,s1.maps,s1.serverip,s1.servername,
                     s1.serverpwd,s1.bericht,s1.squad_id,s1.gametype,s1.gcountry,s1.lineup,s1.glineup,s1.matchadmins,s2.icon,s2.name,s2.game
-           FROM ".$db['cw']." AS s1
-           LEFT JOIN ".$db['squads']." AS s2 ON s1.squad_id = s2.id
+           FROM ".dba::get('cw')." AS s1
+           LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
            WHERE s1.id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
@@ -27,7 +27,7 @@ else
     {
         if($get['datum'] > time())
         {
-            $qryp = db("SELECT * FROM ".$db['cw_player']."
+            $qryp = db("SELECT * FROM ".dba::get('cw_player')."
                   WHERE cwid = '".convert::ToInt($_GET['id'])."'
                   ORDER BY status");
             while($getp = _fetch($qryp))
@@ -53,7 +53,7 @@ else
                         "status" => $status));
             }
 
-            $cntPlayers = cnt($db['cw_player'], " WHERE cwid = '".convert::ToInt($_GET['id'])."' AND member = '".convert::ToInt($userid)."'", "cwid");
+            $cntPlayers = cnt(dba::get('cw_player'), " WHERE cwid = '".convert::ToInt($_GET['id'])."' AND member = '".convert::ToInt($userid)."'", "cwid");
 
             if($cntPlayers) $value = _button_value_edit;
             else            $value = _button_value_add;
@@ -134,12 +134,12 @@ else
     if(isset($_GET['page']))  $page = $_GET['page'];
     else $page = 1;
 
-    $qryc = db("SELECT * FROM ".$db['cw_comments']."
+    $qryc = db("SELECT * FROM ".dba::get('cw_comments')."
                             WHERE cw = ".convert::ToInt($_GET['id'])."
                             ORDER BY datum DESC
               LIMIT ".($page - 1)*($maxcwcomments=config('m_cwcomments')).",".$maxcwcomments."");
 
-    $entrys = cnt($db['cw_comments'], " WHERE cw = ".convert::ToInt($_GET['id']));
+    $entrys = cnt(dba::get('cw_comments'), " WHERE cw = ".convert::ToInt($_GET['id']));
     $i = $entrys-($page - 1)*$maxcwcomments;
 
     while($getc = _fetch($qryc))
@@ -266,10 +266,10 @@ else
             "logo_gegner" => $logo_gegner,
             "squad" => $show,
             "squad_name" => re($get['name']),
-            "gametype" => re($get['gametype']),
+            "gametype" => empty($get['gametype']) ? '-' : re($get['gametype']),
             "lineup" => preg_replace("#\,#","<br />",re($get['lineup'])),
             "glineup" => preg_replace("#\,#","<br />",re($get['glineup'])),
-            "match_admins" => re($get['matchadmins']),
+            "match_admins" => empty($get['matchadmins']) ? '-' : re($get['matchadmins']),
             "datum" => _datum,
             "gegner" => _cw_head_gegner,
             "xonx" => _cw_head_xonx,
@@ -284,9 +284,9 @@ else
             "serverpwd" => $serverpwd,
             "cw_datum" => date("d.m.Y H:i", $get['datum'])._uhr,
             "cw_gegner" => $gegner,
-            "cw_xonx" => re($get['xonx']),
-            "cw_liga" => re($get['liga']),
-            "cw_maps" => re($get['maps']),
+            "cw_xonx" => empty($get['xonx']) ? '-' : re($get['xonx']),
+            "cw_liga" => empty($get['liga']) ? '-' : re($get['liga']),
+            "cw_maps" => empty($get['maps']) ? '-' : re($get['maps']),
             "cw_server" => $server,
             "cw_result" => $result,
             "cw_bericht" => $bericht,
@@ -294,7 +294,7 @@ else
 
     if($_GET['do'] == "add")
     {
-        if(_rows(db("SELECT `id` FROM ".$db['cw']." WHERE `id` = '".convert::ToInt($_GET['id'])."'")) != 0)
+        if(_rows(db("SELECT `id` FROM ".dba::get('cw')." WHERE `id` = '".convert::ToInt($_GET['id'])."'")) != 0)
         {
             if(settings("reg_cwcomments") == "1" && $chkMe == "unlogged")
             {
@@ -318,6 +318,7 @@ else
                             elseif(empty($_POST['nick'])) $error = _empty_nick;
                             elseif(empty($_POST['email'])) $error = _empty_email;
                             elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
+                            else if(check_email_trash_mail($_POST['email'])) $error = _error_trash_mail;
                             elseif(empty($_POST['comment'])) $error = _empty_eintrag;
                             $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
                         }
@@ -344,7 +345,7 @@ else
                                 "error" => $error,
                                 "eintraghead" => _eintrag));
                     } else {
-                        $qry = db("INSERT INTO ".$db['cw_comments']."
+                        $qry = db("INSERT INTO ".dba::get('cw_comments')."
                                              SET `cw`       = '".convert::ToInt($_GET['id'])."',
                                                      `datum`    = '".time()."',
                                                      `nick`     = '".up($_POST['nick'])."',
@@ -370,13 +371,13 @@ else
 
     if($_GET['do'] == "delete")
     {
-        $qry = db("SELECT reg FROM ".$db['cw_comments']."
+        $qry = db("SELECT reg FROM ".dba::get('cw_comments')."
                WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
         if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
         {
-            $qry = db("DELETE FROM ".$db['cw_comments']."
+            $qry = db("DELETE FROM ".dba::get('cw_comments')."
                  WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
             $index = info(_comment_deleted, "?action=details&amp;id=".convert::ToInt($_GET['id'])."");
@@ -384,7 +385,7 @@ else
             $index = error(_error_wrong_permissions, 1);
         }
     } elseif($_GET['do'] == "editcom") {
-        $qry = db("SELECT * FROM ".$db['cw_comments']."
+        $qry = db("SELECT * FROM ".dba::get('cw_comments')."
                WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
@@ -392,7 +393,7 @@ else
         {
             $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                     "time" => date("d.m.Y H:i", time())._uhr));
-            $qry = db("UPDATE ".$db['cw_comments']."
+            $qry = db("UPDATE ".dba::get('cw_comments')."
                    SET `nick`     = '".up($_POST['nick'])."',
                        `email`    = '".up($_POST['email'])."',
                        `hp`       = '".links($_POST['hp'])."',
@@ -405,7 +406,7 @@ else
             $index = error(_error_edit_post,1);
         }
     } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['cw_comments']."
+        $qry = db("SELECT * FROM ".dba::get('cw_comments')."
                  WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 

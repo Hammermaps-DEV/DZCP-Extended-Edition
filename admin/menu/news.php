@@ -6,7 +6,7 @@ if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_newskats_edit_head;
-$qry = db("SELECT * FROM ".$db['newskat']." ORDER BY `kategorie`");
+$qry = db("SELECT * FROM ".dba::get('newskat')." ORDER BY `kategorie`");
 $kats = ''; $color = 1;
 while($get = _fetch($qry))
 {
@@ -20,13 +20,13 @@ while($get = _fetch($qry))
 $show = show($dir."/newskats", array("head" => _config_newskats_head, "kats" => $kats, "add" => _config_newskats_add_head, "img" => _config_newskats_katbild, "delete" => _deleteicon_blank, "edit" => _editicon_blank, "mainkat" => _config_newskats_kat));
 if($_GET['do'] == "delete")
 {
-        $qry = db("SELECT katimg FROM ".$db['newskat']."
+        $qry = db("SELECT katimg FROM ".dba::get('newskat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         @unlink(basePath."/inc/images/newskat/".$get['katimg']);
 
-        $del = db("DELETE FROM ".$db['newskat']."
+        $del = db("DELETE FROM ".dba::get('newskat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_config_newskat_deleted, "?admin=news");
@@ -53,14 +53,14 @@ if($_GET['do'] == "delete")
         {
           $show = error(_config_empty_katname,1);
         } else {
-          $qry = db("INSERT INTO ".$db['newskat']."
+          $qry = db("INSERT INTO ".dba::get('newskat')."
                      SET `katimg`     = '".up($_POST['img'])."',
                          `kategorie`  = '".up($_POST['kat'])."'");
 
           $show = info(_config_newskats_added, "?admin=news");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['newskat']."
+        $qry = db("SELECT * FROM ".dba::get('newskat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -96,7 +96,7 @@ if($_GET['do'] == "delete")
           if($_POST['img'] == "lazy") $katimg = "";
           else $katimg = "`katimg` = '".up($_POST['img'])."',";
 
-          $qry = db("UPDATE ".$db['newskat']."
+          $qry = db("UPDATE ".dba::get('newskat')."
                      SET ".$katimg."
                          `kategorie` = '".up($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");

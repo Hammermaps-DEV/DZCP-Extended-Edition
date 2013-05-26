@@ -16,10 +16,10 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".$db['dl_kat']." ORDER BY name"); $color = 1; $kats = '';
+    $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name"); $color = 1; $kats = '';
     while($get = _fetch($qry))
     {
-        $qrydl = db("SELECT * FROM ".$db['downloads']." WHERE kat = '".$get['id']."' ORDER BY download");
+        $qrydl = db("SELECT * FROM ".dba::get('downloads')." WHERE kat = '".$get['id']."' ORDER BY download");
         if(_rows($qrydl))
         {
             $color_ = 1; $show = "";
@@ -35,7 +35,7 @@ else
                 $show .= show($dir."/downloads_show", array("class" => $class, "link" => $link, "hits" => $getdl['hits']));
             }
 
-            $cntKat = cnt($db['downloads'], " WHERE kat = '".$get['id']."'");
+            $cntKat = cnt(dba::get('downloads'), " WHERE kat = '".$get['id']."'");
             $dltitel = ($cntKat == 1 ? _dl_file : _site_stats_files);
             $kat = show(_dl_titel, array("file" => $dltitel, "cnt" => $cntKat, "name" => re($get['name'])));
             $kats .= show($dir."/download_kats", array("kat" => $kat, "kid" => $get['id'], "show" => $show));

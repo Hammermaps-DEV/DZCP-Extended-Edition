@@ -8,6 +8,13 @@
 
 ## Added for DZCP 1.0 Extended Edition ##
 define('_holder',"['[link]','?admin=[name]','background-image:url(menu/[name].[end]);'],\n");
+define('_teamspeak_default_icon_yes', '<a href="?admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="../inc/images/default_server_yes.png" alt="" class="icon" /></a>');
+define('_teamspeak_default_icon_no', '<a href="?admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="../inc/images/default_server_no.png" alt="" class="icon" /></a>');
+define('_teamspeak_default_icon_yes_no', '<img src="../inc/images/default_server_yesno.png" alt="" class="icon" />');
+define('_teamspeak_menu_icon_yes', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_no.gif" alt="" class="icon" /></a>');
+define('_teamspeak_menu_icon_no', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_yes.gif" alt="" class="icon" /></a>');
+define('_ipban_menu_icon_enable', '<a href="[action]" onclick="return(DZCP.del(\'[info]\'))"><img src="../inc/images/admin_lock_closed.jpg" alt="" class="icon" /></a>');
+define('_ipban_menu_icon_disable', '<a href="[action]" onclick="return(DZCP.del(\'[info]\'))"><img src="../inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
 
 ## Added for DZCP 1.5.2 ##
 define('_dropdown_date_ts', '<select id="t_[nr]" name="t_[nr]" class="dropdown">[day]</select> <select id="m_[nr]" name="m_[nr]" class="dropdown">[month]</select> <select id="j_[nr]" name="j_[nr]" class="dropdown">[year]</select>');
@@ -43,7 +50,7 @@ define('_closedicon_votes', '<img src="../inc/images/closed_votes.gif" alt="" cl
 define('_icqstatus_forum', '<img src="../inc/images/forum_icq.gif" alt="" title="[uin]" class="icon" />');
 define('_hpicon_forum', '<a href="[hp]" target="_blank"><img src="../inc/images/forum_hp.gif" alt="" title="[hp]" class="icon" /></a>');
 define('_emailicon_forum', '<a href="mailto:[email]"><img src="../inc/images/forum_email.gif" alt="" title="[email]" class="icon" /></a>');
-define('_server_menu_icon_yesno', '<a href="?admin=server&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_yesno.gif" alt="" class="icon" /></a>');
+define('_server_menu_icon_yesno', '<img src="../inc/images/server_yesno.gif" alt="" class="icon" />');
 define('_forum_pn_preview', '<img src="../inc/images/forum_pn.gif" alt="" class="icon" style="cursor:pointer" />');
 define('_forum_zitat_preview', '<img src="../inc/images/zitat.gif" alt="" class="icon" style="cursor:pointer" />');
 define('_user_link_preview', '[country] <a class="[class]" href="javascript:void(0)">[nick]</a>');
@@ -67,7 +74,8 @@ define('_userpic_link', '<img src="../inc/images/uploads/userpics/[id].[endung]"
 define('_no_userpic', '<img src="../inc/images/nopic.gif" width="[width]" height="[height]" alt="" />');
 
 ## Icons ##
-define('_closedicon', '<img src="../inc/images/closed.gif" alt="" class="icon" />');
+define('_closedicon', '<img src="../inc/images/closed.png" alt="" class="icon" />');
+define('_openicon', '<img src="../inc/images/open.png" alt="" class="icon" />');
 define('_icqstatus', '<img src="http://web.icq.com/whitepages/online?icq=[uin]&amp;img=5" alt="" title="[uin]" class="icon" />');
 define('_hpicon', '<a href="[hp]" target="_blank"><img src="../inc/images/hp.gif" alt="" title="[hp]" class="icon" /></a>');
 define('_email_mailto', '<a href="mailto:[email]">[email]</a>');
@@ -86,16 +94,16 @@ define('_cw_stats_draw_icon', '<img src="../inc/images/draw.gif" alt="" class="i
 define('_yesicon', '<img src="../inc/images/yes.gif" alt="" class="icon" />');
 define('_noicon', '<img src="../inc/images/no.gif" alt="" class="icon" />');
 define('_newicon', '<img src="../inc/images/forum_newpost.gif" alt="" class="icon" />');
-define('_deleteicon_blank', '<img alt="" src="../inc/images/delete.gif" class="icon" />');
-define('_buddys_delete', '<a href="?action=buddys&amp;do=delete&amp;id=[id]"><img src="../inc/images/delete.gif" alt="" class="icon" /></a>');
-define('_editicon_blank', '<img alt="" src="../inc/images/edit.gif" class="icon" />');
+define('_deleteicon_blank', '<img alt="" src="../inc/images/delete.png" class="icon" />');
+define('_buddys_delete', '<a href="?action=buddys&amp;do=delete&amp;id=[id]"><img src="../inc/images/delete.png" alt="" class="icon" /></a>');
+define('_editicon_blank', '<img alt="" src="../inc/images/edit.png" class="icon" />');
 define('_addbuddyicon', '<a href="../user/?action=buddys&amp;do=addbuddy&amp;id=[id]"><img alt="" src="../inc/images/add.gif" class="icon" /></a>');
-define('_gameicon', '<img alt="" src="../inc/images/gameicons/[icon]" class="icon" />');
-define('_gallery_editicon', '<a href="../upload/?action=usergallery&amp;do=edit&gid=[id]"><img alt="" src="../inc/images/edit.gif" title="Edit" class="icon" /></a>');
-define('_admin_ck_edit', '<a href="?action=admin&amp;do=paycheck&amp;id=[id]"><img src="../inc/images/edit.gif" alt="" title="Edit" class="icon" /></a>');
-define('_msg_delete_sended', '<a href="?action=msg&amp;do=deletesended&amp;id=[id]"><img alt="" src="../inc/images/delete.gif" title="Delete" class="icon" /></a>');
-define('_gallery_deleteicon', '<a href="?action=editprofile&gallery=delete&gid=[id]"><img alt="" src="../inc/images/delete.gif" title="Delete" class="icon" /></a>');
-define('_delete', '<a href="?action=msg&amp;do=deletethis&amp;id=[id]"><img alt="" src="../inc/images/delete.gif" title="Delete" class="icon" /></a>');
+define('_gameicon', '<img alt="" src="../inc/images/gameicons/[icon]" height="16" width="16" class="icon" />');
+define('_gallery_editicon', '<a href="../upload/?action=usergallery&amp;do=edit&gid=[id]"><img alt="" src="../inc/images/edit.png" title="Edit" class="icon" /></a>');
+define('_admin_ck_edit', '<a href="?action=admin&amp;do=paycheck&amp;id=[id]"><img src="../inc/images/edit.png" alt="" title="Edit" class="icon" /></a>');
+define('_msg_delete_sended', '<a href="?action=msg&amp;do=deletesended&amp;id=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
+define('_gallery_deleteicon', '<a href="?action=editprofile&gallery=delete&gid=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
+define('_delete', '<a href="?action=msg&amp;do=deletethis&amp;id=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
 
 ## News ##
 define('_news_kat', '<img src="../inc/images/newskat/[img]" alt="" />');
@@ -390,5 +398,5 @@ define('_user_new_artc', '&nbsp;&nbsp;<a href="../artikel/?action=show&amp;id=[i
 define('_klapptext_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/collapse.gif" alt="" class="icon" /></a>');
 define('_klapptext_dont_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/expand.gif" alt="" class="icon" /></a>');
 define('_klapptext_show_link', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/expand.gif" alt="" class="icon" />[link]</a>');
+define('_klapptext_server_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/[moreicon].gif" alt="" class="icon" />[link]</a>');
 define('_select_field_fightus', '<option value="[id]">[squad] ([game])</option>');
-?>

@@ -7,7 +7,7 @@
  */
 
 ## Install ##
-Cache::installType('zenddisk',array('TypeName' => 'ZEND Server - Disk Cache','CallTag' => 'disk_','Class' => 'cache_zend_disk','InitCache' => false,'SetServer' => false,'Required' => 'Zend Data Cache'));
+Cache::installType('zenddisk',array('TypeName' => 'ZEND Server - Disk Cache','CallTag' => 'disk_','Class' => 'cache_zend_disk','InitCache' => false,'SetServer' => false,'Required' => 'Zend Data Cache', 'CacheType' => 'file'));
 
 class cache_zend_disk extends Cache
 {
@@ -39,6 +39,7 @@ class cache_zend_disk extends Cache
     public static function disk_set_binary($key, $binary, $original_file=false, $ttl = 86400)
     {
         $key = 'bin_'.$key;
+        $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $binary = bin2hex($binary);
         self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));
         return (zend_disk_cache_store(md5($key), $binary, $ttl) === true ? true : false);
@@ -166,4 +167,3 @@ class cache_zend_disk extends Cache
     public static function disk_clean()
     { return zend_disk_cache_clear(); }
 }
-?>

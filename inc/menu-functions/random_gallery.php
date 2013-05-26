@@ -1,26 +1,36 @@
 <?php
 function random_gallery()
 {
-    global $db, $picformat;
-
-    $imgArr = array(); $gallery = '';
-    $files = get_files(basePath.'/inc/images/uploads/gallery/',false,true,$picformat);
-
-    if($files && count($files) >= 1)
+    global $picformat;
+    $menu_xml = get_menu_xml('random_gallery');
+    if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_gallery'))
     {
-        $get = db("SELECT id,kat FROM ".$db['gallery']." ORDER BY RAND()",false,true);
+        $imgArr = array(); $gallery = '';
+        $files = get_files(basePath.'/inc/images/uploads/gallery/',false,true,$picformat);
 
-        foreach($files as $file)
+        if($files && count($files) >= 1)
         {
-            if(convert::ToInt($file) == $get['id'])
-                array_push($imgArr, $file);
-        }
+            $get = db("SELECT id,kat FROM ".dba::get('gallery')." ORDER BY RAND()",false,true);
 
-        shuffle($imgArr);
-        if(!empty($imgArr[0]))
-            $gallery = show("menu/random_gallery", array("image" => $imgArr[0], "id" => $get['id'], "kat" => re($get['kat'])));
+            foreach($files as $file)
+            {
+                if(convert::ToInt($file) == $get['id'])
+                    array_push($imgArr, $file);
+            }
+
+            shuffle($imgArr);
+            if(!empty($imgArr[0]))
+            {
+                $gallery = show("menu/random_gallery", array("image" => $imgArr[0], "id" => $get['id'], "kat" => re($get['kat'])));
+
+                if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache
+                    Cache::set('nav_gallery',$gallery,$menu_xml['config']['update']);
+            }
+        }
     }
+    else
+        $gallery = Cache::get('nav_gallery');
+
 
     return empty($gallery) ? '' : '<table class="navContent" cellspacing="0">'.$gallery.'</table>';
 }
-?>

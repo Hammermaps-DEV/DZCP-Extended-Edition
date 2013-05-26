@@ -12,6 +12,22 @@
 if (!defined('IS_DZCP'))
     exit();
 
+//-> Checkt ob ein Ereignis neu ist
+# DEPRECATED #
+function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
+{
+    global $userid;
+
+    if($userid != 0 && !empty($userid))
+    {
+        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
+        { if(empty($new)) return _newicon; }
+    }
+
+    return '';
+}
+
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
@@ -47,10 +63,10 @@ else
     //Query für alle Kategorien (intern oder nur extern)
     if(permission("intforum"))
     {
-        $qry = db("SELECT * FROM ".$db['f_kats']."
+        $qry = db("SELECT * FROM ".dba::get('f_kats')."
                ORDER BY kid");
     } else {
-        $qry = db("SELECT * FROM ".$db['f_kats']."
+        $qry = db("SELECT * FROM ".dba::get('f_kats')."
                WHERE intern = 0
                ORDER BY kid");
     }
@@ -60,12 +76,12 @@ else
         $fkats .= '<li><label class="searchKat" style="text-align:center">'.re($get['name']).'</label></li>';
 
         $showt = "";
-        $qrys = db("SELECT * FROM ".$db['f_skats']."
+        $qrys = db("SELECT * FROM ".dba::get('f_skats')."
                 WHERE sid = '".$get['id']."'
                 ORDER BY kattopic");
         while($gets = _fetch($qrys))
         {
-            $intF = db("SELECT * FROM ".$db['f_access']."
+            $intF = db("SELECT * FROM ".dba::get('f_access')."
                   WHERE user = '".$_SESSION['id']."'
                   AND forum = '".$gets['id']."'");
             if($get['intern'] == 0 || (($get['intern'] == 1 && _rows($intF)) || $chkMe == 4))
@@ -96,7 +112,7 @@ else
                 for($x=0;$x<count($suche);$x++)
                 {
                 $z=0;
-                $qryu = db("SELECT id,nick FROM ".$db['users']."
+                $qryu = db("SELECT id,nick FROM ".dba::get('users')."
                             WHERE lower(nick) LIKE lower('%".trim($suche[$x])."%')");
                                 if(_rows($qryu))
                                 {
@@ -120,7 +136,7 @@ else
                                 $z++;
                                 }
         } else {
-            $qryu = db("SELECT id,nick FROM ".$db['users']."
+            $qryu = db("SELECT id,nick FROM ".dba::get('users')."
             WHERE lower(nick) LIKE lower('%".trim($_GET['search'])."%')");
                     if(_rows($qryu))
                     {
@@ -179,12 +195,12 @@ else
 
     if(!permission("intforum")) $dosearch .= ' AND s4.intern = 0';
         $qry = db("SELECT s1.id,s1.topic,s1.kid,s1.t_reg,s1.t_email,s1.t_nick,s1.hits,s4.intern,s3.id AS subid
-            FROM ".$db['f_threads']." AS s1
-                LEFT JOIN ".$db['f_posts']." AS s2
+            FROM ".dba::get('f_threads')." AS s1
+                LEFT JOIN ".dba::get('f_posts')." AS s2
                 ON s1.id = s2.sid
-                    LEFT JOIN ".$db['f_skats']." AS s3
+                    LEFT JOIN ".dba::get('f_skats')." AS s3
     ON s1.kid = s3.id
-                LEFT JOIN ".$db['f_kats']." AS s4
+                LEFT JOIN ".dba::get('f_kats')." AS s4
                 ON s3.sid = s4.id
                     ".$dosearch."
                 GROUP by s1.id
@@ -192,13 +208,13 @@ else
                     LIMIT ".($page - 1)*$maxfsearch.",".$maxfsearch."");
 
     $qrye = db("SELECT s1.id
-                            FROM ".$db['f_threads']." AS s1
-                LEFT JOIN ".$db['f_posts']." AS s2
+                            FROM ".dba::get('f_threads')." AS s1
+                LEFT JOIN ".dba::get('f_posts')." AS s2
                 ON s1.id = s2.sid
-    LEFT JOIN ".$db['f_skats']." AS s3
+    LEFT JOIN ".dba::get('f_skats')." AS s3
     ON s2.kid = s3.id
     AND s1.kid = s3.id
-    LEFT JOIN ".$db['f_kats']." AS s4
+    LEFT JOIN ".dba::get('f_kats')." AS s4
     ON s3.sid = s4.id
                 ".$dosearch."
                     GROUP by s1.id");
@@ -206,7 +222,7 @@ else
 
                 while($get = _fetch($qry))
                 {
-                    $intF = db("SELECT * FROM ".$db['f_access']."
+                    $intF = db("SELECT * FROM ".dba::get('f_access')."
                     WHERE user = '".$_SESSION['id']."'
                     AND forum = '".$get['subid']."'");
                     if(($get['intern'] == 1 && !_rows($intF) && $chkMe != 4)) $entrys--;
@@ -216,11 +232,11 @@ else
                     else $sticky = "";
             if($get['closed'] == 1) $closed = _closedicon;
             else $closed = "";
-                $cntpage = cnt($db['f_posts'], " WHERE sid = ".$get['id']);
+                $cntpage = cnt(dba::get('f_posts'), " WHERE sid = ".$get['id']);
             if($cntpage == 0) $pagenr = 1;
-                else $pagenr = ceil($cntpage/$maxfposts);
+                else $pagenr = ceil($cntpage/config('m_fposts'));
 
-                $qrylp = db("SELECT date,nick,reg,email FROM ".$db['f_posts']."
+                $qrylp = db("SELECT date,nick,reg,email FROM ".dba::get('f_posts')."
                         WHERE sid = '".$get['id']."'
                         ORDER BY date DESC");
                 if(_rows($qrylp))
@@ -248,7 +264,7 @@ else
                         "topic" => $threadlink,
                         "subtopic" => cut(re($get['subtopic']),config('l_forumsubtopic')),
                         "hits" => $get['hits'],
-                        "replys" => cnt($db['f_posts'], " WHERE sid = '".$get['id']."'"),
+                        "replys" => cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'"),
                                 "class" => $class,
                                 "lpost" => $lpost,
                                 "autor" => autor($get['t_reg'], '', $get['t_nick'], $get['t_email'])));
@@ -288,12 +304,12 @@ else
 
                                         //intern:
                                             if(permission("intnews")) {
-                                            $qry = db("SELECT * FROM ".$db['news']."
+                                            $qry = db("SELECT * FROM ".dba::get('news')."
                                             ".$dosearch." AND public != 0 AND intern != 0
                  ORDER BY titel ASC");
                      //nicht intern
     } else {
-        $qry = db("SELECT * FROM ".$db['news']."
+        $qry = db("SELECT * FROM ".dba::get('news')."
             ".$dosearch." AND public != 0 AND intern != 1
             ORDER BY titel ASC");
     }
@@ -311,7 +327,7 @@ else
 
     unset($class);
     //ARTIKEL
-    $qry = db("SELECT * FROM ".$db['artikel']."
+    $qry = db("SELECT * FROM ".dba::get('artikel')."
     ".$dosearch."
              ORDER BY titel ASC");
                  while($get = _fetch($qry))
@@ -327,7 +343,7 @@ else
 
     unset($class);
 //SITES
-    $qry = db("SELECT * FROM ".$db['sites']."
+    $qry = db("SELECT * FROM ".dba::get('sites')."
         ".$dosearch."
              ORDER BY titel ASC");
     while($get = _fetch($qry))
@@ -361,7 +377,7 @@ else
                             OR (lower(s1.gegner) LIKE lower('%".up($_GET['search'])."%')";
     }
                                     $dosearch .= ')';
-                                    $qry = db("SELECT s1.id, s1.gegner, s1.clantag, s2.name FROM ".$db['cw']." AS s1 JOIN ".$db['squads']." AS s2 ON s1.squad_id = s2.id
+                                    $qry = db("SELECT s1.id, s1.gegner, s1.clantag, s2.name FROM ".dba::get('cw')." AS s1 JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
                                     ".$dosearch."
         ORDER BY s1.clantag ASC");
         while($get = _fetch($qry))
@@ -392,7 +408,7 @@ else
             OR (lower(event) LIKE lower('%".up($_GET['search'])."%')";
     }
     $dosearch .= ')';
-                    $qry = db("SELECT datum, title FROM ".$db['events']."
+                    $qry = db("SELECT datum, title FROM ".dba::get('events')."
                             ".$dosearch."
                             ORDER BY title ASC");
                             while($get = _fetch($qry))

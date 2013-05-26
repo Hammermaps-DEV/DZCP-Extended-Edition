@@ -11,13 +11,9 @@ if(_adminMenu != 'true')
       $wysiwyg = '_word';
       if($_GET['do'] == "add")
       {
-        $qryk = db("SELECT * FROM ".$db['newskat']."");
+        $qryk = db("SELECT * FROM ".dba::get('newskat')."");
         while($getk = _fetch($qryk))
-        {
-          $kat .= show(_select_field, array("value" => $getk['id'],
-                                            "sel" => "",
-                                            "what" => re($getk['kategorie'])));
-        }
+        { $kat .= show(_select_field, array("value" => $getk['id'], "sel" => "", "what" => re($getk['kategorie']))); }
 
         $show = show($dir."/artikel_form", array("head" => _artikel_add,
                                                  "nautor" => _autor,
@@ -28,6 +24,7 @@ if(_adminMenu != 'true')
                                                  "ntitel" => _titel,
                                                  "do" => "insert",
                                                  "ntext" => _eintrag,
+                                                 "selr_ac" => 'selected="selected"',
                                                  "error" => "",
                                                  "titel" => "",
                                                  "artikeltext" => "",
@@ -40,15 +37,17 @@ if(_adminMenu != 'true')
                                                  "button" => _button_value_add,
                                                  "nmore" => _news_admin_more,
                                                  "linkname" => _linkname,
-                                                                       "interna" => _news_admin_intern,
+                                                 "interna" => _news_admin_intern,
                                                  "nurl" => _url));
-      } elseif($_GET['do'] == "insert") {
+      }
+      elseif($_GET['do'] == "insert")
+      {
           if(empty($_POST['titel']) || empty($_POST['artikel']))
             {
               if(empty($_POST['titel'])) $error = _empty_artikel_title;
               elseif(empty($_POST['artikel'])) $error = _empty_artikel;
 
-          $qryk = db("SELECT * FROM ".$db['newskat']."");
+          $qryk = db("SELECT * FROM ".dba::get('newskat')."");
           while($getk = _fetch($qryk))
           {
             if($_POST['kat'] == $getk['id']) $sel = "selected=\"selected\"";
@@ -61,6 +60,7 @@ if(_adminMenu != 'true')
 
               $error = show("errors/errortable", array("error" => $error));
 
+          $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
           $show = show($dir."/artikel_form", array("head" => _artikel_add,
                                                    "nautor" => _autor,
                                                    "autor" => autor(convert::ToInt($userid)),
@@ -77,6 +77,7 @@ if(_adminMenu != 'true')
                                                    "url1" => $_POST['url1'],
                                                    "url2" => $_POST['url2'],
                                                    "url3" => $_POST['url3'],
+                                                   "selr_ac" => $selr_ac,
                                                    "ntext" => _eintrag,
                                                    "button" => _button_value_add,
                                                    "error" => $error,
@@ -86,11 +87,12 @@ if(_adminMenu != 'true')
           } else {
           if($_POST)
           {
-            $qry = db("INSERT INTO ".$db['artikel']."
+            $qry = db("INSERT INTO ".dba::get('artikel')."
                        SET `autor`  = '".convert::ToInt($userid)."',
                            `kat`    = '".convert::ToInt($_POST['kat'])."',
                            `titel`  = '".up($_POST['titel'])."',
                            `text`   = '".up($_POST['artikel'],1)."',
+                           `comments` = '".convert::ToInt($_POST['comments'])."',
                            `link1`  = '".up($_POST['link1'])."',
                            `link2`  = '".up($_POST['link2'])."',
                            `link3`  = '".up($_POST['link3'])."',
@@ -101,11 +103,11 @@ if(_adminMenu != 'true')
           $show = info(_artikel_added, "?admin=artikel");
         }
       } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".$db['artikel']."
+        $qry = db("SELECT * FROM ".dba::get('artikel')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $qryk = db("SELECT * FROM ".$db['newskat']."");
+        $qryk = db("SELECT * FROM ".dba::get('newskat')."");
         while($getk = _fetch($qryk))
         {
           if($get['kat'] == $getk['id']) $sel = "selected=\"selected\"";
@@ -118,6 +120,7 @@ if(_adminMenu != 'true')
 
         $do = show(_artikel_edit_link, array("id" => $_GET['id']));
 
+        $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
         $show = show($dir."/artikel_form", array("head" => _artikel_edit,
                                                  "nautor" => _autor,
                                                  "autor" => autor(convert::ToInt($userid)),
@@ -134,6 +137,7 @@ if(_adminMenu != 'true')
                                                  "url1" => $get['url1'],
                                                  "url2" => $get['url2'],
                                                  "url3" => $get['url3'],
+                                                 "selr_ac" => $selr_ac,
                                                  "ntext" => _eintrag,
                                                  "error" => "",
                                                  "button" => _button_value_edit,
@@ -142,10 +146,11 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editartikel") {
         if($_POST)
         {
-          $qry = db("UPDATE ".$db['artikel']."
+          $qry = db("UPDATE ".dba::get('artikel')."
                      SET `kat`    = '".convert::ToInt($_POST['kat'])."',
                          `titel`  = '".up($_POST['titel'])."',
                          `text`   = '".up($_POST['artikel'],1)."',
+                         `comments` = '".convert::ToInt($_POST['comments'])."',
                          `link1`  = '".up($_POST['link1'])."',
                          `link2`  = '".up($_POST['link2'])."',
                          `link3`  = '".up($_POST['link3'])."',
@@ -156,18 +161,18 @@ if(_adminMenu != 'true')
         }
         $show = info(_artikel_edited, "?admin=artikel");
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['artikel']."
+        $qry = db("DELETE FROM ".dba::get('artikel')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $show = info(_artikel_deleted, "?admin=artikel");
       } elseif($_GET['do'] == 'public') {
         if($_GET['what'] == 'set')
         {
-          $upd = db("UPDATE ".$db['artikel']."
+          $upd = db("UPDATE ".dba::get('artikel')."
                      SET `public` = '1',
                                    `datum`  = '".time()."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         } elseif($_GET['what'] == 'unset') {
-          $upd = db("UPDATE ".$db['artikel']."
+          $upd = db("UPDATE ".dba::get('artikel')."
                      SET `public` = '0'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
@@ -177,19 +182,19 @@ if(_adminMenu != 'true')
         if(isset($_GET['page']))  $page = $_GET['page'];
         else $page = 1;
 
-        $entrys = cnt($db['artikel']);
-        $qry = db("SELECT * FROM ".$db['artikel']."
-                   ORDER BY `public` ASC, `datum` DESC
-                                     LIMIT ".($page - 1)*($maxadminartikel=config('m_adminartikel')).",".$maxadminartikel."");
+        $entrys = cnt(dba::get('artikel'));
+        $qry = db("SELECT * FROM ".dba::get('artikel')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminartikel=config('m_adminartikel')).",".$maxadminartikel."");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
                                                         "action" => "admin=artikel&amp;do=edit",
                                                         "title" => _button_title_edit));
+
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=artikel&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => convSpace(_confirm_del_artikel)));
+
           $titel = show(_artikel_show_link, array("titel" => re(cut($get['titel'],config('l_newsadmin'))),
                                                   "id" => $get['id']));
 
@@ -206,7 +211,7 @@ if(_adminMenu != 'true')
                                                    "titel" => $titel,
                                                    "class" => $class,
                                                    "autor" => autor($get['autor']),
-                                                       "intnews" => "",
+                                                   "intnews" => "",
                                                    "sticky" => "",
                                                    "public" => $public,
                                                    "edit" => $edit,

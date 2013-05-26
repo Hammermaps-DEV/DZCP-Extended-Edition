@@ -19,15 +19,15 @@ else
     if(!empty($_GET['showsquad'])) header('Location: ?action=shows&id='.convert::ToInt($_GET['showsquad']));
     else if(!empty($_GET['show'])) header('Location: ?action=shows&id='.convert::ToInt($_GET['show']));
 
-    $get = _fetch(db("SELECT * FROM ".$db['squads']." WHERE `id` = '".convert::ToInt($_GET['id'])."'"));
+    $get = _fetch(db("SELECT * FROM ".dba::get('squads')." WHERE `id` = '".convert::ToInt($_GET['id'])."'"));
     $qrym = db("SELECT s1.user,s1.squad,s2.id,s2.nick,s2.icq,s2.email,s2.xfire,s2.rlname,
                   s2.level,s2.bday,s2.hp,s3.posi,s4.pid
-                  FROM ".$db['squaduser']." AS s1
-                  LEFT JOIN ".$db['users']." AS s2
+                  FROM ".dba::get('squaduser')." AS s1
+                  LEFT JOIN ".dba::get('users')." AS s2
                   ON s2.id=s1.user
-                  LEFT JOIN ".$db['userpos']." AS s3
+                  LEFT JOIN ".dba::get('userpos')." AS s3
                   ON s3.squad=s1.squad AND s3.user=s1.user
-                  LEFT JOIN ".$db['pos']." AS s4
+                  LEFT JOIN ".dba::get('pos')." AS s4
                   ON s4.id=s3.posi
                   WHERE s1.squad='".convert::ToInt($_GET['id'])."'
                   ORDER BY s4.pid, s2.nick");
@@ -37,7 +37,7 @@ else
     $c = 1;
     while($getm = _fetch($qrym))
     {
-        $cntall = cnt($db['squaduser'], " WHERE squad= '".$get['id']."'");
+        $cntall = cnt(dba::get('squaduser'), " WHERE squad= '".$get['id']."'");
 
         if($getm['icq'] == 0)
         {

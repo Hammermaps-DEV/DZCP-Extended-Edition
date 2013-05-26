@@ -2,9 +2,9 @@
 //-> Shoutbox
 function shout($ajax = 0)
 {
-    global $db,$userid,$chkMe;
+    global $userid,$chkMe;
     $shoutconfig = config(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));
-    $qry = db("SELECT * FROM ".$db['shout']." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
+    $qry = db("SELECT * FROM ".dba::get('shout')." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
 
     $i = 1; $color = 1; $show = "";
     while ($get = _fetch($qry))
@@ -72,4 +72,3 @@ function shout($ajax = 0)
 
     return empty($ajax) ? '<table class="navContent" cellspacing="0">'.$shout.'</table>' : $show;
 }
-?>

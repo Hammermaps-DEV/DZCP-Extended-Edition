@@ -32,7 +32,7 @@ else
         } elseif($size > config('upicsize')."000") {
             $index = error(_upload_wrong_size, 1);
         } else {
-            copy($tmpname, basePath."/inc/images/gameicons/".$_FILES['file']['name']."");
+            copy($tmpname, basePath."/inc/images/gameicons/custom/".$_FILES['file']['name']);
             @unlink($_FILES['file']['tmp_name']);
 
             $index = info(_info_upload_success, "../admin/?admin=squads&amp;do=add");

@@ -10,7 +10,7 @@ if(_adminMenu != 'true')
     {
       $show = error(_error_wrong_permissions, 1);
     } else {
-      $qry = db("SELECT * FROM ".$db['pos']."
+      $qry = db("SELECT * FROM ".dba::get('pos')."
                  ORDER BY pid");
       while($get = _fetch($qry))
       {
@@ -40,7 +40,7 @@ if(_adminMenu != 'true')
 
       if($_GET['do'] == "edit")
       {
-        $qry1 = db("SELECT * FROM ".$db['pos']."
+        $qry1 = db("SELECT * FROM ".dba::get('pos')."
                     ORDER BY pid");
         while($get1 = _fetch($qry1))
         {
@@ -49,7 +49,7 @@ if(_adminMenu != 'true')
                                                   "sel" => ""));
         }
 
-        $qry = db("SELECT * FROM ".$db['pos']."
+        $qry = db("SELECT * FROM ".dba::get('pos')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -79,45 +79,45 @@ if(_adminMenu != 'true')
             if($_POST['pos'] == "1" || "2") $sign = ">= ";
             else $sign = "> ";
 
-            $posi = db("UPDATE ".$db['pos']."
+            $posi = db("UPDATE ".dba::get('pos')."
                         SET `pid` = pid+1
                         WHERE pid ".$sign." '".convert::ToInt($_POST['pos'])."'");
               }
 
-          $qry = db("UPDATE ".$db['pos']."
+          $qry = db("UPDATE ".dba::get('pos')."
                      SET `position` = '".up($_POST['kat'])."'
                          ".$pid."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
     // permissions
-          db("DELETE FROM ".$db['permissions']." WHERE `pos` = '".convert::ToInt($_GET['id'])."'");
+          db("DELETE FROM ".dba::get('permissions')." WHERE `pos` = '".convert::ToInt($_GET['id'])."'");
           if(!empty($_POST['perm']))
           {
             foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";
                                   if(!empty($p))$p = ', '.substr($p, 0, strlen($p) - 1);
 
-            db("INSERT INTO ".$db['permissions']." SET `pos` = '".convert::ToInt($_GET['id'])."'".$p);
+            db("INSERT INTO ".dba::get('permissions')." SET `pos` = '".convert::ToInt($_GET['id'])."'".$p);
           }
     ////////////////////
 
     // internal boardpermissions
-          db("DELETE FROM ".$db['f_access']." WHERE `pos` = '".convert::ToInt($_GET['id'])."'");
+          db("DELETE FROM ".dba::get('f_access')." WHERE `pos` = '".convert::ToInt($_GET['id'])."'");
           if(!empty($_POST['board']))
           {
             foreach($_POST['board'] AS $v)
-              db("INSERT INTO ".$db['f_access']." SET `pos` = '".convert::ToInt($_GET['id'])."', `forum` = '".$v."'");
+              db("INSERT INTO ".dba::get('f_access')." SET `pos` = '".convert::ToInt($_GET['id'])."', `forum` = '".$v."'");
           }
     ////////////////////
 
           $show = info(_pos_admin_edited, "?admin=positions");
         }
       } elseif($_GET['do'] == "delete") {
-        db("DELETE FROM ".$db['pos']." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        db("DELETE FROM ".$db['permissions']." WHERE pos = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('pos')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("DELETE FROM ".dba::get('permissions')." WHERE pos = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_pos_admin_deleted, "?admin=positions");
 
       } elseif($_GET['do'] == "new") {
-        $qry = db("SELECT * FROM ".$db['pos']."
+        $qry = db("SELECT * FROM ".dba::get('pos')."
                    ORDER BY pid");
         while($get = _fetch($qry))
         {
@@ -145,26 +145,26 @@ if(_adminMenu != 'true')
           if($_POST['pos'] == "1" || "2") $sign = ">= ";
           else $sign = "> ";
 
-          $posi = db("UPDATE ".$db['pos']."
+          $posi = db("UPDATE ".dba::get('pos')."
                       SET `pid` = pid+1
                       WHERE pid ".$sign." '".convert::ToInt($_POST['pos'])."'");
 
-          $qry = db("INSERT INTO ".$db['pos']."
+          $qry = db("INSERT INTO ".dba::get('pos')."
                      SET `pid`        = '".convert::ToInt($_POST['pos'])."',
                          `position`  = '".up($_POST['kat'])."'");
-          $posID = mysql_insert_id();
+          $posID = database::get_insert_id();
     // permissions
           foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";
                                 if(!empty($p))$p = ', '.substr($p, 0, strlen($p) - 1);
 
-          db("INSERT INTO ".$db['permissions']." SET `pos` = '".$posID."'".$p);
+          db("INSERT INTO ".dba::get('permissions')." SET `pos` = '".$posID."'".$p);
     ////////////////////
 
     // internal boardpermissions
           if(!empty($_POST['board']))
           {
             foreach($_POST['board'] AS $v)
-              db("INSERT INTO ".$db['f_access']." SET `pos` = '".$posID."', `forum` = '".$v."'");
+              db("INSERT INTO ".dba::get('f_access')." SET `pos` = '".$posID."', `forum` = '".$v."'");
           }
     ////////////////////
 

@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".$db['sponsoren']." WHERE site = 1 ORDER BY pos");
+    $qry = db("SELECT * FROM ".dba::get('sponsoren')." WHERE site = 1 ORDER BY pos");
     if(_rows($qry) >= 1)
     {
         $show = '';
@@ -31,4 +31,3 @@ else
 
     $index = show($dir."/sponsors", array("show" => $show));
 }
-?>

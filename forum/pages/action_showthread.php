@@ -17,13 +17,13 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $check = db("SELECT s3.name,s3.intern,s2.sid,s1.kid,s2.id
-               FROM ".$db['f_kats']." s3, ".$db['f_skats']." s2, ".$db['f_threads']." s1
+               FROM ".dba::get('f_kats')." s3, ".dba::get('f_skats')." s2, ".dba::get('f_threads')." s1
                WHERE s1.kid = s2.id
                AND s2.sid = s3.id
                AND s1.id = '".convert::ToInt($_GET['id'])."'");
     $checks = _fetch($check);
 
-    $f_check = db("SELECT * FROM ".$db['f_threads']."
+    $f_check = db("SELECT * FROM ".dba::get('f_threads')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'
                  AND kid = '".$checks['kid']."'");
     if(_rows($f_check))
@@ -32,19 +32,19 @@ else
         {
             $index = error(_error_wrong_permissions, 1);
         } else {
-            $update = db("UPDATE ".$db['f_threads']."
+            $update = db("UPDATE ".dba::get('f_threads')."
                     SET `hits` = hits+1
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             if(isset($_GET['page'])) $page = $_GET['page'];
             else $page = 1;
 
-            $qryp = db("SELECT * FROM ".$db['f_posts']."
+            $qryp = db("SELECT * FROM ".dba::get('f_posts')."
                   WHERE sid = '".convert::ToInt($_GET['id'])."'
                   ORDER BY id
                   LIMIT ".($page - 1)*$maxfposts.",".$maxfposts."");
 
-            $entrys = cnt($db['f_posts'], " WHERE sid = ".convert::ToInt($_GET['id']));
+            $entrys = cnt(dba::get('f_posts'), " WHERE sid = ".convert::ToInt($_GET['id']));
             $i = 2;
 
             if($entrys == 0) $pagenr = "1";
@@ -103,7 +103,7 @@ else
 
                 if($getp['reg'] != 0)
                 {
-                    $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+                    $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                       WHERE id = '".$getp['reg']."'");
                     $getu = _fetch($qryu);
 
@@ -152,22 +152,22 @@ else
                         "zitat" => $zitat,
                         "onoff" => $onoff,
                         "top" => _topicon,
-                        "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
+                        "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                 $i++;
             }
 
-            $qry = db("SELECT * FROM ".$db['f_threads']."
+            $qry = db("SELECT * FROM ".dba::get('f_threads')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
             $get = _fetch($qry);
 
             $qryw = db("SELECT s1.kid,s1.topic,s2.kattopic,s2.sid
-                  FROM ".$db['f_threads']." AS s1
-                  LEFT JOIN ".$db['f_skats']." AS s2
+                  FROM ".dba::get('f_threads')." AS s1
+                  LEFT JOIN ".dba::get('f_skats')." AS s2
                   ON s1.kid = s2.id
                   WHERE s1.id = '".convert::ToInt($_GET['id'])."'");
             $getw = _fetch($qryw);
 
-            $qrykat = db("SELECT name FROM ".$db['f_kats']."
+            $qrykat = db("SELECT name FROM ".dba::get('f_kats')."
                     WHERE id = '".$getw['sid']."'");
             $kat = _fetch($qrykat);
 
@@ -220,12 +220,12 @@ else
                     $closed = "";
                 }
 
-                $qryok = db("SELECT * FROM ".$db['f_kats']."
+                $qryok = db("SELECT * FROM ".dba::get('f_kats')."
                      ORDER BY kid");
                 while($getok = _fetch($qryok))
                 {
                     $skat = "";
-                    $qryo = db("SELECT * FROM ".$db['f_skats']."
+                    $qryo = db("SELECT * FROM ".dba::get('f_skats')."
                       WHERE sid = '".$getok['id']."'
                       ORDER BY kattopic");
                     while($geto = _fetch($qryo))
@@ -271,7 +271,7 @@ else
 
             if($get['t_reg'] != 0)
             {
-                $qryu = db("SELECT nick,icq,hp,email FROM ".$db['users']."
+                $qryu = db("SELECT nick,icq,hp,email FROM ".dba::get('users')."
                     WHERE id = '".$get['t_reg']."'");
                 $getu = _fetch($qryu);
 
@@ -300,7 +300,7 @@ else
                 if(preg_match("#".$_GET['hl']."#i",$nick)) $ftxt['class'] = 'class="highlightSearchTarget"';
             }
 
-            $qryabo = db("SELECT user,fid FROM ".$db['f_abo']."
+            $qryabo = db("SELECT user,fid FROM ".dba::get('f_abo')."
                     WHERE user = '".convert::ToInt($userid)."'
                     AND fid = '".convert::ToInt($_GET['id'])."'");
             $getabo = _fetch($qryabo);
@@ -349,7 +349,7 @@ else
                     "ip" => $posted_ip,
                     "top" => _topicon,
                     "lpost" => $lpost,
-                    "lp" => cnt($db['f_posts'], " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1,
+                    "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1,
                     "add" => $add,
                     "nav" => $nav,
                     "vote" => $vote,

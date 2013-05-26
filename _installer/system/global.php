@@ -61,4 +61,4 @@ define('prepare_files_success', 'Alle notwendigen Dateirechte sind gesetzt. Klic
 define('saved_user', 'Die Datenbank Informationen wurden erfolgreich gespeichert!<br />Klicken Sie auf &quot;Weiter&quot;.');
 define('no_db_update', 'Die Datenbank ist bereits aktuell, es ist kein Update deiner Datenbank notwendig.');
 define('no_db_update_selected', 'Du musst die zuvor installierte Version von DZCP ausw&auml;hlen um mit dem Update zu beginnen!');
-?>
+define('_error_invalid_email', 'Du hast eine ung&uuml;ltige Emailadresse angegeben!');

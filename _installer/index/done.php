@@ -17,4 +17,3 @@ else
     unset($_SESSION['mysql_database']);
     unset($_SESSION['mysql_dbengine']);
 }
-?>

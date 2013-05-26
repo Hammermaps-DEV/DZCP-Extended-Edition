@@ -16,10 +16,10 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $ges = cnt($db['awards']);
-    $place_1 = cnt($db['awards'], " WHERE place = '1' ");
-    $place_2 = cnt($db['awards'], " WHERE place = '2' ");
-    $place_3 = cnt($db['awards'], " WHERE place = '3' ");
+    $ges = cnt(dba::get('awards'));
+    $place_1 = cnt(dba::get('awards'), " WHERE place = '1' ");
+    $place_2 = cnt(dba::get('awards'), " WHERE place = '2' ");
+    $place_3 = cnt(dba::get('awards'), " WHERE place = '3' ");
 
     $stats = show($dir."/awards", array("head" => _site_awards,
             "p1" => _stats_place." 1",

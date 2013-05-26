@@ -18,4 +18,3 @@ if (!defined('IS_DZCP'))
 cookie::put('tmpdir', $_GET['set']);
 cookie::save();
 header("Location: ".$_SERVER['HTTP_REFERER']);
-?>

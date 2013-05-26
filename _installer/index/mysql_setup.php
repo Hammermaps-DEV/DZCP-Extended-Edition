@@ -27,4 +27,3 @@ else
         $index = show("/msg/mysql_setup_fail",array("text" => $sql_text));
     }
 }
-?>

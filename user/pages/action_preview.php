@@ -22,7 +22,7 @@ else
     header("Content-type: text/html; charset=utf-8");
     if($do == 'edit')
     {
-        $get = db("SELECT reg,datum FROM ".$db['usergb']." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
+        $get = db("SELECT reg,datum FROM ".dba::get('usergb')." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
 
         $get_id = '?';
         $get_userid = $get['reg'];
@@ -32,7 +32,7 @@ else
     }
     else
     {
-        $get_id = cnt($db['usergb'], "WHERE user = ".(isset($_GET['uid']) ? (convert::ToInt($_GET['uid'])+1) : 1));
+        $get_id = cnt(dba::get('usergb'), "WHERE user = ".(isset($_GET['uid']) ? (convert::ToInt($_GET['uid'])+1) : 1));
         $get_userid = convert::ToInt($userid);
         $get_date = time();
         $regCheck = ($chkMe == 'unlogged' ? true : false);
@@ -71,4 +71,3 @@ else
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
 }
-?>

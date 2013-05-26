@@ -12,12 +12,28 @@
 if (!defined('IS_DZCP'))
     exit();
 
+//-> Checkt ob ein Ereignis neu ist
+# DEPRECATED #
+function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
+{
+    global $userid;
+
+    if($userid != 0 && !empty($userid))
+    {
+        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
+        { if(empty($new)) return _newicon; }
+    }
+
+    return '';
+}
+
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $check = db("SELECT s2.id,s1.intern FROM ".$db['f_kats']." AS s1
-               LEFT JOIN ".$db['f_skats']." AS s2
+    $check = db("SELECT s2.id,s1.intern FROM ".dba::get('f_kats')." AS s1
+               LEFT JOIN ".dba::get('f_skats')." AS s2
                ON s2.sid = s1.id
                WHERE s2.id = '".convert::ToInt($_GET['id'])."'");
     $checks = _fetch($check);
@@ -31,14 +47,14 @@ else
 
         if(empty($_POST['suche']))
         {
-            $qry = db("SELECT * FROM ".$db['f_threads']."
+            $qry = db("SELECT * FROM ".dba::get('f_threads')."
                  WHERE kid ='".convert::ToInt($_GET['id'])."'
                  OR global = 1
                  ORDER BY global DESC, sticky DESC, lp DESC, t_date DESC
                  LIMIT ".(($page - 1)*$maxfthreads=config('m_fthreads')).",".$maxfthreads."");
         } else {
             $qry = db("SELECT s1.global,s1.topic,s1.subtopic,s1.t_text,s1.t_email,s1.hits,s1.t_reg,s1.t_date,s1.closed,s1.sticky,s1.id
-                 FROM ".$db['f_threads']." AS s1
+                 FROM ".dba::get('f_threads')." AS s1
                  WHERE s1.topic LIKE '%".$_POST['suche']."%'
                  AND s1.kid = '".convert::ToInt($_GET['id'])."'
                  OR s1.subtopic LIKE '%".$_POST['suche']."%'
@@ -49,7 +65,7 @@ else
                  LIMIT ".($page - 1)*($maxfthreads=config('m_fthreads')).",".$maxfthreads."");
         }
 
-        $entrys = cnt($db['f_threads'], " WHERE kid = ".convert::ToInt($_GET['id']));
+        $entrys = cnt(dba::get('f_threads'), " WHERE kid = ".convert::ToInt($_GET['id']));
         $i = 2;
 
         while($get = _fetch($qry))
@@ -63,14 +79,14 @@ else
             if($get['closed'] == "1") $closed = show("page/button_closed");
             else $closed = "";
 
-            $cntpage = cnt($db['f_posts'], " WHERE sid = ".$get['id']);
+            $cntpage = cnt(dba::get('f_posts'), " WHERE sid = ".$get['id']);
 
             if($cntpage == "0") $pagenr = "1";
             else $pagenr = ceil($cntpage/$maxfposts);
 
             if(empty($_POST['suche']))
             {
-                $qrys = db("SELECT id FROM ".$db['f_skats']."
+                $qrys = db("SELECT id FROM ".dba::get('f_skats')."
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $gets = _fetch($qrys);
 
@@ -92,7 +108,7 @@ else
                         "page" => $pagenr));
             }
 
-            $qrylp = db("SELECT date,nick,reg,email FROM ".$db['f_posts']."
+            $qrylp = db("SELECT date,nick,reg,email FROM ".dba::get('f_posts')."
                    WHERE sid = '".$get['id']."'
                    ORDER BY date DESC");
             if(_rows($qrylp))
@@ -111,14 +127,14 @@ else
                     "topic" => $threadlink,
                     "subtopic" => re(cut($get['subtopic'],config('l_forumsubtopic'))),
                     "hits" => $get['hits'],
-                    "replys" => cnt($db['f_posts'], " WHERE sid = '".$get['id']."'"),
+                    "replys" => cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'"),
                     "class" => $class,
                     "lpost" => $lpost,
                     "autor" => autor($get['t_reg'], '', $get['t_nick'], $get['t_email'])));
             $i--;
         }
 
-        $qrys = db("SELECT id,kattopic FROM ".$db['f_skats']."
+        $qrys = db("SELECT id,kattopic FROM ".dba::get('f_skats')."
                 WHERE id = '".convert::ToInt($_GET['id'])."'");
         $gets = _fetch($qrys);
 
@@ -150,11 +166,11 @@ else
                     "new" => $new,));
         }
 
-        $qrysub = db("SELECT sid FROM ".$db['f_skats']."
+        $qrysub = db("SELECT sid FROM ".dba::get('f_skats')."
                   WHERE id = '".convert::ToInt($_GET['id'])."'");
         $subkat = _fetch($qrysub);
 
-        $qryk = db("SELECT name FROM ".$db['f_kats']."
+        $qryk = db("SELECT name FROM ".dba::get('f_kats')."
                 WHERE id = '".$subkat['sid']."'");
         $kat = _fetch($qryk);
 

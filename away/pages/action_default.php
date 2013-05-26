@@ -24,8 +24,8 @@ else
 
         if(isset($_GET['page'])) $page = $_GET['page'];
         else $page = 1;
-        $entrys = cnt($db['away']);
-        $qry = db("SELECT * FROM ".$db['away']."
+        $entrys = cnt(dba::get('away'));
+        $qry = db("SELECT * FROM ".dba::get('away')."
                ORDER BY id DESC
                LIMIT ".($page - 1)*($maxaway=config('m_away')).",".$maxaway."");
 

@@ -30,6 +30,7 @@ $ajaxThumbgen = (!isset($ajaxThumbgen) ? false : $ajaxThumbgen);
 ## INCLUDES/REQUIRES ##
 require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');
+require_once(basePath.'/inc/database.php');
 require_once(basePath."/inc/apic.php");
 require_once(basePath."/inc/api.php");
 require_once(basePath.'/inc/kernel.php');
@@ -39,10 +40,11 @@ require_once(basePath."/inc/cache.php");
 if(!$ajaxThumbgen)
 {
     require_once(basePath.'/inc/sendmail.php');
-    require_once(basePath.'/inc/server_query/_functions.php');
-    require_once(basePath."/inc/teamspeak_query.php");
+    require_once(basePath.'/inc/GameQ.php');
 }
 
+// IP Prüfung
+check_ip();
 define('IS_DZCP', true);
 
 ## FUNCTIONS ##
@@ -51,12 +53,11 @@ define('IS_DZCP', true);
 $rootAdmin = 1;
 
 ## Settingstabelle auslesen ##
-$settings = settings(array('prev','tmpdir','clanname','pagetitel','language'));
+$settings = settings(array('prev','tmpdir','clanname','pagetitel'));
 $prev = $settings['prev'].'_';
 $sdir = $settings['tmpdir'];
 $clanname = $settings["clanname"];
 $pagetitle = $settings["pagetitel"];
-$default_language = $settings["language"];
 unset($settings);
 
 ## Cookie initialisierung ##
@@ -78,6 +79,37 @@ Cache::loadClasses();
 Cache::setType($cache_engine);
 Cache::init();
 
+//-> GameQ
+if(!$ajaxThumbgen)
+    spl_autoload_register(array('GameQ', 'auto_load'));
+
+// -> Prüft ob die IP gesperrt und gültig ist
+function check_ip()
+{
+    global $ajaxThumbgen,$ajaxJob;
+
+    if(!$ajaxThumbgen && !$ajaxJob)
+    {
+        if(($ip=visitorIp()) == '0.0.0.0' || $ip == false || empty($ip))
+            die('Deine IP ist ung&uuml;ltig!<p>Your IP is invalid!');
+
+        //Banned IP
+        $banned_ip_sql = db("SELECT id,typ FROM `".dba::get('ipban')."` WHERE `ip` = '".$ip."' AND `enable` = '1'");
+        if(_rows($banned_ip_sql) >= 1)
+        {
+            $banned_ip = _fetch($banned_ip_sql);
+            if($banned_ip['typ'] == '2' || $banned_ip['typ'] == '3')
+                die('Deine IP ist gesperrt!<p>Your IP is banned!');
+        }
+
+        unset($banned_ip,$banned_ip_sql);
+        sfs::check(); //SFS Update
+        if(sfs::is_spammer())
+            die('Deine IP-Adresse ist auf <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a> gesperrt, die IP wurde zu oft für Spam Angriffe auf Webseiten verwendet.<p>
+                 Your IP address is known on <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a>, your IP has been used for spam attacks on websites.');
+    }
+}
+
 //-> Auslesen der Cookies und automatisch anmelden
 if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen && !$ajaxJob && checkme() == "unlogged")
 {
@@ -86,7 +118,7 @@ if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen 
     DebugConsole::insert_info('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').' & Permanent-Key: '.cookie::get('pkey'));
 
     ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey FROM ".$db['users']." WHERE id = '".cookie::get('id')."' AND pkey = '".cookie::get('pkey')."' AND level != '0'");
+    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey,language FROM ".dba::get('users')." WHERE id = '".cookie::get('id')."' AND pkey = '".cookie::get('pkey')."' AND level != '0'");
     if(_rows($sql))
     {
         $get = _fetch($sql);
@@ -104,6 +136,9 @@ if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen 
         $_SESSION['lastvisit']  = $get['time'];
         $_SESSION['ip']         = visitorIp();
 
+        if($get['language'] != 'default')
+            language::run_language(re($get['language']));
+
         if(data($get['id'], "ip") != $_SESSION['ip'])
             $_SESSION['lastvisit'] = data($get['id'], "time");
 
@@ -111,10 +146,10 @@ if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen 
             $_SESSION['lastvisit'] = data($get['id'], "time");
 
         ## Aktualisiere Datenbank ##
-        db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '".$permanent_key."' WHERE id = '".$get['id']."'");
+        db("UPDATE ".dba::get('users')." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '".$permanent_key."' WHERE id = '".$get['id']."'");
 
         ## Aktualisiere die User-Statistik ##
-        db("UPDATE ".$db['userstats']." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
+        db("UPDATE ".dba::get('userstats')." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
     }
     else
     {
@@ -125,8 +160,14 @@ if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen 
 
 if(!$ajaxThumbgen)
 {
-    //-> Language auslesen
-    $language = (cookie::get('language') != false ? (file_exists(basePath.'/inc/lang/languages/'.cookie::get('language').'.php') ? cookie::get('language') : $default_language) : $default_language);
+    //-> Change Language
+    if(isset($_GET['set_language']) && !empty($_GET['set_language']) && file_exists(basePath."/inc/lang/languages/".$_GET['set_language'].".php"))
+    {
+        language::run_language($_GET['set_language']);
+        header("Location: ".$_SERVER['HTTP_REFERER']);
+    }
+    else
+        language::run_language();
 
     $userid = userid();
     $chkMe = checkme();
@@ -143,13 +184,11 @@ if(!$ajaxThumbgen)
 //-> User Anmeldung
 function login($username='',$pwd='',$permanent=false)
 {
-    global $db;
-
     if(empty($username) || empty($pwd))
         return false;
 
     ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,pwd,pwd_encoder,time FROM ".$db['users']." WHERE user = '".$username."' AND level != '0'");
+    $sql = db("SELECT id,user,pwd,pwd_encoder,time,language FROM ".dba::get('users')." WHERE user = '".$username."' AND level != '0'");
     if(_rows($sql))
     {
         $get = _fetch($sql);
@@ -174,15 +213,17 @@ function login($username='',$pwd='',$permanent=false)
         $_SESSION['lastvisit']  = $get['time'];
         $_SESSION['ip']         = visitorIp();
 
+        if($get['language'] != 'default')
+            language::run_language($get['language']);
+
         ## Aktualisiere Datenbank ##
-        db("UPDATE ".$db['users']." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '".$permanent_key."' WHERE id = '".$get['id']."'");
+        db("UPDATE ".dba::get('users')." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '".$permanent_key."' WHERE id = '".$get['id']."'");
 
         ## Aktualisiere die User-Statistik ##
-        db("UPDATE ".$db['userstats']." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
+        db("UPDATE ".dba::get('userstats')." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
 
         ## Ereignis in den Adminlog schreiben ##
         wire_ipcheck("login(".$get['id'].")");
-
         return true;
     }
 
@@ -192,10 +233,8 @@ function login($username='',$pwd='',$permanent=false)
 //-> Aktualisierung des Online Status *preview
 function update_user_status_preview()
 {
-    global $db;
-
     ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,time FROM ".$db['users']." WHERE id = '".convert::ToInt($_SESSION['id'])."'
+    $sql = db("SELECT id,time FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_SESSION['id'])."'
     AND sessid = '".session_id()."' AND ip = '".visitorIp()."' AND level != '0'");
 
     if(_rows($sql))
@@ -212,17 +251,17 @@ function update_user_status_preview()
             $_SESSION['lastvisit'] = data($get['id'], "time");
 
         ## Aktualisiere Datenbank ##
-        db("UPDATE ".$db['users']." SET `online` = '1' WHERE id = '".$get['id']."'");
+        db("UPDATE ".dba::get('users')." SET `online` = '1' WHERE id = '".$get['id']."'");
     }
 }
 
 //-> User Abmeldung
 function logout()
 {
-    global $db,$userid;
+    global $userid;
 
     if($userid)
-        db("UPDATE ".$db['users']." SET online = '0', sessid = '' WHERE id = '".convert::ToInt($userid)."'");
+        db("UPDATE ".dba::get('users')." SET online = '0', sessid = '' WHERE id = '".convert::ToInt($userid)."'");
 
     cookie::clear();
     cookie::save();
@@ -241,12 +280,10 @@ function logout()
 //-> Auslesen der UserID
 function userid()
 {
-    global $db;
-
     if(empty($_SESSION['id']) || empty($_SESSION['pwd']))
         return 0;
 
-    $sql = db("SELECT id FROM ".$db['users']." WHERE id = '".convert::ToInt($_SESSION['id'])."' AND pwd = '".$_SESSION['pwd']."'");
+    $sql = db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_SESSION['id'])."' AND pwd = '".$_SESSION['pwd']."'");
 
     if(!_rows($sql))
         return 0;
@@ -258,20 +295,13 @@ function userid()
 //-> Prueft, ob User eingeloggt ist und wenn ja welches Level er besitzt
 function checkme($userid_set=0)
 {
-    global $db;
-
-    if($userid_set != 0)
-        $userid = convert::ToInt($userid_set);
-    else
-        $userid = userid();
-
-    if(!$userid)
+    if(!$userid = ($userid_set != 0 ? convert::ToInt($userid_set) : userid()))
         return "unlogged";
 
-    $qry = db("SELECT level FROM ".$db['users']."
+    $qry = db("SELECT level FROM ".dba::get('users')."
                WHERE id = ".convert::ToInt($userid)."
                AND pwd = '".$_SESSION['pwd']."'
-               AND ip = '".mysql_real_escape_string($_SESSION['ip'])."'");
+               AND ip = '".$_SESSION['ip']."'");
 
     if(_rows($qry))
     {
@@ -294,26 +324,12 @@ if(!$ajaxThumbgen)
     $designpath = '../inc/_templates_/'.$tmpdir;
 }
 
-//-> API call after Templateswitch
-API_CORE::init();
-
-//-> Languagefiles einlesen
-function lang($lng)
+//-> Languagefiles einlesen *Run
+if(!$ajaxThumbgen)
 {
-    if(!file_exists(basePath."/inc/lang/languages/".$lng.".php"))
-    {
-        $files = get_files(basePath.'/inc/lang/languages/',false,true,array('php'));
-
-        if(!count($files))
-           die('No language files found in "inc/lang/languages/*"!');
-
-        $lng = str_replace('.php','',$files[0]);
-    }
-
-    require_once(basePath."/inc/lang/global.php");
-    require_once(basePath."/inc/lang/languages/".$lng.".php");
-
-    header("Content-type: text/html; charset="._charset);
+    //-> API & RSS call after Templateswitch & Language
+    API_CORE::init();
+    rss_feed::init();
 }
 
 //-> User bearbeiten, Level Menu
@@ -336,30 +352,9 @@ function get_level_dropdown_menu($selected_level=0,$userid=0)
     return $option;
 }
 
-//-> Languagefiles einlesen *Run
-if(!$ajaxThumbgen)
-{ lang($language); }
-
-//-> Sprachdateien auflisten
-function languages()
-{
-    $lang="";
-    $files = get_files(basePath.'/inc/lang/languages/',false,true,array('php'));
-    foreach($files as $file)
-    {
-        $file = str_replace('.php','',$file);
-        $upFile = strtoupper(substr($file,0,1)).substr($file,1);
-
-        if(file_exists('../inc/lang/flaggen/'.$file.'.gif'))
-            $lang .= '<a href="../user/?action=language&amp;set='.$file.'"><img src="../inc/lang/flaggen/'.$file.'.gif" alt="'.$upFile.'" title="'.$upFile.'" class="icon" /></a> ';
-    }
-
-    return $lang;
-}
-
 //-> Userspezifiesche Dinge
 if(!empty($userid) && $userid != 0 && $ajaxJob != true && $userid != false && !$ajaxThumbgen)
-{ db("UPDATE ".$db['userstats']." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".convert::ToInt($userid)); }
+{ db("UPDATE ".dba::get('userstats')." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".convert::ToInt($userid)); }
 
 //-> PHP-Code farbig anzeigen
 function highlight_text($txt)
@@ -423,47 +418,26 @@ function highlight_text($txt)
 
 function regexChars($txt)
 {
-    $txt = strip_tags($txt);
-    $txt = str_replace('"','&quot;',$txt);
-    $txt = str_replace('\\','\\\\',$txt);
-    $txt = str_replace('<','\<',$txt);
-    $txt = str_replace('>','\>',$txt);
-    $txt = str_replace('/','\/',$txt);
-    $txt = str_replace('.','\.',$txt);
-    $txt = str_replace(':','\:',$txt);
-    $txt = str_replace('^','\^',$txt);
-    $txt = str_replace('$','\$',$txt);
-    $txt = str_replace('|','\|',$txt);
-    $txt = str_replace('?','\?',$txt);
-    $txt = str_replace('*','\*',$txt);
-    $txt = str_replace('+','\+',$txt);
-    $txt = str_replace('-','\-',$txt);
-    $txt = str_replace('(','\(',$txt);
-    $txt = str_replace(')','\)',$txt);
-    $txt = str_replace('[','\[',$txt);
-    $txt = str_replace(']','\]',$txt);
-    $txt = str_replace('}','\}',$txt);
-    $txt = str_replace('{','\{',$txt);
-    $txt = str_replace("\r",'',$txt);
-    return str_replace("\n",'',$txt);
+    $search = array('"','\\','<','>','/','.',':','^','$','|','?','*','+','-','(',')','[',']','}','{','\r','\n');
+    $replace = array('&quot;','\\\\','\<','\>','\/','\.','\:','\^','\$','\|','\?','\*','\+','\-','\(','\)','\[','\]','\}','\{','','');
+    return str_replace($search, $replace, strip_tags($txt));
 }
 
 //-> Glossarfunktion *Buggy
 if(glossar_enabled && !$ajaxThumbgen)
 {
-    $gl_words = array();
-    $gl_desc = array();
-    $qryglossar = db("SELECT * FROM ".$db['glossar']);
+    $gl_words = array(); $gl_desc = array();
+    $qryglossar = db("SELECT * FROM ".dba::get('glossar'));
     while($getglossar = _fetch($qryglossar))
     {
-      $gl_words[] = re($getglossar['word']);
-      $gl_desc[]  = re($getglossar['glossar']);
+        $gl_words[] = re($getglossar['word']);
+        $gl_desc[]  = re($getglossar['glossar']);
     }
 }
 
 function glossar($txt)
 {
-    global $db,$gl_words,$gl_desc;
+    global $gl_words,$gl_desc;
 
     $txt = str_replace('&#93;',']',$txt);
     $txt = str_replace('&#91;','[',$txt);
@@ -528,8 +502,7 @@ function replace($txt, $tinymce=true, $no_vid_tag=false)
     if(!$no_vid_tag)
         $txt = preg_replace_callback("#\[youtube\]http\:\/\/www.youtube.com\/watch\?v\=(.*)\[\/youtube\]#Uis", create_function('$yt','$width = 425; $height = 344; return "<object width=\"".$width."\" height=\"".$height."\"><param name=\"movie\" value=\"http://www.youtube.com/v/".trim($yt[1])."&amp;hl=de&amp;fs=1\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"http://www.youtube.com/v/".trim($yt[1])."&amp;hl=de&amp;fs=1\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"".$width."\" height=\"".$height."\"></embed></object>";'), $txt);
 
-    $txt = str_replace("\"","&#34;",$txt);
-    return preg_replace("#(\w){1,1}(&nbsp;)#Uis","$1 ",$txt);
+    return preg_replace("#(\w){1,1}(&nbsp;)#Uis","$1 ",str_replace("\"","&#34;",$txt));
 }
 
 //-> Badword Filter
@@ -574,7 +547,7 @@ function eMailAddr($email)
     $output = '';
     for($i=0;$i<strlen($email);$i++)
     {
-        $output.=str_replace(substr($email,$i,1),"&#".ord(substr($email,$i,1)).";",substr($email,$i,1));
+        $output .= str_replace(substr($email,$i,1),"&#".ord(substr($email,$i,1)).";",substr($email,$i,1));
     }
 
     return $output;
@@ -596,21 +569,25 @@ function re_bbcode($txt)
 
 /* START # from wordpress under GBU GPL license
    URL autolink function */
-function _make_url_clickable_cb($matches) {
+function _make_url_clickable_cb($matches)
+{
     $ret = '';
     $url = $matches[2];
 
     if ( empty($url) )
         return $matches[0];
     // removed trailing [.,;:] from URL
-    if ( in_array(substr($url, -1), array('.', ',', ';', ':')) === true ) {
+    if ( in_array(substr($url, -1), array('.', ',', ';', ':')) === true )
+    {
         $ret = substr($url, -1);
         $url = substr($url, 0, strlen($url)-1);
     }
+
     return $matches[1] . "<a href=\"$url\" rel=\"nofollow\">$url</a>" . $ret;
 }
 
-function _make_web_ftp_clickable_cb($matches) {
+function _make_web_ftp_clickable_cb($matches)
+{
     $ret = '';
     $dest = $matches[2];
     $dest = 'http://' . $dest;
@@ -618,19 +595,23 @@ function _make_web_ftp_clickable_cb($matches) {
     if ( empty($dest) )
         return $matches[0];
     // removed trailing [,;:] from URL
-    if ( in_array(substr($dest, -1), array('.', ',', ';', ':')) === true ) {
+    if ( in_array(substr($dest, -1), array('.', ',', ';', ':')) === true )
+    {
         $ret = substr($dest, -1);
         $dest = substr($dest, 0, strlen($dest)-1);
     }
+
     return $matches[1] . "<a href=\"$dest\" rel=\"nofollow\">$dest</a>" . $ret;
 }
 
-function _make_email_clickable_cb($matches) {
+function _make_email_clickable_cb($matches)
+{
     $email = $matches[2] . '@' . $matches[3];
     return $matches[1] . "<a href=\"mailto:$email\">$email</a>";
 }
 
-function make_clickable($ret) {
+function make_clickable($ret)
+{
     $ret = ' ' . $ret;
     // in testing, using arrays here was found to be faster
     $ret = preg_replace_callback('#([\s>])([\w]+?://[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]*)#is', '_make_url_clickable_cb', $ret);
@@ -639,8 +620,7 @@ function make_clickable($ret) {
 
     // this one is not in an array because we need it to run last, for cleanup of accidental links within links
     $ret = preg_replace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", $ret);
-    $ret = trim($ret);
-    return $ret;
+    return trim($ret);
 }
 
 /* END # from wordpress under GBU GPL license */
@@ -666,15 +646,12 @@ function bbcode($txt, $tinymce=0, $no_vid=false, $ts=false, $nolink=false)
     if(!$no_vid && glossar_enabled)
         $txt = glossar($txt);
 
-    $txt = str_replace("&#34;","\"",$txt);
-    return str_replace('<p></p>', '<p>&nbsp;</p>', $txt);
+    return str_replace('<p></p>', '<p>&nbsp;</p>', str_replace("&#34;","\"",$txt));
 }
 
 function bbcode_nletter($txt)
 {
-    $txt = stripslashes($txt);
-    $txt = nl2br(trim($txt));
-    return '<style type="text/css">p { margin: 0px; padding: 0px; }</style>'.$txt;
+    return '<style type="text/css">p { margin: 0px; padding: 0px; }</style>'.nl2br(trim(stripslashes($txt)));
 }
 
 function bbcode_nletter_plain($txt)
@@ -682,7 +659,27 @@ function bbcode_nletter_plain($txt)
     $txt = preg_replace("#\<\/p\>#Uis","\r\n",$txt);
     $txt = preg_replace("#\<br(.*?)\>#Uis","\r\n",$txt);
     $txt = str_replace("p { margin: 0px; padding: 0px; }","",$txt);
-    $txt = convert_feed($txt);
+    $txt = stripslashes($txt);
+    $txt = str_replace("&Auml;","Ae",$txt);
+    $txt = str_replace("&auml;","ae",$txt);
+    $txt = str_replace("&Uuml;","Ue",$txt);
+    $txt = str_replace("&uuml;","ue",$txt);
+    $txt = str_replace("&Ouml;","Oe",$txt);
+    $txt = str_replace("&ouml;","oe",$txt);
+    $txt = htmlentities($txt, ENT_QUOTES, _charset);
+    $txt = str_replace("&amp;","&",$txt);
+    $txt = str_replace("&lt;","<",$txt);
+    $txt = str_replace("&gt;",">",$txt);
+    $txt = str_replace("&#60;","<",$txt);
+    $txt = str_replace("&#62;",">",$txt);
+    $txt = str_replace("&#34;","\"",$txt);
+    $txt = str_replace("&nbsp;"," ",$txt);
+    $txt = str_replace("&szlig;","ss",$txt);
+    $txt = preg_replace("#&(.*?);#is","",$txt);
+    $txt = str_replace("&","&amp;",$txt);
+    $txt = str_replace("", "\"",$txt);
+    $txt = str_replace("", "\"",$txt);
+    $txt = strip_tags($txt);
     $txt = str_replace("&amp;#91;","[",$txt);
     $txt = str_replace("&amp;#93;","]",$txt);
     return strip_tags($txt);
@@ -690,9 +687,9 @@ function bbcode_nletter_plain($txt)
 
 function bbcode_html($txt,$tinymce=0)
 {
-    $txt = str_replace("&lt;","<",$txt);
-    $txt = str_replace("&gt;",">",$txt);
-    $txt = str_replace("&quot;","\"",$txt);
+    $search  = array("&lt;","&gt;","&quot;");
+    $replace = array("<",">","\"");
+    $txt = str_replace($search,$replace,$txt);
     $txt = BadwordFilter($txt);
     $txt = replace($txt,$tinymce);
     $txt = highlight_text($txt);
@@ -723,6 +720,7 @@ function zitat($nick,$zitat)
 function re($txt)
 {
     $txt = stripslashes($txt);
+    $txt = str_replace("&apostroph ","'",$txt);
     $txt = str_replace("& ","&amp; ",$txt);
     $txt = str_replace("[","&#91;",$txt);
     $txt = str_replace("]","&#93;",$txt);
@@ -740,7 +738,6 @@ function smileys($txt)
     foreach($files as $file)
     {
         $bbc = preg_replace("=.gif=Uis","",$file);
-
         if(preg_match("=:".$bbc.":=Uis",$txt) !== false)
             $txt = preg_replace("=:".$bbc.":=Uis",'<img src="../inc/images/smileys/'.$bbc.'.gif" alt="'.$bbc.'" />', $txt);
     }
@@ -770,8 +767,7 @@ function smileys($txt)
 //-> Funktion um Ausgaben zu kuerzen
 function cut($str, $length = 0, $dots = true)
 {
-    if($length == 0)
-        return '';
+    if($length == 0) return '';
 
     $start = 0;
     $dots = ($dots == true && strlen(html_entity_decode($str)) > $length) ? '...' : '';
@@ -809,16 +805,13 @@ function wrap($str, $width = 75, $break = "\n", $cut = true)
 //-> Funktion um sauber in die DB einzutragen
 function up($txt, $bbcode=false, $charset=_charset)
 {
-    $txt = str_replace("& ","&amp; ",$txt);
-    $txt = spChars($txt);
-    return trim($txt);
+    return trim(spChars(str_replace("& ","&amp; ",$txt)));
 }
 
 //-> Funktion um einer id einen Nick zuzuweisen
 function nick_id($tid)
 {
-    global $db;
-    $get = db("SELECT nick FROM ".$db['users']." WHERE id = '".$tid."'",false,true);
+    $get = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$tid."'",false,true);
     return $get['nick'];
 }
 
@@ -831,51 +824,47 @@ function highlight($word)
 //-> Counter updaten
 function updateCounter()
 {
-    global $db;
+    if(db("SELECT id FROM ".dba::get('c_ips')." WHERE datum+".counter_reload." <= ".time()." OR FROM_UNIXTIME(datum,'%d.%m.%Y') != '".date("d.m.Y")."'",true) >= 1)
+        db("DELETE FROM ".dba::get('c_ips')." WHERE datum+".counter_reload." <= ".time()." OR FROM_UNIXTIME(datum,'%d.%m.%Y') != '".date("d.m.Y")."'");
 
-    if(db("SELECT id FROM ".$db['c_ips']." WHERE datum+".counter_reload." <= ".time()." OR FROM_UNIXTIME(datum,'%d.%m.%Y') != '".date("d.m.Y")."'",true) >= 1)
-        db("DELETE FROM ".$db['c_ips']." WHERE datum+".counter_reload." <= ".time()." OR FROM_UNIXTIME(datum,'%d.%m.%Y') != '".date("d.m.Y")."'");
-
-    if(($count=db("SELECT id,visitors,today FROM ".$db['counter']." WHERE today = '".date("j.n.Y")."'",true)) >= 1)
+    if(($count=db("SELECT id,visitors,today FROM ".dba::get('counter')." WHERE today = '".date("j.n.Y")."'",true)) >= 1)
     {
-        $get = db("SELECT id,ip,datum FROM ".$db['c_ips']." WHERE ip = '".VisitorIP()."' AND FROM_UNIXTIME(datum,'%d.%m.%Y') = '".date("d.m.Y")."'",false,true);
+        $get = db("SELECT id,ip,datum FROM ".dba::get('c_ips')." WHERE ip = '".VisitorIP()."' AND FROM_UNIXTIME(datum,'%d.%m.%Y') = '".date("d.m.Y")."'",false,true);
         $sperrzeit = $get['datum']+counter_reload;
         if($sperrzeit <= time())
         {
-            db("DELETE FROM ".$db['c_ips']." WHERE ip = '".VisitorIP()."'");
-            db(($count ? "UPDATE ".$db['counter']." SET `visitors` = visitors+1 WHERE today = '".date("j.n.Y")."'" : "INSERT INTO ".$db['counter']." SET `visitors` = '1', `today` = '".date("j.n.Y")."'"));
-            db("INSERT INTO ".$db['c_ips']." SET `ip` = '".VisitorIP()."', `datum`  = '".time()."'");
+            db("DELETE FROM ".dba::get('c_ips')." WHERE ip = '".VisitorIP()."'");
+            db(($count ? "UPDATE ".dba::get('counter')." SET `visitors` = visitors+1 WHERE today = '".date("j.n.Y")."'" : "INSERT INTO ".dba::get('counter')." SET `visitors` = '1', `today` = '".date("j.n.Y")."'"));
+            db("INSERT INTO ".dba::get('c_ips')." SET `ip` = '".VisitorIP()."', `datum`  = '".time()."'");
         }
     }
     else
     {
-        db(($count ? "UPDATE ".$db['counter']." SET `visitors` = visitors+1 WHERE today = '".date("j.n.Y")."'" : "INSERT INTO ".$db['counter']." SET `visitors` = '1', `today` = '".date("j.n.Y")."'"));
-        db("INSERT INTO ".$db['c_ips']." SET `ip` = '".VisitorIP()."', `datum`  = '".time()."'");
+        db(($count ? "UPDATE ".dba::get('counter')." SET `visitors` = visitors+1 WHERE today = '".date("j.n.Y")."'" : "INSERT INTO ".dba::get('counter')." SET `visitors` = '1', `today` = '".date("j.n.Y")."'"));
+        db("INSERT INTO ".dba::get('c_ips')." SET `ip` = '".VisitorIP()."', `datum`  = '".time()."'");
     }
 }
 
 //-> Updatet die Maximalen User die gleichzeitig online sind
 function update_maxonline()
 {
-    global $db;
-
-    $get = db("SELECT maxonline FROM ".$db['counter']." WHERE today = '".date("j.n.Y")."'",false,true);
-    $count = cnt($db['c_who']);
+    $get = db("SELECT maxonline FROM ".dba::get('counter')." WHERE today = '".date("j.n.Y")."'",false,true);
+    $count = cnt(dba::get('c_who'));
 
     if($get['maxonline'] <= $count)
-        db("UPDATE ".$db['counter']." SET `maxonline` = '".convert::ToInt($count)."' WHERE today = '".date("j.n.Y")."'");
+        db("UPDATE ".dba::get('counter')." SET `maxonline` = '".convert::ToInt($count)."' WHERE today = '".date("j.n.Y")."'");
 }
 
 //-> Prueft, wieviele Besucher gerade online sind
 function online_guests($where='')
 {
-    global $db,$chkMe;
+    global $chkMe;
 
     if(!isSpider())
     {
-        db("DELETE FROM ".$db['c_who']." WHERE online < ".time());
-        db("REPLACE INTO ".$db['c_who']." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".up($where)."', `login` = '".($chkMe == 'unlogged' ? '0' : '1')."'");
-        return cnt($db['c_who']);
+        db("DELETE FROM ".dba::get('c_who')." WHERE online < ".time());
+        db("REPLACE INTO ".dba::get('c_who')." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".up($where)."', `login` = '".($chkMe == 'unlogged' ? '0' : '1')."'");
+        return cnt(dba::get('c_who'));
     }
 }
 
@@ -893,28 +882,20 @@ function limited_array($array=array(),$begin,$max)
     return $array_exp;
 }
 
-//-> Prueft den Zahlstatus eines Users (Clankasse)
-function paycheck($tocheck)
-{
-    return ($tocheck >= time() ? true : false);
-}
-
 //-> Prueft, ob ein User diverse Rechte besitzt
 function permission($check)
 {
-    global $db,$userid;
+    global $userid;
 
-    if(checkme() == 4)
-        return true;
-
+    if(checkme() == 4) return true;
     if($userid && !empty($check))
     {
         // check rank permission
-        $team = db("SELECT s1.".$check." FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.pos = s2.posi
+        $team = db("SELECT s1.".$check." FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi
         WHERE s2.user = '".convert::ToInt($userid)."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
 
         // check user permission
-        $user = db("SELECT id FROM ".$db['permissions']." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
+        $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
 
         if($user || $team)
             return true;
@@ -926,44 +907,13 @@ function permission($check)
 //-> Checkt, ob neue Nachrichten vorhanden sind
 function check_msg()
 {
-    global $db;
-
-    if(db("SELECT page FROM ".$db['msg']." WHERE an = '".$_SESSION['id']."' AND page = '0'",true))
+    if(db("SELECT page FROM ".dba::get('msg')." WHERE an = '".$_SESSION['id']."' AND page = '0'",true))
     {
-        db("UPDATE ".$db['msg']." SET `page` = '1' WHERE an = '".$_SESSION['id']."'");
+        db("UPDATE ".dba::get('msg')." SET `page` = '1' WHERE an = '".$_SESSION['id']."'");
         return show("user/new_msg", array("new" => _site_msg_new));
     }
 
     return '';
-}
-
-//-> Prueft sicherheitsrelevante Gegebenheiten im Forum
-function forumcheck($tid, $what)
-{
-    global $db;
-    return (db("SELECT ".$what." FROM ".$db['f_threads']." WHERE id = '".convert::ToInt($tid)."' AND ".$what." = '1'",true) >= 1);
-}
-
-//-> Preuft, ob User ein Member des Squads ist
-function squadmember($squad_id)
-{
-    global $db;
-    return (db("SELECT id FROM ".$db['squaduser']." WHERE squad = '".convert::ToInt($squad_id)."' AND user = '".$_SESSION['id']."'",true) ? true : false);
-}
-
-//-> Gibt ein selectfield mit Ja und Nein aus
-function select_field($what,$where,$tid)
-{
-    global $db;
-    $rows = db("SELECT ".$what." FROM ".$db[$where]." WHERE user = '".convert::ToInt($tid)."' AND ".$what." = '1'",true);
-    return '<option value="0" '.(!$rows ? 'selected="selected"' : '').'>'._no.'</option><option value="1" '.($rows ? 'selected="selected"' : '').'>'._yes.'</option>';
-}
-
-//-> Prueft ob ein User schon in der Buddyliste vorhanden ist
-function check_buddy($buddy)
-{
-    global $db,$userid;
-    return (db("SELECT buddy FROM ".$db['buddys']." WHERE user = '".convert::ToInt($userid)."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true);
 }
 
 //-> Funktion um bei Clanwars Endergebnisse auszuwerten
@@ -998,16 +948,6 @@ function cw_result_nopic($punkte, $gpunkte)
         return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span>';
 }
 
-function cw_result_nopic_raw($punkte, $gpunkte)
-{
-    if($punkte > $gpunkte)
-        return '<span class=CwWon>'.$punkte.':'.$gpunkte.'</span>';
-    else if($punkte < $gpunkte)
-        return '<span class=CwLost>'.$punkte.':'.$gpunkte.'</span>';
-    else
-        return '<span class=CwDraw>'.$punkte.':'.$gpunkte.'</span>';
-}
-
 //-> Funktion um bei Clanwars Endergebnisse auszuwerten ohne bild und ohne farbe
 function cw_result_nopic_nocolor($punkte, $gpunkte)
 {
@@ -1019,48 +959,63 @@ function cw_result_nopic_nocolor($punkte, $gpunkte)
         return $punkte.':'.$gpunkte;
 }
 
-//-> Funktion um bei Clanwars Details Endergebnisse auszuwerten ohne bild
-function cw_result_details($punkte, $gpunkte)
-{
-    if($punkte > $gpunkte)
-        return '<td class="contentMainFirst" align="center"><span class="CwWon">'.$punkte.'</span></td><td class="contentMainFirst" align="center"><span class="CwLost">'.$gpunkte.'</span></td>';
-    else if($punkte < $gpunkte)
-        return '<td class="contentMainFirst" align="center"><span class="CwLost">'.$punkte.'</span></td><td class="contentMainFirst" align="center"><span class="CwWon">'.$gpunkte.'</span></td>';
-    else
-        return '<td class="contentMainFirst" align="center"><span class="CwDraw">'.$punkte.'</span></td><td class="contentMainFirst" align="center"><span class="CwDraw">'.$gpunkte.'</span></td>';
-}
-
 //-> Flaggen ausgeben
-function flag($code)
+function flag($code,$tinymce=false)
 {
     global $picformat;
 
-    if(empty($code))
-        return '<img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
-
-    foreach($picformat AS $end)
+    if($tinymce)
     {
-        if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
-            return '<img src="../inc/images/flaggen/'.$code.'.'.$end.'" alt="" class="icon" />';
-    }
+        foreach($picformat AS $end)
+        {
+            if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
+                return'<img src="../../../../inc/images/flaggen/'.$code.'.'.$end.'" alt="" style="vertical-align:middle" />';
+        }
 
-    return '<img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
+        return '<img src="../../../../inc/images/flaggen/nocountry.gif" alt="" style="vertical-align:middle" />';
+    }
+    else
+    {
+        if(empty($code))
+            return '<img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
+
+        foreach($picformat AS $end)
+        {
+            if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
+                return '<img src="../inc/images/flaggen/'.$code.'.'.$end.'" alt="" class="icon" />';
+        }
+
+        return '<img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
+    }
 }
 
-function rawflag($code)
+function rawflag($code,$tinymce=false)
 {
     global $picformat;
 
-    if(empty($code))
-        return '<img src=../inc/images/flaggen/nocountry.gif alt= class=icon />';
-
-    foreach($picformat AS $end)
+    if($tinymce)
     {
-        if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
-            return '<img src=../inc/images/flaggen/'.$code.'.'.$end.' alt= class=icon />';
-    }
+        foreach($picformat AS $end)
+        {
+            if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
+                return $code;
+        }
 
-    return '<img src=../inc/images/flaggen/nocountry.gif alt= class=icon />';
+        return 'nocountry';
+    }
+    else
+    {
+        if(empty($code))
+            return '<img src=../inc/images/flaggen/nocountry.gif alt= class=icon />';
+
+        foreach($picformat AS $end)
+        {
+            if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
+                return '<img src=../inc/images/flaggen/'.$code.'.'.$end.' alt= class=icon />';
+        }
+
+        return '<img src=../inc/images/flaggen/nocountry.gif alt= class=icon />';
+    }
 }
 
 //-> Liste der Laender ausgeben
@@ -1138,32 +1093,55 @@ function info($msg, $url, $timeout = 4)
 }
 
 //-> Errormmeldung ausgeben
-function error($error, $back=1)
+function error($error = '', $back = true, $show_back = true)
 {
-    return show("errors/error", array("error" => $error, "back" => $back, "fehler" => _error, "backtopage" => _error_back));
+    return show("errors/".($show_back ? "error" : "error2"), array("error" => $error, "back" => $back));
 }
 
-//-> Errormmeldung ohne "zurueck" ausgeben
-function error2($error)
-{
-    return show("errors/error2", array("error" => $error, "fehler" => _error));
-}
-
-//-> Email wird auf korrekten Syntax & Erreichbarkeit ueberprueft
+//-> EMail wird auf korrekten Syntax überprüft
 function check_email($email)
 {
     return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email);
 }
 
+//-> EMail wird auf Trashmail Server überprüft
+function check_email_trash_mail($email)
+{
+    if(!use_trash_mails)
+    {
+        if(Cache::check('trashmail_servers'))
+        {
+            if($stream = fileExists(trash_mail_url))
+            {
+                if(!empty($stream) && $stream)
+                    Cache::set('trashmail_servers',$stream,172800); //48h
+                else
+                    return false;
+            }
+        }
+        else
+            $stream = Cache::get('trashmail_servers');
+
+        $xml = new SimpleXMLElement($stream);
+        $domains = array();
+        foreach($xml->domainitem as $domain)
+        { $domains[] = (string)$domain->domain; }
+        $email_host = substr($email, strrpos($email, '@')+1, strlen($email));
+        return in_array($email_host, $domains) ? true : false;
+    }
+
+    return false;
+}
+
 //-> Bilder verkleinern
 function img_size($img)
 {
-    return "<a href=\"../".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$img."\" alt=\"\" /></a>";
 }
 
 function img_cw($folder="", $img="")
 {
-    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=".$folder."_".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$folder."_".$img."\" alt=\"\" /></a>";
 }
 
 //-> Blaetterfunktion
@@ -1175,7 +1153,7 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
         return "&#xAB; <span class=\"fontSites\">0</span> &#xBB;";
 
     if($icon)
-        $icon = '<img src="../inc/images/multipage.gif" alt="" class="icon" /> '._seiten;
+        $icon = '<img src="../inc/images/multipage.png" alt="" class="icon" /> '._seiten;
 
     if($entrys <= $perpage)
         return $icon.' &#xAB; <span class="fontSites">1</span> &#xBB;';
@@ -1221,9 +1199,7 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
 //-> Nickausgabe mit Profillink oder Emaillink (reg/nicht reg)
 function autor($uid, $class="", $nick="", $email="", $cut="",$add="")
 {
-    global $db;
-
-    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".convert::ToInt($uid)."'");
+    $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1239,9 +1215,7 @@ function autor($uid, $class="", $nick="", $email="", $cut="",$add="")
 
 function cleanautor($uid, $class="", $nick="", $email="", $cut="")
 {
-    global $db;
-
-    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".convert::ToInt($uid)."'");
+    $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1253,9 +1227,7 @@ function cleanautor($uid, $class="", $nick="", $email="", $cut="")
 
 function rawautor($uid)
 {
-    global $db;
-
-    $qry = db("SELECT nick,country FROM ".$db['users']." WHERE id = '".convert::ToInt($uid)."'");
+    $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1268,10 +1240,8 @@ function rawautor($uid)
 //-> Nickausgabe ohne Profillink oder Emaillink fr das ForenAbo
 function fabo_autor($uid)
 {
-    global $db;
-
     $return = '';
-    $qry = db("SELECT nick FROM ".$db['users']." WHERE id = '".$uid."'");
+    $qry = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$uid."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1283,10 +1253,8 @@ function fabo_autor($uid)
 
 function blank_autor($uid)
 {
-    global $db;
-
     $return = '';
-    $qry = db("SELECT nick FROM ".$db['users']." WHERE id = '".$uid."'");
+    $qry = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$uid."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
@@ -1307,15 +1275,15 @@ function jsconvert($txt)
 //-> interner Forencheck
 function fintern($id)
 {
-    global $db,$userid,$chkMe;
-    $fget = db("SELECT s1.intern,s2.id FROM ".$db['f_kats']." AS s1 LEFT JOIN ".$db['f_skats']." AS s2 ON s2.sid = s1.id WHERE s2.id = '".convert::ToInt($id)."'",false,true);
+    global $userid,$chkMe;
+    $fget = db("SELECT s1.intern,s2.id FROM ".dba::get('f_kats')." AS s1 LEFT JOIN ".dba::get('f_skats')." AS s2 ON s2.sid = s1.id WHERE s2.id = '".convert::ToInt($id)."'",false,true);
 
     if($chkMe == "unlogged")
         return empty($fget['intern']) ? true : false;
     else
     {
-        $team = db("SELECT * FROM ".$db['f_access']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".convert::ToInt($userid)."' AND s2.posi != '0' AND s1.forum = '".convert::ToInt($id)."'",true);
-        $user = db("SELECT * FROM ".$db['f_access']." WHERE `user` = '".convert::ToInt($userid)."' AND `forum` = '".convert::ToInt($id)."'",true);
+        $team = db("SELECT * FROM ".dba::get('f_access')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".convert::ToInt($userid)."' AND s2.posi != '0' AND s1.forum = '".convert::ToInt($id)."'",true);
+        $user = db("SELECT * FROM ".dba::get('f_access')." WHERE `user` = '".convert::ToInt($userid)."' AND `forum` = '".convert::ToInt($id)."'",true);
 
         if($user || $team || $chkMe == 4 || !$fget['intern'])
             return true;
@@ -1335,18 +1303,17 @@ function data($tid, $what)
     if(empty($tid) || empty($what))
         return false;
 
-    global $db;
     if(is_array($what))
     {
         $sql='';
         foreach($what as $qy)
         { $sql .= $qy.", "; }
         $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".$db['users']."` WHERE id = '".convert::ToInt($tid)."'",false,true);
+        return db("SELECT ".$sql." FROM `".dba::get('users')."` WHERE id = '".convert::ToInt($tid)."'",false,true);
     }
     else
     {
-        $get = db("SELECT ".$what." FROM `".$db['users']."` WHERE id = '".convert::ToInt($tid)."'",false,true);
+        $get = db("SELECT ".$what." FROM `".dba::get('users')."` WHERE id = '".convert::ToInt($tid)."'",false,true);
         return $get[$what];
     }
 }
@@ -1359,18 +1326,17 @@ function data($tid, $what)
  **/
 function userstats($tid, $what)
 {
-    global $db;
     if(is_array($what))
     {
         $sql='';
         foreach($what as $qy)
         { $sql .= $qy.", "; }
         $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".$db['userstats']."` WHERE user = '".convert::ToInt($tid)."'",false,true);
+        return db("SELECT ".$sql." FROM `".dba::get('userstats')."` WHERE user = '".convert::ToInt($tid)."'",false,true);
     }
     else
     {
-        $get = db("SELECT ".$what." FROM `".$db['userstats']."` WHERE user = '".convert::ToInt($tid)."'",false,true);
+        $get = db("SELECT ".$what." FROM `".dba::get('userstats')."` WHERE user = '".convert::ToInt($tid)."'",false,true);
         return $get[$what];
     }
 }
@@ -1391,13 +1357,13 @@ function sendMail($mailto,$subject,$content)
 
 function check_msg_email()
 {
-    global $db,$clanname,$httphost;
-    $qry = db("SELECT s1.an,s1.page,s1.titel,s1.sendmail,s1.id AS mid,s2.id,s2.nick,s2.email,s2.pnmail FROM ".$db['msg']." AS s1 LEFT JOIN ".$db['users']." AS s2 ON s2.id = s1.an WHERE page = 0 AND sendmail = 0");
+    global $clanname,$httphost;
+    $qry = db("SELECT s1.an,s1.page,s1.titel,s1.sendmail,s1.id AS mid,s2.id,s2.nick,s2.email,s2.pnmail FROM ".dba::get('msg')." AS s1 LEFT JOIN ".dba::get('users')." AS s2 ON s2.id = s1.an WHERE page = 0 AND sendmail = 0");
     while($get = _fetch($qry))
     {
         if($get['pnmail'])
         {
-            db("UPDATE ".$db['msg']." SET `sendmail` = '1' WHERE id = '".$get['mid']."'");
+            db("UPDATE ".dba::get('msg')." SET `sendmail` = '1' WHERE id = '".$get['mid']."'");
             $subj = show(settings('eml_pn_subj'), array("domain" => $httphost));
             $message = show(settings('eml_pn'), array("nick" => re($get['nick']), "domain" => $httphost, "titel" => $get['titel'], "clan" => $clanname));
             sendMail(re($get['email']), $subj, $message);
@@ -1407,30 +1373,6 @@ function check_msg_email()
 
 if(!$ajaxThumbgen)
 { check_msg_email(); }
-
-function perm_sendnews($uID)
-{
-    global $db;
-    $team = db("SELECT s1.news FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".convert::ToInt($uID)."' AND s1.news = '1' AND s2.posi != '0'",true);
-    $user = db("SELECT id FROM ".$db['permissions']." WHERE user = '".convert::ToInt($uID)."' AND `news` = '1'",true);
-    return ($user || $team ? true : false);
-}
-
-//-> Checkt ob ein Ereignis neu ist
-# DEPRECATED #
-function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
-{
-    global $db,$userid;
-
-    if($userid != 0 && !empty($userid))
-    {
-        $get = db("SELECT lastvisit FROM ".$db['userstats']." WHERE user = '".convert::ToInt($userid)."'",false,true);
-        if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
-        { if(empty($new)) return _newicon; }
-    }
-
-    return '';
-}
 
 //-> DropDown Mens Date/Time
 function dropdown($what, $wert, $age = 0)
@@ -1513,68 +1455,17 @@ function dropdown($what, $wert, $age = 0)
     return $return;
 }
 
-//Games fuer den Livestatus
-function sgames($game = '')
-{
-  $protocols = get_files(basePath.'/inc/server_query/',false,true,array('php'));
-  foreach($protocols AS $protocol)
-  {
-    unset($gamemods, $server_name_config);
-    $protocol = str_replace('.php', '', $protocol);
-    if(substr($protocol, 0, 1) != '_')
-    {
-      $explode = '##############################################################################################################################';
-      $protocol_config = explode($explode, file_get_contents(basePath.'/inc/server_query/'.$protocol.'.php'));
-      eval(str_replace('<?php', '', $protocol_config[0]));
-
-      if(!empty($server_name_config) && count($server_name_config) > 2) {
-        foreach($server_name_config AS $slabel => $sconfig) {
-          $gamemods .= $sconfig[1].', ';
-        }
-      }
-      $gamemods = empty($gamemods) ? '' : ' ('.substr($gamemods, 0, strlen($gamemods) - 2).')';
-
-      $games .= '<option value="'.$protocol.'">';
-      switch($protocol):
-        case 'bf1942'; case 'bf2142'; case 'bf2'; case 'bfvietnam'; case 'bfbc2';
-          $protocol = strtr($protocol, array('bfbc2' => 'Battlefield Bad Company 2', 'bfv' => 'Battlefield V', 'bf' => 'Battlefield '));
-        break;
-        case 'bf3'; $protocol = 'Battlefield 3'; break;
-        case 'swat4'; $protocol = strtoupper($protocol); break;
-        case 'aarmy'; $protocol = 'Americas Army'; break;
-        case 'arma'; $protocol = 'Armed Assault'; break;
-        case 'wet'; $protocol = 'Wolfenstein: Enemy Territory'; break;
-        case 'mta'; $protocol = 'Multi-Theft-Auto'; break;
-        case 'cnc'; $protocol = 'Command &amp; Conquer'; break;
-        case 'sof2'; $protocol = 'Soldiers of Fortune 2'; break;
-        case 'ut'; $protocol = 'Unreal Tournament'; break;
-        default;
-
-          $protocol = ucfirst(str_replace('_', ' ', $protocol));
-          $protocol = (strlen($protocol) < 4) ? strtoupper($protocol) : $protocol;
-        break;
-      endswitch;
-      $games .= $protocol.$gamemods;
-      $games .= '</option>';
-    }
-  }
-
-  return str_replace("value=\"".$game."\"","value=\"".$game."\" selected=\"selected\"",$games);
-}
-
 //Umfrageantworten selektieren
 function voteanswer($what, $vid)
 {
-    global $db;
-    $get = db("SELECT sel FROM ".$db['vote_results']." WHERE what = '".up($what)."' AND vid = '".$vid."'",false,true);
+    $get = db("SELECT sel FROM ".dba::get('vote_results')." WHERE what = '".up($what)."' AND vid = '".$vid."'",false,true);
     return $get['sel'];
 }
 
 //-> Prueft, ob eine Userid existiert
 function exist($tid)
 {
-    global $db;
-    return (db("SELECT id FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false);
+    return db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false;
 }
 
 //-> Geburtstag errechnen
@@ -1613,27 +1504,25 @@ function getuserlvl($userid=0)
 //-> Ausgabe der Position des einzelnen Members
 function getrank($tid, $squad=false, $profil=false)
 {
-    global $db;
-
     if($squad)
     {
        if($profil)
-            $qry = db("SELECT posi,squad FROM ".$db['userpos']." AS s1 LEFT JOIN ".$db['squads']." AS s2 ON s1.squad = s2.id WHERE s1.user = '".convert::ToInt($tid)."' AND s1.squad = '".convert::ToInt($squad)."' AND s1.posi != '0'");
+            $qry = db("SELECT posi,squad FROM ".dba::get('userpos')." AS s1 LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad = s2.id WHERE s1.user = '".convert::ToInt($tid)."' AND s1.squad = '".convert::ToInt($squad)."' AND s1.posi != '0'");
         else
-            $qry = db("SELECT posi,squad FROM ".$db['userpos']." WHERE user = '".convert::ToInt($tid)."' AND squad = '".convert::ToInt($squad)."' AND posi != '0'");
+            $qry = db("SELECT posi,squad FROM ".dba::get('userpos')." WHERE user = '".convert::ToInt($tid)."' AND squad = '".convert::ToInt($squad)."' AND posi != '0'");
 
         if(_rows($qry))
         {
             while($get = _fetch($qry))
             {
-                $gets = db("SELECT name FROM ".$db['squads']." WHERE id = '".convert::ToInt($get['squad'])."'",false,true);
-                $getp = db("SELECT position FROM ".$db['pos']." WHERE id = '".convert::ToInt($get['posi'])."'",false,true);
+                $gets = db("SELECT name FROM ".dba::get('squads')." WHERE id = '".convert::ToInt($get['squad'])."'",false,true);
+                $getp = db("SELECT position FROM ".dba::get('pos')." WHERE id = '".convert::ToInt($get['posi'])."'",false,true);
                 return(!empty($gets['name']) ? '<b>'.$gets['name'].':</b> '.$getp['position'] : $getp['position']);
             }
         }
         else
         {
-            $get = db("SELECT level FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."'",false,true);
+            $get = db("SELECT level FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",false,true);
             switch ($get['level'])
             {
                 case 0: return _status_unregged; break;
@@ -1648,7 +1537,7 @@ function getrank($tid, $squad=false, $profil=false)
     }
     else
     {
-        $qry = db("SELECT s1.*,s2.position FROM ".$db['userpos']." AS s1 LEFT JOIN ".$db['pos']." AS s2 ON s1.posi = s2.id WHERE s1.user = '".convert::ToInt($tid)."' AND s1.posi != '0' ORDER BY s2.pid ASC");
+        $qry = db("SELECT s1.*,s2.position FROM ".dba::get('userpos')." AS s1 LEFT JOIN ".dba::get('pos')." AS s2 ON s1.posi = s2.id WHERE s1.user = '".convert::ToInt($tid)."' AND s1.posi != '0' ORDER BY s2.pid ASC");
         if(_rows($qry))
         {
             $get = _fetch($qry);
@@ -1656,7 +1545,7 @@ function getrank($tid, $squad=false, $profil=false)
         }
         else
         {
-            $get = db("SELECT level FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."'",false,true);
+            $get = db("SELECT level FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",false,true);
             switch ($get['level'])
             {
                 case 0: return _status_unregged; break;
@@ -1680,10 +1569,10 @@ function txtArea($txt)
 //-> Session fuer den letzten Besuch setzen
 function set_lastvisit()
 {
-    global $db,$userid;
+    global $userid;
     if($userid)
     {
-        if(!db("SELECT id FROM ".$db['users']." WHERE id = ".convert::ToInt($userid)." AND time+'".users_online."'>'".time()."'",true))
+        if(!db("SELECT id FROM ".dba::get('users')." WHERE id = ".convert::ToInt($userid)." AND time+'".users_online."'>'".time()."'",true))
         {
             $time = data(convert::ToInt($userid), "time");
             $_SESSION['lastvisit'] = $time;
@@ -1694,29 +1583,10 @@ function set_lastvisit()
 //-> Checkt welcher User gerade noch online ist
 function onlinecheck($tid)
 {
-    global $db;
-    if(db("SELECT id FROM ".$db['users']." WHERE id = '".convert::ToInt($tid)."' AND time+'".users_online."'>'".time()."' AND online = 1",true))
+    if(db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."' AND time+'".users_online."'>'".time()."' AND online = 1",true))
         return '<img src="../inc/images/online.png" alt="" class="icon" />';
     else
         return '<img src="../inc/images/offline.png" alt="" class="icon" />';
-}
-
-//Funktion fuer die Sprachdefinierung der Profilfelder
-function pfields_name($name)
-{
-    $searchpattern = array("=_city_=Uis","=_hobbys_=Uis","=_job_=Uis","=_motto_=Uis","=_exclans_=Uis","=_email2_=Uis","=_email3_=Uis","=_autor_=Uis","=_auto_=Uis","=_buch_=Uis","=_drink_=Uis","=_essen_=Uis",
-    "=_favoclan_=Uis","=_film_=Uis","=_game_=Uis","=_map_=Uis","=_musik_=Uis","=_person_=Uis","=_song_=Uis","=_spieler_=Uis","=_sportler_=Uis","=_sport_=Uis","=_waffe_=Uis","=_board_=Uis","=_cpu_=Uis",
-    "=_graka_=Uis","=_hdd_=Uis","=_headset_=Uis","=_inet_=Uis","=_maus_=Uis","=_mauspad_=Uis","=_monitor_=Uis","=_ram_=Uis","=_system_=Uis");
-    $replacement  = array(_profil_city,_profil_hobbys,_profil_job,_profil_motto,_profil_exclans,_profil_email2,_profil_email3,_profil_autor,_profil_auto,_profil_buch,_profil_drink,_profil_essen,
-    _profil_favoclan,_profil_film,_profil_game,_profil_map,_profil_musik,_profil_person,_profil_song,_profil_spieler,_profil_sportler,_profil_sport,_profil_waffe,_profil_board,_profil_cpu,_profil_graka,
-    _profil_hdd,_profil_headset,_profil_inet,_profil_maus,_profil_mauspad,_profil_monitor,_profil_monitor,_profil_ram,_profil_os);
-    return preg_replace($searchpattern, $replacement , $name);
-}
-
-//-> Gibt die Tageszahl eines Monats aus
-function days_in_month($month, $year)
-{
-    return $month == 2 ? ($year % 4 ? 28 : ($year % 100 ? 29 : ($year % 400 ? 28 : 29))) : (($month - 1) % 7 % 2 ? 30 : 31);
 }
 
 //-> Setzt bei einem Tag >10 eine 0 vorran (Kalender)
@@ -1726,15 +1596,6 @@ function cal($i)
         $i = preg_replace("=0=", "", $i);
 
     return ($i < 10 ? "0".$i : $i);
-}
-
-//-> Entfernt fuehrende Nullen bei Monatsangaben
-function nonum($i)
-{
-    if(!preg_match("=10=Uis",$i))
-        $i = preg_replace("=0=", "", $i);
-
-    return $i;
 }
 
 //-> Konvertiert Platzhalter in die jeweiligen bersetzungen
@@ -1750,103 +1611,6 @@ function navi_name($name)
     return $name;
 }
 
-//RSS News Feed erzeugen
-function convert_feed($txt)
-{
-  $txt = stripslashes($txt);
-  $txt = str_replace("","Ae",$txt);
-  $txt = str_replace("","ae",$txt);
-  $txt = str_replace("","Ue",$txt);
-  $txt = str_replace("","ue",$txt);
-  $txt = str_replace("","Oe",$txt);
-  $txt = str_replace("","oe",$txt);
-  $txt = str_replace("&Auml;","Ae",$txt);
-  $txt = str_replace("&auml;","ae",$txt);
-  $txt = str_replace("&Uuml;","Ue",$txt);
-  $txt = str_replace("&uuml;","ue",$txt);
-  $txt = str_replace("&Ouml;","Oe",$txt);
-  $txt = str_replace("&ouml;","oe",$txt);
-  $txt = htmlentities($txt, ENT_QUOTES, _charset);
-  $txt = str_replace("&amp;","&",$txt);
-  $txt = str_replace("&lt;","<",$txt);
-  $txt = str_replace("&gt;",">",$txt);
-  $txt = str_replace("&#60;","<",$txt);
-  $txt = str_replace("&#62;",">",$txt);
-  $txt = str_replace("&#34;","\"",$txt);
-  $txt = str_replace("&nbsp;"," ",$txt);
-  $txt = str_replace("&szlig;","ss",$txt);
-  $txt = preg_replace("#&(.*?);#is","",$txt);
-  $txt = str_replace("&","&amp;",$txt);
-  $txt = str_replace("", "\"",$txt);
-  $txt = str_replace("", "\"",$txt);
-  $txt = strip_tags($txt);
-  return $txt;
-}
-
-function feed()
-{
-      global $db,$pagetitle,$clanname;
-
-      if(!config('news_feed') && file_exists(basePath . '/rss.xml'))
-          @unlink(basePath . '/rss.xml');
-
-    $host = $_SERVER['HTTP_HOST'];
-    $pfad = preg_replace("#^(.*?)\/(.*?)#Uis","$1",dirname($_SERVER['PHP_SELF']));
-
-    $feed = '<?xml version="1.0" encoding="'._charset.'" ?>';
-    $feed .= "\r\n";
-    $feed .= '<rss version="0.91">';
-    $feed .= "\r\n";
-    $feed .= '<channel>';
-    $feed .= "\r\n";
-    $feed .= '  <title>'.convert_feed($pagetitle).'</title>';
-    $feed .= "\r\n";
-    $feed .= '  <link>http://'.$host.'</link>';
-    $feed .= "\r\n";
-    $feed .= '  <description>Clannews von '.convert_feed($clanname).'</description>';
-    $feed .= "\r\n";
-    $feed .= '  <language>de-de</language>';
-    $feed .= "\r\n";
-    $feed .= '  <copyright>'.date("Y", time()).' '.convert_feed($clanname).'</copyright>';
-    $feed .= "\r\n";
-
-    $data = @fopen("../rss.xml","w+");
-    @fwrite($data, $feed);
-
-    $qry = db("SELECT * FROM ".$db['news']." WHERE intern = 0 AND public = 1 ORDER BY datum DESC LIMIT 15");
-    while($get = _fetch($qry))
-    {
-      $get1 = db("SELECT nick FROM ".$db['users']." WHERE id = '".$get['autor']."'",false,true);
-
-      $feed .= '  <item>';
-      $feed .= "\r\n";
-      $feed .= '    <pubDate>'.date("r", $get['datum']).'</pubDate>';
-      $feed .= "\r\n";
-      $feed .= '    <author>'.convert_feed($get1['nick']).'</author>';
-      $feed .= "\r\n";
-      $feed .= '    <title>'.convert_feed($get['titel']).'</title>';
-      $feed .= "\r\n";
-      $feed .= '    <description>';
-      $feed .= convert_feed($get['text']);
-      $feed .= '    </description>';
-      $feed .= "\r\n";
-      $feed .= '    <link>http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'].'</link>';
-      $feed .= "\r\n";
-      $feed .= '  </item>';
-      $feed .= "\r\n";
-
-      $data = @fopen("../rss.xml","w+");
-      @fwrite($data, $feed);
-    }
-
-    $feed .= '</channel>';
-    $feed .= "\r\n";
-    $feed .= '</rss>';
-
-    $data = @fopen("../rss.xml","w+");
-    @fwrite($data, $feed);
-}
-
 // Userpic ausgeben
 function userpic($userid, $width=170,$height=210)
 {
@@ -1854,15 +1618,10 @@ function userpic($userid, $width=170,$height=210)
     foreach($picformat as $endung)
     {
         if(file_exists(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung))
-        {
-            $pic = show(_userpic_link, array("id" => convert::ToInt($userid), "endung" => $endung, "width" => $width, "height" => $height));
-            break;
-        }
-        else
-            $pic = show(_no_userpic, array("width" => $width, "height" => $height));
+            return show(_userpic_link, array("id" => convert::ToInt($userid), "endung" => $endung, "width" => $width, "height" => $height));
     }
 
-    return $pic;
+    return show(_no_userpic, array("width" => $width, "height" => $height));
 }
 
 // Useravatar ausgeben
@@ -1872,15 +1631,10 @@ function useravatar($userid, $width=100,$height=100)
     foreach($picformat as $endung)
     {
         if(file_exists(basePath."/inc/images/uploads/useravatare/".convert::ToInt($userid).".".$endung))
-        {
-            $pic = show(_userava_link, array("id" => convert::ToInt($userid), "endung" => $endung, "width" => $width, "height" => $height));
-            break;
-        }
-        else
-            $pic = show(_no_userava, array("width" => $width, "height" => $height));
+            return show(_userava_link, array("id" => convert::ToInt($userid), "endung" => $endung, "width" => $width, "height" => $height));
     }
 
-    return $pic;
+    return show(_no_userava, array("width" => $width, "height" => $height));
 }
 
 // Userpic feur Hoverinformationen ausgeben
@@ -1899,7 +1653,7 @@ function hoveruserpic($userid, $width=170,$height=210)
 // Adminberechtigungen ueberpruefen
 function admin_perms($userid)
 {
-    global $db,$chkMe,$rootAdmin;
+    global $chkMe,$rootAdmin;
 
     if(empty($userid) || !$userid)
         return false;
@@ -1911,8 +1665,7 @@ function admin_perms($userid)
     $e = array('gb', 'shoutbox', 'editusers', 'votes', 'contact', 'joinus', 'intnews', 'forum', 'gs_showpw', 'edittactics');
 
     // check user permission
-    $c = db("SELECT * FROM ".$db['permissions']." WHERE user = '".convert::ToInt($userid)."'",false,true);
-    if(!empty($c))
+    if(db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."'",true))
     {
         $admin_settings = array();
         $files = get_files(basePath.'/admin/menu/',false,true,array('xml'));
@@ -1924,7 +1677,8 @@ function admin_perms($userid)
                 $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
         }
 
-        foreach($c AS $v => $k)
+        $check = db("SELECT * FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        foreach($check AS $v => $k)
         {
             if($v != 'id' && $v != 'user' && $v != 'pos' && !in_array($v, $e))
             {
@@ -1943,9 +1697,9 @@ function admin_perms($userid)
     }
 
     // check rank permission
-    if(db("SELECT id FROM `".$db['userpos']."` WHERE `user` = ".convert::ToInt($userid)." LIMIT 1",true))
+    if(db("SELECT id FROM `".dba::get('userpos')."` WHERE `user` = ".convert::ToInt($userid)." LIMIT 1",true))
     {
-        $qry = db("SELECT s1.* FROM ".$db['permissions']." AS s1 LEFT JOIN ".$db['userpos']." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".convert::ToInt($userid)."' AND s2.posi != '0'");
+        $qry = db("SELECT s1.* FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".convert::ToInt($userid)."' AND s2.posi != '0'");
         while($r = _fetch($qry))
         {
             foreach($r AS $v => $k)
@@ -1965,13 +1719,10 @@ function admin_perms($userid)
 //-> Rechte abfragen
 function getPermissions($checkID = 0, $pos = 0)
 {
-    global $db;
-
     if(!empty($checkID))
     {
-        $check = empty($pos) ? 'user' : 'pos';
-        $checked = array();
-        $qry = db("SELECT * FROM ".$db['permissions']." WHERE `".$check."` = '".convert::ToInt($checkID)."'");
+        $check = empty($pos) ? 'user' : 'pos'; $checked = array();
+        $qry = db("SELECT * FROM ".dba::get('permissions')." WHERE `".$check."` = '".convert::ToInt($checkID)."'");
 
         if(_rows($qry))
         {
@@ -1981,7 +1732,7 @@ function getPermissions($checkID = 0, $pos = 0)
     }
 
     $permission = array();
-    $qry = db("SHOW COLUMNS FROM ".$db['permissions']."");
+    $qry = db("SHOW COLUMNS FROM ".dba::get('permissions')."");
     while($get = _fetch($qry))
     {
         if($get['Field'] != 'id' && $get['Field'] != 'user' && $get['Field'] != 'pos' && $get['Field'] != 'intforum')
@@ -2005,19 +1756,19 @@ function getPermissions($checkID = 0, $pos = 0)
 //-> interne Foren-Rechte abfragen
 function getBoardPermissions($checkID = 0, $pos = 0)
 {
-    global $db, $dir;
-    $qry = db("SELECT id,name FROM ".$db['f_kats']." WHERE intern = '1' ORDER BY `kid` ASC"); $i_forum = '';
+    global $dir;
+    $qry = db("SELECT id,name FROM ".dba::get('f_kats')." WHERE intern = '1' ORDER BY `kid` ASC"); $i_forum = '';
     while($get = _fetch($qry))
     {
         unset($kats, $fkats, $break);
         $kats = (empty($katbreak) ? '' : '<div style="clear:both">&nbsp;</div>').'<table class="hperc" cellspacing="1"><tr><td class="contentMainTop"><b>'.re($get["name"]).'</b></td></tr></table>';
-        $katbreak = 1; $break = 1;
 
-        $qry2 = db("SELECT kattopic,id FROM ".$db['f_skats']." WHERE `sid` = '".$get['id']."' ORDER BY `kattopic` ASC"); $fkats = '';
+        $katbreak = 1; $break = 1; $fkats = '';
+        $qry2 = db("SELECT kattopic,id FROM ".dba::get('f_skats')." WHERE `sid` = '".$get['id']."' ORDER BY `kattopic` ASC");
         while($get2 = _fetch($qry2))
         {
             $br = ($break % 2) ? '<br />' : ''; $break++;
-            $chk =  db("SELECT * FROM ".$db['f_access']." WHERE `".(empty($pos) ? 'user' : 'pos')."` = '".convert::ToInt($checkID)."' AND ".(empty($pos) ? 'user' : 'pos')." != '0' AND `forum` = '".$get2['id']."'",true) ? ' checked="checked"' : '';
+            $chk =  db("SELECT * FROM ".dba::get('f_access')." WHERE `".(empty($pos) ? 'user' : 'pos')."` = '".convert::ToInt($checkID)."' AND ".(empty($pos) ? 'user' : 'pos')." != '0' AND `forum` = '".$get2['id']."'",true) ? ' checked="checked"' : '';
             $fkats .= '<input type="checkbox" class="checkbox" id="board_'.$get2['id'].'" name="board['.$get2['id'].']" value="'.$get2['id'].'"'.$chk.' /><label for="board_'.$get2['id'].'"> '.re($get2['kattopic']).'</label> '.$br;
         }
 
@@ -2060,7 +1811,7 @@ function xfire($username='')
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 }
 
-// Pruft die Ausgelagerten Seiten und API Zugriff
+// Prüft die ausgelagerten Seiten für Zugriff
 function include_action($page_dir='',$default='default')
 {
     $do = convert::ToString((isset($_GET['do']) ? htmlentities($_GET['do']) : NULL));
@@ -2075,34 +1826,40 @@ function include_action($page_dir='',$default='default')
 }
 
 //Preuft ob alle clicks nur einmal gezahlt werden *gast/user
-function count_clicks($side_tag='',$clickedID=0)
+function count_clicks($side_tag='',$clickedID=0,$update=true)
 {
-    global $db,$userid;
+    global $userid;
 
-    $qry = db("SELECT id FROM ".$db['clicks_ips']." WHERE uid = 0 AND time <= ".time());
-    if(_rows($qry)) while($get = _fetch($qry)) { db("DELETE FROM ".$db['clicks_ips']." WHERE `id` = ".$get['id']); }
+    $qry = db("SELECT id,side FROM ".dba::get('clicks_ips')." WHERE uid = 0 AND time <= ".time());
+    if(_rows($qry)) while($get = _fetch($qry)) { if($get['side'] != 'vote') db("DELETE FROM ".dba::get('clicks_ips')." WHERE `id` = ".$get['id']); }
 
     if(checkme() != 'unlogged')
     {
-        if(db("SELECT id FROM ".$db['clicks_ips']." WHERE `uid` = '".convert::ToInt($userid)."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
+        if(db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `uid` = '".convert::ToInt($userid)."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
             return false;
 
-        if(db("SELECT id FROM ".$db['clicks_ips']." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
+        if(db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
         {
-            db("UPDATE `".$db['clicks_ips']."` SET `uid` = '".convert::ToInt($userid)."', `time` = '0' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
+            if($update)
+                db("UPDATE `".dba::get('clicks_ips')."` SET `uid` = '".convert::ToInt($userid)."', `time` = '0' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
+
             return false;
         }
         else
         {
-            db("INSERT INTO ".$db['clicks_ips']." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '".convert::ToInt($userid)."', '".$clickedID."', '".$side_tag."', '0')");
+            if($update)
+                db("INSERT INTO ".dba::get('clicks_ips')." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '".convert::ToInt($userid)."', '".$clickedID."', '".$side_tag."', '0')");
+
             return true;
         }
     }
     else
     {
-        if(!db("SELECT id FROM ".$db['clicks_ips']." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
+        if(!db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
         {
-            db("INSERT INTO ".$db['clicks_ips']." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '0', '".$clickedID."', '".$side_tag."', '".(time()+count_clicks_expires)."')");
+            if($update)
+                db("INSERT INTO ".dba::get('clicks_ips')." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '0', '".$clickedID."', '".$side_tag."', '".(time()+count_clicks_expires)."')");
+
             return true;
         }
     }
@@ -2124,21 +1881,68 @@ function thumbgen_delete($filename,$width='100',$height='')
     list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/uploads/'.$filename);
     $neueBreite = empty($width) || $width <= 1 ? $breite : convert::ToInt($width);
     $neueHoehe = empty($height) || $height <= 1 ? intval($hoehe*$neueBreite/$breite) : convert::ToInt($height);
-    if(Cache::delete_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type))
-        return true;
-    else
-        return false;
+    return (Cache::delete_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type) ? true : false);
+}
+
+/**
+ * Laden der Menu XML Files
+ * @param string $phold
+ * @return multitype:boolean multitype:string boolean Ambigous <XMLObj, boolean>
+ */
+function load_menu_xml()
+{
+    global $ajaxThumbgen;
+    if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,array('php'))) && !$ajaxThumbgen)
+    {
+        if(count($add_menu_functions) >= 1)
+        {
+            foreach($add_menu_functions as $func)
+            {
+                $func_name = str_replace('.php', '', $func);
+                if(@file_exists(basePath.'/inc/menu-functions/'.$func_name.'.xml')) //XML Extension
+                    xml::openXMLfile('menu_'.$func_name,'inc/menu-functions/'.$func_name.'.xml');
+            }
+        }
+    }
+}
+
+function get_menu_xml($phold='')
+{
+    $xml_config=false; $MenuConfig = array();
+    if(@file_exists(basePath.'/inc/menu-functions/'.$phold.'.xml')) //XML Extension
+    {
+        $MenuConfig['AjaxLoad'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad'));
+        $MenuConfig['Only_Users'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Users'));
+        $MenuConfig['Only_Admin'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Admin'));
+        $MenuConfig['Only_Root'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Root'));
+        $MenuConfig['AjaxLoad_Img'] = xml::getXMLvalue('menu_'.$phold, 'AjaxLoad_Img');
+        $MenuConfig['update'] = convert::ToString(xml::getXMLvalue('menu_'.$phold, 'Update'));
+
+        $ajax_width = convert::ToString(xml::getXMLvalue('menu_'.$phold, 'Div_Width'));
+        $MenuConfig['div_width'] = empty($ajax_width) ? '' : 'width:'.$ajax_width.'px;';
+
+        $ajax_height = convert::ToString(xml::getXMLvalue('menu_'.$phold, 'Div_Height'));
+        $MenuConfig['div_height'] = empty($ajax_height) ? '' : 'height:'.$ajax_height.'px;';
+
+        $MenuConfig['AjaxLoad_Img_Use'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad_Img_Use'));
+        $xml_config=true;
+    }
+
+    return array('xml' => $xml_config, 'config' => $MenuConfig);
 }
 
 /**
  *  Neue Languages & Neue Funktionen einbinden
  */
-if(($add_languages = API_CORE::load_additional_language()) != false)
-{ foreach($add_languages as $language) include($language); }
+if(!$ajaxThumbgen)
+{
+    if(($add_languages = API_CORE::load_additional_language()) != false)
+    { foreach($add_languages as $language) include($language); }
 
-if(($add_functions = API_CORE::load_additional_functions()) != false)
-{ foreach($add_functions as $func) include($func); }
-unset($add_languages,$add_functions);
+    if(($add_functions = API_CORE::load_additional_functions()) != false)
+    { foreach($add_functions as $func) include($func); }
+    unset($add_languages,$add_functions);
+}
 
 //-> Navigation einbinden
 if(file_exists(basePath.'/inc/menu-functions/navi.php') && !$ajaxThumbgen)
@@ -2147,11 +1951,11 @@ if(file_exists(basePath.'/inc/menu-functions/navi.php') && !$ajaxThumbgen)
 //-> Ausgabe des Indextemplates
 function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
 {
-    global $db,$userid,$userip,$tmpdir,$chkMe,$AjaxLoad_blacklist;
-    global $designpath,$language,$cp_color,$rootAdmin;
+    global $userid,$userip,$tmpdir,$chkMe,$AjaxLoad_blacklist;
+    global $designpath,$cp_color,$rootAdmin;
 
     // installer vorhanden?
-    if(file_exists(basePath."/_installer") && $chkMe == 4)
+    if(file_exists(basePath."/_installer") && $chkMe == 4 && !is_debug)
         $index = _installdir;
 
     // user gebannt? Logge aus!
@@ -2162,14 +1966,15 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
     }
 
     // JS-Dateine einbinden
-    $lng = ($language=='deutsch') ? 'de':'en';
-    $edr = ($wysiwyg=='_word') ? 'advanced':'normal';
+    $lng = (language::get_language()=='deutsch') ? 'de':'en';
+    $edr = (($wysiwyg=='_word') ? 'advanced':'normal');
     $lcolor = ($cp_color) ? 'lcolor=true;':'';
     $java_vars = '<script language="javascript" type="text/javascript">var maxW = '.config('maxwidth').',lng = \''.$lng.'\',dzcp_editor = \''.$edr.'\';'.$lcolor.'</script>';
-    $login = ''; $check_msg = '';
+    unset($lcolor,$edr,$lng);
+    $login = ''; $check_msg = ''; $ukrss = '';
 
-    if(!strstr($_SERVER['HTTP_USER_AGENT'],'Android') AND !strstr($_SERVER['HTTP_USER_AGENT'],'webOS'))
-        $java_vars .= '<script language="javascript" type="text/javascript" src="'.$designpath.'/_js/wysiwyg'.$wysiwyg.'.js"></script>';
+    if(!API::is_mobile())
+        $java_vars .= '<script language="javascript" type="text/javascript" src="'.$designpath.'/_js/wysiwyg.js"></script>';
 
     if(settings("wmodus") && $chkMe != 4)
     {
@@ -2187,6 +1992,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
     {
         updateCounter();
         update_maxonline();
+        load_menu_xml();
 
         //check permissions
         if($chkMe == "unlogged")
@@ -2195,7 +2001,9 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         {
             $check_msg = check_msg();
             set_lastvisit();
-            db("UPDATE ".$db['users']." SET `time` = '".time()."', `whereami` = '".up($where)."' WHERE id = '".convert::ToInt($userid)."'");
+            db("UPDATE ".dba::get('users')." SET `time` = '".time()."', `whereami` = '".up($where)."' WHERE id = '".convert::ToInt($userid)."'");
+            $get_rss_key = db("SELECT rss_key FROM `".dba::get('users')."` WHERE id = '".convert::ToInt($userid)."' LIMIT 1",false,true);
+            $ukrss = $get_rss_key['rss_key'];
         }
 
         //init templateswitch
@@ -2215,6 +2023,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         $dir = $designpath;
         $title = re(strip_tags($title));
         $charset = _charset;
+        $lng_meta = language::get_meta();
         $index = empty($index) ? '' : (empty($check_msg) ? '' : $check_msg).'<table class="mainContent" cellspacing="1" style="margin-top:0">'.$index.'</table>';
 
         //check if placeholders are given
@@ -2222,7 +2031,7 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
 
         //filter placeholders
         $pholdervars = '';
-        $blArr = array("[title]","[copyright]","[java_vars]","[login]", "[template_switch]","[headtitle]","[index]", "[time]","[rss]","[dir]","[charset]");
+        $blArr = array("[title]","[copyright]","[java_vars]","[login]", "[template_switch]","[headtitle]","[index]", "[time]","[rss]","[dir]","[charset]","[ukrss]","[lng_meta]");
         foreach($blArr as $bl)
         {
             if(preg_match("#".$bl."#",$pholder))
@@ -2246,22 +2055,10 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
                 if(@file_exists(basePath.'/inc/menu-functions/'.$phold.'.php'))
                 {
                     ## DZCP-Extended Edition START ##
-                    $xml_config=false;
-                    if(@file_exists(basePath.'/inc/menu-functions/'.$phold.'.xml')) //XML Extension
-                    {
-                        // Load XML Config file
-                        $MenuConfig = array();
-                        xml::openXMLfile('menu_'.$phold,'inc/menu-functions/'.$phold.'.xml');
-                        $MenuConfig['AjaxLoad'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad'));
-                        $MenuConfig['Only_Users'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Users'));
-                        $MenuConfig['Only_Admin'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Admin'));
-                        $MenuConfig['Only_Root'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Root'));
-                        $MenuConfig['AjaxLoad_Img'] = xml::getXMLvalue('menu_'.$phold, 'AjaxLoad_Img');
-                        $MenuConfig['AjaxLoad_Img_Use'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad_Img_Use'));
-                        $xml_config=true;
-                    }
+                    $menu_xml = get_menu_xml($phold);
+                    $MenuConfig = $menu_xml['config'];
 
-                    if($xml_config)
+                    if($menu_xml['xml'])
                     {
                         $arr[$phold] = '';
                         if(!$MenuConfig['AjaxLoad'] || array_key_exists($phold, $AjaxLoad_blacklist) || !AjaxLoad)
@@ -2282,9 +2079,10 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
                             (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
                             ($MenuConfig['Only_Root'] && $chkMe == 4 && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                             {
+                                $icon_html = '<img src="../inc/images/'.$MenuConfig['AjaxLoad_Img'].'" alt="" />';
                                 $menu_index_hash = md5_file(basePath.'/inc/menu-functions/'.$phold.'.php');
-                                $Ajax_img = ($MenuConfig['AjaxLoad_Img_Use'] ? "<div style=\"width:100%;padding:10px 0;text-align:center\"><img src=\"../inc/images/".$MenuConfig['AjaxLoad_Img']."\" alt=\"\" /></div>" : "");
-                                $arr[$phold] = "<div id=\"menu_".$phold."\">".$Ajax_img."<script language=\"javascript\" type=\"text/javascript\">DZCP.initDynLoader('menu_".$phold."','menu','&hash=".$menu_index_hash."');</script></div>";
+                                $Ajax_img = ($MenuConfig['AjaxLoad_Img_Use'] ? "<div style=\"".$MenuConfig['div_width']." ".$MenuConfig['div_height']." padding:10px;text-align:center;\">".$icon_html."</div>" : "");
+                                $arr[$phold] = "<div style=\"".$MenuConfig['div_width']." ".$MenuConfig['div_height']."\" id=\"menu_".$phold."\">".$Ajax_img."<script language=\"javascript\" type=\"text/javascript\">DZCP.initDynLoader('menu_".$phold."','menu','&hash=".$menu_index_hash."');</script></div>";
                             }
                         }
                     }
@@ -2313,8 +2111,10 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
 
     // Cookie speichern
     cookie::save();
+
+    // Datenbankverbindung beenden
+    database::close();
 }
 
 //Initialisierung der Addon Calls
 API_CORE::call_addons_init();
-?>

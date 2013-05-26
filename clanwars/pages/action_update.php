@@ -20,17 +20,17 @@ else
     {
         $index = error(_error_have_to_be_logged, 1);
     } else {
-        $qry = db("SELECT * FROM ".$db['cw_player']."
+        $qry = db("SELECT * FROM ".dba::get('cw_player')."
                WHERE cwid = '".convert::ToInt($_GET['id'])."'
                AND member = '".convert::ToInt($userid)."'");
         if(_rows($qry))
         {
-            $upd = db("UPDATE ".$db['cw_player']."
+            $upd = db("UPDATE ".dba::get('cw_player')."
                  SET `status` = '".convert::ToInt($_POST['status'])."'
                  WHERE cwid = '".convert::ToInt($_GET['id'])."'
                  AND member = '".convert::ToInt($userid)."'");
         } else {
-            $ins = db("INSERT INTO ".$db['cw_player']."
+            $ins = db("INSERT INTO ".dba::get('cw_player')."
                  SET `cwid`   = '".convert::ToInt($_GET['id'])."',
                      `member` = '".convert::ToInt($userid)."',
                      `status` = '".convert::ToInt($_POST['status'])."'");

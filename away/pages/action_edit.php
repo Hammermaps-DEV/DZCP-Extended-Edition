@@ -20,7 +20,7 @@ else
     {
         $index = error(_error_wrong_permissions, 1);
     } else {
-        $qry = db("SELECT * FROM ".$db['away']." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        $qry = db("SELECT * FROM ".dba::get('away')." WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
         $date1 = show(_dropdown_date, array("day" => dropdown("day",date("d",$get['start'])),
@@ -81,7 +81,7 @@ else
                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                         "time" => date("d.m.Y H:i", time())._uhr));
 
-                $qry = db("UPDATE ".$db['away']."
+                $qry = db("UPDATE ".dba::get('away')."
                     SET `start`= '".convert::ToInt($abdata)."',
                           `end`= '".convert::ToInt($time)."',
                         `titel`= '".up($_POST['titel'])."',

@@ -13,7 +13,7 @@ if(_adminMenu != 'true')
       $wysiwyg = '_word';
       if($_GET['do'] == "add")
       {
-        $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
+        $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
                    ORDER BY s1.name, s2.pos");
          $thiskat = '';
         while($get = _fetch($qry))
@@ -63,7 +63,7 @@ if(_adminMenu != 'true')
           $kat_ = preg_replace('/-(\d+)/','',$_POST['pos']);
           $pos_ = preg_replace("=nav_(.*?)-=","",$_POST['pos']);
 
-          $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
+          $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
                      ORDER BY s1.name, s2.pos");
           $thiskat = '';
           while($get = _fetch($qry))
@@ -101,11 +101,11 @@ if(_adminMenu != 'true')
                                                   "inhalt" => _inhalt,
                                                   "do" => "addsite"));
         } else {
-          $qry = db("INSERT INTO ".$db['sites']."
+          $qry = db("INSERT INTO ".dba::get('sites')."
                      SET `titel` = '".up($_POST['titel'])."',
                          `text`  = '".up($_POST['inhalt'],1)."',
                          `html`  = '".convert::ToInt($_POST['html'])."'");
-          $insert_id = mysql_insert_id();
+          $insert_id = database::get_insert_id();
 
           if($_POST['pos'] == "1" || "2") $sign = ">= ";
           else $sign = "> ";
@@ -115,11 +115,11 @@ if(_adminMenu != 'true')
 
           $url = "../sites/?show=".$insert_id."";
 
-          $posi = db("UPDATE ".$db['navi']."
+          $posi = db("UPDATE ".dba::get('navi')."
                       SET `pos` = pos+1
                       WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
-          $posi = db("INSERT INTO ".$db['navi']."
+          $posi = db("INSERT INTO ".dba::get('navi')."
                       SET `pos`     = '".convert::ToInt($pos)."',
                           `kat`     = '".up($kat)."',
                           `name`    = '".up($_POST['name'])."',
@@ -132,11 +132,11 @@ if(_adminMenu != 'true')
           $show = info(_site_added, "?admin=editor");
         }
       } elseif($_GET['do'] == "edit") {
-        $qrys = db("SELECT * FROM ".$db['sites']."
+        $qrys = db("SELECT * FROM ".dba::get('sites')."
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
         $gets = _fetch($qrys);
 
-        $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
+        $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
                    ORDER BY s1.name, s2.pos");
         $thiskat = '';
         while($get = _fetch($qry))
@@ -153,7 +153,7 @@ if(_adminMenu != 'true')
           $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
         }
 
-        $qryn = db("SELECT * FROM ".$db['navi']."
+        $qryn = db("SELECT * FROM ".dba::get('navi')."
                     WHERE editor = '".convert::ToInt($_GET['id'])."'");
         $getn = _fetch($qryn);
 
@@ -189,7 +189,7 @@ if(_adminMenu != 'true')
 
           if(isset($_POST['html'])) $checked = "checked=\"checked\"";
 
-          $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".$db['navi_kats']." AS s1 LEFT JOIN ".$db['navi']." AS s2 ON s1.`placeholder` = s2.`kat`
+          $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
                      ORDER BY s1.name, s2.pos");
           $thiskat = '';
           while($get = _fetch($qry))
@@ -226,7 +226,7 @@ if(_adminMenu != 'true')
                                                   "inhalt" => _inhalt,
                                                   "do" => "editsite&amp;id=".$_GET['id'].""));
         } else {
-          $qry = db("UPDATE ".$db['sites']."
+          $qry = db("UPDATE ".dba::get('sites')."
                      SET `titel` = '".up($_POST['titel'])."',
                          `text`  = '".up($_POST['inhalt'],1)."',
                          `html`   = '".convert::ToInt($_POST['html'])."'
@@ -240,11 +240,11 @@ if(_adminMenu != 'true')
 
           $url = "../sites/?show=".$_GET['id']."";
 
-          $posi = db("UPDATE ".$db['navi']."
+          $posi = db("UPDATE ".dba::get('navi')."
                       SET `pos` = pos+1
                       WHERE pos ".$sign." '".convert::ToInt($pos)."'");
 
-          $posi = db("UPDATE ".$db['navi']."
+          $posi = db("UPDATE ".dba::get('navi')."
                       SET `pos`     = '".convert::ToInt($pos)."',
                           `kat`     = '".up($kat)."',
                           `name`    = '".up($_POST['name'])."',
@@ -254,13 +254,13 @@ if(_adminMenu != 'true')
           $show = info(_site_edited, "?admin=editor");
         }
       } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".$db['sites']."
+        $qry = db("DELETE FROM ".dba::get('sites')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $qry = db("DELETE FROM ".$db['navi']."
+        $qry = db("DELETE FROM ".dba::get('navi')."
                    WHERE editor = '".convert::ToInt($_GET['id'])."'");
         $show = info(_editor_deleted, "?admin=editor");
       } else {
-        $qry = db("SELECT * FROM ".$db['sites']."");
+        $qry = db("SELECT * FROM ".dba::get('sites')."");
         while($get = _fetch($qry))
         {
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

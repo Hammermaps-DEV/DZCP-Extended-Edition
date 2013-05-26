@@ -44,8 +44,8 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
                     else
                     {
                         ## Extension Filter ##
-                        $exp_string = explode(".", $file);
-                        if(!in_array($file, $blacklist) && in_array(strtolower($exp_string[1]), $file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
+                        $exp_string = array_reverse(explode(".", $file));
+                        if(!in_array($file, $blacklist) && in_array(strtolower($exp_string[0]), $file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
                             $files[] = $file;
                     }
                 }
@@ -62,8 +62,8 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
                     else
                     {
                         ## Extension Filter ##
-                        $exp_string = explode(".", $file);
-                        if(!in_array($file, $blacklist) && in_array(strtolower($exp_string[1]), $file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
+                        $exp_string = array_reverse(explode(".", $file));
+                        if(!in_array($file, $blacklist) && in_array(strtolower($exp_string[0]), $file_ext) && ($preg_match ? preg_match($preg_match,$file) : true))
                             $files[] = $file;
                     }
                 }
@@ -88,16 +88,16 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
 }
 
 /**
-* Erkennen welche PHP Version ausgeführt wird.
+* Erkennen welche PHP Version ausgefÃ¼hrt wird.
 * Added by DZCP-Extended Edition
 *
 * @return boolean
 */
-function is_php($version='5.2.0')
+function is_php($version='5.3.0')
 { return (floatval(phpversion()) >= $version); }
 
 /**
- * PHPInfo in ein Array lesen und zurückgeben
+ * PHPInfo in ein Array lesen und zurÃ¼ckgeben
  *
  * @return array
  **/
@@ -138,7 +138,7 @@ function parsePHPInfo()
 }
 
 /**
- * Prüft wie PHP ausgeführt wird
+ * PrÃ¼ft wie PHP ausgefÃ¼hrt wird
  * Added by DZCP-Extended Edition
  *
  * @return string
@@ -152,12 +152,12 @@ function php_sapi_type()
 }
 
 /**
- * Funktion um eine Datei im Web auf Existenz zu prüfen und abzurufen
+ * Funktion um eine Datei im Web auf Existenz zu prÃ¼fen und abzurufen
  * Updated for DZCP-Extended Edition
  *
  * @return String
  **/
-function fileExists($url)
+function fileExists($url,$timeout=2)
 {
     if((!fsockopen_support() && !use_curl || (use_curl && !extension_loaded('curl'))))
         return false;
@@ -167,7 +167,7 @@ function fileExists($url)
     $port = isset($url_p['port']) ? $url_p['port'] : 80;
     unset($url_p);
 
-    if(!ping_port($host,$port,2))
+    if(!ping_port($host,$port,$timeout))
         return false;
 
     unset($host,$port);
@@ -179,6 +179,8 @@ function fileExists($url)
         curl_setopt($curl, CURLOPT_URL, $url);
         curl_setopt($curl, CURLOPT_HEADER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT , $timeout);
+        curl_setopt($curl, CURLOPT_TIMEOUT, $timeout * 2); // x 2
 
         if(!$content = curl_exec($curl))
             return false;
@@ -188,6 +190,7 @@ function fileExists($url)
     }
     else
     {
+        ini_set('default_socket_timeout', $timeout * 2);
         if(!$content = @file_get_contents($url))
             return false;
     }
@@ -224,12 +227,13 @@ function fsockopen_support()
  *
  * @return boolean
  **/
-function ping_port($address='',$port=0000,$timeout=2)
+function ping_port($address='',$port=0000,$timeout=2,$udp=false)
 {
     if(!fsockopen_support())
         return false;
 
-    if($fp = @fsockopen(DNSToIp($address), $port, $errno, $errstr, $timeout))
+    $errstr = NULL; $errno = NULL;
+    if($fp = @fsockopen(($udp ? "udp://".DNSToIp($address) : DNSToIp($address)), $port, $errno, $errstr, $timeout))
     {
         unset($ip,$port,$errno,$errstr,$timeout);
         @fclose($fp);
@@ -260,7 +264,7 @@ function DNSToIp($address='')
 }
 
 /**
- * Gibt die IP des Besuchers / Users zurück
+ * Gibt die IP des Besuchers / Users zurÃ¼ck
  * Added by DZCP-Extended Edition
  *
  * @return String
@@ -269,19 +273,72 @@ function visitorIp()
 {
     $TheIp=$_SERVER['REMOTE_ADDR'];
     if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-    {
-        ## IP auf Gültigkeit prüfen ##
-        $TheIp_XF=$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $TheIp_X = explode('.',$TheIp_XF);
-        if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp_XF))
-            $TheIp = $TheIp_XF;
-    }
+        $TheIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+    if(isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']))
+        $TheIp = $_SERVER['HTTP_CLIENT_IP'];
+
+    if(isset($_SERVER['HTTP_FROM']) && !empty($_SERVER['HTTP_FROM']))
+        $TheIp = $_SERVER['HTTP_FROM'];
 
     $TheIp_X = explode('.',$TheIp);
     if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp))
         return trim($TheIp);
 
     return '0.0.0.0';
+}
+
+/**
+ * PrÃ¼ft eine IP gegen eine IP-Range
+ * @param ipv4 $ip
+ * @param ipv4 range $range
+ * @return boolean
+ */
+function validateIpV4Range ($ip, $range)
+{
+    if(!is_array($range))
+    {
+        $counter = 0;
+        $tip = explode ('.', $ip);
+        $rip = explode ('.', $range);
+        foreach ($tip as $targetsegment)
+        {
+            $rseg = $rip[$counter];
+            $rseg = preg_replace ('=(\[|\])=', '', $rseg);
+            $rseg = explode ('-', $rseg);
+            if (!isset($rseg[1]))
+                $rseg[1] = $rseg[0];
+
+            if ($targetsegment < $rseg[0] || $targetsegment > $rseg[1])
+                return false;
+
+            $counter++;
+        }
+    }
+    else
+    {
+        foreach ($range as $range_num)
+        {
+            $counter = 0;
+            $tip = explode ('.', $ip);
+            $rip = explode ('.', $range_num);
+            foreach ($tip as $targetsegment)
+            {
+                $rseg = $rip[$counter];
+                $rseg = preg_replace ('=(\[|\])=', '', $rseg);
+                $rseg = explode ('-', $rseg);
+                if (!isset($rseg[1]))
+                    $rseg[1] = $rseg[0];
+
+                if ($targetsegment < $rseg[0] || $targetsegment > $rseg[1])
+                    return false;
+
+                $counter++;
+            }
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -370,222 +427,18 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
 }
 
 /**
- * Datenbank Connect
- * Todo: Code überarbeiten, Update auf MySQLi
- **/
-if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
-{
-    if(!isset($db)) //tinymce fix
-        require_once(basePath."/inc/config.php");
-
-    if(!empty($db['host']) && !empty($db['user']) && !empty($db['pass']) && !empty($db['db']))
-    {
-        if(!$msql = @mysql_connect($db['host'], $db['user'], $db['pass']))
-        {
-            echo "<b>Fehler beim Zugriff auf die Datenbank!<p>";
-            print_db_error(false);
-        }
-
-        if(!@mysql_select_db($db['db'],$msql))
-        {
-            echo "<b>Die angegebene Datenbank <i>".$db['db']."</i> existiert nicht!<p>";
-            print_db_error(false);
-        }
-    }
-    else
-    {
-        echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /></head><body><b>';
-        if(empty($db['host']))
-            echo "Das MySQL-Hostname fehlt in der Configuration!<p>";
-
-        if(empty($db['user']))
-            echo "Der MySQL-Username fehlt in der Configuration!<p>";
-
-        if(empty($db['pass']))
-            echo "Das MySQL-Passwort fehlt in der Configuration!<p>";
-
-        if(empty($db['db']))
-            echo "Der MySQL-Datenbankname fehlt in der Configuration!<p>";
-
-        die("Bitte überprüfe deine mysql.php!</b></body></html>");
-    }
-}
-
-/**
- * Gibt requires Fehler aus und stoppt die Ausführung des CMS
+ * Gibt requires Fehler aus und stoppt die AusfÃ¼hrung des CMS
  * Added by DZCP-Extended Edition
  **/
-function check_of_php52()
-{ if(!is_php('5.2.0')) die('<b>Requires failed:</b><br /><ul>'.
- '<li><b>The DZCP-Extended Edition requires PHP 5.2.0 or newer.</b>'.
- '<li><b>Die DZCP-Extended Edition ben&ouml;tigt PHP 5.2.0 oder neuer.</b>'); }
+function check_of_php530()
+{ if(!is_php('5.3.0')) die('<b>Requires failed:</b><br /><ul>'.
+ '<li><b>The DZCP-Extended Edition requires PHP 5.3.0 or newer.</b>'.
+ '<li><b>Die DZCP-Extended Edition ben&ouml;tigt PHP 5.3.0 oder neuer.</b>'); }
 
-check_of_php52();
-
-/**
- * Gibt Datenbank Fehler aus und stoppt die Ausführung des CMS
- * Added by DZCP-Extended Edition
- **/
-function print_db_error($query=false)
-{
-    global $prefix;
-    die('<b>MySQL-Query failed:</b><br /><ul>'.
-            '<li><b>ErrorNo</b> = '.str_replace($prefix,'',mysql_errno()).
-            '<li><b>Error</b>   = '.str_replace($prefix,'',mysql_error()).
-            ($query ? '<li><b>Query</b>   = '.str_replace($prefix,'',$query).'</ul>' : ''));
-}
+check_of_php530();
 
 /**
- * Datenbank Query senden
- * Updated for DZCP-Extended Edition
- * Todo: Code überarbeiten, Update auf MySQLi + SQL-Inception Schutz
- *
- * @return resource/array/int
- **/
-function db($query,$rows=false,$fetch=false,$clear_output=false)
-{
-    if(!$qry = mysql_query($query))
-        print_db_error($query);
-
-    if($fetch && $rows)
-        return mysql_fetch_array($qry);
-    else if($fetch && !$rows)
-        return mysql_fetch_assoc($qry);
-    else if(!$fetch && $rows)
-        return mysql_num_rows($qry);
-    else if(!$clear_output)
-        return $qry;
-    else
-        unset($qry); //clear mem
-}
-
-/**
- * Informationen über die MySQL-Datenbank abrufen
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return resource
- **/
-function dbinfo()
-{
-    $info = array(); $sum = 0; $rows = 0; $entrys = 0;
-    $qry = db("Show table status");
-    while($data = _fetch($qry))
-    {
-        $allRows = $data["Rows"];
-        $dataLength  = $data["Data_length"];
-        $indexLength = $data["Index_length"];
-
-        $tableSum = $dataLength + $indexLength;
-
-        $sum += $tableSum;
-        $rows += $allRows;
-        $entrys ++;
-    } //while end
-
-    $info["entrys"] = $entrys;
-    $info["rows"] = $rows;
-    $info["size"] = @round($sum/1048576,2);
-
-    return $info;
-}
-
-/**
- * Liefert die Anzahl der Zeilen im Ergebnis
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return integer
- **/
-function _rows($rows)
-{
-    return mysql_num_rows($rows);
-}
-
-/**
- * Liefert einen Datensatz als assoziatives Array
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return array
- **/
-function _fetch($fetch)
-{
-    return mysql_fetch_assoc($fetch);
-}
-
-/**
- * Funktion um diverse Dinge aus Tabellen auszaehlen zu lassen
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return integer
- **/
-function cnt($count, $where = "", $what = "id")
-{
-    $cnt = db("SELECT COUNT(".$what.") AS num FROM ".$count." ".$where,false,true);
-    return $cnt['num'];
-}
-
-/**
- * Funktion um diverse Dinge aus Tabellen zusammenzaehlen zu lassen
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return integer
- **/
-function sum($db, $where = "", $what)
-{
-    $cnt = db("SELECT SUM(".$what.") AS num FROM ".$db.$where,false,true);
-    return convert::ToInt($cnt['num']);
-}
-
-/**
- * Funktion um CMS Settings aus der Datenbank auszulesen
- * Updated for DZCP-Extended Edition
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return mixed/array
- **/
-function settings($what)
-{
-    global $db;
-    if(is_array($what))
-    {
-        $sql='';
-        foreach($what as $qy)
-        { $sql .= $qy.", "; }
-        $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".$db['settings']."`",false,true);
-    }
-    else
-    {
-        $get = db("SELECT ".$what." FROM `".$db['settings']."`",false,true);
-        return $get[$what];
-    }
-}
-
-/**
- * Funktion um die CMS Config aus der Datenbank auszulesen
- * Updated for DZCP-Extended Edition
- * Todo: Code überarbeiten, Update auf MySQLi
- *
- * @return mixed/array
- **/
-function config($what)
-{
-    global $db;
-    if(is_array($what))
-    {
-        $sql='';
-        foreach($what as $qy) { $sql .= $qy.", "; }
-        $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".$db['config']."`",false,true);
-    }
-    else
-    {
-        $get = db("SELECT ".$what." FROM `".$db['config']."`",false,true);
-        return $get[$what];
-    }
-}
-
-/**
- * Generiert Passwörter
+ * Generiert PasswÃ¶rter
  * Updated for DZCP-Extended Edition
  *
  * @return String
@@ -615,13 +468,29 @@ function mkpwd($passwordLength=8,$specialcars=true)
 }
 
 /**
+ * Generiert eine XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX unique id
+ *
+ * @return string
+ */
+function GenGuid()
+{
+    $s = strtoupper(md5(uniqid(rand(),true)));
+    $guidText =
+    substr($s,0,8) . '-' .
+    substr($s,8,4) . '-' .
+    substr($s,12,4). '-' .
+    substr($s,16,4). '-' .
+    substr($s,20);
+    return $guidText;
+}
+
+/**
  * Funktion zum schreiben der Adminlogs
  * Added by DZCP-Extended Edition
  */
 function wire_ipcheck($what='')
 {
-    global $db;
-    db("INSERT INTO ".$db['ipcheck']." SET `ip` = '".visitorIp()."',`what` = '".$what."',`time` = '".time()."'");
+    db("INSERT INTO ".dba::get('ipcheck')." SET `ip` = '".visitorIp()."',`what` = '".$what."',`time` = '".time()."'");
 }
 
 /**
@@ -632,20 +501,37 @@ function wire_ipcheck($what='')
  */
 function ipcheck($what,$time = "")
 {
-    global $db;
-    $get = db("SELECT time,what FROM ".$db['ipcheck']." WHERE what = '".$what."' AND ip = '".visitorIp()."' ORDER BY time DESC",false,true);
+    $get = db("SELECT time,what FROM ".dba::get('ipcheck')." WHERE what = '".$what."' AND ip = '".visitorIp()."' ORDER BY time DESC",false,true);
     if(preg_match("#vid#", $get['what']))
         return true;
     else
     {
         if($get['time']+$time<time())
-            db("DELETE FROM ".$db['ipcheck']." WHERE what = '".$what."' AND ip = '".visitorIp()."' AND time+'".$time."'<'".time()."'");
+            db("DELETE FROM ".dba::get('ipcheck')." WHERE what = '".$what."' AND ip = '".visitorIp()."' AND time+'".$time."'<'".time()."'");
 
         if($get['time']+$time>time())
             return true;
         else
             return false;
     }
+}
+
+/**
+ * Erkennt Spider und Crawler um sie von der Besucherstatistik auszuschliessen.
+ *
+ * @return boolean
+ */
+function isSpider()
+{
+    $uagent = $_SERVER['HTTP_USER_AGENT'];
+    $ex = explode("\n", file_get_contents(basePath.'/inc/_spiders.txt'));
+    for($i=0;$i<=count($ex)-1;$i++)
+    {
+        if(stristr($uagent, trim($ex[$i])))
+            return true;
+    }
+
+    return false;
 }
 
 /**
@@ -685,15 +571,20 @@ function string_to_array($str,$counter=1)
         $t1=explode("=$counter>",$value);
         $kk=$t1[0];
 
-        if($t1[1] == "+#bool#+" or $t1[1] == "-#bool#-")
-            $vv=String_to_boolConverter($t1[1]);
-        else
-            $vv=convert::UTF8_Reverse($t1[1]);
+        if(count($t1) >= 2)
+        {
+            if($t1[1] == "+#bool#+" or $t1[1] == "-#bool#-")
+                $vv=String_to_boolConverter($t1[1]);
+            else
+                $vv=convert::UTF8_Reverse($t1[1]);
 
-        if(isset($t1[2]) && $t1[2]=="~Y~")
-            $arr[$kk]=string_to_array($vv,($counter+1));
+            if(isset($t1[2]) && $t1[2]=="~Y~")
+                $arr[$kk]=string_to_array($vv,($counter+1));
+            else
+                $arr[$kk]=$vv;
+        }
         else
-            $arr[$kk]=$vv;
+            $arr[$kk] = 0;
     }
 
     return $arr;
@@ -736,37 +627,19 @@ function generatetime()
 }
 
 /**
- * Erkennt Spider und Crawler um sie von der Besucherstatistik auszuschliessen.
- *
- * @return boolean
- */
-function isSpider()
-{
-    $uagent = $_SERVER['HTTP_USER_AGENT'];
-    $ex = explode("\n", file_get_contents(basePath.'/inc/_spiders.txt'));
-    for($i=0;$i<=count($ex)-1;$i++)
-    {
-        if(stristr($uagent, trim($ex[$i])))
-            return true;
-    }
-
-    return false;
-}
-
-/**
  * Funktion um Sonderzeichen zu konvertieren
  *
  * @return string
  */
 function spChars($txt)
 {
-    $search = array("Ä", "Ö", "Ü", "ä", "ö", "ü", "ß", "€");
-    $replace = array("&Auml;", "&Ouml;", "&Uuml;", "&auml;", "&ouml;", "&uuml;", "&szlig;", "&euro;");
+    $search = array("Ã„", "Ã–", "Ãœ", "Ã¤", "Ã¶", "Ã¼", "ÃŸ", "Â€â‚¬", "'", "\"");
+    $replace = array("&Auml;", "&Ouml;", "&Uuml;", "&auml;", "&ouml;", "&uuml;", "&szlig;", "&euro;","&apostroph ;","&quot;");
     return str_replace($search, $replace, $txt);
 }
 
 /**
- * Funktion um eine Variable prüfung in einem Array durchzuführen
+ * Funktion um eine Variable prÃ¼fung in einem Array durchzufÃ¼hren
  * Added by DZCP-Extended Edition
  *
  * @return boolean
@@ -775,7 +648,35 @@ function array_var_exists($var,$search)
 { foreach($search as $key => $var_) { if($var_==$var) return true; } return false; }
 
 /**
- * Funktion um Passwörter in einen Hash umzurechnen
+ * Sortiert ein Array anhand eines Keys
+ *
+ * @param array $records
+ * @param strin $field
+ * @param boolean $reverse
+ * @return array
+ */
+function record_sort($named_recs, $order_by, $rev=false, $flags=0)
+{
+    if(is_array($named_recs) && !empty($order_by))
+    {
+        $named_hash = array();
+        foreach($named_recs as $key=>$fields)
+            $named_hash["$key"] = $fields[$order_by];
+
+        $rev ? arsort($named_hash,$flags=0) : asort($named_hash, $flags=0);
+
+        $sorted_records = array();
+        foreach($named_hash as $key=>$val)
+            $sorted_records["$key"]= $named_recs[$key];
+
+        return $sorted_records;
+    }
+
+    return $named_recs;
+}
+
+/**
+ * Funktion um PasswÃ¶rter in einen Hash umzurechnen
  * Added by DZCP-Extended Edition
  *
  * Info Metode:
@@ -831,7 +732,7 @@ function sec_format($seconds)
 }
 
 /**
- * Funktion um Datengrößen zu ermitteln.
+ * Funktion um DatengrÃ¶ÃŸen zu ermitteln.
  * Added by DZCP-Extended Edition
  *
  * @return int
@@ -841,15 +742,15 @@ function filesize_extended($file=null)
     if(links_check_url($file))
         return remote_filesize($file);
 
-    if(allow_os_shell) // Standardmäßig deaktiviert, sehe config.php
+    if(allow_os_shell) // StandardmÃ¤ÃŸig deaktiviert, sehe config.php
         return os_filesize($file);
 
     return @filesize($file);
 }
 
 /**
- * Funktion um Datengrößen > 2 GB anzeigen zu können * OS-Shell Zugriff nötig und ein 64 Bit System
- * Standardmäßig deaktiviert, sehe config.php
+ * Funktion um DatengrÃ¶ÃŸen > 2 GB anzeigen zu kÃ¶nnen * OS-Shell Zugriff nÃ¶tig und ein 64 Bit System
+ * StandardmÃ¤ÃŸig deaktiviert, sehe config.php
  * Added by DZCP-Extended Edition
  *
  * @return int
@@ -868,7 +769,7 @@ function os_filesize($file=null)
 }
 
 /**
- * Funktion um Datengrößen auf Remote Servern zu ermitteln.
+ * Funktion um DatengrÃ¶ÃŸen auf Remote Servern zu ermitteln.
  * Added by DZCP-Extended Edition
  *
  * @return int
@@ -926,7 +827,7 @@ function remote_filesize($url)
 
 
 /**
- * Funktion um einen Binärstring zu Dekodieren.
+ * Funktion um einen BinÃ¤rstring zu Dekodieren.
  * Added by DZCP-Extended Edition
  *
  * @return binary/string
@@ -951,17 +852,6 @@ function hextobin($hexstr)
 
     return $sbin;
 }
-
-/**
- * Funktion um fehlende Klassen zu laden
- * Added by DZCP-Extended Edition
- */
-spl_autoload_register(function ($class)
-{
-    if(file_exists(basePath. "/inc/additional-kernel/".$class.".php"))
-    { include_once(basePath. "/inc/additional-kernel/".$class.".php"); }
-    else { trigger_error("Could not load class '".$class."' from file 'inc/additional-kernel/".$class.".php'<p>Add '".$class.".php' with 'class ".$class."' to 'inc/additional-kernel/'<p>", E_USER_WARNING); }
-});
 
 #############################################
 #################### XML ####################
@@ -1013,7 +903,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * XML Werte ändern
+    * XML Werte Ã¤ndern
     *
     * @return boolean
      */
@@ -1030,7 +920,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen neuen XML Knoten hinzufügen
+    * Einen neuen XML Knoten hinzufÃ¼gen
     *
     * @return boolean
     */
@@ -1057,7 +947,7 @@ class xml // Class by DZCP-Extended Edition
     {
         if(!array_key_exists($XMLTag,self::$xmlobj))
         {
-            trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geöffnet.');
+            trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geÃ¶ffnet.');
             return false;
         }
 
@@ -1067,7 +957,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen XML Knoten löschen
+    * Einen XML Knoten lÃ¶schen
     *
     * @return boolean
     */
@@ -1084,7 +974,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen XML Knoten Attribut löschen
+    * Einen XML Knoten Attribut lÃ¶schen
     *
     * @return boolean
     */
@@ -1142,4 +1032,22 @@ class convert // Class by DZCP-Extended Edition
     public static final function ToHTML($input)
     { return htmlentities($input, ENT_COMPAT | ENT_HTML5, _charset); }
 }
-?>
+
+/**
+ * Funktion um zusÃ¤tzliche Klassen zu laden
+ * Added by DZCP-Extended Edition
+ */
+$additional_kernel = get_files(basePath.'/inc/additional-kernel/',false,true,array('php'),"#^class.(.*?).inc#");
+if(count($additional_kernel) >= 1 && !empty($additional_kernel))
+{ foreach($additional_kernel as $function) { if(file_exists(basePath.'/inc/additional-kernel/'.$function)) { include_once(basePath.'/inc/additional-kernel/'.$function); } } }
+unset($additional_kernel,$function);
+
+/**
+ * Funktion um fehlende Klassen zu laden
+ * Added by DZCP-Extended Edition
+ */
+spl_autoload_register(function ($class)
+{
+    if(file_exists(basePath. "/inc/additional-kernel/".$class.".php"))
+    { include_once(basePath. "/inc/additional-kernel/".$class.".php"); }
+});

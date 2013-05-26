@@ -35,9 +35,9 @@ else
                     $index = error(_error_buddy_already_in, 1);
                 else
                 {
-                    db("INSERT INTO ".$db['buddys']." SET `user` = '".convert::ToInt($userid)."', `buddy` = '".convert::ToInt($_POST['users'])."'");
+                    db("INSERT INTO ".dba::get('buddys')." SET `user` = '".convert::ToInt($userid)."', `buddy` = '".convert::ToInt($_POST['users'])."'");
                     $msg = show(_buddy_added_msg, array("user" => autor(convert::ToInt($userid))));
-                    db("INSERT INTO ".$db['msg']."
+                    db("INSERT INTO ".dba::get('msg')."
                         SET `datum`     = '".time()."',
                             `von`       = '0',
                             `an`        = '".convert::ToInt($_POST['users'])."',
@@ -58,9 +58,9 @@ else
                     $index = error(_error_buddy_already_in, 1);
                 else
                 {
-                    db("INSERT INTO ".$db['buddys']." SET `user`   = '".convert::ToInt($userid)."', `buddy`  = '".convert::ToInt($user)."'");
+                    db("INSERT INTO ".dba::get('buddys')." SET `user`   = '".convert::ToInt($userid)."', `buddy`  = '".convert::ToInt($user)."'");
                     $msg = show(_buddy_added_msg, array("user" => addslashes(autor(convert::ToInt($userid)))));
-                    db("INSERT INTO ".$db['msg']."
+                    db("INSERT INTO ".dba::get('msg')."
                         SET `datum`     = '".time()."',
                             `von`       = '0',
                             `an`        = '".convert::ToInt($user)."',
@@ -71,9 +71,9 @@ else
                 }
             break;
             case 'delete':
-                db("DELETE FROM ".$db['buddys']." WHERE buddy = ".convert::ToInt($_GET['id'])." AND user = '".convert::ToInt($userid)."'");
+                db("DELETE FROM ".dba::get('buddys')." WHERE buddy = ".convert::ToInt($_GET['id'])." AND user = '".convert::ToInt($userid)."'");
                 $msg = show(_buddy_del_msg, array("user" => addslashes(autor(convert::ToInt($userid)))));
-                db("INSERT INTO ".$db['msg']."
+                db("INSERT INTO ".dba::get('msg')."
                       SET `datum`     = '".time()."',
                           `von`       = '0',
                           `an`        = '".convert::ToInt($_GET['id'])."',
@@ -83,7 +83,7 @@ else
                 $index = info(_buddys_delete_successful, "../user/?action=buddys");
             break;
             default: //default page
-                $qry = db("SELECT * FROM ".$db['buddys']." WHERE user = ".convert::ToInt($userid));
+                $qry = db("SELECT * FROM ".dba::get('buddys')." WHERE user = ".convert::ToInt($userid));
                 $too = ''; $color = 1; $buddys = '';
 
                 if(_rows($qry) >= 1)
@@ -92,7 +92,7 @@ else
                     {
                         $pn = show(_pn_write, array("id" => $get['buddy'], "nick" => data($get['buddy'], "nick")));
                         $delete = show(_buddys_delete, array("id" => $get['buddy']));
-                        $yesnocheck = db("SELECT * FROM ".$db['buddys']." where user = '".$get['buddy']."' AND buddy = '".convert::ToInt($userid)."'");
+                        $yesnocheck = db("SELECT * FROM ".dba::get('buddys')." where user = '".$get['buddy']."' AND buddy = '".convert::ToInt($userid)."'");
                         $too = (_rows($yesnocheck) ? _buddys_yesicon : _buddys_noicon);
                         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
                         $buddys .= show($dir."/buddys_show", array(
@@ -105,7 +105,7 @@ else
                     } //while end
                 }
 
-                $qry = db("SELECT id,nick FROM ".$db['users']." WHERE level != 0 ORDER BY nick"); $users = '';
+                $qry = db("SELECT id,nick FROM ".dba::get('users')." WHERE level != 0 ORDER BY nick"); $users = '';
                 if(_rows($qry) >= 1)
                 {
                     while($get = _fetch($qry))
@@ -120,4 +120,3 @@ else
         }
     }
 }
-?>

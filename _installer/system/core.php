@@ -5,9 +5,13 @@ $host = str_replace('www.','',$_SERVER['HTTP_HOST']);
 if((isset($_GET['action']) ? $_GET['action'] : '') == 'mysql_setup_tb')
     $_SESSION['db_install'] = true;
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once(basePath."/inc/debugger.php");
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/config.php');
+require_once(basePath.'/inc/database.php');
 require_once(basePath.'/inc/kernel.php');
 require_once(basePath.'/_installer/system/global.php');
 require_once(basePath.'/_installer/system/emlv.php');
@@ -368,4 +372,15 @@ function up($txt, $bbcode=false, $charset=_charset)
     $txt = spChars($txt);
     return trim($txt);
 }
-?>
+
+//-> EMail wird auf korrekten Syntax überprüft
+function check_email($email)
+{
+    return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email);
+}
+
+//-> Ist ein Zend Server
+function is_zs()
+{
+    return strripos(phpversion(), 'ZS') === false ? false : true;
+}

@@ -21,7 +21,7 @@ else
     ################
     $where = _site_ulist;
     $maxuserlist = config('m_userlist');
-    $entrys = cnt($db['users']," WHERE level != 0");
+    $entrys = cnt(dba::get('users')," WHERE level != 0");
     $search = (isset($_GET['search']) && !empty($_GET['search']) ? $_GET['search'] : _nick);
 
     switch(isset($_GET['show']) ? $_GET['show'] : '')
@@ -37,7 +37,7 @@ else
         default: $qry = " WHERE level != '0' ORDER BY level DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
     }
 
-    if(!_rows(($qry = db("SELECT id,nick,level,email,hp,xfire,bday,sex,icq,status,position,regdatum FROM ".$db['users'].$qry))))
+    if(!_rows(($qry = db("SELECT id,nick,level,email,hp,xfire,bday,sex,icq,status,position,regdatum FROM ".dba::get('users').$qry))))
         $userliste = show(_no_entrys_yet_all, array("colspan" => "12"));
     else
     {
@@ -88,4 +88,3 @@ else
     $show_entrys = show(_userlist_counts, array("cnt_full" => $entrys." ".( $entrys >= 2 ? _users : _user ), "cnt" => _rows($qry)));
     $index = show($dir."/userliste", array("show_entrys" => $show_entrys, "edel" => $edel, "search" => $search, "nav" => $seiten, "show" => $userliste)); //Index Out
 }
-?>

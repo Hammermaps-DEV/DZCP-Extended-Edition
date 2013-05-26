@@ -11,7 +11,7 @@ if(_adminMenu != 'true')
       $show = error(_error_wrong_permissions, 1);
     } else {
       $qry = db("SELECT id,ip,port,clanname,clanurl,pwd,checked
-                 FROM ".$db['serverliste']."");
+                 FROM ".dba::get('serverliste')."");
 
       while ($get = _fetch($qry))
       {
@@ -53,7 +53,7 @@ if(_adminMenu != 'true')
     }
     if($_GET['do'] == "accept")
     {
-      $qry = db("UPDATE ".$db['serverliste']."
+      $qry = db("UPDATE ".dba::get('serverliste')."
                  SET `checked` = '".convert::ToInt($_POST['checked'])."'
                  WHERE id = '".convert::ToInt($_POST['id'])."'");
 
@@ -61,7 +61,7 @@ if(_adminMenu != 'true')
       else $show = info(_error_server_dont_accept, "?admin=serverlist");
 
     } elseif($_GET['do'] == "delete") {
-      $qry = db("DELETE FROM ".$db['serverliste']."
+      $qry = db("DELETE FROM ".dba::get('serverliste')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");
 
       $show = info(_slist_server_deleted, "?admin=serverlist");

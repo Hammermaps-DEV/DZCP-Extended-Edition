@@ -17,6 +17,7 @@ include("../inc/buffer.php");
 include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/bbcode.php");
+include(basePath."/downloads/helper.php");
 
 ##############
 ## SETTINGS ##
@@ -28,9 +29,6 @@ $index = "";
 ##############
 ## SECTIONS ##
 ##############
-
-// Helper
-include(basePath."/downloads/helper.php");
 
 #########################
 ## Action Loader START ##

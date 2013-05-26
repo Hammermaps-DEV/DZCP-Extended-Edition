@@ -27,14 +27,14 @@ if(_adminMenu != 'true')
           elseif($_POST['beschreibung'])  $show = error(_admin_error_glossar_desc);
           elseif(preg_match("#[[:punct:]]#is",$_POST['link'])) $show = error(_glossar_specialchar);
         } else {
-          $ins = db("INSERT INTO ".$db['glossar']."
+          $ins = db("INSERT INTO ".dba::get('glossar')."
                      SET `word`    = '".up($_POST['link'])."',
                          `glossar` = '".up($_POST['beschreibung'],1)."'");
 
           $show = info(_admin_glossar_added,'?admin=glossar');
         }
       } elseif($_GET['do'] == 'edit') {
-        $qry = db("SELECT * FROM ".$db['glossar']."
+        $qry = db("SELECT * FROM ".dba::get('glossar')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
@@ -53,7 +53,7 @@ if(_adminMenu != 'true')
           elseif($_POST['beschreibung'])  $show = error(_admin_error_glossar_desc);
           elseif(preg_match("#[[:punct:]]#is",$_POST['link'])) $show = error(_glossar_specialchar);
         } else {
-          $ins = db("UPDATE ".$db['glossar']."
+          $ins = db("UPDATE ".dba::get('glossar')."
                      SET `word`    = '".up($_POST['link'])."',
                          `glossar` = '".up($_POST['beschreibung'],1)."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -61,7 +61,7 @@ if(_adminMenu != 'true')
           $show = info(_admin_glossar_edited,'?admin=glossar');
         }
       } elseif($_GET['do'] == 'delete') {
-        $del = db("DELETE FROM ".$db['glossar']."
+        $del = db("DELETE FROM ".dba::get('glossar')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_admin_glossar_deleted,'?admin=glossar');
@@ -69,9 +69,9 @@ if(_adminMenu != 'true')
         $maxglossar = 20;
         if(isset($_GET['page']))  $page = $_GET['page'];
         else $page = 1;
-        $entrys = cnt($db['glossar']);
+        $entrys = cnt(dba::get('glossar'));
 
-        $qry = db("SELECT * FROM ".$db['glossar']."
+        $qry = db("SELECT * FROM ".dba::get('glossar')."
                    ORDER BY word
                    LIMIT ".($page - 1)*$maxglossar.",".$maxglossar."");
         while($get = _fetch($qry))

@@ -20,7 +20,6 @@ else
     ## User Erase ##
     ################
     $_SESSION['lastvisit'] = data(convert::ToInt($userid), "time");
-    db("UPDATE ".$db['userstats']." SET `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."' WHERE user = '".convert::ToInt($userid)."'");
+    db("UPDATE ".dba::get('userstats')." SET `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."' WHERE user = '".convert::ToInt($userid)."'");
     header("Location: ?action=userlobby");
 }
-?>

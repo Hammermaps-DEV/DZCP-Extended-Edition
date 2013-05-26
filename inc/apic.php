@@ -11,12 +11,7 @@ class API_CORE
 {
     public static $addon_index = array();
     public static $MobileDevice = false;
-    private static $UserAgent = '';
-    private static $MobileAgent = array('sony','symbian','nokia','samsung','mobile','windows ce','epoc','opera mini','opera mobi',
-            'mini','nitro','j2me','midp-','cldc-','netfront','mot','up.browser','up.link','audiovox',
-            'blackberry','ericsson,','panasonic','philips','sanyo','sharp','sie-',
-            'portalmmm','blazer','avantgo','danger','palm','series60','palmsource','pocketpc',
-            'smartphone','rover','ipaq','au-mic,','alcatel','ericy','vodafone','wap1.','wap2.','iphone','android');
+    public static $MobileClass = '';
 
     public static function init()
     {
@@ -24,7 +19,7 @@ class API_CORE
          *  Addons auflisten und Index zusammenstellen
          */
         DebugConsole::insert_initialize('API_CORE::init()', 'DZCP API-Core'); //Debug Log
-        global $language,$tmpdir,$ajaxThumbgen;
+        global $tmpdir,$ajaxThumbgen;
         if(modapi_enabled && !$ajaxThumbgen)
         {
             $addons = get_files(basePath.'/inc/additional-addons/',true);
@@ -34,7 +29,7 @@ class API_CORE
                 {
                     $additional_functions = get_files(basePath.'/inc/additional-addons/'.$addon.'/functions/',false,true,array('php'));
                     $additional_languages_global = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/',false,true,array('php'));
-                    $additional_languages = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/'.$language.'/',false,true,array('php'));
+                    $additional_languages = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/'.language::get_language().'/',false,true,array('php'));
                     $additional_tpl = get_files(basePath.'/inc/additional-addons/'.$addon.'/_templates_/',true); $addon_infos = array();
                     $additional_pages = get_files(basePath.'/inc/additional-addons/'.$addon.'/',true,false,array(),false,array('_templates_','functions','languages'));
                     $addon_infos = array();
@@ -87,8 +82,8 @@ class API_CORE
         /**
          *  Mobilgeräte erkennen
          */
-        self::$UserAgent = strtolower($_SERVER['HTTP_USER_AGENT']);
-        self::detectMobileAgent();
+        self::$MobileClass = new Mobile_Detect();
+        self::$MobileDevice = self::$MobileClass->isMobile();
     }
 
     /**
@@ -139,7 +134,7 @@ class API_CORE
     */
     public static function load_additional_language()
     {
-        global $language,$ajaxThumbgen;
+        global $ajaxThumbgen;
         $return = false;
         if(allow_additional && !$ajaxThumbgen)
         {
@@ -147,10 +142,10 @@ class API_CORE
             if(count($additional_languages_global) >= 1 && !empty($additional_languages_global))
             { foreach($additional_languages_global as $lang_g) { if(file_exists(basePath.'/inc/additional-languages/'.$lang_g)) $return[] = basePath.'/inc/additional-languages/'.$lang_g; } }
 
-            $additional_languages = get_files(basePath.'/inc/additional-languages/'.$language.'/',false,true,array('php'));
+            $additional_languages = get_files(basePath.'/inc/additional-languages/'.language::get_language().'/',false,true,array('php'));
             if(count($additional_languages) >= 1 && !empty($additional_languages))
-            { foreach($additional_languages as $lang) { if(file_exists(basePath.'/inc/additional-languages/'.$language.'/'.$lang))
-                $return[] = basePath.'/inc/additional-languages/'.$language.'/'.$lang; } }
+            { foreach($additional_languages as $lang) { if(file_exists(basePath.'/inc/additional-languages/'.language::get_language().'/'.$lang))
+                $return[] = basePath.'/inc/additional-languages/'.language::get_language().'/'.$lang; } }
             unset($additional_languages,$additional_languages_global);
         }
 
@@ -180,8 +175,8 @@ class API_CORE
                         {
                             foreach($languages as $lang)
                             {
-                                if(file_exists($dir.'languages/'.$language.'/'.$lang))
-                                    $return[] = $dir.'languages/'.$language.'/'.$lang;
+                                if(file_exists($dir.'languages/'.language::get_language().'/'.$lang))
+                                    $return[] = $dir.'languages/'.language::get_language().'/'.$lang;
                             }
                             unset($lang,$languages);
                         }
@@ -281,43 +276,4 @@ class API_CORE
 
         return false;
     }
-
-    /**
-     *  Mobilgeräte erkennen
-     *
-     *  @return boolean
-     */
-    private static function detectMobileAgent()
-    {
-        if (isset($_SERVER['HTTP_X_WAP_PROFILE']) || isset($_SERVER['HTTP_PROFILE']))
-            self::$MobileDevice = true;
-
-        if (((strpos($_SERVER['HTTP_ACCEPT'], 'text/vnd.wap.wml') > 0) || (strpos($_SERVER['HTTP_ACCEPT'], 'application/vnd.wap.xhtml+xml') > 0)) && !self::$MobileDevice)
-            self::$MobileDevice = true;
-
-        if(!self::$MobileDevice)
-        {
-            foreach(self::$MobileAgent as $key => $value)
-            {
-                if (strpos(self::$UserAgent,$value) !== false)
-                {
-                    self::$MobileDevice = true;
-                    break;
-                }
-            }
-        }
-
-        if (!self::$MobileDevice)
-        {
-            if (strpos($_SERVER['HTTP_ACCEPT'],'application/vnd.wap.xhtml+xml') !== false)
-                self::$MobileDevice = true;
-        }
-
-        if (self::$MobileDevice && !headers_sent())
-        {
-            header('Cache-Control: no-transform');
-            header('Vary: User-Agent, Accept');
-        }
-    }
 }
-?>
