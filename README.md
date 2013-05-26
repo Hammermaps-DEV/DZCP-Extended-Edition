@@ -126,64 +126,63 @@ Das Gästebuch wurde überarbeitet, nun können die User Kommentare gelöscht od
 In der Gallery ist nun Seitenblättern möglich, die Gallery kann in mehrere Seiten eingeteilt werden.
 
 Die Anzeige für TS3 und die Gameserver von DZCP wurde gegen GameQ ausgetauscht und grundliegend überarbeitet.
-Es können damit nun um die 60 Spiele Live angezeit werden.
+Es können damit nun um die 60 Spiele Live angezeit werden:
 
-Alien Swarm
-Half Life 2: Deathmatch
-Sven Co-op
-Garry's Mod
-Counter-Strike: Global Offensive
-Counter-Strike 1.6
-Counter-Strike: Condition Zero
-Counter-Strike: Source
-Day of Defeat
-Day of Defeat: Source
-Half Life
-Half Life 2: Insurgency
-Left 4 Dead
-Left 4 Dead 2
-Natural Selection
-Natural Selection 2
-Team Fortress Classic
-Team Fortress 2
-Zombie Master
-Zombie Panic Source
-Homefront
-America's Army 3
-Unreal Tournament 3
-Age of Chivalry
-Armed Assault 2
-Armed Assault 3
-Battlefield 1942
-Battlefield 2
-Battlefield 2142
-Battlefield 3
-Battlefield Bad Company 2
-Battlefield Vietnam
-Brink
-Call of Duty: Modern Warfare 3
-Call of Duty
-Call of Duty 2
-Call of Duty 4
-CoD:United Offensive
-Call of Duty: World at War
-Unreal Tournament
-Crysis
-Crysis 2
-Crysis Wars
-DayZ
-Doom 3
-Wolfenstein Enemy Territory
-Enemy Territory: Quake Wars
-F.E.A.R.
-Minecraft
-Medal of Honor: Allied Assault
-Medal of Honor: Spearhead
-Medal of Honor Warfighter
-Quake 2
-Quake 3
-Quake 4
-Red Orchestra: Ostfront 41-45
+Alien Swarm, Half Life 2: Deathmatch
+Sven Co-op, 
+Garry's Mod, 
+Counter-Strike: Global Offensive, 
+Counter-Strike 1.6, 
+Counter-Strike: Condition Zero, 
+Counter-Strike: Source, 
+Day of Defeat, 
+Day of Defeat: Source, 
+Half Life, 
+Half Life 2: Insurgency, 
+Left 4 Dead, 
+Left 4 Dead 2, 
+Natural Selection, 
+Natural Selection 2, 
+Team Fortress Classic, 
+Team Fortress 2, 
+Zombie Master, 
+Zombie Panic Source, 
+Homefront, 
+America's Army 3, 
+Unreal Tournament 3, 
+Age of Chivalry, 
+Armed Assault 2, 
+Armed Assault 3, 
+Battlefield 1942, 
+Battlefield 2, 
+Battlefield 2142, 
+Battlefield 3, 
+Battlefield Bad Company 2, 
+Battlefield Vietnam, 
+Brink, 
+Call of Duty: Modern Warfare 3, 
+Call of Duty, 
+Call of Duty 2, 
+Call of Duty 4, 
+CoD:United Offensive, 
+Call of Duty: World at War, 
+Unreal Tournament, 
+Crysis, 
+Crysis 2, 
+Crysis Wars, 
+DayZ, 
+Doom 3, 
+Wolfenstein Enemy Territory, 
+Enemy Territory: Quake Wars, 
+F.E.A.R., 
+Minecraft, 
+Medal of Honor: Allied Assault, 
+Medal of Honor: Spearhead, 
+Medal of Honor Warfighter, 
+Quake 2, 
+Quake 3, 
+Quake 4, 
+Red Orchestra: Ostfront 41-45, 
 Red Orchestra 2
 
 Der Teamspeak 3 Viewer wurde auch gegen GameQ ersetzt und ins DZCP intigriert.
