@@ -142,8 +142,6 @@ class GameQ_Protocols_Mohwf extends GameQ_Protocols_Bf3
     */
     protected function process_dzcp_runtime()
     {
-        print_r($this->server_data_stream);
-
         $result = new GameQ_Result();
         if(!$this->server_data_stream['gq_online'])
         {

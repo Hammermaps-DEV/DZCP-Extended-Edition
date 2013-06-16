@@ -58,8 +58,8 @@ if(_adminMenu != 'true')
           } else {
         if($_POST['to'] == "reg")
         {
-                  $message = show(settings('eml_nletter'), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = settings('eml_nletter_subj');
+                  $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
+                  $subject = re(settings('eml_nletter_subj'));
 
           $qry = db("SELECT email FROM ".dba::get('users')."
                      WHERE nletter = 1");
@@ -75,8 +75,8 @@ if(_adminMenu != 'true')
               $show = info(_msg_reg_answer_done, "?admin=nletter");
 
         } elseif($_POST['to'] == "member") {
-          $message = show(settings('eml_nletter'), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = settings('eml_nletter_subj');
+          $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
+                  $subject = re(settings('eml_nletter_subj'));
 
           $qry = db("SELECT email FROM ".dba::get('users')."
                      WHERE level >= 2");
@@ -91,8 +91,8 @@ if(_adminMenu != 'true')
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } elseif($_POST['to'] == "leader") {
-          $message = show(settings('eml_nletter'), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = settings('eml_nletter_subj');
+          $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
+                  $subject = re(settings('eml_nletter_subj'));
 
           $qry = db("SELECT s2.email	FROM ".dba::get('squaduser')." AS s1
                      LEFT JOIN ".dba::get('users')." AS s2 ON s2.id=s1.user
@@ -111,8 +111,8 @@ if(_adminMenu != 'true')
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } else {
-          $message = show(settings('eml_nletter'), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = settings('eml_nletter_subj');
+          $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
+                  $subject = re(settings('eml_nletter_subj'));
 
           $qry = db("SELECT s2.email FROM ".dba::get('squaduser')." AS s1
                      LEFT JOIN ".dba::get('users')." AS s2
@@ -159,4 +159,3 @@ if(_adminMenu != 'true')
                                           "error" => "",
                                           "posteintrag" => ""));
       }
-?>

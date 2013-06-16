@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if(!permission("edittactics"))
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         $wysiwyg = '_word';
@@ -38,7 +38,7 @@ else
                 break;
             case 'add':
                 if(!isset($_POST['map']) || empty($_POST['map']))
-                    $index = error(_error_taktik_empty_map, 1);
+                    $index = error(_error_taktik_empty_map);
                 else
                 {
                     db("INSERT INTO ".dba::get('taktik')." SET
@@ -86,7 +86,7 @@ else
                 if(isset($_POST['id']) && !empty($_POST['id']))
                 {
                     if(!isset($_POST['map']) || empty($_POST['map']))
-                        $index = error(_error_taktik_empty_map, 1);
+                        $index = error(_error_taktik_empty_map);
                     else
                     {
                         db("UPDATE ".dba::get('taktik')." SET
@@ -104,4 +104,3 @@ else
         }
     }
 }
-?>

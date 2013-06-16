@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 /**
  * Pagination Class
  * @author Logan Cai  (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -586,4 +585,3 @@ class pagination
 	}
 
 }
-?>

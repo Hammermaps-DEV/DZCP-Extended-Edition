@@ -6,8 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._artikel;
-    if(permission("artikel"))
-    {
       $wysiwyg = '_word';
       if($_GET['do'] == "add")
       {
@@ -230,7 +228,3 @@ if(_adminMenu != 'true')
                                                "delete" => _deleteicon_blank,
                                                "add" => _artikel_add));
       }
-    } else {
-      $show = error(_error_wrong_permissions, 1);
-    }
-?>

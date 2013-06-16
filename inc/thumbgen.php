@@ -88,32 +88,36 @@ function thumbgen($filename,$width,$height)
             {
                 case 1: ## GIF ##
                     header("Content-Type: image/gif");
-                    $altesBild = imagecreatefromgif(basePath.'/inc/images/'.$filename);
-                    imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
+                    @imagecolortransparent($neuesBild, @imagecolorallocate($neuesBild, 0, 0, 0));
+                    $altesBild = @imagecreatefromgif(basePath.'/inc/images/'.$filename);
+                    @imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
 
                     ob_start();
-                    imagegif($neuesBild);
+                    @imagegif($neuesBild);
                     $bin = ob_get_contents();
                     ob_end_clean();
                 break;
                 default:
                 case 2: ## JPEG ##
                     header("Content-Type: image/jpeg");
-                    $altesBild = imagecreatefromjpeg(basePath.'/inc/images/'.$filename);
-                    imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
+                    $altesBild = @imagecreatefromjpeg(basePath.'/inc/images/'.$filename);
+                    @imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
 
                     ob_start();
-                    imagejpeg($neuesBild, null, 100);
+                    @imagejpeg($neuesBild, null, 100);
                     $bin = ob_get_contents();
                     ob_end_clean();
                 break;
                 case 3: ## PNG ##
                     header("Content-Type: image/png");
-                    $altesBild = imagecreatefrompng(basePath.'/inc/images/'.$filename);
-                    imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
+                    @imagecolortransparent($neuesBild, @imagecolorallocate($neuesBild, 0, 0, 0));
+                    @imagealphablending($neuesBild, false);
+                    @imagesavealpha($neuesBild, true);
+                    $altesBild = @imagecreatefrompng(basePath.'/inc/images/'.$filename);
+                    @imagecopyresampled($neuesBild, $altesBild,0,0,0,0, $neueBreite, $neueHoehe, $breite, $hoehe);
 
                     ob_start();
-                    imagepng($neuesBild);
+                    @imagepng($neuesBild);
                     $bin = ob_get_contents();
                     ob_end_clean();
                 break;

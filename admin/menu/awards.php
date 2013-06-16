@@ -8,7 +8,7 @@ if(_adminMenu != 'true')
     $where = $where.': '._awards_head;
     if(!permission("awards"))
     {
-        $show = error(_error_wrong_permissions, 1);
+        $show = error(_error_wrong_permissions);
     } else {
         if($_GET['do'] == "new")
       {
@@ -84,9 +84,9 @@ if(_adminMenu != 'true')
         {
               if(empty($_POST['event']))
               {
-                  $show = error(_awards_empty_event, 1);
+                  $show = error(_awards_empty_event);
               } elseif(empty($_POST['url'])) {
-                  $show = error(_awards_empty_url, 1);
+                  $show = error(_awards_empty_url);
               }
         } else {
               if(empty($_POST['place'])) $place = "-";
@@ -113,9 +113,9 @@ if(_adminMenu != 'true')
         {
               if(empty($_POST['event']))
               {
-                  $index = error(_awards_empty_event, 1);
+                  $index = error(_awards_empty_event);
               } elseif(empty($_POST['url'])) {
-                  $index = error(_awards_empty_url, 1);
+                  $index = error(_awards_empty_url);
               }
         } else {
               if(empty($_POST['place'])) $place = "-";
@@ -173,4 +173,3 @@ if(_adminMenu != 'true')
                                            ));
       }
     }
-?>

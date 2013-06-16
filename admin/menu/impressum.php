@@ -27,4 +27,3 @@ if(isset($_GET['do']) && $_GET['do'] == "update")
     db("UPDATE ".dba::get('settings')." SET `i_autor` = '".up($_POST['seitenautor'], 1)."', `i_domain` = '".up($_POST['domain'])."' WHERE id = 1");
     $show = info(_config_set, "?admin=impressum");
 }
-?>

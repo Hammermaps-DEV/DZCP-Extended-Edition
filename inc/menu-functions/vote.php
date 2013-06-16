@@ -13,18 +13,15 @@ function vote($ajax = false)
 
         if($stimmen != 0)
         {
-          if(ipcheck("vid_".$get['id']) /*|| cookie::get('vid_'.$get['id']) != false*/ || $get['closed'] == 1)
+          if(ipcheck("vid_".$get['id']) || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1)
           {
             $percent = round($getv['stimmen']/$stimmen*100,1);
             $rawpercent = round($getv['stimmen']/$stimmen*100,0);
-
-            $balken = show(_votes_balken, array("width" => $rawpercent));
-
             $votebutton = "";
             $results .= show("menu/vote_results", array("answer" => re($getv['sel']),
                                                         "percent" => $percent,
                                                         "stimmen" => $getv['stimmen'],
-                                                        "balken" => $balken));
+                                                        "width" => $rawpercent));
           } else {
             $votebutton = '<input id="contentSubmitVote" type="submit" value="'._button_value_vote.'" class="voteSubmit" />';
             $results .= show("menu/vote_vote", array("id" => $getv['id'],

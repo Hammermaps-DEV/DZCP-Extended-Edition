@@ -96,5 +96,3 @@
         echo "error:'" . $error . "',\n";
         echo  "path:'" . $path . "'";
         echo "}";
-
-?>

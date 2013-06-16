@@ -75,7 +75,7 @@ class cache_file extends Cache
      *
      * @return boolean
      */
-    public static function file_set_binary($key, $binary, $original_file=false, $ttl = 3600)
+    public static function file_set_binary($key, $binary, $original_file=false, $ttl = 0)
     {
         global $prev;
         $hash = md5($key.$prev);

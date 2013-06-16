@@ -48,4 +48,3 @@ else
             "eintragen" => _slist_add,
             "hlswip" => _gt_addip));
 }
-?>

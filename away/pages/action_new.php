@@ -19,7 +19,7 @@ else
 $where = $where.' - '._away_new;
   if($chkMe == "unlogged" || $chkMe < "2")
   {
-    $index = error(_error_wrong_permissions, 1);
+    $index = error(_error_wrong_permissions);
   } else {
 
      $date1 = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
@@ -94,4 +94,3 @@ $where = $where.' - '._away_new;
              }
   }
 }
-?>

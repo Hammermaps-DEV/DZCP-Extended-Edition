@@ -6,12 +6,7 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._admin_pos;
-    if($chkMe != 4)
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
-      $qry = db("SELECT * FROM ".dba::get('pos')."
-                 ORDER BY pid");
+      $qry = db("SELECT * FROM ".dba::get('pos')." ORDER BY pid");
       while($get = _fetch($qry))
       {
         $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -68,7 +63,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editpos") {
         if(empty($_POST['kat']))
         {
-          $show = error(_pos_empty_kat,1);
+          $show = error(_pos_empty_kat);
         } else {
           if($_POST['pos'] == "lazy")
               {
@@ -140,7 +135,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['kat']))
         {
-          $show = error(_pos_empty_kat,1);
+          $show = error(_pos_empty_kat);
         } else {
           if($_POST['pos'] == "1" || "2") $sign = ">= ";
           else $sign = "> ";
@@ -171,5 +166,3 @@ if(_adminMenu != 'true')
           $show = info(_pos_admin_added, "?admin=positions");
         }
       }
-    }
-?>

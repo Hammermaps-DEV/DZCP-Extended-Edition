@@ -20,7 +20,7 @@ else
     {
         if(!permission("partners"))
         {
-            $index = error(_error_wrong_permissions, 1);
+            $index = error(_error_wrong_permissions);
         } else {
             $infos = show(_upload_partners_info, array("userpicsize" => config('upicsize')));
 
@@ -41,7 +41,7 @@ else
 
                 if(!$tmpname)
                 {
-                    $index = error(_upload_no_data, 1);
+                    $index = error(_upload_no_data);
                 } else {
                     copy($tmpname, basePath."/banner/partners/".$_FILES['file']['name']."");
                     @unlink($_FILES['file']['tmp_name']);
@@ -51,7 +51,6 @@ else
             }
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

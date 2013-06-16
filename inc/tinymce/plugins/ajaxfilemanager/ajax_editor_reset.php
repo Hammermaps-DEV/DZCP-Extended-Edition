@@ -124,4 +124,3 @@
     echo $info;
     echo ",history:" . sizeof($_SESSION[$_POST['path']]) . "\n";
     echo "}";
-?>

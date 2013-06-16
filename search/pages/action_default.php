@@ -502,4 +502,3 @@ else
                                                                     "full" => _search_type_full,
                                                                             "intitle" => _search_type_title));
 }
-?>

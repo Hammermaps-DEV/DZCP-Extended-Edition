@@ -8,13 +8,17 @@
 
 /**
 * Eine Liste der Dateien oder Verzeichnisse zusammenstellen, die sich im angegebenen Ordner befinden.
-* Updated for DZCP-Extended Edition
 *
 * @return array
 */
 function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array(),$preg_match=false,$blacklist=array())
 {
     $files = array();
+    $hash = md5($dir.$only_dir.$only_files.count($file_ext).$preg_match.count($blacklist));
+
+    if(!RTBuffer::check($hash))
+        return RTBuffer::get($hash);
+
     if($handle = @opendir($dir))
     {
         if($only_dir) ## Ordner ##
@@ -81,6 +85,7 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
         if(!count($files))
             return false;
 
+        RTBuffer::set($hash,$files);
         return $files;
     }
     else
@@ -89,7 +94,6 @@ function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array()
 
 /**
 * Erkennen welche PHP Version ausgeführt wird.
-* Added by DZCP-Extended Edition
 *
 * @return boolean
 */
@@ -200,7 +204,6 @@ function fileExists($url,$timeout=2)
 
 /**
  * Funktion um notige Erweiterungen zu prufen
- * Added by DZCP-Extended Edition
  *
  * @return boolean
  **/
@@ -223,7 +226,6 @@ function fsockopen_support()
 
 /**
  * Pingt einen Server Port
- * Added by DZCP-Extended Edition
  *
  * @return boolean
  **/
@@ -245,7 +247,6 @@ function ping_port($address='',$port=0000,$timeout=2,$udp=false)
 
 /**
  * Wandelt eine DNS Adresse in eine IPv4 um
- * Added by DZCP-Extended Edition
  *
  * @return String / IPv4
  */
@@ -265,7 +266,6 @@ function DNSToIp($address='')
 
 /**
  * Gibt die IP des Besuchers / Users zurück
- * Added by DZCP-Extended Edition
  *
  * @return String
  */
@@ -369,7 +369,6 @@ function pholderreplace($pholder)
 
 /**
 * Sucht nach Platzhaltern und ersetzt diese.
-* Updated for DZCP-Extended Edition
 *
 * @return string
 */
@@ -383,6 +382,7 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
         $template = $_SESSION['installer'] ? basePath."/_installer/html/".$tpl : basePath."/inc/_templates_/".$tmpdir."/".$tpl;
         $template_additional = $_SESSION['installer'] ? false : basePath."/inc/additional-tpl/".$tmpdir."/".$tpl;
         $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;
+        $array['dir_img'] = $_SESSION['installer'] ? "html/img/": '../inc/_templates_/'.$tmpdir.'/images/';
 
         if($template_additional != false && file_exists($template_additional.".html"))
             $tpl = file_get_contents($template_additional.".html");
@@ -428,7 +428,6 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
 
 /**
  * Gibt requires Fehler aus und stoppt die Ausführung des CMS
- * Added by DZCP-Extended Edition
  **/
 function check_of_php530()
 { if(!is_php('5.3.0')) die('<b>Requires failed:</b><br /><ul>'.
@@ -486,7 +485,6 @@ function GenGuid()
 
 /**
  * Funktion zum schreiben der Adminlogs
- * Added by DZCP-Extended Edition
  */
 function wire_ipcheck($what='')
 {
@@ -495,7 +493,6 @@ function wire_ipcheck($what='')
 
 /**
  * Checkt versch. Dinge anhand der Hostmaske eines Users
- * Updated for DZCP-Extended Edition
  *
 * @return boolean
  */
@@ -536,7 +533,6 @@ function isSpider()
 
 /**
  * Wandelt einen Boolean zu einem Boolean-String um.
- * Added by DZCP-Extended Edition
  *
  * @return String
  */
@@ -558,7 +554,6 @@ function String_to_boolConverter($bool_coded)
 
 /**
  * Wandelt einen Array-String zu einem Array um.
- * Added by DZCP-Extended Edition
  *
  * @return array
  */
@@ -592,7 +587,6 @@ function string_to_array($str,$counter=1)
 
 /**
  * Wandelt einen Array zu einem Array-String um.
- * Added by DZCP-Extended Edition
  *
  * @return String
  */
@@ -640,7 +634,6 @@ function spChars($txt)
 
 /**
  * Funktion um eine Variable prüfung in einem Array durchzuführen
- * Added by DZCP-Extended Edition
  *
  * @return boolean
  */
@@ -677,7 +670,6 @@ function record_sort($named_recs, $order_by, $rev=false, $flags=0)
 
 /**
  * Funktion um Passwörter in einen Hash umzurechnen
- * Added by DZCP-Extended Edition
  *
  * Info Metode:
  * 0 => md5
@@ -689,18 +681,18 @@ function record_sort($named_recs, $order_by, $rev=false, $flags=0)
  */
 function pass_hash($pass_key='',$metode=0)
 {
+    global $sql_salt;
     switch($metode)
     {
-        case 1: return sha1($pass_key,false); break;
-        case 2: return hash('sha256', $pass_key,false); break;
-        case 3: return hash('sha512', $pass_key,false); break;
+        case 1: return sha1($pass_key . (salt ? $sql_salt : ''),false); break;
+        case 2: return hash('sha256', $pass_key . (salt ? $sql_salt : ''),false); break;
+        case 3: return hash('sha512', $pass_key . (salt ? $sql_salt : ''),false); break;
         default: return md5($pass_key,false); break;
     }
 }
 
 /**
  * Funktion um Sekunden in Tage:Stinden:Minuten:Sekunden Formate umzuwandeln
- * Added by DZCP-Extended Edition
  *
  * @return string
  */
@@ -733,7 +725,6 @@ function sec_format($seconds)
 
 /**
  * Funktion um Datengrößen zu ermitteln.
- * Added by DZCP-Extended Edition
  *
  * @return int
  */
@@ -751,7 +742,6 @@ function filesize_extended($file=null)
 /**
  * Funktion um Datengrößen > 2 GB anzeigen zu können * OS-Shell Zugriff nötig und ein 64 Bit System
  * Standardmäßig deaktiviert, sehe config.php
- * Added by DZCP-Extended Edition
  *
  * @return int
  */
@@ -770,7 +760,6 @@ function os_filesize($file=null)
 
 /**
  * Funktion um Datengrößen auf Remote Servern zu ermitteln.
- * Added by DZCP-Extended Edition
  *
  * @return int
  */
@@ -828,7 +817,6 @@ function remote_filesize($url)
 
 /**
  * Funktion um einen Binärstring zu Dekodieren.
- * Added by DZCP-Extended Edition
  *
  * @return binary/string
  */
@@ -851,6 +839,25 @@ function hextobin($hexstr)
     }
 
     return $sbin;
+}
+
+/**
+ * Runtime Buffer
+ * Funktion um Werte kurzzeitig zu speichern.
+ * *Aktuelle Laufzeit, keine AJAX Unterstüzung
+ */
+final class RTBuffer
+{
+    protected static $buffer = array();
+    public static final function set($tag='',$data='')
+    { self::$buffer[$tag]['ttl'] = (time()+1); self::$buffer[$tag]['data'] = json_encode($data,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); }
+
+    public static final function get($tag)
+    { return (array_key_exists($tag, self::$buffer) ? json_decode(self::$buffer[$tag]['data']):false); }
+
+    public static final function check($tag)
+    { if(!runtime_buffer) return true; if(!array_key_exists($tag, self::$buffer)) return true; else if(self::$buffer[$tag]['ttl'] < time())
+    { unset(self::$buffer[$tag]['data']); unset(self::$buffer[$tag]['ttl']); return true; } else return false; }
 }
 
 #############################################
@@ -876,6 +883,25 @@ class xml // Class by DZCP-Extended Edition
             }
 
             self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
+
+            if(self::$xmlobj[$XMLTag]['objekt'] != false)
+                return true;
+            else
+                return false;
+        }
+        else
+            return true;
+    }
+
+    /**
+     * XML Stream Laden
+     */
+    public static function openXMLStream($XMLTag,$XMLStream)
+    {
+        if(!array_key_exists($XMLTag,self::$xmlobj))
+        {
+            self::$xmlobj[$XMLTag]['xmlFile'] = $XMLStream;
+            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_string($XMLStream);
 
             if(self::$xmlobj[$XMLTag]['objekt'] != false)
                 return true;

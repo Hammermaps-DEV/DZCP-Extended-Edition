@@ -120,7 +120,6 @@ else
             }
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

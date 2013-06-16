@@ -7,6 +7,6 @@
  */
 
 define('_version', '1.0');
-define('_release', '26.05.2013');
-define('_build', 'repo:dev:git:0152');
+define('_release', '16.06.2013');
+define('_build', 'repo:dev:git:0163');
 define('_edition', 'Extended Edition');

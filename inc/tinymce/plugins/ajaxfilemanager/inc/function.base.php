@@ -3,7 +3,7 @@
 	{
 		die('Permission denied');
 	}
-?><?php
+
 	/**
 	 * function avaialble to the file manager
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -1238,4 +1238,3 @@ function getRootPath() {
                 return $rotate;*/
             }
         }  
-?>

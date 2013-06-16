@@ -790,16 +790,10 @@ class Mobile_Detect {
 
 
         ){
-
             return 'C';
-
         }
 
         // All older smartphone platforms and featurephones - Any device that doesn't support media queries will receive the basic, C grade experience
         return 'C';
-
-
     }
-
-
 }

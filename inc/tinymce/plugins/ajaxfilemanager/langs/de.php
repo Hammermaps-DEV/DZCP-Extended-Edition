@@ -327,6 +327,3 @@
 		define('TXT_CONTENT_UPDATE_FAILED', 'Inhalt konnte nicht aktualisiert werden.');
 		define('TXT_SAVE_AS_ERR_NAME_INVALID', 'Bitte nur Buchstaben, Zahlen, Leerzeichen, Bindestriche und Unterstriche in Dateinamen verwenden.');
 	//88888888888   Above for Text Editor   888888888888888888888
-	
-	
-?>

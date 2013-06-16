@@ -117,4 +117,3 @@ else
             "legende" => $legende,
             "show" => $show));
 }
-?>

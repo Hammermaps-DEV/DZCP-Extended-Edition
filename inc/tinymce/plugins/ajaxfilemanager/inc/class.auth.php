@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php 
 /**
  * the purpose I added this class is to make the file system much flexible 
  * for customization.
@@ -40,4 +39,3 @@
 			}
 		}
 	}
-?>

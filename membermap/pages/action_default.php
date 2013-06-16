@@ -61,4 +61,3 @@ else
             'mm_markerIcon' => $mm_markerIcon
     ));
 }
-?>

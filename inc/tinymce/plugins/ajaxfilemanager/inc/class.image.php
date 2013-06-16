@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 	/**
 	 * this class provide functions to edit an image, e.g. resize, rotate, flip, crop
 	 * @author Logan Cai cailongqun [at] yahoo [dot] com [dot] cn
@@ -811,5 +810,3 @@
         
     }	
 	}
-	
-?>

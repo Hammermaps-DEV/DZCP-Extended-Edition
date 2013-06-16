@@ -46,4 +46,3 @@ else
 
     $index = show($dir."/linkus", array("head" => _linkus_head, "show" => $show));
 }
-?>

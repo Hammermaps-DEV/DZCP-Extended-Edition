@@ -9,7 +9,6 @@
 define('basePath', dirname(__FILE__));
 require_once(basePath."/inc/debugger.php");
 require_once(basePath."/inc/config.php");
-require_once(basePath."/inc/buffer.php");
 require_once(basePath."/inc/bbcode.php");
 
 header("Content-Type: text/xml; charset=ISO-8859-1");

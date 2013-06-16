@@ -67,6 +67,38 @@ define('_custom_game_icon_none', 'Not use custom icon');
 define('_profil_language', 'Language');
 define('_default', 'Default');
 define('_no_entrys', 'No entrys');
+define('_extended', 'Extended');
+define('_username', 'Username');
+define('_aktion', 'Aktion');
+
+//Activate User
+define('_config_activate_user', 'activate user');
+define('_profil_locked', 'Account not activated, <a href="../user/?action=akl&do=send" target="_self">&lt; Aktivierungs-Mail senden &gt;</a>');
+define('_profil_closed', 'Account Disabled');
+define('_admin_akl_regist_subj', 'Betreff: Registrierungs Aktivierungs-eMail');
+define('_admin_akl_regist', 'Registrierungs Aktivierungs-eMail Template');
+define('_reg_akl_invalid', 'Dieser Aktivierungslink ist nicht mehr g&uuml;ltig!');
+define('_reg_akl_valid', 'Dein Account wurde aktiviert!');
+define('_reg_akl_sended', 'Dein Aktivierungslink wurde an "[email]" versandt, schau bitte in dein E-Mail Postfach');
+define('_reg_akl_email_nf', 'Es existiert kein Account mit dieser E-Mail Addresse!');
+define('_reg_akl_locked', 'Der Account ist gesperrt und kann nicht mehr aktiviert werden!');
+define('_reg_akl_activated', 'Dein Account ist bereits aktiviert');
+define('_info_reg_valid_pwd_akl', 'Du hast dich erfolgreich registriert!<br /><br />Bitte aktiviere deinen Account über die Aktivierungs-eMail, die wir dir an deine E-Mail Adresse gesendet haben.<br /><br />Deine Zugangsdaten wurden dir an deine E-Mail Adresse "[email]" versandt.');
+define('_button_value_activate', 'Aktivieren');
+define('_activate_code', 'Aktivierungscode');
+define('_activate_head', 'Account aktivieren');
+define('_perm_activateusers', 'Account Aktivierungen verwalten');
+define('_admin_akl_sended', 'gesendet');
+define('_admin_akl_activated', 'Aktivierungen');
+define('_actived', 'User Account wurde aktiviert!');
+define('_button_title_akl', 'Account aktivieren');
+define('_admin_akl_resend', 'Aktivierungslink wurde an "[email]" versandt.');
+define('_akl', 'Aktivierungsmails');
+define('_akl_info', 'Sollen Aktivierungsmails bei Neuregistrierungen verwendet werden');
+
+//Nav Empty
+define('_navi_nnwars_entrys', '<center>Keine Wars geplant</center>');
+define('_navi_nartikel_entrys', '<center>Keine Artikel vorhanden</center>');
 
 //TS
 define('_ts_fport', 'File Port');
@@ -124,6 +156,8 @@ define('_ipban_error_pip', 'Du kannst keine privaten IP-Adressen sperren!');
 define("_ip_empty", 'Keine IP eingegeben!');
 
 ## ADDED FOR 1.6 Final
+define(_gal_npa, 'No Pictures Added');
+
 define('_search_con_or', 'at least one word');
 define('_search_con_and', 'character by character');
 define('_search_con_andb', 'every word');
@@ -136,6 +170,64 @@ define('_no_entrys_yet_all' , '
   <td class="contentMainFirst" colspan="[colspan]" align="center">No entries!</td>
 </tr>');
 define('_include_action_error','<tr><td class="contentHead" align="center" colspan="3"><span class="fontBold"><br>File: "[file]" is missing or corrupted!<br/>The module functions are not available!<br></br></span></td></tr>');
+
+define('_template_navi_main', 'Hauptnavigation');
+define('_template_navi_clan', 'Clannavigation');
+define('_template_navi_server', 'Servernavigation');
+define('_template_navi_misc', 'Sonstiges');
+define('_template_userarea', 'Benutzerbereich');
+define('_template_vote', 'Umfragen');
+define('_template_partners', 'Partner');
+define('_template_sponsors', 'Sponsoren');
+define('_template_counter', 'Statistik');
+define('_template_l_news', 'Neuigkeiten');
+define('_template_ftopics', 'Foreneintr&auml;ge');
+define('_template_l_wars', 'Letzte Wars');
+define('_template_n_wars', 'n&auml;chste Wars');
+define('_template_teams', 'Teams');
+define('_template_gallerie', 'Unsere Gallerien');
+define('_template_top_match', 'Top Match');
+define('_template_shout', 'Shoutbox');
+define('_template_template_switch', 'Design &auml;ndern');
+define('_template_events', 'Termine');
+define('_template_kalender', 'Kalender');
+define('_template_l_artikel', 'Artikel');
+define('_template_l_reg', 'neue User');
+define('_template_motm', 'Member of the Moment');
+define('_template_random_gallery', 'zuf&auml;lliges Galleriebild');
+define('_template_server', 'Server');
+define('_template_teamspeak', 'Teamspeak');
+define('_template_top_dl', 'Top Downloads');
+define('_template_uotm', 'User of the Moment');
+define('_news_userimage', 'Own Newspicture');
+define('_newspic_del', 'delete Newspicture?');
+define('_newspic_deleted', 'Newspicture deleted successfully');
+
+define('_gal_npa', 'Es sind keine Bilder verf&uuml;gbar');
+define('_gal_pics', 'Bilder in Gallerie');
+define('_config_slideshow', 'Slideshow');
+define('_perm_slideshow', 'Slideshow-Bilder verwalten');
+define('_slider', 'Slideshow');
+define('_slider_admin_add', 'Neues Slideshowbild hinzuf&uuml;gen');
+define('_slider_admin_add_done', 'Das Slideshowbild wurde erfolgreich eingef&uuml;gt');
+define('_slider_admin_del', 'Soll das Slideshowbild wirklich gel&ouml;scht werden');
+define('_slider_admin_del_done', 'Das Slideshowbild wurde erfolgreich gel&ouml;scht');
+define('_slider_admin_edit', 'Slideshowbild editieren');
+define('_slider_admin_edit_done', 'Die &Auml;nderungen wurden erfolgreich &uuml;bernommen!');
+define('_slider_admin_error_empty_bezeichnung', 'Du musst eine Bezeichnung eingeben');
+define('_slider_admin_error_empty_url', 'Du musst einen Link hinterlegen');
+define('_slider_admin_error_nopic', 'Du musst ein Bild hochladen');
+define('_slider_bezeichnung', 'Bezeichnung');
+define('_slider_new_window', 'Neues Fenster?');
+define('_slider_pic', 'Bild');
+define('_slider_desc', 'Beschreibung');
+define('_slider_position', 'Position');
+define('_slider_position_first', 'als erstes');
+define('_slider_position_lazy', '<option value="lazy">- nicht &auml;ndern -</option>');
+define('_slider_url', 'URL');
+define('_slider_info', 'Nur jpg, gif oder png Dateien mit einer maximalen Gr&ouml;&szlig;e von [userpicsize]KB!<br />Die empfohlene Gr&ouml;&szlig;e ist 777px * 200px');
+define('_slider_show_title', 'Titel anzeigen');
+define('_max', 'max.');
 
 ## Navigation / Server ##
 define('_navi_gsv_players_online', 'Online');
@@ -354,7 +446,6 @@ define('_pos_nletter' , 'Include this position in newsletter to Leader and Co-Le
 define('_clankasse_vwz' , 'Purpose');
 define('_pwd2' , 'repeat password');
 define('_wrong_pwd' , 'The password entered does not match');
-define('_info_reg_valid_pwd' , 'You has been successfully registered and can login now with your access data!<br /><br />Your access data has been send to your email address [email], too.');
 define('_profil_pnmail' , 'Email on new message');
 define('_admin_pn_subj' , 'Subject: PN-Email');
 define('_admin_pn' , 'PN-Email Template');
@@ -560,7 +651,7 @@ define('_sponsor' , 'Sponsor');
 define('_config_fileeditor_head' , 'File editor');
 //-----------------------------------------------
 define('_main_info' , 'Here you can set global settings like default language, default template, title of the site, etc...');
-define('_admin_eml_head' , 'Emailtemplates');
+define('_admin_eml_head' , 'E-Mail Templates');
 define('_admin_eml_info' , 'Here you can edit the emailtemplates from different areas.<br />Make sure that you do not delete the placeholders in the triggers [...]!');
 define('_admin_reg_subj' , 'Subject: Registration');
 define('_admin_pwd_subj' , 'Subject: Lost password');
@@ -624,8 +715,7 @@ define('_profil_sig' , 'Board signature');
 define('_akt_version' , 'DZCP Version');
 define('_forum_searchlink' , '- <a href="../search/">Board search</a> -');
 define('_msg_deleted' , 'The message was successfully deleted!');
-define('_info_reg_valid' , 'You successfully registered on this page!<br />
-Your password were send to your e-mail adress [email]');
+define('_info_reg_valid' , 'You successfully registered on this page!<br />Your access data has been send to your email address "[email]"');
 define('_edited_by' , '<br /><br /><i>last edited by [autor] at [time]</i>');
 define('_linkus_empty_text' , 'You have to indicate an url of the banner!');
 define('_gb_titel' , '<span class="fontBold">#[postid]</span> from [nick] [email] [hp] at [datum] on [zeit][lang_uhr] [edit] [delete] [comment] [public]');

@@ -39,4 +39,3 @@
     {
         die(ERR_DOWNLOAD_FILE_NOT_FOUND);
     }
-?>

@@ -22,4 +22,3 @@ else
 
     $index = info(_cw_players_reset, '?action=details&id='.convert::ToInt($_GET['id']));
 }
-?>

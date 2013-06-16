@@ -14,7 +14,7 @@ if(_adminMenu != 'true')
 
 $where = $where.': '._backup_head;
 
-if(!empty($do))
+if(!empty($do) && $do == 'backup_run')
 {
     $v = str_replace(" ","_",_version);
     $file_name = 'backup_dzcp_v.'.$v.'_'.date("d.m.y").'.sql';

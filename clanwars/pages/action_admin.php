@@ -18,4 +18,3 @@ else
 {
     if($_GET['do'] == 'edit') header("Location: ../admin/?admin=cw&do=edit&id=".$_GET['id']);
 }
-?>

@@ -125,7 +125,7 @@ if(_adminMenu != 'true')
 
             $show = info(_config_forum_kat_added, "?admin=forum");
           } else {
-            $show = error(_config_empty_katname, 1);
+            $show = error(_config_empty_katname);
           }
         } elseif($_GET['do'] == "delete") {
           $what = db("SELECT id FROM ".dba::get('f_skats')."
@@ -179,7 +179,7 @@ if(_adminMenu != 'true')
         } elseif($_GET['do'] == "editkat") {
           if(empty($_POST['kat']))
           {
-            $show = error(_config_empty_katname, 1);
+            $show = error(_config_empty_katname);
           } else {
             if($_POST['kid'] == "lazy"){
               $kid = "";
@@ -225,7 +225,7 @@ if(_adminMenu != 'true')
         } elseif($_GET['do']== "addskat") {
           if(empty($_POST['skat']))
           {
-            $show = error(_config_forum_empty_skat,1);
+            $show = error(_config_forum_empty_skat);
           } else {
             if($_POST['order'] == "1" || "2") $sign = ">= ";
             else  $sign = "> ";
@@ -274,7 +274,7 @@ if(_adminMenu != 'true')
         } elseif($_GET['do'] == "editskat") {
           if(empty($_POST['skat']))
           {
-            $show = error(_config_forum_empty_skat,1);
+            $show = error(_config_forum_empty_skat);
           } else {
 
             if($_POST['order'] == "lazy"){
@@ -315,6 +315,5 @@ if(_adminMenu != 'true')
         }
       }
     } else {
-      $show = error(_error_wrong_permissions, 1);
+      $show = error(_error_wrong_permissions);
     }
-?>

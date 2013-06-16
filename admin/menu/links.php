@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._config_links;
-    if(!permission("links"))
-    {
-      $index = error(_error_wrong_permissions, 1);
-    } else {
       if($_GET['do'] == "new")
       {
         $linktyp = '
@@ -93,9 +89,9 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editlink") {
         if(empty($_POST['link']) || empty($_POST['beschreibung']) || (isset($_POST['banner']) && empty($_POST['text'])))
         {
-          if(empty($_POST['link']))             $show = error(_links_empty_link, 1);
-          elseif(empty($_POST['beschreibung'])) $show = error(_links_empty_beschreibung, 1);
-          elseif(empty($_POST['text']))         $show = error(_links_empty_text, 1);
+          if(empty($_POST['link']))             $show = error(_links_empty_link);
+          elseif(empty($_POST['beschreibung'])) $show = error(_links_empty_beschreibung);
+          elseif(empty($_POST['text']))         $show = error(_links_empty_text);
         } else {
             $qry = db("UPDATE ".dba::get('links')."
                        SET `url`          = '".links($_POST['link'])."',
@@ -141,5 +137,3 @@ if(_adminMenu != 'true')
                                           "add" => _links_admin_head
                                           ));
       }
-    }
-?>

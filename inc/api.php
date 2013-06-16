@@ -125,4 +125,16 @@ class API extends API_CORE
      */
     public static function replace_dba_sqltb($tag = '', $new_table = '')
     { return replace($tag, $new_table); }
+
+    /**
+     * Fügt neue BBCodes mit HTML Ersatz ein. *preg_replace*
+     * add_bbcode_rep(array('#\[test\](.*?)\[\/test\]#Uis','#\[test2\](.*?)\[\/test2\]#Uis'),
+     *                array('<test_html>$1</test_html>',   '<test2_html>$1</test2_html>')));
+     *
+     * @param array $bbcode
+     * @param array $html_replacement
+     * @return boolean
+     */
+    public static function add_bbcode_rep($bbcode = array(), $html_replacement = array())
+    { self::add_additional_bbcode($bbcode,$html_replacement); }
 }

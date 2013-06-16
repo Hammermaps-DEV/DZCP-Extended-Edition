@@ -22,6 +22,8 @@ function l_artikel()
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache
                 Cache::set('nav_l_artikel',$l_articles,$menu_xml['config']['update']);
         }
+        else
+            $l_articles = show(_navi_nartikel_entrys, array("colspan" => "1"));
     }
     else
         $l_articles = Cache::get('nav_l_artikel');

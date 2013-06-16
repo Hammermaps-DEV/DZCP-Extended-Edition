@@ -52,6 +52,7 @@ if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,a
 $dir = "sites";
 
 ## SECTIONS ##
+header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
 switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
     case 'menu';
         switch (isset($_GET['mod']) ? $_GET['mod'] : ''):
@@ -92,7 +93,8 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
     break;
 endswitch;
 
-#######################
-## OUTPUT BUFFER END ##
-#######################
-gz_output();
+// Cookie speichern
+cookie::save();
+
+// Datenbankverbindung beenden
+database::close();

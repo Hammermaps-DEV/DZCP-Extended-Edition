@@ -12,7 +12,7 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('gb')."` CHANGE `hp` `hp` VARCHAR(130) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('settings')."` ADD `urls_linked` INT(1) NOT NULL DEFAULT '1', ADD `ts_customicon` INT(1) NOT NULL DEFAULT '1' AFTER `ts_version`, ADD `ts_showchannel` INT(1) NOT NULL DEFAULT '0' AFTER `ts_customicon`",false,false,true);
     db("ALTER TABLE `".dba::get('msg')."` CHANGE `see_u` `see_u` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
-    db("ALTER TABLE `".dba::get('msg')."` CHANGE `page` `page` INT( 11 ) NOT NULL DEFAULT '0'",false,false,true);
+    db("ALTER TABLE `".dba::get('msg')."` CHANGE `page` `page` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".dba::get('away')."` CHANGE `lastedit` `lastedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('settings')."` DROP `pfad`",false,false,true);
     db("ALTER TABLE `".dba::get('newskat')."` CHANGE `katimg` `katimg` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
@@ -55,6 +55,30 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('config')."` DROP `l_team`;",false,false,true);
     db("ALTER TABLE `".dba::get('server')."` ADD `custom_icon` VARCHAR( 30 ) NOT NULL DEFAULT '' AFTER `qport`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `language` VARCHAR( 15 ) NOT NULL DEFAULT 'default' AFTER `country`;",false,false,true);
+    db("ALTER TABLE `".dba::get('news')."` ADD `custom_image` INT( 1 ) NOT NULL DEFAULT '0' AFTER `comments` ;",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` ADD `actkey` VARCHAR( 50 ) NOT NULL DEFAULT '' AFTER `pkey`;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` ADD `eml_akl_register` TEXT NULL DEFAULT NULL AFTER `eml_nletter`;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` ADD `eml_akl_register_subj` TEXT NULL DEFAULT NULL AFTER `eml_fabo_pedit_subj`;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_reg_subj` `eml_reg_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pwd_subj` `eml_pwd_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_nletter` `eml_nletter` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_nletter_subj` `eml_nletter_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_reg` `eml_reg` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pwd` `eml_pwd` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_npost_subj` `eml_fabo_npost_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_tedit_subj` `eml_fabo_tedit_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_pedit_subj` `eml_fabo_pedit_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pn_subj` `eml_pn_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_npost` `eml_fabo_npost` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_tedit` `eml_fabo_tedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_pedit` `eml_fabo_pedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pn` `eml_pn` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
+    db("ALTER TABLE `".dba::get('userstats')."` ADD `akl` INT( 5 ) NOT NULL DEFAULT '1' AFTER `cws`;",false,false,true);
+    db("ALTER TABLE `".dba::get('config')."` ADD `use_akl` INT( 1 ) NOT NULL DEFAULT '1' AFTER `news_feed`;",false,false,true);
+
+    //Update E-Mail Templates
+    db("UPDATE `".dba::get('settings')."` SET `eml_akl_register_subj` = '".emlv('eml_akl_register_subj')."' WHERE `id` = 1;",false,false,true);
+    db("UPDATE `".dba::get('settings')."` SET `eml_akl_register` = '".emlv('eml_akl_register')."' WHERE `id` = 1;",false,false,true);
 
     // Add UNIQUE INDEX
     if(db("SELECT id FROM `".dba::get('config')."`",true) >= 2)
@@ -207,6 +231,7 @@ function install_155x_1600_update()
       `pos` int(1) NOT NULL DEFAULT '0',
       `artikel` int(1) NOT NULL DEFAULT '0',
       `awards` int(1) NOT NULL DEFAULT '0',
+      `activateusers` int(1) NOT NULL DEFAULT '0',
       `backup` int(1) NOT NULL DEFAULT '0',
       `clear` int(1) NOT NULL DEFAULT '0',
       `config` int(1) NOT NULL DEFAULT '0',
@@ -245,7 +270,8 @@ function install_155x_1600_update()
       `support` int(1) NOT NULL DEFAULT '0',
       `votes` int(1) NOT NULL DEFAULT '0',
       `votesadmin` int(1) NOT NULL DEFAULT '0',
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      KEY `user` (`user`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     // Permissions Datensatz einspielen
@@ -456,6 +482,21 @@ function install_155x_1600_update()
         PRIMARY KEY (`id`),
         UNIQUE KEY `id` (`id`),
         KEY `ip` (`ip`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
+    //-> Slideshow ==================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('slideshow')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('slideshow')."` (
+    `id` int(5) NOT NULL AUTO_INCREMENT,
+    `pos` int(5) NOT NULL DEFAULT '0',
+    `bez` varchar(200) NOT NULL DEFAULT '',
+    `showbez` int(1) NOT NULL default '1',
+    `desc` varchar(249) NOT NULL DEFAULT '',
+    `url` varchar(200) NOT NULL DEFAULT '',
+    `target` int(11) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     return true;

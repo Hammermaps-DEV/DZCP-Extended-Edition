@@ -56,5 +56,5 @@ else
         $index = show($dir."/server", array("servers" => $index));
     }
     else
-        $index = error(_fopen,1);
+        $index = error(_fopen);
 }

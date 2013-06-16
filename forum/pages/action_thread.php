@@ -143,7 +143,7 @@ else
                                           "vote" => $vote,
                                           "posteintrag" => bbcode($get['t_text'],0,1)));
     } else {
-      $index = error(_error_wrong_permissions, 1);
+      $index = error(_error_wrong_permissions);
     }
   } elseif($_GET['do'] == "editthread") {
     $qry = db("SELECT * FROM ".dba::get('f_threads')."
@@ -430,9 +430,9 @@ else
           $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
           $gettopic = _fetch($topic);
 
-          $subj = show(settings('eml_fabo_tedit_subj'), array("titel" => $title));
+          $subj = show(re(settings('eml_fabo_tedit_subj')), array("titel" => $title));
 
-           $message = show(settings('eml_fabo_tedit'), array("nick" => re($getabo['nick']),
+           $message = show(re(settings('eml_fabo_tedit')), array("nick" => re($getabo['nick']),
                                                                 "postuser" => fabo_autor(convert::ToInt($userid)),
                                                             "topic" => $gettopic['topic'],
                                                             "titel" => $title,
@@ -450,11 +450,11 @@ else
         $index = info(_forum_editthread_successful, "?action=showthread&amp;id=".$gett['id']."");
 
       }
-    } else $index = error(_error_wrong_permissions, 1);
+    } else $index = error(_error_wrong_permissions);
   } elseif($_GET['do'] == "add") {
     if(settings("reg_forum") == "1" && $chkMe == "unlogged")
     {
-      $index = error(_error_unregistered,1);
+      $index = error(_error_unregistered);
     } else {
       if(!ipcheck("fid(".$_GET['kid'].")", config('f_forum')))
       {
@@ -533,16 +533,16 @@ else
                                             "vote" => $vote,
                                             "posteintrag" => ""));
       } else {
-        $index = error(show(_error_flood_post, array("sek" => config('f_forum'))), 1);
+        $index = error(show(_error_flood_post, array("sek" => config('f_forum'))));
       }
     }
   } elseif($_GET['do'] == "addthread") {
       if(_rows(db("SELECT id FROM ".dba::get('f_skats')." WHERE id = '".convert::ToInt($_GET['kid'])."'")) == 0) {
-          $index = error(_id_dont_exist, 1);
+          $index = error(_id_dont_exist);
       } else {
         if(settings("reg_forum") == "1" && $chkMe == "unlogged")
         {
-            $index = error(_error_have_to_be_logged, 1);
+            $index = error(_error_have_to_be_logged);
         } else {
             if(!empty($userid) && $userid != 0)
                 $toCheck = empty($_POST['eintrag']) || empty($_POST['topic']);
@@ -764,4 +764,3 @@ else
   }
   }
 }
-?>

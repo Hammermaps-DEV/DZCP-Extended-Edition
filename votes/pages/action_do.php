@@ -27,9 +27,9 @@ else
                 if($get['intern'])
                 {
                     if(!count_clicks('vote',$get['id']))
-                        $index = error(_error_voted_again,1);
+                        $index = error(_error_voted_again);
                     else if($get['closed'])
-                        $index = error(_error_vote_closed,1);
+                        $index = error(_error_vote_closed);
                     else
                     {
                         db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".convert::ToInt($userid)."'");
@@ -43,9 +43,9 @@ else
                 else
                 {
                    if(!count_clicks('vote',($id=convert::ToInt($_GET['id']))))
-                        $index = error(_error_voted_again,1);
+                        $index = error(_error_voted_again);
                    else if($get['closed'])
-                        $index = error(_error_vote_closed,1);
+                        $index = error(_error_vote_closed);
                     else
                     {
                         if(!empty($userid) && $userid != 0)
@@ -81,9 +81,9 @@ else
                 $get = db("SELECT id,closed FROM ".dba::get('votes')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
 
                 if(!count_clicks('vote',$get['id']))
-                    $index = error(_error_voted_again,1);
+                    $index = error(_error_voted_again);
                 else if($get['closed'])
-                    $index = error(_error_vote_closed,1);
+                    $index = error(_error_vote_closed);
                 else
                 {
                     if(!empty($userid) && $userid != 0)

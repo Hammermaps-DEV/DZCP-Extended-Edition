@@ -18,7 +18,7 @@ function teamspeak()
 
         if(!empty($get['host_ip_dns']) && !empty($get['server_port']) && !empty($get['query_port']))
         {
-            if(!fsockopen_support()) return error(_fopen, false, false);
+            if(!fsockopen_support()) return error(_fopen,'0',false);
 
             $ip_port = TS3Renderer::tsdns($get['host_ip_dns']);
             $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : $get['host_ip_dns']);

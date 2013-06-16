@@ -42,3 +42,10 @@ function check_buddy($buddy)
     global $userid;
     return (db("SELECT buddy FROM ".dba::get('buddys')." WHERE user = '".convert::ToInt($userid)."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true);
 }
+
+//-> Prueft, ob eine Userid existiert
+function exist($tid)
+{
+    echo 'run<p>';
+    return db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false;
+}

@@ -27,7 +27,7 @@ else
             if(config('securelogin') && ($_POST['secure'] != $_SESSION['sec_login'] || !isset($_POST['secure']) || empty($_SESSION['sec_login'])))
             {
                 ## Der Secure Code ist falsch ##
-                $index = error(_error_invalid_regcode, 1);
+                $index = error(_error_invalid_regcode);
             }
             else
             {
@@ -45,16 +45,30 @@ else
                         {
                             $get = _fetch($qry);
 
-                            ## Schreibe IP in die IPCheck ##
+                            ## Schreibe Adminlog ##
                             wire_ipcheck("trylogin(".$get['id'].")");
-                        }
-                    }
 
-                    ## User Abmelden ##
-                    logout();
+                            if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = ".$get['id']." AND `actkey` IS NOT NULL",true))
+                            {
+                                $_SESSION['akl_id'] = $get['id'];
+                                $index = error(_profil_locked);
+                            }
+
+                            if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = ".$get['id']." AND `actkey` IS NULL AND level = 0",true))
+                            {
+                                $index = error(_profil_closed);
+                                logout(); ## User Abmelden ##
+                            }
+                        }
+                        else
+                            logout(); ## User Abmelden ##
+                    }
+                    else
+                        logout(); ## User Abmelden ##
 
                     ## Error anzeigen ##
-                    $index = error(_login_pwd_dont_match);
+                    if(empty($index))
+                        $index = error(_login_pwd_dont_match);
                 }
             }
         break;
@@ -67,7 +81,7 @@ else
                 logout();
 
                 ## Error anzeigen ##
-                $index = error(_error_user_already_in, 1);
+                $index = error(_error_user_already_in);
             }
         break;
     }

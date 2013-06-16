@@ -104,4 +104,3 @@ if(_adminMenu != 'true')
     $support .= "\r\n";
 
     $show = show($dir."/support", array("info" => _admin_support_info, "head" => _admin_support_head, "support" => txtArea($support)));
-?>

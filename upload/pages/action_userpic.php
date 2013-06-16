@@ -40,9 +40,9 @@ else
 
             if(!$tmpname)
             {
-                $index = error(_upload_no_data, 1);
+                $index = error(_upload_no_data);
             } elseif($size > config('upicsize')."000")  {
-                $index = error(_upload_wrong_size, 1);
+                $index = error(_upload_wrong_size);
             } else {
                 foreach($picformat as $tmpendung)
                 {
@@ -67,7 +67,6 @@ else
             }
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

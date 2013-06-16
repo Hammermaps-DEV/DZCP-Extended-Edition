@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._member_admin_header;
-    if(!permission("editsquads"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       $qry = db("SELECT * FROM ".dba::get('squads')." ORDER BY pos");
       while($get = _fetch($qry))
       {
@@ -63,7 +59,7 @@ if(_adminMenu != 'true')
                                                   "what" => _nach.' '.re($get['name'])));
         }
 
-        $files = get_files(basePath.'/inc/images/gameicons/',false,true,array('gif','jpg','png'));
+        $files = get_files(basePath.'/inc/images/gameicons/custom/',false,true,array('gif','jpg','png'));
         foreach($files as $file)
         {
             $gameicons .= show(_select_field, array("value" => $file,
@@ -103,10 +99,10 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "addsquad") {
         if(empty($_POST['squad']))
         {
-          $show = error(_admin_squad_no_squad, 1);
+          $show = error(_admin_squad_no_squad);
         } elseif(empty($_POST['game']))
         {
-          $show = error(_admin_squad_no_game, 1);
+          $show = error(_admin_squad_no_game);
         } else {
           if($_POST['position'] == 1 || $_POST['position'] == 2) $sign = ">= ";
           else $sign = "> ";
@@ -224,7 +220,7 @@ if(_adminMenu != 'true')
         if($get['status'] == 1) 		$status = "selected=\"selected\"";
                 if($get['team_show'] == 1) 	$team_show = "selected=\"selected\"";
 
-        $files = get_files(basePath.'/inc/images/gameicons/',false,true);
+        $files = get_files(basePath.'/inc/images/gameicons/custom/',false,true);
         foreach($files as $file)
         {
           if($file == $get['icon']) $sel = "selected=\"selected\"";
@@ -296,10 +292,10 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editsquad") {
         if(empty($_POST['squad']))
         {
-          $show = error(_admin_squad_no_squad, 1);
+          $show = error(_admin_squad_no_squad);
         } elseif(empty($_POST['game']))
         {
-          $show = error(_admin_squad_no_game, 1);
+          $show = error(_admin_squad_no_game);
         } else {
           $ask = db("SELECT pos FROM ".dba::get('squads')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -429,5 +425,3 @@ if(_adminMenu != 'true')
                 db("DELETE FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
         $show = info(_admin_squad_deleted, "?admin=squads");
       }
-    }
-?>

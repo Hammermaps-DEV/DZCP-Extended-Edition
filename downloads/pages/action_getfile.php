@@ -17,22 +17,14 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if(settings("reg_dl") == "1" && $chkMe == "unlogged")
-        $index = error(_error_unregistered,1);
+        $index = error(_error_unregistered);
     else
     {
         $get = db("SELECT url,id FROM ".dba::get('downloads')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
-        $file = preg_replace("#added...#Uis", "", $get['url']);
-
-        if(preg_match("=added...=Uis",$get['url']) !== FALSE)
-            $dlFile = "files/".$file;
-        else
-            $dlFile = $get['url'];
 
         if(count_clicks('download',$get['id']))
             db("UPDATE ".dba::get('downloads')." SET `hits` = hits+1, `last_dl` = '".time()."' WHERE id = '".$get['id']."'");
 
-        //download file
-        header("Location: ".$dlFile);
+        header("Location: ".$get['url']);
     }
 }
-?>

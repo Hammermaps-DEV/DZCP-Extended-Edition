@@ -25,8 +25,8 @@ else
             'inc/_cache/tinymce',
             'inc/images',
             'inc/images/gameicons',
+            'inc/images/gameicons/custom',
             'inc/images/maps',
-            'inc/images/newskat',
             'inc/images/smileys',
             'inc/images/uploads',
             'inc/images/uploads/taktiken',
@@ -36,6 +36,8 @@ else
             'inc/images/uploads/gallery',
             'inc/images/uploads/squads',
             'inc/images/uploads/clanwars',
+            'inc/images/uploads/newskat',
+            'inc/images/uploads/news',
             'inc/tinymce_files',
             'inc/config.php');
 

@@ -22,7 +22,7 @@ else
     $where = _site_user_lobby;
 
     if($chkMe == "unlogged")
-        $index = error(_error_have_to_be_logged, 1);
+        $index = error(_error_have_to_be_logged);
     else
     {
         $can_erase = false;
@@ -114,7 +114,8 @@ else
         #####################################
         ## Neue Registrierte User anzeigen ##
         #####################################
-        $qryu = db("SELECT regdatum FROM ".dba::get('users')." ORDER BY id DESC"); $user = ''; $i = 0;
+        $admin_pass = !permission("activateusers") ? "WHERE level >= 1" : "";
+        $qryu = db("SELECT regdatum FROM ".dba::get('users')." ".$admin_pass." ORDER BY id DESC"); $user = ''; $i = 0;
         if(_rows($qryu) >= 1)
         {
             while($getu = _fetch($qryu))

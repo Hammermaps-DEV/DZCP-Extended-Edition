@@ -56,4 +56,3 @@ else
             "email" => _email,
             "icq" => _icq));
 }
-?>

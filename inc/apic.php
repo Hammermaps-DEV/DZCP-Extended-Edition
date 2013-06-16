@@ -12,6 +12,7 @@ class API_CORE
     public static $addon_index = array();
     public static $MobileDevice = false;
     public static $MobileClass = '';
+    public static $bbcode_index = array();
 
     public static function init()
     {
@@ -276,4 +277,29 @@ class API_CORE
 
         return false;
     }
+
+    /**
+     *  *RUN* Additional BBCODE
+     *
+     *  @return string
+     */
+    public static function run_additional_bbcode($txt)
+    {
+        global $ajaxThumbgen;
+        if(modapi_enabled)
+        {
+            foreach (self::$bbcode_index as $key => $data)
+            { $txt = preg_replace($data['code'],$data['rep'],$txt); }
+        }
+
+        return $txt;
+    }
+
+    /**
+     *  Add Additional BBCODE
+     *
+     *  @return string
+     */
+    public static function add_additional_bbcode($bbcode=array(),$rep=array())
+    { self::$bbcode_index[] = array('code' => $bbcode, 'rep' => $rep); }
 }

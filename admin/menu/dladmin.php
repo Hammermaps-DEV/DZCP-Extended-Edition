@@ -39,8 +39,8 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['download']) || empty($_POST['url']))
         {
-          if(empty($_POST['download'])) $show = error(_downloads_empty_download, 1);
-          elseif(empty($_POST['url']))  $show = error(_downloads_empty_url, 1);
+          if(empty($_POST['download'])) $show = error(_downloads_empty_download);
+          elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
         } else {
 
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
@@ -93,8 +93,8 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editdl") {
         if(empty($_POST['download']) || empty($_POST['url']))
         {
-          if(empty($_POST['download'])) $show = error(_downloads_empty_download, 1);
-          elseif(empty($_POST['url']))  $show = error(_downloads_empty_url, 1);
+          if(empty($_POST['download'])) $show = error(_downloads_empty_download);
+          elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
         } else {
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
           else                                    $dl = up($_POST['url']);

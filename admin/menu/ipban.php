@@ -167,9 +167,9 @@ switch ($do)
 
     case 'add':
         if(empty($_POST['ip']))
-            $show = error(_ip_empty,1);
+            $show = error(_ip_empty);
         else if(validateIpV4Range($_POST['ip'], '[192].[168].[0-255].[0-255]') || validateIpV4Range($_POST['ip'], '[127].[0].[0-255].[0-255]') || validateIpV4Range($_POST['ip'], '[10].[0-255].[0-255].[0-255]') || validateIpV4Range($_POST['ip'], '[172].[16-31].[0-255].[0-255]'))
-            $show = error(_ipban_error_pip,1);
+            $show = error(_ipban_error_pip);
         else
         {
             if(empty($_POST['info']))
@@ -195,7 +195,7 @@ switch ($do)
     break;
     case 'edit_save':
         if(empty($_POST['ip']))
-            $show = error(_ip_empty,1);
+            $show = error(_ip_empty);
         else
         {
             $get = db("SELECT id,data FROM ".dba::get('ipban')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);

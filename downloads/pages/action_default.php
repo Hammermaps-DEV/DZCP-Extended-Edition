@@ -47,4 +47,3 @@ else
 
     $index = show($dir."/downloads", array("kats" => $kats));
 }
-?>

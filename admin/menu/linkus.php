@@ -5,8 +5,6 @@
 if(_adminMenu != 'true')
     exit();
 
-    if(permission('links'))
-    {
       if($_GET['do'] == "new")
       {
         $show = show($dir."/form_linkus", array("head" => _linkus_admin_head,
@@ -26,9 +24,9 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['link']) || empty($_POST['beschreibung']) || empty($_POST['text']))
         {
-          if(empty($_POST['link']))             $show = error(_linkus_empty_link, 1);
-          elseif(empty($_POST['beschreibung'])) $show = error(_linkus_empty_beschreibung, 1);
-          elseif(empty($_POST['text']))         $show = error(_linkus_empty_text, 1);
+          if(empty($_POST['link']))             $show = error(_linkus_empty_link);
+          elseif(empty($_POST['beschreibung'])) $show = error(_linkus_empty_beschreibung);
+          elseif(empty($_POST['text']))         $show = error(_linkus_empty_text);
         } else {
           $qry = db("INSERT INTO ".dba::get('linkus')."
                      SET `url`          = '".links($_POST['link'])."',
@@ -58,9 +56,9 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editlink") {
         if(empty($_POST['link']) || empty($_POST['beschreibung']) || empty($_POST['text']))
         {
-          if(empty($_POST['link']))             $show = error(_linkus_empty_link, 1);
-          elseif(empty($_POST['beschreibung'])) $show = error(_linkus_empty_beschreibung, 1);
-          elseif(empty($_POST['text']))         $show = error(_linkus_empty_text, 1);
+          if(empty($_POST['link']))             $show = error(_linkus_empty_link);
+          elseif(empty($_POST['beschreibung'])) $show = error(_linkus_empty_beschreibung);
+          elseif(empty($_POST['text']))         $show = error(_linkus_empty_text);
         } else {
           $qry = db("UPDATE ".dba::get('linkus')."
                      SET `url`          = '".links($_POST['link'])."',
@@ -109,7 +107,3 @@ if(_adminMenu != 'true')
                                            "show" => $show_,
                                            "add" => _linkus_admin_head));
       }
-    } else {
-      $show = error(_error_wrong_permissions, 1);
-    }
-?>

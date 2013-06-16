@@ -43,11 +43,11 @@ switch ($do)
     case 'addnavi':
         if(empty($_POST['name']))
         {
-            $show = error(_navi_no_name,1);
+            $show = error(_navi_no_name);
         } elseif(empty($_POST['url'])) {
-            $show = error(_navi_no_url,1);
+            $show = error(_navi_no_url);
         } elseif($_POST['pos'] == "lazy") {
-            $show = error(_navi_no_pos,1);
+            $show = error(_navi_no_pos);
         } else {
             if($_POST['pos'] == "1" || "2") $sign = ">= ";
             else $sign = "> ";

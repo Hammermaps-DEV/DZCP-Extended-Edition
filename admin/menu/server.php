@@ -25,7 +25,7 @@ switch($do)
             die();
         }
         else
-            $show = error(_server_isnt_live,1);
+            $show = error(_server_isnt_live);
     break;
 
     case 'edit':
@@ -54,9 +54,9 @@ switch($do)
 
     case 'editserver':
         if(empty($_POST['ip']) || empty($_POST['port']))
-            $show = error(_empty_ip,1);
+            $show = error(_empty_ip);
         else if(empty($_POST['name']))
-            $show = error(_empty_servername,1);
+            $show = error(_empty_servername);
         else
         {
             if($_POST['game'] == "lazy") $game = "";
@@ -105,11 +105,11 @@ switch($do)
 
     case 'add':
         if(empty($_POST['ip']) || empty($_POST['port']))
-            $show = error(_empty_ip,1);
+            $show = error(_empty_ip);
         else if($_POST['game'] == "lazy")
-            $show = error(_empty_game,1);
+            $show = error(_empty_game);
         else if(empty($_POST['name']))
-            $show = error(_empty_servername,1);
+            $show = error(_empty_servername);
         else
         {
             db("INSERT INTO ".dba::get('server')."
@@ -134,7 +134,7 @@ switch($do)
             if(!empty($get['custom_icon']))
             {
                 if(file_exists(basePath.'/inc/images/gameicons/custom/'.$get['custom_icon']))
-                    $gameicon = show(_gameicon, array('icon' => 'custom/'.$get['custom_icon']));
+                    $gameicon = show(_gameicon, array('icon' => $get['custom_icon']));
             }
             else
             {

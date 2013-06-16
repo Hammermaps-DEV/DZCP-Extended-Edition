@@ -339,7 +339,7 @@ class GameQ_Protocols_Bfbc2 extends GameQ_Protocols
         $result->add('game_num_bot', '');
         $result->add('game_password', false);
         $result->add('game_secure', $secure);
-        $result->add('game_engine', 'bfbc2');
+        $result->add('game_engine', 'frostbite');
         $result->add('game_protocol', $this->server_data_stream['gq_protocol']);
         $result->add('game_transport', $this->server_data_stream['gq_transport']);
         $result->add('game_port', $this->server_data_stream['gq_port']);

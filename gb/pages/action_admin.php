@@ -86,7 +86,7 @@ else
                 header("Location: ../gb/");
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'unset':
             if(permission('gb'))
@@ -95,7 +95,7 @@ else
                 header("Location: ../gb/");
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'delete':
             $get = db("SELECT reg FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
@@ -106,7 +106,7 @@ else
                 $index = info(_gb_delete_successful, "../gb/");
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'cdelete':
             $get = db("SELECT reg FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
@@ -116,7 +116,7 @@ else
                 $index = info(_comment_deleted, "../gb/");
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'cedit':
             $get = db("SELECT * FROM ".dba::get('gb_comments')."  WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
@@ -135,7 +135,7 @@ else
                                                      "eintraghead" => _eintrag));
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'edit':
             $get = db("SELECT * FROM ".dba::get('gb')."  WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
@@ -158,7 +158,7 @@ else
                                                  "eintraghead" => _gb_edit_head));
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'editgb':
             if(convert::ToInt($_POST['reg']) == convert::ToInt($userid) || permission('gb'))
@@ -171,7 +171,7 @@ else
                 $index = info(_gb_edited, "../gb/");
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
         case 'editgbc':
             $get = db("SELECT reg FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
@@ -189,8 +189,7 @@ else
                 $index = info(_gb_comment_edited, "../gb/");
             }
             else
-                $index = error(_error_edit_post,1);
+                $index = error(_error_edit_post);
         break;
     }
 }
-?>

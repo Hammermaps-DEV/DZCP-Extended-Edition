@@ -15,6 +15,9 @@ define('_teamspeak_menu_icon_yes', '<a href="?admin=teamspeak&amp;do=menu&amp;id
 define('_teamspeak_menu_icon_no', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_yes.gif" alt="" class="icon" /></a>');
 define('_ipban_menu_icon_enable', '<a href="[action]" onclick="return(DZCP.del(\'[info]\'))"><img src="../inc/images/admin_lock_closed.jpg" alt="" class="icon" /></a>');
 define('_ipban_menu_icon_disable', '<a href="[action]" onclick="return(DZCP.del(\'[info]\'))"><img src="../inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
+define('_news_img', '<img src="../inc/images/uploads/news/[img]" alt="" />');
+define('_emailicon_blank', '<img src="../inc/images/email.gif" alt="" class="icon" />');
+
 
 ## Added for DZCP 1.5.2 ##
 define('_dropdown_date_ts', '<select id="t_[nr]" name="t_[nr]" class="dropdown">[day]</select> <select id="m_[nr]" name="m_[nr]" class="dropdown">[month]</select> <select id="j_[nr]" name="j_[nr]" class="dropdown">[year]</select>');
@@ -98,7 +101,7 @@ define('_deleteicon_blank', '<img alt="" src="../inc/images/delete.png" class="i
 define('_buddys_delete', '<a href="?action=buddys&amp;do=delete&amp;id=[id]"><img src="../inc/images/delete.png" alt="" class="icon" /></a>');
 define('_editicon_blank', '<img alt="" src="../inc/images/edit.png" class="icon" />');
 define('_addbuddyicon', '<a href="../user/?action=buddys&amp;do=addbuddy&amp;id=[id]"><img alt="" src="../inc/images/add.gif" class="icon" /></a>');
-define('_gameicon', '<img alt="" src="../inc/images/gameicons/[icon]" height="16" width="16" class="icon" />');
+define('_gameicon', '<img alt="" src="../inc/images/gameicons/custom/[icon]" height="16" width="16" class="icon" />');
 define('_gallery_editicon', '<a href="../upload/?action=usergallery&amp;do=edit&gid=[id]"><img alt="" src="../inc/images/edit.png" title="Edit" class="icon" /></a>');
 define('_admin_ck_edit', '<a href="?action=admin&amp;do=paycheck&amp;id=[id]"><img src="../inc/images/edit.png" alt="" title="Edit" class="icon" /></a>');
 define('_msg_delete_sended', '<a href="?action=msg&amp;do=deletesended&amp;id=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
@@ -106,7 +109,7 @@ define('_gallery_deleteicon', '<a href="?action=editprofile&gallery=delete&gid=[
 define('_delete', '<a href="?action=msg&amp;do=deletethis&amp;id=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
 
 ## News ##
-define('_news_kat', '<img src="../inc/images/newskat/[img]" alt="" />');
+define('_news_kat', '<img src="../inc/images/uploads/newskat/[img]" alt="" />');
 define('_news_klapplink', '<br /><a href="javascript:DZCP.toggle(\'[id]\')"><img src="../inc/images/[which].gif" id="img[id]" alt="" class="icon" /> [klapplink]</a>');
 define('_news_links', '<span class="fontItalic">[rel]</span><br />[link1] [link2] [link3]');
 define('_artikel_links', '<span class="fontItalic">[rel]</span><br />[link1] [link2] [link3]');
@@ -135,7 +138,6 @@ define('_dropdown_date', '<select id="t" name="t" class="dropdown">[day]</select
 
 ## Umfragen ##
 define('_votes_titel', '<a href="javascript:DZCP.toggle(\'[vid]\')"><img src="../inc/images/[icon].gif" alt="" id="img[vid]" class="icon" />[intern][titel]</a>');
-define('_votes_balken', '<img src="../inc/images/vote.gif" width="[width]%" height="4" alt="[width]%" />');
 
 ## Downloads ##
 define('_downloads_files_exists', '<option value="[dl]" [sel]>[dl]</option>');
@@ -179,7 +181,7 @@ define('_linkus_admin', '<a href="?action=admin&amp;do=new">[new]</a>');
 define('_news_edit_link', "editnews&amp;id=[id]");
 define('_artikel_edit_link', 'editartikel&amp;id=[id]');
 define('_config_forum_kats_titel', '<a href="?admin=forum&amp;show=subkats&amp;id=[id]" style="display:block">[kat]</a>');
-define('_config_newskats_img', '<img src="../inc/images/newskat/[img]" alt="" />');
+define('_config_newskats_img', '<img src="../inc/images/uploads/newskat/[img]" alt="" />');
 define('_config_neskats_katbild_upload', '<a href="../upload/?action=newskats">upload</a>');
 define('_config_neskats_katbild_upload_edit', '<a href="../upload/?action=newskats&amp;edit=[id]">upload</a>');
 define('_config_newskats_editid', 'editnewskat&amp;id=[id]');

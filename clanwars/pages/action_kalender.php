@@ -159,4 +159,3 @@ else
             "show" => $show,
             "details" => _cw_head_details_show));
 }
-?>

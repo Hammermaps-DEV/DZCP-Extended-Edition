@@ -50,7 +50,7 @@ else
                     "what" => _button_value_edit,
                     "posteintrag" => re_bbcode($get['text'])));
         } else {
-            $index = error(_error_wrong_permissions, 1);
+            $index = error(_error_wrong_permissions);
         }
     } elseif($_GET['do'] == "editpost") {
         $qry = db("SELECT reg FROM ".dba::get('f_posts')."
@@ -133,9 +133,9 @@ else
                         if($entrys == "0") $pagenr = "1";
                         else $pagenr = ceil($entrys/$maxfposts);
 
-                        $subj = show(settings('eml_fabo_pedit_subj'), array("titel" => $title));
+                        $subj = show(re(settings('eml_fabo_pedit_subj')), array("titel" => $title));
 
-                        $message = show(settings('eml_fabo_pedit'), array("nick" => re($getabo['nick']),
+                        $message = show(re(settings('eml_fabo_pedit')), array("nick" => re($getabo['nick']),
                                 "postuser" => fabo_autor(convert::ToInt($userid)),
                                 "topic" => $gettopic['topic'],
                                 "titel" => $title,
@@ -161,12 +161,12 @@ else
                 $index = info(_forum_editpost_successful, $lpost);
             }
         } else {
-            $index = error(_error_wrong_permissions, 1);
+            $index = error(_error_wrong_permissions);
         }
     } elseif($_GET['do'] == "add") {
         if(settings("reg_forum") == "1" && $chkMe == "unlogged")
         {
-            $index = error(_error_unregistered,1);
+            $index = error(_error_unregistered);
         } else {
             if(!ipcheck("fid(".$_GET['kid'].")", config('f_forum')))
             {
@@ -177,9 +177,9 @@ else
                 $checks = _fetch($check);
                 if(forumcheck($_GET['id'], "closed"))
                 {
-                    $index = error(_error_forum_closed, 1);
+                    $index = error(_error_forum_closed);
                 } elseif($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id'])) {
-                    $index = error(_error_no_access, 1);
+                    $index = error(_error_no_access);
                 } else {
                     if(!empty($userid) && $userid != 0)
                     {
@@ -397,18 +397,18 @@ else
                             "posteintrag" => ""));
                 }
             } else {
-                $index = error(show(_error_flood_post, array("sek" => config('f_forum'))), 1);
+                $index = error(show(_error_flood_post, array("sek" => config('f_forum'))));
             }
         }
     } elseif($_GET['do'] == "addpost") {
         $qry_thread = db("SELECT `id`,`kid` FROM ".dba::get('f_threads')." WHERE `id` = '".convert::ToInt($_GET['id'])."'");
         if(_rows($qry_thread) == 0)
         {
-            $index = error(_id_dont_exist,1);
+            $index = error(_id_dont_exist);
         } else {
             if(settings("reg_forum") == "1" && $chkMe == "unlogged")
             {
-                $index = error(_error_unregistered,1);
+                $index = error(_error_unregistered);
             } else {
                 $get_threadkid = _fetch($qry_thread);
                 $check = db("SELECT s2.id,s1.intern FROM ".dba::get('f_kats')." AS s1
@@ -725,9 +725,9 @@ else
                             if($entrys == "0") $pagenr = "1";
                             else $pagenr = ceil($entrys/$maxfposts);
 
-                            $subj = show(settings('eml_fabo_npost_subj'), array("titel" => $title));
+                            $subj = show(re(settings('eml_fabo_npost_subj')), array("titel" => $title));
 
-                            $message = show(settings('eml_fabo_npost'), array("nick" => re($getabo['nick']),
+                            $message = show(re(settings('eml_fabo_npost')), array("nick" => re($getabo['nick']),
                                     "postuser" => fabo_autor(convert::ToInt($userid)),
                                     "topic" => $gettopic['topic'],
                                     "titel" => $title,
@@ -790,4 +790,3 @@ else
         }
     }
 }
-?>

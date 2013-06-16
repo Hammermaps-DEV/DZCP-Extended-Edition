@@ -327,6 +327,3 @@
 		define('TXT_CONTENT_UPDATE_FAILED', 'Failed to update content to the file.');
 		define('TXT_SAVE_AS_ERR_NAME_INVALID', 'Please give it a name which only contain letters, digits, space, hyphen and underscore.');
 	//88888888888   Above for Text Editor   888888888888888888888
-	
-	
-?>

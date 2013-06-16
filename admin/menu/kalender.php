@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
   $where = $where.': '._kalender_head;
-  if(!permission("editkalender"))
-  {
-    $show = error(_error_wrong_permissions, 1);
-  } else {
     if($_GET['do'] == "add")
     {
       $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
@@ -32,8 +28,8 @@ if(_adminMenu != 'true')
     } elseif($_GET['do'] == "addevent") {
       if(empty($_POST['title']) || empty($_POST['event']))
       {
-        if(empty($_POST['title']))     $show = error(_kalender_error_no_title,1);
-        elseif(empty($_POST['event'])) $show = error(_kalender_error_no_event,1);
+        if(empty($_POST['title']))     $show = error(_kalender_error_no_title);
+        elseif(empty($_POST['event'])) $show = error(_kalender_error_no_event);
       } else {
         $time = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
@@ -73,8 +69,8 @@ if(_adminMenu != 'true')
     } elseif($_GET['do'] == "editevent") {
       if(empty($_POST['title']) || empty($_POST['event']))
       {
-        if(empty($_POST['title']))     $show = error(_kalender_error_no_title,1);
-        elseif(empty($_POST['event'])) $show = error(_kalender_error_no_event,1);
+        if(empty($_POST['title']))     $show = error(_kalender_error_no_title);
+        elseif(empty($_POST['event'])) $show = error(_kalender_error_no_event);
       } else {
         $time = mktime($_POST['h'],$_POST['min'],0,$_POST['m'],$_POST['t'],$_POST['j']);
 
@@ -129,5 +125,3 @@ if(_adminMenu != 'true')
                                              "add" => _kalender_admin_head_add
                                              ));
     }
-  }
-?>

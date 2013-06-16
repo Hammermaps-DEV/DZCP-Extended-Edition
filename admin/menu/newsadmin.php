@@ -33,6 +33,8 @@ if(_adminMenu != 'true')
                                               "nautor" => _autor,
                                               "autor" => autor(convert::ToInt($userid)),
                                               "nkat" => _news_admin_kat,
+                                              "n_newspic" => "",
+                                              "delnewspic" => "",
                                               "kat" => $kat,
                                               "preview" => _preview,
                                               "ntitel" => _titel,
@@ -112,6 +114,8 @@ if(_adminMenu != 'true')
                                                 "nautor" => _autor,
                                                 "autor" => autor(convert::ToInt($userid)),
                                                 "nkat" => _news_admin_kat,
+                            "n_newspic" => "",
+                            "delnewspic" => "",
                                                 "kat" => $kat,
                                                 "preview" => _preview,
                                                 "do" => "insert",
@@ -181,6 +185,18 @@ if(_adminMenu != 'true')
                                                  ".$datum."
                                                  `sticky`     = '".convert::ToInt($stickytime)."'");
 
+                if($_FILES['newspic']['tmp_name']) {
+                    $tmpname = $_FILES['newspic']['tmp_name'];
+                    if(file_exists(basePath.'/inc/images/uploads/news/'.intval($_GET['id']).'.jpg')){
+                        @unlink(basePath."/inc/images/uploads/news/".intval($_GET['id']).".jpg");
+                        @copy($tmpname, basePath."/inc/images/uploads/news/".intval($_GET['id']).".jpg");
+                        @unlink($tmpname);
+                    }else{
+                        @copy($tmpname, basePath."/inc/images/uploads/news/".intval($_GET['id']).".jpg");
+                        @unlink($tmpname);
+                    }
+                }
+
           $show = info(_news_sended, "?admin=newsadmin");
         }
       } elseif($_GET['do'] == "edit") {
@@ -247,6 +263,14 @@ if(_adminMenu != 'true')
                                                                                                                     "uhr" => _uhr));
                 }
 
+                if(file_exists(basePath.'/inc/images/uploads/news/'.$_GET['id'].'.jpg')){
+                    $newsimage = img_size('news/'.$_GET['id'].'.jpg')."<br /><br />";
+                    $delnewspic = '<a href="?admin=newsadmin&do=delnewspic&id='.$_GET['id'].'">'._newspic_del.'</a><br /><br />';
+                }else{
+                    $newsimage = "";
+                    $delnewspic = "";
+                }
+
         $selr_nc = ($get['comments'] ? 'selected="selected"' : '');
         $show = show($dir."/news_form", array("head" => _admin_news_edit_head,
                                               "nautor" => _autor,
@@ -254,6 +278,8 @@ if(_adminMenu != 'true')
                                               "nkat" => _news_admin_kat,
                                               "kat" => $kat,
                                               "do" => $do,
+                "n_newspic" => $newsimage,
+                "delnewspic" => $delnewspic,
                                               "preview" => _preview,
                                               "ntitel" => _titel,
                                               "titel" => re($get['titel']),
@@ -347,6 +373,7 @@ if(_adminMenu != 'true')
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $del = db("DELETE FROM ".dba::get('newscomments')."
                    WHERE news = '".convert::ToInt($_GET['id'])."'");
+        @unlink(basePath."/inc/images/uploads/news/".intval($_GET['id']).".jpg");
 
         $show = info(_news_deleted, "?admin=newsadmin");
       } else {
@@ -402,4 +429,3 @@ if(_adminMenu != 'true')
                                                "delete" => _deleteicon_blank,
                                                "add" => _admin_news_head));
       }
-?>

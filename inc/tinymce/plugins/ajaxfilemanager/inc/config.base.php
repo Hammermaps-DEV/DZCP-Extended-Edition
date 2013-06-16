@@ -3,7 +3,7 @@
 	{
 		die('Permission denied');
 	}
-?><?php
+	
 	/**
 	 * sysem base config setting
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -135,4 +135,3 @@ error_reporting(E_ALL);
 
 	define('CONFIG_LANG_INDEX', 'language'); //the index in the session
 	define('CONFIG_LANG_DEFAULT', (CONFIG_QUERY_STRING_ENABLE && !empty($_GET['language']) && file_exists(DIR_LANG . secureFileName($_GET['language']) . '.php')?secureFileName($_GET['language']):'de')); //change it to be your language file base name, such en
-?>

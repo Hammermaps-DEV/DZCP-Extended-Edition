@@ -49,4 +49,3 @@ else
             "weare" => $weare,
             "show" => $show));
 }
-?>

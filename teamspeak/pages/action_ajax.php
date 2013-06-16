@@ -16,6 +16,7 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
+    header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
     function array_search_channel($key, $var, $array=array())
     {
         foreach ($array as $id => $data)

@@ -6,12 +6,12 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-function db($query,$rows=false,$fetch=false,$clear_output=false)
+function db($query,$rows=false,$fetch=false,$log=false)
 {
     database::init();
     if($rows || $fetch)
     {
-        database::query($query);
+        database::query($query,$log);
 
         if($fetch && $rows)
             $return = database::fetch(true);
@@ -23,10 +23,27 @@ function db($query,$rows=false,$fetch=false,$clear_output=false)
         database::free_result();
         return $return;
     }
-    else if($clear_output)
-        database::query($query,true);
-    else
-        return database::query($query);
+
+    return database::query($query,$log);
+}
+
+function db_stmt($query,$params=array(),$rows=false,$fetch=false,$log=false)
+{
+    database::init();
+    if($rows || $fetch)
+    {
+        database::stmt_query($query,$params,$log);
+
+        if($fetch && !$rows)
+            $return = database::fetch(false)[0];
+        else
+            $return = database::rows();
+
+        database::free_result();
+        return $return;
+    }
+
+    return database::stmt_query($query,$params);
 }
 
 /**
@@ -92,13 +109,17 @@ function settings($what)
         $sql='';
         foreach($what as $qy)
         { $sql .= $qy.", "; }
-        $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".dba::get('settings')."`",false,true);
+        $sql = substr($sql, 0, -2); $hash = md5($sql);
+        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
+        $get = db("SELECT ".$sql." FROM `".dba::get('settings')."`",false,true);
+        RTBuffer::set($hash,$get); return $get;
     }
     else
     {
+        $hash = md5('sql_settings_'.$what);
+        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
         $get = db("SELECT ".$what." FROM `".dba::get('settings')."`",false,true);
-        return $get[$what];
+        RTBuffer::set($hash,$get[$what]); return $get[$what];
     }
 }
 
@@ -114,13 +135,17 @@ function config($what)
     {
         $sql='';
         foreach($what as $qy) { $sql .= $qy.", "; }
-        $sql = substr($sql, 0, -2);
-        return db("SELECT ".$sql." FROM `".dba::get('config')."`",false,true);
+        $sql = substr($sql, 0, -2); $hash = md5($sql);
+        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
+        $get = db("SELECT ".$sql." FROM `".dba::get('config')."`",false,true);
+        RTBuffer::set($hash,$get); return $get;
     }
     else
     {
+        $hash = md5('sql_config_'.$what);
+        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
         $get = db("SELECT ".$what." FROM `".dba::get('config')."`",false,true);
-        return $get[$what];
+        RTBuffer::set($hash,$get[$what]); return $get[$what];
     }
 }
 
@@ -162,6 +187,7 @@ class database
     private static $sql_query = null;
     private static $insert_id = 0;
     private static $runned = false;
+    private static $stmt = null;
 
     /**
      * Datenbank Connect
@@ -190,7 +216,7 @@ class database
             if(!mysqli_options(self::$mysqli, MYSQLI_OPT_CONNECT_TIMEOUT, 5))
                 die('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
 
-            if (!mysqli_real_connect(self::$mysqli, $db_array['host'], $db_array['user'], $db_array['pass'], $db_array['db']))
+            if (!self::$mysqli=mysqli_connect($db_array['host'], $db_array['user'], $db_array['pass'], $db_array['db']))
                 self::print_db_error();
         }
         else
@@ -217,26 +243,91 @@ class database
      * Datenbank Query senden
      * @param string $sql_query
      */
-    public static final function query($sql_query='',$clear_output=false)
+    public static final function query($sql_query='',$log=false)
     {
         global $db_array;
         if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
         {
+            if($log || debug_all_sql_querys) DebugConsole::wire_log('debug', 9, 'SQL_Query', $sql_query);
             if(!mysqli_real_query(self::$mysqli, $sql_query))
                 DebugConsole::sql_error_handler($sql_query);
             else
             {
                 self::$insert_id = mysqli_insert_id(self::$mysqli);
-                if(!$clear_output)
-                {
-                    self::$sql_query = mysqli_store_result(self::$mysqli);
-                    unset($sql_query);
-                    return self::$sql_query;
-                }
-                else
-                    return true;
+                self::$sql_query = mysqli_store_result(self::$mysqli);
+                unset($sql_query);
+                return self::$sql_query;
             }
         }
+    }
+
+    /**
+     * Datenbank Query senden als prepare SQL statement
+     * @param string $static_query
+     * @param array params
+     */
+    public static final function stmt_query($query='SELECT * FROM test WHERE name=?',$params=array('si', 'hallo', '4'), $log=false)
+    {
+        if($log || debug_all_sql_querys) DebugConsole::wire_log('debug', 9, 'SQL_Query', $query);
+        if(self::$stmt = mysqli_prepare(self::$mysqli, $query))
+        {
+            /**
+             *  i 	corresponding variable has type integer
+             *  d 	corresponding variable has type double
+             *  s 	corresponding variable has type string
+             *  b 	corresponding variable is a blob and will be sent in packets
+             */
+            call_user_func_array(array(self::$stmt, 'bind_param'), self::refValues($params));
+            mysqli_stmt_execute(self::$stmt);
+
+            $meta = mysqli_stmt_result_metadata(self::$stmt);
+            if(!$meta || empty($meta)) { mysqli_stmt_close(self::$stmt); self::close(); return; }
+            $row = array(); $parameters = array(); $results = array();
+            while ( $field = mysqli_fetch_field($meta) )
+            {
+                $parameters[] = &$row[$field->name];
+            }
+
+            mysqli_stmt_store_result(self::$stmt);
+            $results['_stmt_rows_'] = mysqli_stmt_num_rows(self::$stmt);
+            call_user_func_array(array(self::$stmt, 'bind_result'), self::refValues($parameters));
+
+            while ( mysqli_stmt_fetch(self::$stmt) )
+            {
+                $x = array();
+                foreach( $row as $key => $val )
+                {
+                    $x[$key] = $val;
+                }
+
+                $results[] = $x;
+            }
+
+            self::$sql_query = $results;
+
+            /* close statement */
+            self::$insert_id = mysqli_insert_id(self::$mysqli);
+            mysqli_stmt_close(self::$stmt);
+            self::close();
+
+            return self::$sql_query;
+        }
+
+        return false;
+    }
+
+    private static final function refValues($arr)
+    {
+        if (strnatcmp(phpversion(),'5.3') >= 0)
+        {
+            $refs = array();
+            foreach($arr as $key => $value)
+                $refs[$key] = &$arr[$key];
+
+            return $refs;
+        }
+
+        return $arr;
     }
 
     /**
@@ -253,13 +344,27 @@ class database
      */
     public static final function fetch($array=false,$result=null)
     {
-        if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
+        if(is_array($result) || (!empty(self::$sql_query) && count(self::$sql_query) >= 1) && is_array(self::$sql_query))
+        {
+            if(array_key_exists('_stmt_rows_', is_array($result) ? $result : self::$sql_query))
+            {
+                if(is_array($result)) unset($result['_stmt_rows_']);
+                else unset(self::$sql_query['_stmt_rows_']);
+            }
+
+            return is_array($result) ? $result[0] : self::$sql_query;
+        }
+        else if(empty(self::$sql_query) && !count(self::$sql_query) && is_array(self::$sql_query))
+            return false;
+        else if(!$_SESSION['installer'] || $_SESSION['db_install'] && (!empty(self::$sql_query) || !empty($result))) //For Installer
         {
             if($array)
                 return mysqli_fetch_array(empty($result) || $result == null ? self::$sql_query : $result, MYSQLI_BOTH);
-            else
+             else
                 return mysqli_fetch_assoc(empty($result) || $result == null ? self::$sql_query : $result);
         }
+
+        return false;
     }
 
     /**
@@ -269,8 +374,13 @@ class database
      */
     public static final function rows($result=null)
     {
+        if(is_array($result) || is_array(self::$sql_query))
+            return is_array($result) ? $result['_stmt_rows_'] : self::$sql_query['_stmt_rows_'];
+
         if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
             return mysqli_num_rows(empty($result) || $result == null ? self::$sql_query : $result);
+
+        return false;
     }
 
     /**

@@ -22,4 +22,3 @@ else
 
     header("Location: ".$get['link']);
 }
-?>

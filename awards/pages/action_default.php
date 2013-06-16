@@ -169,4 +169,3 @@ else
             "legende" => $legende,
             "show" => $show_));
 }
-?>

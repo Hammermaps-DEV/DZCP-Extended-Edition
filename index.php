@@ -6,10 +6,13 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 define('basePath', dirname(__FILE__));
-if(file_exists(basePath."/inc/mysql.php"))
+if(file_exists(basePath."/inc/mysql.php") && file_exists(basePath."/inc/mysql_salt.php"))
+{
     require_once(basePath."/inc/mysql.php");
+    require_once(basePath."/inc/mysql_salt.php");
+}
 else
-{ $sql_host = ''; $sql_user = ''; $sql_pass = ''; $sql_db = ''; $sql_prefix = ''; }
+{ $sql_host = ''; $sql_user = ''; $sql_pass = ''; $sql_db = ''; $sql_prefix = ''; $sql_salt = '';}
 
 if(empty($sql_user) && empty($sql_pass) && empty($sql_db))
     header('Location: _installer/index.php');

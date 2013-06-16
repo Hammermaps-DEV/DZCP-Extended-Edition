@@ -78,4 +78,3 @@ else
 
     $index = show($dir."/kalender", array("monate" => $month, "jahr" => $year, "show" => $show));
 }
-?>

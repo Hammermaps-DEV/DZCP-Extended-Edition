@@ -28,7 +28,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "addbutton") {
         if(empty($_POST['link']))
         {
-          $show = error(_empty_url, 1);
+          $show = error(_empty_url);
         } else {
           $qry = db("INSERT INTO ".dba::get('partners')."
                      SET `link`     = '".links($_POST['link'])."',
@@ -65,7 +65,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editbutton") {
         if(empty($_POST['link']))
         {
-          $show = error(_empty_url, 1);
+          $show = error(_empty_url);
         } else {
           $qry = db("UPDATE ".dba::get('partners')."
                      SET `link`     = '".links($_POST['link'])."',
@@ -113,4 +113,3 @@ if(_adminMenu != 'true')
                                              "link" => _link,
                                              "button" => _partners_button));
       }
-?>

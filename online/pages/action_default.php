@@ -52,4 +52,3 @@ else
             "user" => _status_user.'/'._server_ip,
             "where" => _online_whereami));
 }
-?>

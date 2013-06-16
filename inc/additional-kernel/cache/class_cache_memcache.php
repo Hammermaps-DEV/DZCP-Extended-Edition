@@ -156,24 +156,21 @@ class cache_memcache extends Cache
     {
         $key = 'bin_'.$key;
         $data = @memcache_get(self::$_memcached,md5($key));
-        if($data && !empty($data))
-        {
-            unset($data);
-            $control = self::control_get($key);
+        $control = self::control_get($key);
 
-            if(empty($control['stream_hash']) || empty($control['original_file']))
-                return true;
+        if(empty($control) || empty($data))
+            return true;
 
-            if(!file_exists(basePath.'/'.$control['original_file']))
-                return true;
+        if(empty($control['stream_hash']) && !empty($control['original_file']))
+            return true;
 
-            if(convert::ToString(md5_file(basePath.'/'.$control['original_file'])) != $control['stream_hash'])
-                return true;
+        if(!empty($control['original_file']) && !file_exists(basePath.'/'.$control['original_file']))
+            return true;
 
-            return false;
-        }
+        if(!empty($control['original_file']) && convert::ToString(md5_file(basePath.'/'.$control['original_file'])) != $control['stream_hash'])
+            return true;
 
-        return true;
+        return false;
     }
 
     /**

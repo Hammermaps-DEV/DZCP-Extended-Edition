@@ -36,7 +36,7 @@ else
 
     //Interne News
     $newsconfig = config(array('m_news','cache_news'));
-    $qry = db("SELECT kat,id,klapptext,viewed,link1,link2,link3,url1,url2,url3,titel,intern,text,datum,autor FROM ".dba::get('news')."
+    $qry = db("SELECT kat,id,klapptext,viewed,link1,link2,link3,url1,url2,url3,titel,intern,text,datum,autor,custom_image FROM ".dba::get('news')."
                WHERE sticky >= ".time()." AND datum <= ".time()." AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
                ORDER BY datum DESC LIMIT ".($page - 1)*$newsconfig['m_news'].",".$newsconfig['m_news']."");
 
@@ -54,8 +54,21 @@ else
             $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
             $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
+            $newsimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+            if($get['custom_image'])
+            {
+                foreach($picformat AS $end)
+                {
+                    if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                        break;
+                }
+
+                if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                    $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+            }
+
             $sticky_news = show($dir."/news_show", array("titel" => re($get['titel']),
-                                                          "kat" => re($getkat['katimg']),
+                                                          "newsimage" => $newsimage,
                                                           "id" => $get['id'],
                                                           "comments" => $comments,
                                                           "dp" => "none",
@@ -77,7 +90,7 @@ else
     //Public News
     if(Cache::check('news_page'))
     {
-        $qry = db("SELECT id,url1,url2,url3,link1,link2,link3,titel,klapptext,klapplink,text,datum,autor,viewed,intern,kat FROM ".dba::get('news')."
+        $qry = db("SELECT id,url1,url2,url3,link1,link2,link3,titel,klapptext,klapplink,text,datum,autor,viewed,intern,kat,custom_image FROM ".dba::get('news')."
                         WHERE sticky < ".time()."
                         AND datum <= ".time()."
                         AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
@@ -96,8 +109,21 @@ else
                 $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
                 $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
+                $newsimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+                if($get['custom_image'])
+                {
+                    foreach($picformat AS $end)
+                    {
+                        if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                            break;
+                    }
+
+                    if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                        $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+                }
+
                 $show .= show($dir."/news_show", array("titel" => re($get['titel']),
-                                                              "kat" => re($getkat['katimg']),
+                                                              "newsimage" => $newsimage,
                                                               "id" => $get['id'],
                                                               "comments" => $comments,
                                                               "dp" => "none",

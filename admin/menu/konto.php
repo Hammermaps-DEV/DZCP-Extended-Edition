@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._config_clankasse_head;
-    if(!permission("clankasse"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       $qry = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".dba::get('settings')."");
       $get = _fetch($qry);
 
@@ -87,7 +83,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['kat']))
         {
-          $show = error(_clankasse_empty_kat, 1);
+          $show = error(_clankasse_empty_kat);
         } else {
           $qry = db("INSERT INTO ".dba::get('c_kats')."
                      SET `kat` = '".up($_POST['kat'])."'");
@@ -108,7 +104,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editkat") {
         if(empty($_POST['kat']))
         {
-          $show = error(_clankasse_empty_kat, 1);
+          $show = error(_clankasse_empty_kat);
         } else {
           $qry = db("UPDATE ".dba::get('c_kats')."
                      SET `kat` = '".up($_POST['kat'])."'
@@ -122,5 +118,3 @@ if(_adminMenu != 'true')
 
         $show = info(_clankasse_kat_deleted, "?admin=konto");
       }
-    }
-?>

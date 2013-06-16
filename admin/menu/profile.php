@@ -18,13 +18,13 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "addprofile") {
         if(empty($_POST['name']))
         {
-          $show = error(_profil_no_name,1);
+          $show = error(_profil_no_name);
         } elseif($_POST['kat']=="lazy")
         {
-          $show = error(_profil_no_kat,1);
+          $show = error(_profil_no_kat);
           } elseif($_POST['type']=="lazy")
         {
-          $show = error(_profil_no_type,1);
+          $show = error(_profil_no_type);
         } else {
           $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
 
@@ -74,7 +74,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editprofil") {
         if(empty($_POST['name']))
         {
-          $show = error(_profil_no_name,1);
+          $show = error(_profil_no_name);
         } else {
           $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
 
@@ -261,4 +261,3 @@ if(_adminMenu != 'true')
                                            "del" => _deleteicon_blank,
                                                              "shown" => _profile_shown));
       }
-?>

@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if ($chkMe < "2")
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         if(isset($_GET['what']) && !empty($_GET['what']))
@@ -42,4 +42,3 @@ else
             $index = info(_taktik_added, "../taktik/");
     }
 }
-?>

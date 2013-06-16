@@ -38,13 +38,13 @@ else
 
             if(!$tmpname)
             {
-                $index = error(_upload_no_data, 1);
+                $index = error(_upload_no_data);
             } elseif($size > config('upicsize')."000") {
-                $index = error(_upload_wrong_size, 1);
+                $index = error(_upload_wrong_size);
             } elseif(cnt(dba::get('usergallery'), " WHERE user = ".convert::ToInt($userid)) == config('m_gallerypics')) {
-                $index = error(_upload_over_limit, 2);
+                $index = error(_upload_over_limit, '2');
             } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name'])) {
-                $index = error(_upload_file_exists, 1);
+                $index = error(_upload_file_exists);
             } else {
                 copy($tmpname, basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name']);
                 @unlink($_FILES['file']['tmp_name']);
@@ -76,7 +76,7 @@ else
                         "info" => _upload_info,
                         "infos" => $infos));
             } else {
-                $index = error(_error_wrong_permissions, 1);
+                $index = error(_error_wrong_permissions);
             }
         } elseif($_GET['do'] == "editfile") {
             $tmpname = $_FILES['file']['tmp_name'];
@@ -112,7 +112,6 @@ else
             $index = info(_edit_gallery_done, "../user/?action=editprofile&show=gallery");
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

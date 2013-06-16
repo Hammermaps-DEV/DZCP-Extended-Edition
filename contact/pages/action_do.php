@@ -19,17 +19,17 @@ else
     if($_GET['what'] == "contact")
     {
         if($_POST['secure'] != $_SESSION['sec_contact'] || empty($_SESSION['sec_contact']))
-            $index = error(_error_invalid_regcode,1);
+            $index = error(_error_invalid_regcode);
         elseif(empty($_POST['text']))
-        $index = error(_error_empty_nachricht, 1);
+        $index = error(_error_empty_nachricht);
         elseif(empty($_POST['email']))
-        $index = error(_empty_email, 1);
+        $index = error(_empty_email);
         elseif(!check_email($_POST['email']))
-        $index = error(_error_invalid_email, 1);
+        $index = error(_error_invalid_email);
         else if(check_email_trash_mail($_POST['email']))
-        $index = error(_error_trash_mail, 1);
+        $index = error(_error_trash_mail);
         elseif(empty($_POST['nick']))
-        $index = error(_empty_nick, 1);
+        $index = error(_empty_nick);
         else {
             $icq = preg_replace("=-=Uis","",$_POST['icq']);
             $email = show(_email_mailto, array("email" => $_POST['email']));
@@ -70,19 +70,19 @@ else
         }
     } elseif($_GET['what'] == "joinus") {
         if($_POST['secure'] != $_SESSION['sec_joinus'] || empty($_SESSION['sec_joinus']))
-            $index = error(_error_invalid_regcode,1);
+            $index = error(_error_invalid_regcode);
         elseif(empty($_POST['text']))
-        $index = error(_error_empty_nachricht, 1);
+        $index = error(_error_empty_nachricht);
         elseif(empty($_POST['age']))
-        $index = error(_error_empty_age, 1);
+        $index = error(_error_empty_age);
         elseif(empty($_POST['email']))
-        $index = error(_empty_email, 1);
+        $index = error(_empty_email);
         elseif(!check_email($_POST['email']))
-        $index = error(_error_invalid_email, 1);
+        $index = error(_error_invalid_email);
         else if(check_email_trash_mail($_POST['email']))
-        $index = error(_error_trash_mail, 1);
+        $index = error(_error_trash_mail);
         elseif(empty($_POST['nick']))
-        $index = error(_empty_nick, 1);
+        $index = error(_empty_nick);
         else {
             $icq = preg_replace("=-=Uis","",$_POST['icq']);
             $email = show(_email_mailto, array("email" => $_POST['email']));
@@ -125,19 +125,19 @@ else
         }
     } elseif($_GET['what'] == "fightus") {
         if($_POST['secure'] != $_SESSION['sec_fightus'] || empty($_SESSION['sec_fightus']))
-            $index = error(_error_invalid_regcode,1);
+            $index = error(_error_invalid_regcode);
         elseif(empty($_POST['clan']))
-        $index = error(_error_empty_clanname, 1);
+        $index = error(_error_empty_clanname);
         elseif(empty($_POST['email']))
-        $index = error(_empty_email, 1);
+        $index = error(_empty_email);
         elseif(empty($_POST['maps']))
-        $index = error(_empty_fightus_map, 1);
+        $index = error(_empty_fightus_map);
         elseif(!check_email($_POST['email']))
-        $index = error(_error_invalid_email, 1);
+        $index = error(_error_invalid_email);
         else if(check_email_trash_mail($_POST['email']))
-        $index = error(_error_trash_mail, 1);
+        $index = error(_error_trash_mail);
         elseif(empty($_POST['nick']))
-        $index = error(_empty_nick, 1);
+        $index = error(_empty_nick);
         else {
             $icq = preg_replace("=-=Uis","",$_POST['icq']);
             $email = show(_email_mailto, array("email" => $_POST['email']));
@@ -203,4 +203,3 @@ else
         }
     }
 }
-?>

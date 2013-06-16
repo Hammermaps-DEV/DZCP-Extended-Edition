@@ -31,7 +31,7 @@ else
         $index = show($dir."/register", array("error" => "", "r_name" => "", "r_nick" => "", "r_email" => "", "value" => _button_value_reg, "regcode" => $regcode, "pwd2" => _pwd2));
     }
     else
-        $index = error(_error_user_already_in, 1); //Error, User ist bereits angemeldet
+        $index = error(_error_user_already_in); //Error, User ist bereits angemeldet
 
     ## Registrierung ausführen ##
     if($do == "add")
@@ -66,17 +66,9 @@ else
         }
         else
         {
+            $use_akl = config('use_akl');
             ## Wurde ein Passwort eingegeben ##
-            if(empty($_POST['pwd']))
-            {
-                $mkpwd = mkpwd();
-                $msg = _info_reg_valid;
-            }
-            else
-            {
-                $mkpwd = $_POST['pwd'];
-                $msg = _info_reg_valid_pwd;
-            }
+            $mkpwd = (empty($_POST['pwd']) ? mkpwd() : $_POST['pwd']);
 
             ## Neuen User in die Datenbank schreiben ##
             db("INSERT INTO ".dba::get('users')." SET
@@ -84,11 +76,13 @@ else
             `nick` = '".up($_POST['nick'])."',
             `email` = '".up($_POST['email'])."',
             `pwd` = '".pass_hash($mkpwd,settings('default_pwd_encoder'))."',
+            `pwd_encoder` = '".settings('default_pwd_encoder')."',
             `regdatum` = '".($time=time())."',
-            `level`    = '1',
+            `level`    = ".($use_akl ? '0' : '1').",
             `time`     = '".$time."',
             `rss_key`  = '".md5(mkpwd())."',
-            `status`   = '1'");
+            `actkey`  = '".($use_akl ? ($guid=GenGuid()) : '')."',
+            `status`   = ".($use_akl ? '0' : '1')."");
 
             ## Lese letzte ID aus ##
             $insert_id = database::get_insert_id();
@@ -105,11 +99,18 @@ else
             ## Ereignis in den Adminlog schreiben ##
             wire_ipcheck("reg(".$insert_id.")");
 
-            ## User E-Mail zusammenstellen und senden ##
+            ## E-Mail zusammenstellen und senden ##
+            if($use_akl)
+            {
+                $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
+                $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
+                sendMail($_POST['email'],settings('eml_akl_register_subj'),show(settings('eml_akl_register'), array("nick" => up($_POST['user']), "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+            }
+
             sendMail($_POST['email'],settings('eml_reg_subj'),show(settings('eml_reg'), array("user" => up($_POST['user']), "pwd" => $mkpwd)));
 
             ## Nachricht anzeigen und zum  Userlogin weiterleiten ##
-            $index = info(show($msg, array("email" => $_POST['email'])), "../user/?action=login");
+            $index = info(show($use_akl ? _info_reg_valid_akl : _info_reg_valid, array("email" => $_POST['email'])), "../user/?action=login",8);
         }
     }
 }

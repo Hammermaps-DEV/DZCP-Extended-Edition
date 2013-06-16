@@ -109,10 +109,10 @@ else
                     $index = info(_gb_edited, "?action=user&show=gb&id=".$_GET['id']);
                 }
                 else
-                    $index = error(_error_edit_post,1);
+                    $index = error(_error_edit_post);
             break;
         }
     }
     else
-        $index = error(_user_dont_exist,1);
+        $index = error(_user_dont_exist);
 }

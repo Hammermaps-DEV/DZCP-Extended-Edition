@@ -50,7 +50,7 @@ class Cache
     {
         if(!array_key_exists($typeShort, self::$cacheInstalled))
         {
-            if(empty($install['Required']) || !extension_loaded(!$install['Required']))
+            if(empty($install['Required']) || extension_loaded($install['Required']))
             {
                 if(show_cache_debug)
                     DebugConsole::insert_loaded('inc/additional-kernel/cache/class_'.$install['Class'].'.php', $install['TypeName']);
@@ -58,7 +58,15 @@ class Cache
                 self::$cacheInstalled[$typeShort] = $install;
             }
             else if((!empty($install['Required']) || !extension_loaded($install['Required'])) && show_cache_debug)
+            {
                 DebugConsole::insert_info('inc/cache.php', 'PHP-Extension: "'.$install['Required'].'" not loaded, required for Cache Type: "'.$install['TypeName'].'"');
+                self::$dummy_overwrite = true;
+            }
+            else if(!extension_loaded($install['Required']))
+            {
+                DebugConsole::insert_info('inc/cache.php', 'PHP-Extension: "'.$install['Required'].'" not loaded, required for Cache Type: "'.$install['TypeName'].'"');
+                self::$dummy_overwrite = true;
+            }
         }
 
         if(!array_key_exists($typeShort, self::$cacheToInstall))

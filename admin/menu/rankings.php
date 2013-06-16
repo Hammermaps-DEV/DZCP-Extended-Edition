@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._config_rankings;
-    if(!permission("rankings"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       if($_GET['do'] == "add")
       {
         $qrys = db("SELECT * FROM ".dba::get('squads')."
@@ -36,9 +32,9 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "addranking") {
         if(empty($_POST['league']) || empty($_POST['url']) || empty($_POST['rank']))
         {
-          if(empty($_POST['league']))   $show = error(_error_empty_league,1);
-          elseif(empty($_POST['url']))  $show = error(_error_empty_url,1);
-          elseif(empty($_POST['rank'])) $show = error(_error_empty_rank,1);
+          if(empty($_POST['league']))   $show = error(_error_empty_league);
+          elseif(empty($_POST['url']))  $show = error(_error_empty_url);
+          elseif(empty($_POST['rank'])) $show = error(_error_empty_rank);
         } else {
           $qry = db("INSERT INTO ".dba::get('rankings')."
                      SET `league`   = '".up($_POST['league'])."',
@@ -80,9 +76,9 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editranking") {
         if(empty($_POST['league']) || empty($_POST['url']) || empty($_POST['rank']))
         {
-          if(empty($_POST['league']))   $show = error(_error_empty_league,1);
-          elseif(empty($_POST['url']))  $show = error(_error_empty_url,1);
-          elseif(empty($_POST['rank'])) $show = error(_error_empty_rank,1);
+          if(empty($_POST['league']))   $show = error(_error_empty_league);
+          elseif(empty($_POST['url']))  $show = error(_error_empty_url);
+          elseif(empty($_POST['rank'])) $show = error(_error_empty_rank);
         } else {
           $qry = db("SELECT rank FROM ".dba::get('rankings')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -136,5 +132,3 @@ if(_adminMenu != 'true')
                                              "add" => _rankings_add_head
                                              ));
       }
-    }
-?>

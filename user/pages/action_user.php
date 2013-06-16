@@ -56,7 +56,7 @@ else
 
     $where = _user_profile_of;
     if(!isset($_GET['id']) || empty($_GET['id']) || !exist($_GET['id']))
-        $index = error(_user_dont_exist, 1);
+        $index = error(_user_dont_exist);
     else
     {
         $view_userID = convert::ToInt($_GET['id']); //UserID
@@ -69,6 +69,8 @@ else
 
         if($get['profile_access'] && $chkMe == 'unlogged')
             $index = error(_profile_access_error,1);
+        else if(!$get['level'] && $chkMe == 'unlogged')
+            $index = error(_error_wrong_permissions);
         else
         {
 
@@ -83,7 +85,7 @@ else
                         $index = info(_gb_delete_successful, "?action=user&amp;id=".$view_userID."&show=gb");
                     }
                     else
-                        $index = error(_error_wrong_permissions, 1);
+                        $index = error(_error_wrong_permissions);
                 break;
                 case 'edit':
                     $get = db("SELECT * FROM ".dba::get('usergb')." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
@@ -115,7 +117,7 @@ else
                                 "eintraghead" => _eintrag));
                     }
                     else
-                        $index = error(_error_edit_post,1);
+                        $index = error(_error_edit_post);
                 break;
             }
 
@@ -236,7 +238,7 @@ else
                         $bday = ($get['bday'] == ".." || $get['bday'] == 0 || empty($get['bday']) ? '-' : $get['bday']);
                         $icq = (!empty($get['icq']) ? show(_icqstatus, array("uin" => $get['icq'])) : '-');
                         $icqnr = (!empty($get['icq']) ? re($get['icq']) : '');
-                        $status = ($get['status'] == 1 || ($getl['level'] != 1 && isset($_GET['sq'])) ? _aktiv_icon : _inaktiv_icon);
+                        $status = ($get['status'] == 1 || ($get['level'] != 1 && isset($_GET['sq'])) ? _aktiv_icon : _inaktiv_icon);
                         $buddyadd = show(_addbuddyicon, array("id" => $_GET['id']));
                         $edituser = (permission("editusers") ? str_replace("&amp;id=","",show("page/button_edit_single", array("id" => "", "action" => "action=admin&amp;edit=".$view_userID, "title" => _button_title_edit))) : '');
                         $xfire = (!empty($get['xfire']) ? '<div id="infoXfire_'.re($get['xfire']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.re($get['xfire']).'","xfire","&username='.re($get['xfire']).'");</script></div>' : '-');
@@ -327,7 +329,7 @@ else
                 $navi_gb = show(_profil_navi_gb, array("id" => $view_userID));
                 $navi_gallery = show(_profil_navi_gallery, array("id" => $view_userID));
                 $profil_head = show(_profil_head, array("profilhits" => userstats($view_userID,"profilhits")));
-                $index = show($dir."/profil", array("profilhead" => $profil_head, "show" => $show, "nick" => autor($view_userID), "profil" => $navi_profil, "gb" => $navi_gb, "gallery" => $navi_gallery));
+                $index = show($dir."/profil", array("profilhead" => $profil_head, "show" => $show, "nick" => autor($view_userID,'gray'), "profil" => $navi_profil, "gb" => $navi_gb, "gallery" => $navi_gallery));
             }
         }
     }

@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._server_admin_head;
-    if(!permission("glossar"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       if($_GET['do'] == 'add')
       {
         $show = show($dir."/form_glossar", array("head" => _admin_glossar_add,
@@ -102,5 +98,3 @@ if(_adminMenu != 'true')
                                             "add" => _admin_glossar_add
                                             ));
       }
-    }
-?>

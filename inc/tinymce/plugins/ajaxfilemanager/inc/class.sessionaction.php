@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 /**
 	 *Session Action Class 
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -95,4 +94,3 @@
 			return (isset($_SESSION[$this->fromFolderIndex])?$_SESSION[$this->fromFolderIndex]:'');
 		}
 	}
-?>

@@ -1,0 +1,142 @@
+[error]
+<tr>
+  <td class="contentHead" colspan="2" align="center"><span class="fontBold">[registerhead]</span></td>
+</tr>
+<tr>
+<td>
+<form id="adduser" name="adduser" enctype="multipart/form-data" action="?admin=adduser&amp;do=add" method="post" onsubmit="return(DZCP.submitButton())">
+<input id="gmaps_koord" name="gmaps_koord" type="hidden" value="" required />
+<table class="hperc" cellspacing="1">
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_loginname]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input name="user" type="text" class="inputField_dis"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" value="[wname]" required />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_nick]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input name="nick" type="text" class="inputField_dis"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" value="[wnick]" required />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_email]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input name="email" type="text" class="inputField_dis"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" value="[wemail]" required />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_pwd]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input name="pwd" type="password" class="inputField_dis"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" value="[wpwd]" />
+  </td>
+</tr>
+<tr>
+  <td class="contentHead" colspan="2"><span class="fontBold">[lang_useradd_about]</span></td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_profil_ppic]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="file" name="file" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold"><span class="fontBold">[lang_profil_real]:</span></span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="text" name="rlname" value="[wrlname]" class="inputField_dis_profil"
+    onfocus="this.className='inputField_en_profil';"
+    onblur="this.className='inputField_dis_profil';" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_profil_sex]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <select name="sex" class="dropdown">[sex]</select>
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_profil_bday]:</span></td>
+  <td class="contentMainFirst" align="center">
+    [dropdown_age]
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="25%"><span class="fontBold">[lang_profil_city]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input name="city" type="text" class="inputField_dis" id="city"
+    onfocus="this.className='inputField_en';"
+    onblur="this.className='inputField_dis';" value="[wcity]" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_profil_country]:</span></td>
+  <td class="contentMainFirst" align="center">[country]</td>
+</tr>
+<tr>
+  <td class="contentMainTop" align="center" colspan="3"><span class="fontBold">[lang_admin_user_squadhead]</span></td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="150" valign="top"><span class="fontBold">[lang_member_admin_squad]/[lang_profil_position]:</span></td>
+  <td class="contentMainFirst" colspan="2">
+    <table width="100%">
+      [esquad]
+    </table>
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop" width="150"><span class="fontBold">[lang_admin_user_level]:</span></td>
+  <td class="contentMainFirst" colspan="2" align="center">
+    <script language="javascript" type="text/javascript">
+    function hidelevels(lvl)
+    {
+        if(lvl == 4) $('#hideLvl').css('display', 'none');
+        else         $('#hideLvl').css('display', '');
+    }
+    </script>
+    <select name="level" class="dropdown" onchange="hidelevels(this.value)">
+      <option value="banned" >[lang_admin_level_banned]</option>
+      <option value="1" selected="selected">[lang_status_user]</option>
+      <option value="2" >[lang_status_trial]</option>
+      <option value="3" >[lang_status_member]</option>
+      <option value="4" >[lang_status_admin]</option>
+    </select>
+  </td>
+</tr>
+<tr>
+  <td class="contentMainFirst" colspan="3" style="text-align: center; padding:2px;">[lang_level_info]</td>
+</tr>
+</table>
+<table class="mainContent" cellspacing="1" style="margin:0;margin-top:-1px">
+<tr>
+  <td class="contentMainTop" width="150"><span class="fontBold">[lang_config_positions_rights]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <div class="permissions">
+      [getpermissions]
+    </div>
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_config_positions_boardrights]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <div class="permissions">
+      [getboardpermissions]
+    </div>
+  </td>
+</tr>
+</table>
+<table class="mainContent" cellspacing="1" style="margin:0;margin-top:-1px">
+<tr>
+  <td class="contentBottom" colspan="3"><input id="contentSubmit" type="submit" value="[value]" onclick="return(getCord())" class="submit" /></td>
+</tr>
+</table>
+</form>
+</td>
+</tr>

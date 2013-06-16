@@ -25,7 +25,7 @@ else
     {
         $get = _fetch($qry);
         if($get['internal'] == 1 && ($chkMe == 1 || $chkMe == "unlogged"))
-            $index = error(_error_wrong_permissions, 1);
+            $index = error(_error_wrong_permissions);
         else
         {
             $where = re($get['titel']);
@@ -35,6 +35,5 @@ else
         }
     }
     else
-        $index = error(_sites_not_available,1);
+        $index = error(_sites_not_available);
 }
-?>

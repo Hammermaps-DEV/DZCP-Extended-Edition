@@ -70,6 +70,7 @@ else
                 case 'pwd': $action = '<b>reseted password</b> from '.autor($wid); break;
                 case 'reg': $action = autor($wid).' <b>signed up</b>'; break;
                 case 'trylogin': $action = 'failed to <b>login</b> in '.autor($wid).'`s account'; break;
+                case 'tryloginpwd': $action = 'failed to <b>login</b> in '.autor($wid).'`s account, password failed!'; break;
                 case 'mod_upd': $action = '<b style="color:red">ADMIN</b> '.'Update Mod: <b>'.$wid.'</b>'; break;
                 case 'mod_add': $action = '<b style="color:red">ADMIN</b> '.'Install Mod: <b>'.$wid.'</b>'; break;
                 case 'mod_del': $action = '<b style="color:red">ADMIN</b> '.'Delete Mod: <b>'.$wid.'</b>'; break;
@@ -100,4 +101,3 @@ else
                                          "search" => $swhat,
                                          "nav" => nav($entrys,$maxprot,"?admin=protocol".$sip)));
 }
-?>

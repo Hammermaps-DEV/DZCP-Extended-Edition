@@ -40,11 +40,11 @@ else
 
             if(!$tmpname)
             {
-                $index = error(_upload_no_data, 1);
+                $index = error(_upload_no_data);
             } elseif($size > config('upicsize')."000") {
-                $index = error(_upload_wrong_size, 1);
+                $index = error(_upload_wrong_size);
             } else {
-                copy($tmpname, basePath."/inc/images/newskat/".$_FILES['file']['name']."");
+                copy($tmpname, basePath."/inc/images/uploads/newskat/".$_FILES['file']['name']."");
                 @unlink($_FILES['file']['tmp_name']);
 
                 if(isset($_GET['edit'])) $index = info(_info_upload_success, "../admin/?admin=news&amp;do=edit&amp;id=".$_GET['edit']."");
@@ -52,7 +52,6 @@ else
             }
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

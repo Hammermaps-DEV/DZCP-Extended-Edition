@@ -26,4 +26,3 @@ else
 
     header("Location: ".$get['url']);
 }
-?>

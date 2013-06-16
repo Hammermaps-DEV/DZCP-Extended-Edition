@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._admin_dlkat;
-    if(!permission("downloads"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
       while($get = _fetch($qry))
       {
@@ -51,7 +47,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "editkat") {
         if(empty($_POST['kat']))
         {
-          $show = error(_dl_empty_kat,1);
+          $show = error(_dl_empty_kat);
         } else {
           $qry = db("UPDATE ".dba::get('dl_kat')."
                      SET `name` = '".up($_POST['kat'])."'
@@ -74,7 +70,7 @@ if(_adminMenu != 'true')
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['kat']))
         {
-          $show = error(_dl_empty_kat,1);
+          $show = error(_dl_empty_kat);
         } else {
           $qry = db("INSERT INTO ".dba::get('dl_kat')."
                      SET `name` = '".up($_POST['kat'])."'");
@@ -82,4 +78,3 @@ if(_adminMenu != 'true')
           $show = info(_dl_admin_added, "?admin=dl");
         }
       }
-    }

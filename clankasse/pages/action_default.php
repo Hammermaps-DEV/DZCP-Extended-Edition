@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if($chkMe == "unlogged" || $chkMe < 2 && !permission('clankasse'))
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         $has_permission = permission("clankasse");
@@ -127,4 +127,3 @@ else
                 "seiten" => $seiten));
     }
 }
-?>

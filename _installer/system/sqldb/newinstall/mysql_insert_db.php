@@ -62,6 +62,8 @@ function install_mysql_insert($db_infos)
     `eml_fabo_npost`       = '".emlv('eml_fabo_npost')."',
     `eml_fabo_tedit`       = '".emlv('eml_fabo_tedit')."',
     `eml_fabo_pedit`       = '".emlv('eml_fabo_pedit')."',
+    `eml_akl_register_subj`= '".emlv('eml_akl_register_subj')."',
+    `eml_akl_register`     = '".emlv('eml_akl_register')."',
     `eml_pn`               = '".emlv('eml_pn')."';",false,false,true);
 
     //===============================================================
@@ -215,7 +217,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Rechte =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `edittactics` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `edittactics` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1;",false,false,true);
 
     //===============================================================
     //-> Positionen =================================================
@@ -317,7 +319,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Config =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('config')."` SET `id` = 1, `upicsize` = 100, `gallery` = 4, `m_gallery` = 36, `m_usergb` = 10, `m_clanwars` = 10, `maxshoutarchiv` = 20, `m_clankasse` = 20, `m_awards` = 15, `m_userlist` = 40, `maxwidth` = 400, `shout_max_zeichen` = 100,
+    db("INSERT INTO `".dba::get('config')."` SET `id` = 1, `upicsize` = 100, `gallery` = 4, `m_gallery` = 12, `m_usergb` = 10, `m_clanwars` = 10, `maxshoutarchiv` = 20, `m_clankasse` = 20, `m_awards` = 15, `m_userlist` = 40, `maxwidth` = 400, `shout_max_zeichen` = 100,
      `l_servernavi` = 22, `m_adminnews` = 20, `m_shout` = 10, `m_comments` = 10, `m_archivnews` = 30, `m_gb` = 10, `m_fthreads` = 20, `m_fposts` = 10, `m_news` = 5, `f_forum` = 20, `l_shoutnick` = 20, `f_gb` = 20, `f_membergb` = 20, `f_shout` = 20, `f_newscom` = 20,
      `f_cwcom` = 20, `f_artikelcom` = 20, `f_downloadcom` = 20, `l_newsadmin` = 20, `l_shouttext` = 22, `l_newsarchiv` = 20, `l_forumtopic` = 20, `l_forumsubtopic` = 20, `l_clanwars` = 30, `m_gallerypics` = 5, `m_lnews` = 6, `m_topdl` = 5, `m_ftopics` = 6,
      `m_lwars` = 6, `m_nwars` = 6, `l_topdl` = 20, `l_ftopics` = 28, `l_lnews` = 22, `l_lwars` = 12, `l_nwars` = 12, `l_lreg` = 12, `m_lreg` = 5, `m_artikel` = 15, `m_cwcomments` = 10, `m_adminartikel` = 15, `securelogin` = ".$db_infos['loginsec'].",

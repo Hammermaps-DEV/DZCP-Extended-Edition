@@ -29,4 +29,3 @@ else
         $index = show($dir."/event", array("head" => $head, "events" => $events));
     }
 }
-?>

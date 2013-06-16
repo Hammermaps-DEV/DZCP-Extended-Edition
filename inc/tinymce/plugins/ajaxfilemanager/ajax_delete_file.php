@@ -85,4 +85,3 @@
     }
 
     echo "{error:'" . $error . "'}";
-?>

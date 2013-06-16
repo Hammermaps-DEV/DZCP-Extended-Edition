@@ -67,5 +67,3 @@ class EnchantSpell extends SpellChecker {
 		return $suggs;
 	}
 }
-
-?>

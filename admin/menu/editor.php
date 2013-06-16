@@ -6,10 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._editor_head;
-    if(!permission("editor"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
       $wysiwyg = '_word';
       if($_GET['do'] == "add")
       {
@@ -285,5 +281,3 @@ if(_adminMenu != 'true')
                                            "del" => _deleteicon_blank,
                                            "name" => _editor_name));
       }
-    }
-?>

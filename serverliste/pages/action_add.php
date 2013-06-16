@@ -28,4 +28,3 @@ else
             "slots" => _slist_slots,
             "serverpassword" => _server_password));
 }
-?>

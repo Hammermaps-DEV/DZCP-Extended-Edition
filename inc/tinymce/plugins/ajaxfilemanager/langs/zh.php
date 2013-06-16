@@ -327,6 +327,3 @@
 		define('TXT_CONTENT_UPDATE_FAILED', '无法更新文件内容');
 		define('TXT_SAVE_AS_ERR_NAME_INVALID', '文件名只能含有英文字母,数字, - 和 _');
 	//88888888888   Above for Text Editor   888888888888888888888
-	
-	
-?>

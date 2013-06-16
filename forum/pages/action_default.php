@@ -156,4 +156,3 @@ else
             "online" => $online,
             "top_posts" => $top_posts));
 }
-?>

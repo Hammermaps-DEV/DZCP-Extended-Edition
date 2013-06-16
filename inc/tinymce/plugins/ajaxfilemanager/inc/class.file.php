@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 	/**
 	 * file modification
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -448,5 +447,3 @@
      }
  }   		
 	}
-
-?>

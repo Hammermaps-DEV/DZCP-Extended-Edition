@@ -183,9 +183,9 @@ ORDER BY game");
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['gegner']) || empty($_POST['clantag']) || empty($_POST['t']))
         {
-          if(empty($_POST['gegner'])) $show = error(_cw_admin_empty_gegner, 1);
-          elseif(empty($_POST['clantag'])) $show = error(_cw_admin_empty_clantag, 1);
-          elseif(empty($_POST['t'])) $show = error(_empty_datum, 1);
+          if(empty($_POST['gegner'])) $show = error(_cw_admin_empty_gegner);
+          elseif(empty($_POST['clantag'])) $show = error(_cw_admin_empty_clantag);
+          elseif(empty($_POST['t'])) $show = error(_empty_datum);
         } else {
           if(empty($_POST['xonx1']) && empty($_POST['xonx2'])) $xonx = "";
           else $xonx = "`xonx` = '".$_POST['xonx1']."on".$_POST['xonx2']."',";
@@ -299,9 +299,9 @@ if($img4[0])
 
         if(empty($_POST['gegner']) || empty($_POST['clantag']) || empty($_POST['t']))
         {
-          if(empty($_POST['gegner'])) $show = error(_cw_admin_empty_gegner, 1);
-          elseif(empty($_POST['clantag'])) $show = error(_cw_admin_empty_clantag, 1);
-          elseif(empty($_POST['t'])) $show = error(_empty_datum, 1);
+          if(empty($_POST['gegner'])) $show = error(_cw_admin_empty_gegner);
+          elseif(empty($_POST['clantag'])) $show = error(_cw_admin_empty_clantag);
+          elseif(empty($_POST['t'])) $show = error(_empty_datum);
         } else {
           if(empty($_POST['xonx1']) && empty($_POST['xonx2'])) $xonx = "";
           else $xonx = "`xonx` = '".$_POST['xonx1']."on".$_POST['xonx2']."',";
@@ -531,4 +531,3 @@ if($gets['id'] == $_GET['squad']) { $sel = ' class="dropdownKat"'; } else { $sel
                                              "navi" => nav($entrys,$maxadmincw,"?admin=cw&amp;squad=".$_GET['squad']."")
                                              ));
       }
-?>

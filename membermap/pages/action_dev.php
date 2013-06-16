@@ -101,4 +101,3 @@ echo '<pre>';
 print_r($test['geometry']['location']);
 die();
 }
-?>

@@ -26,4 +26,3 @@ else
     echo '<table class="mainContent" cellspacing="1"'.$index.'</table>';
     exit;
 }
-?>

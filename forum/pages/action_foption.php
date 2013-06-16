@@ -32,4 +32,3 @@ else
         $index = info(_forum_fabo_do, "?action=showthread&amp;id=".$_GET['id']."");
     }
 }
-?>

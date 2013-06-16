@@ -16,6 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
+    header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
     $sID = $_GET['sID'];
     $get = db("SELECT * FROM ".dba::get('server')." WHERE `id` = ".$sID,false,true);
     $cache_hash = md5($get['ip'].':'.$get['port'].'_'.$get['game']);
@@ -72,9 +73,9 @@ else
             break;
             case 'bfbc2': //BFBC2
             case 'bf3': //BF3
-                $icon_basic = $server['game_protocol'].'/'.$server['game_dir'];
-                $icon_mod = $server['game_protocol'].'/'.$server['game_mod'];
-                GameQ::mkdir_img('gameicons/'.$server['game_protocol']);
+                $icon_basic = $server['game_engine'].'/'.$server['game_protocol'].'/'.$server['game_dir'];
+                $icon_mod = $server['game_engine'].'/'.$server['game_protocol'].'/'.$server['game_mod'];
+                GameQ::mkdir_img('gameicons/'.$server['game_engine'].'/'.$server['game_protocol']);
             break;
             case 'etqw':
             case 'doom3':

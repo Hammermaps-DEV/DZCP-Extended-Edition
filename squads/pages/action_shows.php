@@ -89,4 +89,3 @@ else
             "back" => _error_back,
             "id"   => convert::ToInt($_GET['id'])));
 }
-?>

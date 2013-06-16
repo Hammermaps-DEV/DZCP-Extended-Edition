@@ -35,8 +35,8 @@ else
             $index = show($dir."/teamspeak", array("servers" => $index));
         }
         else
-            $index = error('<br /><center>'._no_ts_page.'</center><br />',1);
+            $index = error('<br /><center>'._no_ts_page.'</center><br />');
     }
     else
-        $index = error(_fopen,1);
+        $index = error(_fopen);
 }

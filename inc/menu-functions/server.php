@@ -48,33 +48,39 @@ function server($serverID = 0)
                 {
                     case 'source': //HL2,HL1,Brink,CODW3 etc. * Source & Goldsource
                         $game_icon = $server['game_engine'].'/'.$server['game_dir'];
+                        $icon_mod = $server['game_engine'].'/'.$server['game_mod'];
                         GameQ::mkdir_img('gameicons/'.$server['game_engine']);
-                    break;
+                        break;
                     case 'gamespy': //BF1942,BF2,BF2142,etc
                         $game_icon = $server['game_protocol'].'/'.$server['game_engine'].'/'.$server['game_dir'];
+                        $icon_mod = $server['game_protocol'].'/'.$server['game_engine'].'/'.$server['game_mod'];
                         GameQ::mkdir_img('gameicons/'.$server['game_protocol'].'/'.$server['game_engine']);
-                    break;
+                        break;
                     case 'gamespy2': //Arma 2
                         $game_icon = $server['game_protocol'].'/'.$server['game_engine'].'/'.$server['game_dir'];
+                        $icon_mod = $server['game_protocol'].'/'.$server['game_engine'].'/'.$server['game_mod'];
                         GameQ::mkdir_img('gameicons/'.$server['game_protocol'].'/'.$server['game_engine']);
-                    break;
+                        break;
                     case 'gamespy3': //Arma 3,BF2,UT3
                         $game_icon = $server['game_protocol'].'/'.$server['game_engine'].'/'.$server['game_dir'];
+                        $icon_mod = $server['game_protocol'].'/'.$server['game_engine'].'/'.$server['game_mod'];
                         GameQ::mkdir_img('gameicons/'.$server['game_protocol'].'/'.$server['game_engine']);
-                    break;
+                        break;
                     case 'bfbc2': //BFBC2
                     case 'bf3': //BF3
-                        $game_icon = $server['game_protocol'].'/'.$server['game_dir'];
-                        GameQ::mkdir_img('gameicons/'.$server['game_protocol']);
-                    break;
+                        $game_icon = $server['game_engine'].'/'.$server['game_protocol'].'/'.$server['game_dir'];
+                        $icon_mod = $server['game_engine'].'/'.$server['game_protocol'].'/'.$server['game_mod'];
+                        GameQ::mkdir_img('gameicons/'.$server['game_engine'].'/'.$server['game_protocol']);
+                        break;
                     case 'etqw':
                     case 'doom3':
                     case 'quake2': //Quake 2
                     case 'quake3': //Quake 3
                     case 'quake4': //Quake 4
                         $game_icon = $server['game_protocol'].'/'.$server['game_dir'];
+                        $icon_mod = $server['game_protocol'].'/'.$server['game_mod'];
                         GameQ::mkdir_img('gameicons/'.$server['game_protocol']);
-                    break;
+                        break;
                 }
 
                 $image_secure = ($server['game_secure']['enable'] ? '<img src="../inc/images/'.$server['game_secure']['pic'].'.png" alt="" title="'.$server['game_secure']['name'].'" class="icon" />' : '');

@@ -237,4 +237,3 @@ class GameQ_Protocols_Bf1942 extends GameQ_Protocols_Gamespy
         $this->server_data_stream = $result->fetch();
     }
 }
-?>

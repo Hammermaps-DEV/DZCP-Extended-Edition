@@ -20,7 +20,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : false)
     break;
     case 'addsmiley':
         if(!isset($_FILES['smiley']) || empty($_FILES['smiley']))
-            $show = error(_smileys_error_file, 1);
+            $show = error(_smileys_error_file);
         else
         {
             $tmpname = $_FILES['smiley']['tmp_name'];
@@ -35,11 +35,11 @@ switch (isset($_GET['do']) ? $_GET['do'] : false)
             if(!$tmpname || $type != "image/gif" || !$imageinfo[0] || preg_match("#[[:punct:]]|[[:space:]]#",(isset($_POST['bbcode']) && !empty($_POST['bbcode']) ? $_POST['bbcode'] : $bbcode_name)) || file_exists($spfad.(isset($_POST['bbcode']) && !empty($_POST['bbcode']) ? $_POST['bbcode'] : $bbcode_name).".gif"))
             {
                 if(!$tmpname)
-                    $show = error(_smileys_error_file, 1);
+                    $show = error(_smileys_error_file);
                 else if($type != "image/gif")
-                    $show = error(_smileys_error_type,1);
+                    $show = error(_smileys_error_type);
                 else if(preg_match("#[[:punct:]]|[[:space:]]#",(isset($_POST['bbcode']) && !empty($_POST['bbcode']) ? $_POST['bbcode'] : $bbcode_name)))
-                    $show = error(_smileys_specialchar,1);
+                    $show = error(_smileys_specialchar);
                 else if(file_exists($spfad.(isset($_POST['bbcode']) && !empty($_POST['bbcode']) ? $_POST['bbcode'] : $bbcode_name).".gif"))
                     $show = error(_admin_smiley_exists);
             }
@@ -51,7 +51,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : false)
                     $show = info(_smileys_added, "?admin=smileys");
                 }
                 else
-                    $show = error(_smileys_error_file, 1);
+                    $show = error(_smileys_error_file);
             }
         }
     break;
@@ -118,4 +118,3 @@ switch (isset($_GET['do']) ? $_GET['do'] : false)
 
 if(empty($show))
     $show = show($dir."/smileys", array("show" => $show_default, "add" => _smileys_head_add));
-?>

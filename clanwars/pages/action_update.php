@@ -18,7 +18,7 @@ else
 {
     if($chkMe == "unlogged")
     {
-        $index = error(_error_have_to_be_logged, 1);
+        $index = error(_error_have_to_be_logged);
     } else {
         $qry = db("SELECT * FROM ".dba::get('cw_player')."
                WHERE cwid = '".convert::ToInt($_GET['id'])."'
@@ -39,4 +39,3 @@ else
         $index = info(_cw_status_set, "?action=details&amp;id=".$_GET['id']."");
     }
 }
-?>

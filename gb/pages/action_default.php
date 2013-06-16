@@ -170,4 +170,3 @@ else
         $index = show($dir."/gb",array("show" => $show, "add" => show(_gb_eintragen), "entry" => $entry, "seiten" => $seiten));
     }
 }
-?>

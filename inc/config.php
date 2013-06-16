@@ -9,9 +9,11 @@
 #########################################
 //-> DZCP Settings Start
 #########################################
+date_default_timezone_set('Europe/Berlin');
+
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug, Seiten gecached werden können
-define('show_debug_console', true); //Zeigt die Debug Console
+define('show_debug_console', false); //Zeigt die Debug Console
 define('save_debug_console', false); //Speichert alle in der Debug Console ausgegebenen Texte in eine Log Datei
 
 define('buffer_gzip_compress', true); // Seite mit Hilfe der GZIP-Komprimierung übertragen
@@ -34,6 +36,9 @@ define('use_curl', true); // Verwendet die CURL PHP Erweiterung, anstelle von fi
 define('use_trash_mails', false); // Erlaubt Trashmail Server als E-Mail Adresse.
 define('trash_mail_url', 'http://www.mogelmail.de/mogelmails.xml'); // Liste der Trashmail Server * XML Format
 
+define('salt', true); // Salt für die Passwort Codierung, *Der Salt darf nach der Installation nicht mehr geändert werden.
+// Die Datei inc/mysql_salt.php muss gesichert werden *Backup* !
+
 /*
 * Wenn Imagick 'nicht' verwendet wird, muss bei großen Bildern auf die PHP Einstellung "memory_limit" geachtet werden.
 * Sollte diese zu klein sein, werden mache Vorschaubilder nicht generiert.
@@ -47,6 +52,13 @@ define('users_online', (15*60)); // Wie Lange ein User untätig sein muss, um als
 define('counter_reload', (24*3600)); // Ab wann der Besucherzähler eine aktualisierung durchführt * User basierend *
 define('rss_cache_public_news', (15*60)); // Wann soll der Public RSS Feed aktualisiert werden.
 define('rss_cache_private_news', (10*60)); // Wann soll der Interne RSS Feed aktualisiert werden.
+
+/*
+ * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit zwischen.
+ * Reduziert Abfragen an die MySQL Datenbank und Festplattenzugriffe zbs. dürch Datenlisten etc.
+ * Sollte nur auf false gestellt werden wenn es umbedingt nötig ist.
+ */
+define('runtime_buffer', true);
 
 ## Colors Antispam ##
 $backgroundColor  = '#444444';
@@ -91,10 +103,13 @@ if(!isset($_SESSION['db_install']))
     $_SESSION['db_install'] = false;
 
 ## REQUIRES ##
-if(file_exists(basePath."/inc/mysql.php"))
+if(file_exists(basePath."/inc/mysql.php") && file_exists(basePath."/inc/mysql_salt.php"))
+{
     require_once(basePath."/inc/mysql.php");
+    require_once(basePath."/inc/mysql_salt.php");
+}
 else
-    { $sql_host = ''; $sql_user = ''; $sql_pass = ''; $sql_db = ''; $sql_prefix = '';  }
+    { $sql_host = ''; $sql_user = ''; $sql_pass = ''; $sql_db = ''; $sql_prefix = ''; $sql_salt = ''; }
 
 $db_array = array('host' => $sql_host, 'user' => $sql_user, 'pass' => $sql_pass, 'db' => $sql_db, 'prefix' => $sql_prefix);
 
@@ -153,6 +168,7 @@ $db_array['rss']              = 'rss_config';          # dzcp_rss_config
 $db_array['server']           = 'server';              # dzcp_server
 $db_array['serverliste']      = 'serverliste';         # dzcp_serverliste
 $db_array['settings']         = 'settings';            # dzcp_settings
+$db_array['slideshow']        = 'slideshow';           # dzcp_slideshow
 $db_array['shout']            = 'shoutbox';            # dzcp_shoutbox
 $db_array['sites']            = 'sites';               # dzcp_sites
 $db_array['squads']           = 'squads';              # dzcp_squads

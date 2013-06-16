@@ -68,4 +68,3 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
 
     return $bdays." ".$cws." ".$event;
 }
-?>

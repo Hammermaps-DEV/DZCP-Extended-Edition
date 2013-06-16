@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 
 	/**
 	 * this class provide a function like session handling engine
@@ -226,9 +225,5 @@ class Session
 	    	}   		
     	}
     	return $this->sessionDir;
-    }
-    
-
-    
+    } 
 }
-?>

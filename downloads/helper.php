@@ -24,4 +24,3 @@ function download_time($size)
 
     return $ausg;
 }
-?>

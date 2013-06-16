@@ -30,7 +30,7 @@ else
     {
         if($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id']))
         {
-            $index = error(_error_wrong_permissions, 1);
+            $index = error(_error_wrong_permissions);
         } else {
             $update = db("UPDATE ".dba::get('f_threads')."
                     SET `hits` = hits+1
@@ -357,7 +357,6 @@ else
                     "show" => $show));
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

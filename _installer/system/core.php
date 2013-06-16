@@ -300,11 +300,15 @@ function versions($detect=false)
 //-> Schreibe Inhalt in die "mysql.php"
 function write_sql_config()
 {
-    $stream = file_get_contents(basePath.'/_installer/system/sql_vorlage.txt');
-    $var = array("{prefix}", "{host}", "{user}" ,"{pass}" ,"{db}");
-    $data = array($_SESSION['mysql_prefix'], $_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password'], $_SESSION['mysql_database']);
-    $stream = str_replace($var, $data, $stream);
-    return file_put_contents(basePath.'/inc/mysql.php', $stream);
+    $stream_sql = file_get_contents(basePath.'/_installer/system/sql_vorlage.txt');
+    $stream_salt = file_get_contents(basePath.'/_installer/system/sql_salt_vorlage.txt');
+    $var = array("{prefix}", "{host}", "{user}" ,"{pass}" ,"{db}","{salt}");
+    $data = array($_SESSION['mysql_prefix'], $_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password'], $_SESSION['mysql_database'], $salt=mkpwd());
+    $_SESSION['mysql_salt'] = $salt;
+    file_put_contents(basePath.'/inc/mysql.php', str_replace($var, $data, $stream_sql));
+    file_put_contents(basePath.'/inc/mysql_salt.php', str_replace($var, $data, $stream_salt));
+    unset($stream_sql,$stream_salt);
+    return (file_exists(basePath.'/inc/mysql.php') && file_exists(basePath.'/inc/mysql_salt.php'));
 }
 
 //-> Setzt über FTP die chmod

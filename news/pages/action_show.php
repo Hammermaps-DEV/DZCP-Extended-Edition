@@ -20,19 +20,19 @@ if (!defined('IS_DZCP'))
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::get('news')." WHERE id = ".$news_id=convert::ToInt($_GET['id']),true))
-    $index = error(_id_dont_exist, 1);
+    $index = error(_id_dont_exist);
 else
 {
     $c = db("SELECT intern,public FROM ".dba::get('news')." WHERE id = ".$news_id,false,true);
 
     if(!permission("news") && !$c['public'])
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else if($c['intern'] && !permission("intnews"))
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         if(_rows(($qry = db("SELECT * FROM ".dba::get('news')." WHERE id = '".$news_id."'".(!permission("news") ? " AND public = 1" : "")))) == 0)
-            $index = error(_id_dont_exist,1);
+            $index = error(_id_dont_exist);
         else
         {
             #################################### do case ####################################
@@ -44,7 +44,7 @@ else
                     if($get_ec['comments'])
                     {
                         if(settings("reg_newscomments") == "1" && $chkMe == "unlogged")
-                            $index = error(_error_have_to_be_logged, 1);
+                            $index = error(_error_have_to_be_logged);
                         else
                         {
                             if(!ipcheck("ncid(".$news_id.")", ($f_newscom=config('f_newscom'))))
@@ -95,11 +95,11 @@ else
                                 }
                             }
                             else
-                                $index = error(show(_error_flood_post, array("sek" => $f_newscom)), 1);
+                                $index = error(show(_error_flood_post, array("sek" => $f_newscom)));
                         }
                     }
                     else
-                        $index = error(_no_comments_enabled,1);
+                        $index = error(_no_comments_enabled);
                 break;
                 case 'delete':
                     $get_ec = _fetch($qry);
@@ -112,10 +112,10 @@ else
                             $index = info(_comment_deleted, "?action=show&amp;id=".$news_id."");
                         }
                         else
-                            $index = error(_error_wrong_permissions, 1);
+                            $index = error(_error_wrong_permissions);
                     }
                     else
-                        $index = error(_no_comments_enabled,1);
+                        $index = error(_no_comments_enabled);
                 break;
                 case 'editcom':
                     $get_ec = _fetch($qry);
@@ -188,11 +188,11 @@ else
                                 $index = info(_comment_edited, "?action=show&amp;id=".$news_id."");
                             }
                             else
-                                $index = error(_error_edit_post,1);
+                                $index = error(_error_edit_post);
                         }
                     }
                     else
-                        $index = error(_no_comments_enabled,1);
+                        $index = error(_no_comments_enabled);
                 break;
                 case 'edit':
                     $get = db("SELECT * FROM ".dba::get('newscomments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -219,7 +219,7 @@ else
                                 "error" => ""));
                     }
                     else
-                        $index = error(_error_edit_post,1);
+                        $index = error(_error_edit_post);
                 break;
             }
 
@@ -238,6 +238,19 @@ else
                 $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
                 $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
                 $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
+
+                $newsimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+                if($get['custom_image'])
+                {
+                    foreach($picformat AS $end)
+                    {
+                        if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                            break;
+                    }
+
+                    if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                        $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+                }
 
                 if($get['comments'])
                 {
@@ -326,7 +339,7 @@ else
                 $intern = ($get['intern'] ? _votes_intern : '');
                 $title = re($get['titel']).' - '.$title;
                 $index = show($dir."/news_show_full", array("titel" => re($get['titel']),
-                                                            "kat" => re($getkat['katimg']),
+                                                            "newsimage" => $newsimage,
                                                             "id" => $get['id'],
                                                             "comments" => "",
                                                             "dp" => "compact",

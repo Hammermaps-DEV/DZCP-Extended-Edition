@@ -298,7 +298,7 @@ else
         {
             if(settings("reg_cwcomments") == "1" && $chkMe == "unlogged")
             {
-                $index = error(_error_have_to_be_logged, 1);
+                $index = error(_error_have_to_be_logged);
             } else {
                 if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
                 {
@@ -361,11 +361,11 @@ else
                         $index = info(_comment_added, "?action=details&amp;id=".$_GET['id']."");
                     }
                 } else {
-                    $index = error(show(_error_flood_post, array("sek" => config('f_cwcom'))), 1);
+                    $index = error(show(_error_flood_post, array("sek" => config('f_cwcom'))));
                 }
             }
         } else{
-            $index = error(_id_dont_exist,1);
+            $index = error(_id_dont_exist);
         }
     }
 
@@ -382,7 +382,7 @@ else
 
             $index = info(_comment_deleted, "?action=details&amp;id=".convert::ToInt($_GET['id'])."");
         } else {
-            $index = error(_error_wrong_permissions, 1);
+            $index = error(_error_wrong_permissions);
         }
     } elseif($_GET['do'] == "editcom") {
         $qry = db("SELECT * FROM ".dba::get('cw_comments')."
@@ -403,7 +403,7 @@ else
 
             $index = info(_comment_edited, "?action=details&amp;id=".$_GET['id']."");
         } else {
-            $index = error(_error_edit_post,1);
+            $index = error(_error_edit_post);
         }
     } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".dba::get('cw_comments')."
@@ -435,8 +435,7 @@ else
                     "error" => "",
                     "eintraghead" => _eintrag));
         } else {
-            $index = error(_error_edit_post,1);
+            $index = error(_error_edit_post);
         }
     }
 }
-?>

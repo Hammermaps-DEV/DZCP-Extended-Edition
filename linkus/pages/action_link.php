@@ -19,4 +19,3 @@ else
     $get = db("SELECT url FROM ".dba::get('linkus')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
     header("Location: ".$get['url']);
 }
-?>

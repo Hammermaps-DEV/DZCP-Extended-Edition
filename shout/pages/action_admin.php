@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if(!permission("shoutbox"))
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         if(isset($_GET['do']) ? ($_GET['do'] == "delete") : false)
@@ -27,4 +27,3 @@ else
         }
     }
 }
-?>

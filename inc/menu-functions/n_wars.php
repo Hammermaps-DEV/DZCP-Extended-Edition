@@ -22,6 +22,8 @@ function n_wars()
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache
                 Cache::set('nav_n_wars',$nwars,$menu_xml['config']['update']);
         }
+        else
+            $nwars = show(_navi_nnwars_entrys, array("colspan" => "1"));
     }
     else
         $nwars = Cache::get('nav_n_wars');

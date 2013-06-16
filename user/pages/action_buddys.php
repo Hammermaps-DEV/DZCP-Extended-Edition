@@ -21,18 +21,18 @@ else
 {
     $where = _site_user_buddys;
     if($chkMe == "unlogged")
-        $index = error(_error_have_to_be_logged, 1);
+        $index = error(_error_have_to_be_logged);
     else
     {
         switch($do)
         {
             case 'add':
                 if($_POST['users'] == "-")
-                    $index = error(_error_select_buddy, 1);
+                    $index = error(_error_select_buddy);
                 else if($_POST['users'] == convert::ToInt($userid))
-                    $index = error(_error_buddy_self, 1);
+                    $index = error(_error_buddy_self);
                 else if(!check_buddy($_POST['users']))
-                    $index = error(_error_buddy_already_in, 1);
+                    $index = error(_error_buddy_already_in);
                 else
                 {
                     db("INSERT INTO ".dba::get('buddys')." SET `user` = '".convert::ToInt($userid)."', `buddy` = '".convert::ToInt($_POST['users'])."'");
@@ -51,11 +51,11 @@ else
                 $user = (isset($_GET['id']) ? $_GET['id'] : $_POST['users']);
 
                 if($user == "-")
-                    $index = error(_error_select_buddy, 1);
+                    $index = error(_error_select_buddy);
                 elseif($user == convert::ToInt($userid))
-                    $index = error(_error_buddy_self, 1);
+                    $index = error(_error_buddy_self);
                  elseif(!check_buddy($user))
-                    $index = error(_error_buddy_already_in, 1);
+                    $index = error(_error_buddy_already_in);
                 else
                 {
                     db("INSERT INTO ".dba::get('buddys')." SET `user`   = '".convert::ToInt($userid)."', `buddy`  = '".convert::ToInt($user)."'");

@@ -55,11 +55,11 @@ else
         } elseif ($_GET['do'] == "add") {
             if(!$_POST['t'] OR !$_POST['m'])
             {
-                $index = error(_error_clankasse_empty_datum, 1);
+                $index = error(_error_clankasse_empty_datum);
             } elseif($_POST['transaktion'] == "lazy") {
-                $index = error(_error_clankasse_empty_transaktion, 1);
+                $index = error(_error_clankasse_empty_transaktion);
             } elseif(!$_POST['betrag']) {
-                $index = error(_error_clankasse_empty_betrag, 1);
+                $index = error(_error_clankasse_empty_betrag);
             } else {
                 $betrag = $_POST['betrag'];
                 $betrag = preg_replace("#,#iUs",".",$betrag);
@@ -82,11 +82,11 @@ else
         } elseif ($_GET['do'] == "update" && $_POST['id']) {
             if(!$_POST['datum'])
             {
-                $index = error(_error_clankasse_empty_datum, 1);
+                $index = error(_error_clankasse_empty_datum);
             } elseif(!$_POST['betrag']) {
-                $index = error(_error_clankasse_empty_betrag, 1);
+                $index = error(_error_clankasse_empty_betrag);
             } elseif(!$_POST['transaktion']) {
-                $index = error(_error_clankasse_empty_transaktion, 1);
+                $index = error(_error_clankasse_empty_transaktion);
             } else {
                 $res = db("UPDATE ".dba::get('clankasse')."
                      SET `datum`        = '".convert::ToInt($_POST['datum'])."',
@@ -149,11 +149,11 @@ else
         } elseif($_GET['do'] == "editck") {
             if(!$_POST['t'] OR !$_POST['m'])
             {
-                $index = error(_error_clankasse_empty_datum, 1);
+                $index = error(_error_clankasse_empty_datum);
             } elseif($_POST['transaktion'] == "lazy") {
-                $index = error(_error_clankasse_empty_transaktion, 1);
+                $index = error(_error_clankasse_empty_transaktion);
             } elseif(!$_POST['betrag']) {
-                $index = error(_error_clankasse_empty_betrag, 1);
+                $index = error(_error_clankasse_empty_betrag);
             } else {
                 $betrag = $_POST['betrag'];
                 $betrag = preg_replace("#,#iUs",".",$betrag);
@@ -211,7 +211,6 @@ else
             $index = info(_info_clankass_status_edited, "../clankasse/");
         }
     } else {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     }
 }
-?>

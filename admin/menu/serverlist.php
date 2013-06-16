@@ -6,12 +6,7 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._slist_head_admin;
-    if(!permission("serverliste"))
-    {
-      $show = error(_error_wrong_permissions, 1);
-    } else {
-      $qry = db("SELECT id,ip,port,clanname,clanurl,pwd,checked
-                 FROM ".dba::get('serverliste')."");
+      $qry = db("SELECT id,ip,port,clanname,clanurl,pwd,checked FROM ".dba::get('serverliste')."");
 
       while ($get = _fetch($qry))
       {
@@ -50,7 +45,7 @@ if(_adminMenu != 'true')
                                         "clan" => _profil_clan,
                                         "delete" => _deleteicon_blank,
                                         "serverip" => _slist_serverip));
-    }
+
     if($_GET['do'] == "accept")
     {
       $qry = db("UPDATE ".dba::get('serverliste')."
@@ -66,4 +61,3 @@ if(_adminMenu != 'true')
 
       $show = info(_slist_server_deleted, "?admin=serverlist");
     }
-?>

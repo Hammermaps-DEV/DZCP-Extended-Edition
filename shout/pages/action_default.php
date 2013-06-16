@@ -19,27 +19,27 @@ else
     if(!ipcheck("shout", ($flood_shout=config('f_shout'))))
     {
         if(($_POST['protect'] != 'nospam' || empty($_SESSION['sec_shout']) || $_POST['spam'] != $_SESSION['sec_shout'] || empty($_POST['spam'])) && !isset($userid))
-            $index = error(_error_invalid_regcode,1);
+            $index = error(_error_invalid_regcode);
         else if($userid == 0 && (empty($_POST['name']) || trim($_POST['name']) == '') || $_POST['name'] == "Nick")
-            $index = error(_empty_nick, 1);
+            $index = error(_empty_nick);
         else if($userid == 0 && empty($_POST['email']) || $_POST['email'] == "E-Mail")
-            $index = error(_empty_email, 1);
+            $index = error(_empty_email);
         else if($userid == 0 && !check_email($_POST['email']))
-            $index = error(_error_invalid_email, 1);
+            $index = error(_error_invalid_email);
         else if(check_email_trash_mail($_POST['email']))
-            $index = error(_error_trash_mail, 1);
+            $index = error(_error_trash_mail);
         else if(empty($_POST['eintrag']))
-            $index = error(_error_empty_shout, 1);
+            $index = error(_error_empty_shout);
         else if(settings('reg_shout') == 1 && $chkMe == 'unlogged')
-            $index = error(_error_unregistered, 1);
+            $index = error(_error_unregistered);
         else
         {
             $reg = ($userid == 0 ? $_POST['email'] : convert::ToInt($userid));
             db("INSERT INTO ".dba::get('shout')." SET
                 `datum`  = '".time()."',
-                `nick`   = '".up($_POST['name'],'','UTF-8')."',
-                `email`  = '".up($reg,'','UTF-8')."',
-                `text`   = '".up(substr(str_replace("\n", ' ', $_POST['eintrag']),0,config('shout_max_zeichen')),'','UTF-8')."',
+                `nick`   = '".up($_POST['name'],'')."',
+                `email`  = '".up($reg,'')."',
+                `text`   = '".up(substr(str_replace("\n", ' ', $_POST['eintrag']),0,config('shout_max_zeichen')),'')."',
                 `ip`     = '".visitorIp()."'");
 
             wire_ipcheck('shout');
@@ -49,7 +49,7 @@ else
         }
     }
     else
-        $index = error(show(_error_flood_post, array("sek" => $flood_shout)), 1);
+        $index = error(show(_error_flood_post, array("sek" => $flood_shout)));
 
     if(isset($_GET['ajax']))
     {
@@ -57,4 +57,3 @@ else
         exit();
     }
 }
-?>

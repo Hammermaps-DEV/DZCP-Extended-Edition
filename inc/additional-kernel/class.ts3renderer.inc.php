@@ -310,7 +310,7 @@ class TS3Renderer
                     $file_stream=self::ftDownloadFile($ftInitDownload);
                     if(!empty($file_stream) && $file_stream != false)
                     {
-                        Cache::set_binary('ts_icon_'.$id,$file_stream,'', 9999999999 ); //24h
+                        Cache::set_binary('ts_icon_'.$id,$file_stream,'', (24*60*60) ); //24h
                         $image = 'data:image/png;base64,'.base64_encode($file_stream);
                     }
                     else

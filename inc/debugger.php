@@ -9,9 +9,12 @@ define('show_info', true);
 define('show_warning', true);
 define('show_cache_debug', false);
 
+define('debug_all_sql_querys', false);
+
 #############################################
 ############### Debug Console ###############
 #############################################
+define("EOL","\r\n");
 define('DEBUG_LOADER', true);
 class DebugConsole // Class by DZCP-Extended Edition
 {
@@ -71,6 +74,148 @@ class DebugConsole // Class by DZCP-Extended Edition
         </tr><tr><td><table width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td width="40%" bgcolor="#999999"><div align="center" class="boxdebug" style="font-size:11px">File/Code:</div></td>
         <td width="60%" bgcolor="#999999"><div align="center" class="boxdebug" style="font-size:11px">Action/Msg:</div></td></tr></table><table width="100%" border="0" cellpadding="0" cellspacing="0">
         '.$data.'</table></td></tr></table><table width="100%" border="0" cellpadding="0" cellspacing="0"><tr><td width="100%" bgcolor="#999999">&nbsp;</td></tr></table>';
+    }
+
+    public static final function wire_log($input_level, $input_maxlevel=9, $input_file_name='', $input_content = "",$input_customlevel = "")
+    {
+        $log_path = (isset($_SESSION['installer']) && $_SESSION['installer'] ? "/_installer/system/_logs/" : "/inc/_logs/");
+        $file = basePath.$log_path.date("Y-m-d",time(TRUE))."_".$input_file_name.".log";
+        if ($input_maxlevel > 0)
+        {
+            $string =
+            "#############################".EOL.
+            "# <".$input_file_name.">-Logfile ".date("Y-m-d",time(TRUE))." #".EOL.
+            "# ========================= #".EOL.
+            "# File created at: ".date("H:i:s",time(TRUE))." #".EOL.
+            "#############################".EOL.EOL;
+            if (!file_exists($file))
+            {
+                if (!$fileheader = fopen($file,"w"))
+                {
+                    $status["int"] = 3;
+                    $status["str"] = "LOG_COULD_NOT_OPEN_FILE";
+                    return $status;
+                }
+
+                if (!fwrite($fileheader,$string))
+                {
+                    $status["int"] = 3;
+                    $status["str"] = "LOG_COULD_NOT_WRITE_FILE";
+                    return $status;
+                }
+
+                if (!fclose($fileheader))
+                {
+                    $status["int"] = 4;
+                    $status["str"] = "LOG_COULD_NOT_CLOSE_FILE";
+                }
+                else
+                {
+                    $status["int"] = 0;
+                    $status["str"] = "LOG_OK";
+                }
+            }
+        }
+
+        switch($input_level)
+        {
+
+            /**** Wert:(OFF) ***********************************************************/
+            case "off":
+                $loglevel_int = 0;
+                $loglevel_str = "";
+                break;
+
+                /**** Wert:ERROR ***********************************************************/
+            case "error":
+                $loglevel_int = 1;
+                $loglevel_str = "ERROR";
+                break;
+
+                /**** Wert:SECURITY ********************************************************/
+            case "security":
+                $loglevel_int = 2;
+                $loglevel_str = "SECURITY";
+                break;
+
+                /**** Wert:WARNING *********************************************************/
+            case "warning":
+                $loglevel_int = 3;
+                $loglevel_str = "WARNING";
+                break;
+
+                /**** Wert:SESSION *********************************************************/
+            case "session":
+                $loglevel_int = 4;
+                $loglevel_str = "SESSION";
+                break;
+
+                /**** Wert:STATUS **********************************************************/
+            case "status":
+                $loglevel_int = 5;
+                $loglevel_str = "STATUS";
+                break;
+
+                /**** Wert:ACCESS **********************************************************/
+            case "access":
+                $loglevel_int = 6;
+                $loglevel_str = "ACCESS";
+                break;
+
+                /**** Wert:CUSTOM1 *********************************************************/
+            case "custom1":
+                $loglevel_int = 7;
+                $loglevel_str = "[C1:".$input_customlevel."]";
+                break;
+
+                /**** Wert:USTOM2 **********************************************************/
+            case "custom2":
+                $loglevel_int = 8;
+                $loglevel_str = "[C2:".$input_customlevel."]";
+                break;
+
+                /**** Wert:DEBUG ***********************************************************/
+            case "debug":
+                $loglevel_int = 9;
+                $loglevel_str = "DEBUG";
+                break;
+
+                /**** Wert:Off *************************************************************/
+            default: // UNKNOWN
+                $loglevel_int = 0;
+                $loglevel_str = "";
+                break;
+        }
+
+        if ($loglevel_int > 0 AND $loglevel_int <= $input_maxlevel)
+        {
+            $string = date("H:i:s",time(TRUE))." ". $_SERVER["REMOTE_ADDR"]." [".$loglevel_str."]: ".$input_content.EOL;
+
+            if (!$fileheader = fopen($file,"a"))
+            {
+                $status["int"] = 2;
+                $status["str"] = "LOG_COULD_NOT_OPEN_FILE";
+                return $status;
+            }
+
+            if (!fwrite($fileheader,$string))
+            {
+                $status["int"] = 3;
+                $status["str"] = "LOG_COULD_NOT_WRITE";
+                return $status;
+            }
+
+            if (!fclose($fileheader))
+            {
+                $status["int"] = 4;
+                $status["str"] = "LOG_COULD_NOT_CLOSE_FILE";
+            }
+            else
+            {
+                $status["int"] = 0;
+                $status["str"] = "LOG_OK";
+            }
+        }
     }
 }
 

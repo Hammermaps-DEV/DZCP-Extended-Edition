@@ -17,15 +17,15 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if($_POST['secure'] != $_SESSION['sec_slist'] || empty($_SESSION['sec_slist']))
-        $index = error(_error_invalid_regcode,1);
+        $index = error(_error_invalid_regcode);
     elseif(empty($_POST['clanname']))
-    $index = error(_error_empty_clanname, 1);
+    $index = error(_error_empty_clanname);
     elseif(empty($_POST['ip']))
-    $index = error(_error_empty_ip, 1);
+    $index = error(_error_empty_ip);
     elseif(empty($_POST['port']))
-    $index = error(_error_empty_port, 1);
+    $index = error(_error_empty_port);
     elseif(empty($_POST['slots']))
-    $index = error(_error_empty_slots, 1);
+    $index = error(_error_empty_slots);
     else {
         $msg = _slist_added_msg;
         $title = _slist_title;
@@ -48,4 +48,3 @@ else
         $index = info(_error_server_saved, "../serverliste/");
     }
 }
-?>

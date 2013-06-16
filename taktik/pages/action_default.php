@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if($chkMe == "unlogged" || $chkMe < 2 && !permission('edittactics'))
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         $qry = db("SELECT id,datum,map,spart,sparct,standardt,standardct,autor FROM ".dba::get('taktik')." ORDER BY id DESC");
@@ -57,4 +57,3 @@ else
                 "autor" => _autor));
     }
 }
-?>

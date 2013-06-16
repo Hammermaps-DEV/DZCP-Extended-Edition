@@ -20,11 +20,11 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     if($chkMe == "unlogged")
-        $index = error(_error_have_to_be_logged, 1);
+        $index = error(_error_have_to_be_logged);
     else
     {
         if(isset($_GET['edit']) && data(convert::ToInt($_GET['edit']), "level") == 4 && convert::ToInt($userid) != convert::ToInt($rootAdmin))
-            $index = error(_error_edit_admin, 1);
+            $index = error(_error_edit_admin);
         else if(isset($_GET['edit']) && convert::ToInt($_GET['edit']) == convert::ToInt($userid))
         {
             $qrysq = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY pos"); $esquads = '';
@@ -50,7 +50,7 @@ else
             {
                 case 'identy':
                     if((data(convert::ToInt($_GET['id']), "level") == 4 && convert::ToInt($userid) != convert::ToInt($rootAdmin)) || convert::ToInt($_GET['id']) == convert::ToInt($rootAdmin))
-                        $index = error(_identy_admin, 1);
+                        $index = error(_identy_admin);
                     else
                     {
                         $msg = show(_admin_user_get_identy, array("nick" => autor($_GET['id'])));
@@ -182,9 +182,9 @@ else
                     if(isset($_GET['verify']) && $_GET['verify'] == "yes" && (convert::ToInt($userid) == convert::ToInt($_GET['id']) || data(convert::ToInt($userid), "level") == 4))
                     {
                         if((data(convert::ToInt($_GET['id']), "level") == 4 || data(convert::ToInt($_GET['id']), "level") == 3) && convert::ToInt($userid) != convert::ToInt($rootAdmin))
-                            $index = error(_user_cant_delete_admin, 2);
+                            $index = error(_user_cant_delete_admin, '2');
                         else if (convert::ToInt($_GET['id']) == convert::ToInt($rootAdmin))
-                            $index = error(_user_cant_delete_radmin, 2);
+                            $index = error(_user_cant_delete_radmin, '2');
                         else
                         {
                             ## Ereignis in den Adminlog schreiben ##
@@ -240,45 +240,42 @@ else
                     }
                 break;
                 default:
-                    $qry = db("SELECT id,user,nick,pwd,email,level,position,listck FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_GET['edit'])."'");
-                    while($get = _fetch($qry))
+                    $get = db("SELECT id,user,nick,pwd,email,level,position,listck FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_GET['edit'])."'",false,true);
+                    $qrysq = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY pos"); $esquads = '';
+                    while($getsq = _fetch($qrysq))
                     {
-                        $qrysq = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY pos"); $esquads = '';
-                        while($getsq = _fetch($qrysq))
+                        $qrypos = db("SELECT id,position FROM ".dba::get('pos')." ORDER BY pid"); $posi = "";
+                        while($getpos = _fetch($qrypos))
                         {
-                            $qrypos = db("SELECT id,position FROM ".dba::get('pos')." ORDER BY pid"); $posi = "";
-                            while($getpos = _fetch($qrypos))
-                            {
-                                $sel = db("SELECT id FROM ".dba::get('userpos')."
-                                WHERE posi = '".$getpos['id']."'
-                                AND squad = '".$getsq['id']."'
-                                AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '';
-                                $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
-                            }
-
-                            $check = db("SELECT squad FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
-                            $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
+                            $sel = db("SELECT id FROM ".dba::get('userpos')."
+                            WHERE posi = '".$getpos['id']."'
+                            AND squad = '".$getsq['id']."'
+                            AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '';
+                            $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
                         }
 
-                        $get_identy = show(_admin_user_get_identitat, array("id" => $_GET['edit']));
-                        $editpwd = show($dir."/admin_editpwd", array("pwd" => _new_pwd, "epwd" => ""));
-                        $index = show($dir."/admin", array(
-                                "enick" => re($get['nick']),
-                                "user" => convert::ToInt($_GET['edit']),
-                                "value" => _button_value_edit,
-                                "eemail" => $get['email'],
-                                "eloginname" => $get['user'],
-                                "esquad" => $esquads,
-                                "editpwd" => $editpwd,
-                                "eposi" => $posi,
-                                "getpermissions" => getPermissions(convert::ToInt($_GET['edit'])),
-                                "getboardpermissions" => getBoardPermissions(convert::ToInt($_GET['edit'])),
-                                "showpos" => getrank($_GET['edit']),
-                                "listck" => (empty($get['listck']) ? '' : ' checked="checked"'),
-                                "alvl" => $get['level'],
-                                "elevel" => ($chkMe == 4 || permission("editusers") ? get_level_dropdown_menu($get['level']) : ''),
-                                "get" => $get_identy));
+                        $check = db("SELECT squad FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
+                        $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
                     }
+
+                    $get_identy = show(_admin_user_get_identitat, array("id" => $_GET['edit']));
+                    $editpwd = show($dir."/admin_editpwd", array("pwd" => _new_pwd, "epwd" => ""));
+                    $index = show($dir."/admin", array(
+                                        "enick" => re($get['nick']),
+                                        "user" => convert::ToInt($_GET['edit']),
+                                        "value" => _button_value_edit,
+                                        "eemail" => $get['email'],
+                                        "eloginname" => $get['user'],
+                                        "esquad" => $esquads,
+                                        "editpwd" => $editpwd,
+                                        "eposi" => $posi,
+                                        "getpermissions" => getPermissions(convert::ToInt($_GET['edit'])),
+                                        "getboardpermissions" => getBoardPermissions(convert::ToInt($_GET['edit'])),
+                                        "showpos" => getrank($_GET['edit']),
+                                        "listck" => (empty($get['listck']) ? '' : ' checked="checked"'),
+                                        "alvl" => $get['level'],
+                                        "elevel" => ($chkMe == 4 || permission("editusers") ? get_level_dropdown_menu($get['level']) : ''),
+                                        "get" => $get_identy));
                 break;
             }
         }

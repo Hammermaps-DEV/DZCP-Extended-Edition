@@ -16,7 +16,7 @@ $where = $where.': '._clear_head;
 if(isset($_GET['do']) && $_GET['do'] == "clear")
 {
     if(!isset($_POST['days']) || empty($_POST['days']))
-        $show = error(_clear_error_days,1);
+        $show = error(_clear_error_days);
     else
     {
         $time = convert::ToInt(time()-($_POST['days']*24*60*60));
@@ -45,4 +45,3 @@ if(isset($_GET['do']) && $_GET['do'] == "clear")
 }
 else
     $show = show($dir."/clear", array("value" => _button_value_clear, "c_days" => "", "forum_info" => _clear_forum_info));
-?>

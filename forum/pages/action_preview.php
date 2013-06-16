@@ -223,4 +223,3 @@ else
     exit('<table class="mainContent" cellspacing="1" style="margin-top:17px">'.$index.'</table>');
   }
 }
-?>

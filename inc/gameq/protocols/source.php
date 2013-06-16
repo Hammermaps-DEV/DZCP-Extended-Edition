@@ -630,4 +630,3 @@ class GameQ_Protocols_Source extends GameQ_Protocols
         $this->server_data_stream = $result->fetch();
     }
 }
-?>

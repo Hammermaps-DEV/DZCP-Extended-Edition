@@ -8,8 +8,8 @@
 
 ## Error Reporting ##
 if(!defined('DEBUG_LOADER'))
-exit('<b>Die Debug-Console wurde nicht included oder wurde nicht geladen!<p>
-Bitte prüfen Sie ob jede index.php einen "include(basePath."/inc/debugger.php");" Eintrag hat.</b>');
+    exit('<b>Die Debug-Console wurde nicht included oder wurde nicht geladen!<p>
+    Bitte prüfen Sie ob jede index.php einen "include(basePath."/inc/debugger.php");" Eintrag hat.</b>');
 
 if(is_debug)
 {
@@ -31,10 +31,18 @@ $ajaxThumbgen = (!isset($ajaxThumbgen) ? false : $ajaxThumbgen);
 require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/database.php');
-require_once(basePath."/inc/apic.php");
-require_once(basePath."/inc/api.php");
+
+if(!$ajaxThumbgen)
+{
+    require_once(basePath."/inc/apic.php");
+    require_once(basePath."/inc/api.php");
+}
+
 require_once(basePath.'/inc/kernel.php');
-require_once(basePath."/inc/cookie.php");
+
+if(!$ajaxThumbgen)
+    require_once(basePath."/inc/cookie.php");
+
 require_once(basePath."/inc/cache.php");
 
 if(!$ajaxThumbgen)
@@ -111,55 +119,55 @@ function check_ip()
 }
 
 //-> Auslesen der Cookies und automatisch anmelden
-if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxThumbgen && !$ajaxJob && checkme() == "unlogged")
-{
-    ## Debug Log ##
-    DebugConsole::insert_initialize('inc/bbcode.php', 'Autologin');
-    DebugConsole::insert_info('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').' & Permanent-Key: '.cookie::get('pkey'));
-
-    ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,nick,pwd,email,level,time,pkey,language FROM ".dba::get('users')." WHERE id = '".cookie::get('id')."' AND pkey = '".cookie::get('pkey')."' AND level != '0'");
-    if(_rows($sql))
-    {
-        $get = _fetch($sql);
-        DebugConsole::insert_successful('inc/bbcode.php', 'Autologin for "'.$get['user'].' => ID: '.$get['id'].'" is successfully');
-
-        ## Generiere neuen permanent-key ##
-        $permanent_key = pass_hash(mkpwd(6,true),0);
-        cookie::put('pkey', $permanent_key);
-        cookie::save();
-        DebugConsole::insert_info('inc/bbcode.php', 'Update Permanent-Key for ID: '.$get['id'].' to "'.$permanent_key.'"'); //Debug Log
-
-        ## Schreibe Werte in die Server Sessions ##
-        $_SESSION['id']         = $get['id'];
-        $_SESSION['pwd']        = $get['pwd'];
-        $_SESSION['lastvisit']  = $get['time'];
-        $_SESSION['ip']         = visitorIp();
-
-        if($get['language'] != 'default')
-            language::run_language(re($get['language']));
-
-        if(data($get['id'], "ip") != $_SESSION['ip'])
-            $_SESSION['lastvisit'] = data($get['id'], "time");
-
-        if(empty($_SESSION['lastvisit']))
-            $_SESSION['lastvisit'] = data($get['id'], "time");
-
-        ## Aktualisiere Datenbank ##
-        db("UPDATE ".dba::get('users')." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '".$permanent_key."' WHERE id = '".$get['id']."'");
-
-        ## Aktualisiere die User-Statistik ##
-        db("UPDATE ".dba::get('userstats')." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
-    }
-    else
-    {
-        DebugConsole::insert_error('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').'" was not successful'); //Debug Log
-        logout(); ## User Logout ##
-    }
-}
-
 if(!$ajaxThumbgen)
 {
+    if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxJob && checkme() == "unlogged")
+    {
+        ## Debug Log ##
+        DebugConsole::insert_initialize('inc/bbcode.php', 'Autologin');
+        DebugConsole::insert_info('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').' & Permanent-Key: '.cookie::get('pkey'));
+
+        ## User aus der Datenbank suchen ##
+        $sql = db_stmt("SELECT id,user,nick,pwd,email,level,time,pkey,language FROM ".dba::get('users')." WHERE id = ? AND pkey = ? AND level != '0'",array('is', cookie::get('id'),cookie::get('pkey'))); //Use prepare sql statement
+        if(_rows($sql))
+        {
+            $get = _fetch($sql);
+            DebugConsole::insert_successful('inc/bbcode.php', 'Autologin for "'.$get['user'].' => ID: '.$get['id'].'" is successfully');
+
+            ## Generiere neuen permanent-key ##
+            $permanent_key = pass_hash(mkpwd(6,true),0);
+            cookie::put('pkey', $permanent_key);
+            cookie::save();
+            DebugConsole::insert_info('inc/bbcode.php', 'Update Permanent-Key for ID: '.$get['id'].' to "'.$permanent_key.'"'); //Debug Log
+
+            ## Schreibe Werte in die Server Sessions ##
+            $_SESSION['id']         = $get['id'];
+            $_SESSION['pwd']        = $get['pwd'];
+            $_SESSION['lastvisit']  = $get['time'];
+            $_SESSION['ip']         = visitorIp();
+
+            if($get['language'] != 'default')
+                language::run_language(re($get['language']));
+
+            if(data($get['id'], "ip") != $_SESSION['ip'])
+                $_SESSION['lastvisit'] = data($get['id'], "time");
+
+            if(empty($_SESSION['lastvisit']))
+                $_SESSION['lastvisit'] = data($get['id'], "time");
+
+            ## Aktualisiere Datenbank ##
+            db("UPDATE ".dba::get('users')." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '".$permanent_key."' WHERE id = '".$get['id']."'");
+
+            ## Aktualisiere die User-Statistik ##
+            db("UPDATE ".dba::get('userstats')." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
+        }
+        else
+        {
+            DebugConsole::insert_error('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').'" was not successful'); //Debug Log
+            logout(); ## User Logout ##
+        }
+    }
+
     //-> Change Language
     if(isset($_GET['set_language']) && !empty($_GET['set_language']) && file_exists(basePath."/inc/lang/languages/".$_GET['set_language'].".php"))
     {
@@ -188,12 +196,16 @@ function login($username='',$pwd='',$permanent=false)
         return false;
 
     ## User aus der Datenbank suchen ##
-    $sql = db("SELECT id,user,pwd,pwd_encoder,time,language FROM ".dba::get('users')." WHERE user = '".$username."' AND level != '0'");
+    $sql = db_stmt("SELECT id,user,pwd,pwd_encoder,time,language FROM ".dba::get('users')." WHERE user = ? AND level != '0'",array('s', $username)); //Use prepare sql statement
     if(_rows($sql))
     {
         $get = _fetch($sql);
         if($get['pwd'] != pass_hash($pwd,$get['pwd_encoder']))
+        {
+            ## Schreibe Adminlog ##
+            wire_ipcheck("tryloginpwd(".$get['id'].")");
             return false;
+        }
 
         ## Autologin ##
         if($permanent)
@@ -261,7 +273,7 @@ function logout()
     global $userid;
 
     if($userid)
-        db("UPDATE ".dba::get('users')." SET online = '0', sessid = '' WHERE id = '".convert::ToInt($userid)."'");
+        db("UPDATE ".dba::get('users')." SET online = '0', sessid = '', pkey = '' WHERE id = '".convert::ToInt($userid)."'");
 
     cookie::clear();
     cookie::save();
@@ -280,16 +292,39 @@ function logout()
 //-> Auslesen der UserID
 function userid()
 {
-    if(empty($_SESSION['id']) || empty($_SESSION['pwd']))
-        return 0;
+    if(empty($_SESSION['id']) || empty($_SESSION['pwd'])) return 0;
+    $hash = md5("SELECT id FROM ".dba::get('users')." WHERE id = ".$_SESSION['id']." AND pwd = ".$_SESSION['pwd']);
 
-    $sql = db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_SESSION['id'])."' AND pwd = '".$_SESSION['pwd']."'");
+    if(Cache::is_mem())
+    {
+        //MEM
+        if(Cache::check($hash))
+        {
+            $sql = db_stmt("SELECT id FROM ".dba::get('users')." WHERE id = ? AND pwd = ?",array('is', $_SESSION['id'], $_SESSION['pwd'])); //Use prepare sql statement
+            if(!_rows($sql)) return 0;
 
-    if(!_rows($sql))
-        return 0;
+            $get = _fetch($sql);
+            Cache::set($hash,$get['id'],2);
+            return $get['id'];
+        }
+        else
+            return Cache::get($hash);
+    }
+    else
+    {
+        //RTBuffer
+        if(RTBuffer::check($hash))
+        {
+            $sql = db_stmt("SELECT id FROM ".dba::get('users')." WHERE id = ? AND pwd = ?",array('is', $_SESSION['id'], $_SESSION['pwd'])); //Use prepare sql statement
+            if(!_rows($sql)) return 0;
 
-    $get = _fetch($sql);
-    return convert::ToInt($get['id']);
+            $get = _fetch($sql);
+            RTBuffer::set($hash,$get['id']);
+            return $get['id'];
+        }
+        else
+            return RTBuffer::get($hash);
+    }
 }
 
 //-> Prueft, ob User eingeloggt ist und wenn ja welches Level er besitzt
@@ -298,18 +333,45 @@ function checkme($userid_set=0)
     if(!$userid = ($userid_set != 0 ? convert::ToInt($userid_set) : userid()))
         return "unlogged";
 
-    $qry = db("SELECT level FROM ".dba::get('users')."
-               WHERE id = ".convert::ToInt($userid)."
-               AND pwd = '".$_SESSION['pwd']."'
-               AND ip = '".$_SESSION['ip']."'");
+    $qry = "SELECT level FROM ".dba::get('users')." WHERE id = ".convert::ToInt($userid)." AND pwd = '".$_SESSION['pwd']."' AND ip = '".$_SESSION['ip']."'";
+    $hash = md5($qry);
 
-    if(_rows($qry))
+    if(Cache::is_mem())
     {
-        $get = _fetch($qry);
-        return $get['level'];
+        //MEM
+        if(Cache::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                Cache::set($hash,$get['level'],2);
+                return $get['level'];
+            }
+            else
+                return "unlogged";
+        }
+        else
+            return Cache::get($hash);
     }
     else
-        return "unlogged";
+    {
+        //RTBuffer
+        if(RTBuffer::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                RTBuffer::set($hash,$get['level']);
+                return $get['level'];
+            }
+            else
+                return "unlogged";
+        }
+        else
+            return RTBuffer::get($hash);
+    }
 }
 
 //-> Templateswitch
@@ -322,11 +384,8 @@ if(!$ajaxThumbgen)
         $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
 
     $designpath = '../inc/_templates_/'.$tmpdir;
-}
 
-//-> Languagefiles einlesen *Run
-if(!$ajaxThumbgen)
-{
+    //-> Languagefiles einlesen *Run
     //-> API & RSS call after Templateswitch & Language
     API_CORE::init();
     rss_feed::init();
@@ -474,33 +533,120 @@ function bbcodetolow($founds)
 //-> Replaces
 function replace($txt, $tinymce=true, $no_vid_tag=false)
 {
+    global $chkMe;
+
     $txt = str_replace("&#34;","\"",$txt);
 
     if($tinymce)
         $txt = preg_replace("#<img src=\"(.*?)\" mce_src=\"(.*?)\"(.*?)\>#i","<img src=\"$2\" alt=\"\">",$txt);
 
+    //BBCODE
     $txt = preg_replace_callback("/\[(.*?)\](.*?)\[\/(.*?)\]/","bbcodetolow",$txt);
     $var = array("/\[url\](.*?)\[\/url\]/",
-                   "/\[img\](.*?)\[\/img\]/",
-                 "/\[url\=(http\:\/\/)?(.*?)\](.*?)\[\/url\]/",
-                 "/\[b\](.*?)\[\/b\]/",
-                 "/\[i\](.*?)\[\/i\]/",
-                 "/\[u\](.*?)\[\/u\]/",
-                 "/\[color=(.*?)\](.*?)\[\/color\]/");
+            "/\[img\](.*?)\[\/img\]/",
+            "/\[url\=(http\:\/\/)?(.*?)\](.*?)\[\/url\]/",
+            "/\[b\](.*?)\[\/b\]/",
+            "/\[i\](.*?)\[\/i\]/",
+            "/\[u\](.*?)\[\/u\]/",
+            "/\[color\=(.*?)\](.*?)\[\/color\]/",
+            "/\[size\=(.*?)\](.*?)\[\/size\]/",
+            "/\[font\=(.*?)\](.*?)\[\/font\]/",
+            "/\[left\](.*?)\[\/left\]/",
+            "/\[center\](.*?)\[\/center\]/",
+            "/\[right\](.*?)\[\/right\]/",
+            "/\[email\](.*?)\[\/email\]/",
+            "/\[email\=(.*?)\](.*?)\[\/email\]/",
+            "/\[list\](.*?)\[\/list\]/",
+            "/\[center\](.*?)\[\/center\]/");
 
     $repl = array("<a href=\"$1\" target=\"_blank\">$1</a>",
-                  "<img src=\"$1\" class=\"content\" alt=\"\" />",
-                  "<a href=\"http://$2\" target=\"_blank\">$3</a>",
-                  "<b>$1</b>",
-                  "<i>$1</i>",
-                  "<u>$1</u>",
-                  "<span style=\"color:$1\">$2</span>");
+            "<img height=\"400\" width=\"500\" src=\"$1\" class=\"resizeImage\" alt=\"\" />",
+            "<a href=\"http://$2\" target=\"_blank\">$3</a>",
+            "<b>\"$1\"</b>",
+            "<em>\"$1\"</em>",
+            "<u>\"$1\"</u>",
+            "<font color=\"$1\">$2</font>",
+            "<font size=\"$1\">$2</font>",
+            "<font face=\"$1\">$2</font>",
+            "<div align=\"left\">$1</div>",
+            "<div align=\"center\">$1</div>",
+            "<div align=\"right\">$1</div>",
+            "<a href=\"mailto:$1\">$1</a>",
+            "<a href=\"mailto:$1\">$2</a>",
+            "<li>\"$1\"</li>",
+            "<center>\"$1\"</center>");
 
     $txt = preg_replace($var,$repl,$txt);
     $txt = preg_replace_callback("#\<img(.*?)\>#", create_function('$img','if(preg_match("#class#i",$img[1])) return "<img".$img[1].">"; else return "<img class=\"content\"".$img[1].">";'), $txt);
 
+    if(strstr($txt,'[*]'))
+    {
+        $matches = explode('[*]',$txt);
+
+        foreach($matches as $i=>$str)
+        {
+            $str = trim($str);
+
+            if(empty($str))
+            {
+                unset($matches[$i]);
+                continue;
+            }
+
+            $matches[$i] = '<li>'.$str.'</li>';
+        }
+
+        $txt = implode('',$matches);
+    }
+
+    $txt = preg_replace("#(\/li|ul|ol type=\"a\"|ol type=\"1\")>(.*)*<(li|\/ol|\/ul){1}>#sSU",'\\1><\\3>',$txt);
+
     if(!$no_vid_tag)
-        $txt = preg_replace_callback("#\[youtube\]http\:\/\/www.youtube.com\/watch\?v\=(.*)\[\/youtube\]#Uis", create_function('$yt','$width = 425; $height = 344; return "<object width=\"".$width."\" height=\"".$height."\"><param name=\"movie\" value=\"http://www.youtube.com/v/".trim($yt[1])."&amp;hl=de&amp;fs=1\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param><embed src=\"http://www.youtube.com/v/".trim($yt[1])."&amp;hl=de&amp;fs=1\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"".$width."\" height=\"".$height."\"></embed></object>";'), $txt);
+    {
+        $var = array("/\[googlevideo\](.*?)\[\/googlevideo\]/",
+                     "/\[myvideo\](.*?)\[\/myvideo\]/",
+                     "/\[youtube\]http\:\/\/www.youtube.com\/watch\?v\=(.*)\[\/youtube\]/",
+                     "/\[divx\](.*?)\[\/divx\]/",
+                     "/\[vimeo\]([0-9]{0,})\[\/vimeo\]/",
+                     "/\[xfire\](.*?)\[\/xfire\]/",
+                     "/\[golem\](.*?)\[\/golem\]/");
+
+        $repl = array(
+        "<embed id=VideoPlayback src=http://video.google.de/googleplayer.swf?docid=-$1&hl=de&fs=true style=width:425px;height:344px allowFullScreen=true allowScriptAccess=always type=application/x-shockwave-flash> </embed>",
+
+        "<object wmode=\"opaque\" style=\"width: 425px; height: 344px;\" type=\"application/x-shockwave-flash\" data=\"http://www.myvideo.de/movie/$1\"> </param>
+        <param name=\"wmode\" value=\"opaque\">
+        <param name=\"movie\" value=\"http://www.myvideo.de/movie/$1\"><param name=\"AllowFullscreen\" value=\"true\"></object>",
+
+        "<object width=\"425\" height=\"344\" wmode=\"opaque\"><param name=\"movie\" value=\"http://www.youtube.com/v/$1&hl=de_DE&fs=1&color1=0x3a3a3a&color2=0x999999&border=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param>
+        <param name=\"wmode\" value=\"opaque\"><embed src=\"http://www.youtube.com/v/$1&hl=de_DE&fs=1&color1=0x3a3a3a&color2=0x999999&border=0\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"425\" height=\"344\"></embed></object>",
+
+        "<object classid=\"clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616\" width=\"425\" height=\"344\" wmode=\"opaque\" codebase=\"http://go.divx.com/plugin/DivXBrowserPlugin.cab\">
+        <param name=\"custommode\" value=\"none\" /><param name=\"autoPlay\" value=\"false\" /><param name=\"src\" value=\"$1\" />
+        <embed type=\"video/divx\" src=\"$1\" custommode=\"none\" width=\"425\" height=\"344\" autoPlay=\"false\" pluginspage=\"http://go.divx.com/plugin/download/\"></embed></object>",
+
+        "<object width=\"425\" height=\"344\" wmode=\"opaque\"><param name=\"allowfullscreen\" value=\"true\" /></param>
+        <param name=\"wmode\" value=\"opaque\">
+        <param name=\"allowscriptaccess\" value=\"always\" /><param name=\"movie\" value=\"http://www.vimeo.com/moogaloop.swf?clip_id=\\1&server=www.vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1\" /><embed src=\"http://www.vimeo.com/moogaloop.swf?clip_id=\\1&server=www.vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"425\" height=\"344\"></embed></object>",
+
+        "<object width=\"425\" height=\"344\" wmode=\"opaque\"></param>
+        <param name=\"wmode\" value=\"opaque\">
+        <embed src=\"http://media.xfire.com/swf/embedplayer.swf\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"425\" height=\"344\" flashvars=\"videoid=\\1\"></embed></object>",
+
+        "<object width=\"480\" height=\"270\" wmode=\"opaque\"></param>
+        <param name=\"wmode\" value=\"opaque\">
+        <param name=\"movie\" value=\"http://video.golem.de/player/videoplayer.swf?id=$1&autoPl=false\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"AllowScriptAccess\" value=\"always\"><embed src=\"http://video.golem.de/player/videoplayer.swf?id=$1&autoPl=false\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" AllowScriptAccess=\"always\" width=\"480\" height=\"270\"></embed></object>");
+
+        $txt = preg_replace($var,$repl,$txt);
+    }
+
+    if($chkMe >= 1)
+    {
+        $txt=str_replace('[hide]','<br />',$txt);
+        $txt=str_replace('[/hide]','<br />',$txt);
+    }
+    else
+        $txt = preg_replace("/\[hide\](.*?)\[\/hide\]/", "",$txt);
 
     return preg_replace("#(\w){1,1}(&nbsp;)#Uis","$1 ",str_replace("\"","&#34;",$txt));
 }
@@ -633,8 +779,13 @@ function bbcode($txt, $tinymce=0, $no_vid=false, $ts=false, $nolink=false)
 
     $txt = str_replace("\\","\\\\",$txt);
     $txt = str_replace("\\n","<br />",$txt);
+
+    if(!$no_vid)
+        $txt = API_CORE::run_additional_bbcode($txt,$no_vid);
+
     $txt = BadwordFilter($txt);
     $txt = replace($txt,$tinymce,$no_vid);
+
     $txt = highlight_text($txt);
     $txt = re_bbcode($txt);
 
@@ -642,7 +793,6 @@ function bbcode($txt, $tinymce=0, $no_vid=false, $ts=false, $nolink=false)
         $txt = strip_tags($txt,"<br><object><em><param><embed><strong><iframe><hr><table><tr><td><div><span><a><b><font><i><u><p><ul><ol><li><br /><img>");
 
     $txt = smileys($txt);
-
     if(!$no_vid && glossar_enabled)
         $txt = glossar($txt);
 
@@ -690,6 +840,7 @@ function bbcode_html($txt,$tinymce=0)
     $search  = array("&lt;","&gt;","&quot;");
     $replace = array("<",">","\"");
     $txt = str_replace($search,$replace,$txt);
+    $txt = API_CORE::run_additional_bbcode($txt);
     $txt = BadwordFilter($txt);
     $txt = replace($txt,$tinymce);
     $txt = highlight_text($txt);
@@ -888,17 +1039,55 @@ function permission($check)
     global $userid;
 
     if(checkme() == 4) return true;
-    if($userid && !empty($check))
+    $hash = md5($userid.'_'.$check);
+
+    if(Cache::is_mem())
     {
-        // check rank permission
-        $team = db("SELECT s1.".$check." FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi
-        WHERE s2.user = '".convert::ToInt($userid)."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
+        //MEM
+        if(Cache::check($hash))
+        {
+            if($userid && !empty($check))
+            {
+                // check rank permission
+                $team = db("SELECT s1.".$check." FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi
+                WHERE s2.user = '".convert::ToInt($userid)."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
 
-        // check user permission
-        $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
+                // check user permission
+                $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
 
-        if($user || $team)
-            return true;
+                if($user || $team)
+                {
+                    Cache::set($hash,true,2);
+                    return true;
+                }
+            }
+        }
+        else
+            return Cache::get($hash);
+    }
+    else
+    {
+        //RTBuffer
+        if(RTBuffer::check($hash))
+        {
+            if($userid && !empty($check))
+            {
+                // check rank permission
+                $team = db("SELECT s1.".$check." FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi
+                WHERE s2.user = '".convert::ToInt($userid)."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
+
+                // check user permission
+                $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
+
+                if($user || $team)
+                {
+                    RTBuffer::set($hash,true);
+                    return true;
+                }
+            }
+        }
+        else
+            return RTBuffer::get($hash);
     }
 
     return false;
@@ -1065,7 +1254,7 @@ function links_check_url($string='')
 }
 
 //-> Infomeldung ausgeben
-function info($msg, $url, $timeout = 4)
+function info($msg, $url, $timeout = 5)
 {
     if(config('direct_refresh'))
         return header('Location: '.str_replace('&amp;', '&', $url));
@@ -1093,7 +1282,7 @@ function info($msg, $url, $timeout = 4)
 }
 
 //-> Errormmeldung ausgeben
-function error($error = '', $back = true, $show_back = true)
+function error($error = '', $back = '1', $show_back = true)
 {
     return show("errors/".($show_back ? "error" : "error2"), array("error" => $error, "back" => $back));
 }
@@ -1134,9 +1323,11 @@ function check_email_trash_mail($email)
 }
 
 //-> Bilder verkleinern
-function img_size($img)
+function img_size($img,$width=0,$height=0)
 {
-    return "<a href=\"../".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$img."\" alt=\"\" /></a>";
+    $width = ($width != 0 ? '&width='.$width : '');
+    $height = ($height != 0 ? '&height='.$height : '');
+    return "<a href=\"../inc/images/uploads/".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$img.$width.$height."\" alt=\"\" /></a>";
 }
 
 function img_cw($folder="", $img="")
@@ -1153,10 +1344,10 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
         return "&#xAB; <span class=\"fontSites\">0</span> &#xBB;";
 
     if($icon)
-        $icon = '<img src="../inc/images/multipage.png" alt="" class="icon" /> '._seiten;
+        $icon = '<img src="../inc/images/multipage.png" alt="" class="icon" /> <span class="fontSites">'._seiten.'</span>';
 
     if($entrys <= $perpage)
-        return $icon.' &#xAB; <span class="fontSites">1</span> &#xBB;';
+        return '';
 
     if(!$page || $page < 1)
         $page = 2;
@@ -1337,7 +1528,7 @@ function userstats($tid, $what)
     else
     {
         $get = db("SELECT ".$what." FROM `".dba::get('userstats')."` WHERE user = '".convert::ToInt($tid)."'",false,true);
-        return $get[$what];
+        return convert::ToString($get[$what]);
     }
 }
 
@@ -1358,20 +1549,27 @@ function sendMail($mailto,$subject,$content)
 function check_msg_email()
 {
     global $clanname,$httphost;
-    $qry = db("SELECT s1.an,s1.page,s1.titel,s1.sendmail,s1.id AS mid,s2.id,s2.nick,s2.email,s2.pnmail FROM ".dba::get('msg')." AS s1 LEFT JOIN ".dba::get('users')." AS s2 ON s2.id = s1.an WHERE page = 0 AND sendmail = 0");
-    while($get = _fetch($qry))
+
+    $qry = "SELECT s1.an,s1.page,s1.titel,s1.sendmail,s1.id AS mid,s2.id,s2.nick,s2.email,s2.pnmail FROM ".dba::get('msg')." AS s1 LEFT JOIN ".dba::get('users')." AS s2 ON s2.id = s1.an WHERE page = 0 AND sendmail = 0";
+    $hash = md5($qry);
+
+    if(!Cache::is_mem() || Cache::check($hash))
     {
-        if($get['pnmail'])
+        $qry = db($qry);
+        while($get = _fetch($qry))
         {
-            db("UPDATE ".dba::get('msg')." SET `sendmail` = '1' WHERE id = '".$get['mid']."'");
-            $subj = show(settings('eml_pn_subj'), array("domain" => $httphost));
-            $message = show(settings('eml_pn'), array("nick" => re($get['nick']), "domain" => $httphost, "titel" => $get['titel'], "clan" => $clanname));
-            sendMail(re($get['email']), $subj, $message);
+            if($get['pnmail'])
+            {
+                db("UPDATE ".dba::get('msg')." SET `sendmail` = '1' WHERE id = '".$get['mid']."'");
+                $subj = show(re(settings('eml_pn_subj')), array("domain" => $httphost));
+                $message = show(re(settings('eml_pn')), array("nick" => re($get['nick']), "domain" => $httphost, "titel" => $get['titel'], "clan" => $clanname));
+                sendMail(re($get['email']), $subj, $message);
+            }
         }
     }
 }
 
-if(!$ajaxThumbgen)
+if(!$ajaxThumbgen && !$ajaxJob)
 { check_msg_email(); }
 
 //-> DropDown Mens Date/Time
@@ -1462,12 +1660,6 @@ function voteanswer($what, $vid)
     return $get['sel'];
 }
 
-//-> Prueft, ob eine Userid existiert
-function exist($tid)
-{
-    return db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false;
-}
-
 //-> Geburtstag errechnen
 function getAge($bday)
 {
@@ -1477,14 +1669,10 @@ function getAge($bday)
         $iCurrentDay = date('j');
         $iCurrentMonth = date('n');
         $iCurrentYear = date('Y');
-
-        if(($iCurrentMonth>$iMonth) || (($iCurrentMonth==$iMonth) && ($iCurrentDay>=$tiday)))
-            return $iCurrentYear - $iYear;
-        else
-            return $iCurrentYear - ($iYear + 1);
+        return (($iCurrentMonth>$iMonth) || (($iCurrentMonth==$iMonth) && ($iCurrentDay>=$tiday))) ? $iCurrentYear - $iYear : $iCurrentYear - ($iYear + 1);
     }
-    else
-        return '-';
+
+    return '-';
 }
 
 //-> Ausgabe des Userlevels
@@ -1522,15 +1710,15 @@ function getrank($tid, $squad=false, $profil=false)
         }
         else
         {
-            $get = db("SELECT level FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",false,true);
+            $get = db("SELECT level,actkey FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",false,true);
             switch ($get['level'])
             {
-                case 0: return _status_unregged; break;
+                case 0: return !empty($get['actkey']) ? _profil_admin_locked : _status_unregged; break;
                 case 1: return _status_user; break;
                 case 2: return _status_trial; break;
                 case 3: return _status_member; break;
                 case 4: return _status_admin; break;
-                case 'banned': return _status_banned; break;
+                case 9: return _status_banned; break;
                 default: return _gast; break;
             }
         }
@@ -1545,15 +1733,15 @@ function getrank($tid, $squad=false, $profil=false)
         }
         else
         {
-            $get = db("SELECT level FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",false,true);
+            $get = db("SELECT level,actkey FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",false,true);
             switch ($get['level'])
             {
-                case 0: return _status_unregged; break;
+                case 0: return !empty($get['actkey']) ? _profil_admin_locked : _status_unregged; break;
                 case 1: return _status_user; break;
                 case 2: return _status_trial; break;
                 case 3: return _status_member; break;
                 case 4: return _status_admin; break;
-                case 'banned': return _status_banned; break;
+                case 9: return _status_banned; break;
                 default: return _gast; break;
             }
         }
@@ -1585,6 +1773,8 @@ function onlinecheck($tid)
 {
     if(db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."' AND time+'".users_online."'>'".time()."' AND online = 1",true))
         return '<img src="../inc/images/online.png" alt="" class="icon" />';
+    else if(db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."' AND `actkey` IS NOT NULL AND level = 0",true))
+        return '<img src="../inc/images/static.png" alt="" class="icon" />';
     else
         return '<img src="../inc/images/offline.png" alt="" class="icon" />';
 }
@@ -1811,13 +2001,40 @@ function xfire($username='')
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 }
 
+// Prüft ob die Seite in der Navigation als Intern eingestellt ist.
+function check_internal_url()
+{
+    $url = '..'.str_ireplace('index.php','',str_ireplace(str_ireplace('\\','/',basePath),'',$_SERVER['SCRIPT_FILENAME']));
+    $url_query = $url.'?'.$_SERVER['QUERY_STRING'];
+    $sql_url_query = db("SELECT internal FROM `dzcp_navi` WHERE `url` LIKE '".$url_query."' LIMIT 1");
+    $sql_url = db("SELECT internal FROM `dzcp_navi` WHERE `url` LIKE '".$url."' LIMIT 1");
+    $sql_found_row = false;
+    if(_rows($sql_url_query))
+    {
+        $sql_found_row = true;
+        $get = _fetch($sql_url_query);
+        if(($get['internal'] && checkme() == 'unlogged'))
+            return true;
+    }
+    else if(_rows($sql_url) && !$sql_found_row)
+    {
+        $get = _fetch($sql_url);
+        if(($get['internal'] && checkme() == 'unlogged'))
+            return true;
+    }
+    else
+        return false;
+}
+
 // Prüft die ausgelagerten Seiten für Zugriff
 function include_action($page_dir='',$default='default')
 {
-    $do = convert::ToString((isset($_GET['do']) ? htmlentities($_GET['do']) : NULL));
-    $page = convert::ToInt((isset($_GET['page']) ? $_GET['page'] : 1));
-    $action = convert::ToString(isset($_GET['action']) ? htmlentities(strtolower($_GET['action'])) : strtolower($default));
-    if(($modul_file=API_CORE::load_additional_page($page_dir,$action)))
+    $do = convert::ToString((isset($_GET['do']) && !empty($_GET['do']) ? htmlentities(strtolower($_GET['do'])) : (isset($_POST['do']) && !empty($_POST['do']) ? htmlentities(strtolower($_POST['do'])) : '')));
+    $page = convert::ToInt((isset($_GET['page']) ? $_GET['page'] : (isset($_POST['page']) ? $_POST['page'] : 1)));
+    $action = convert::ToString(isset($_GET['action']) && !empty($_GET['action']) ? htmlentities(strtolower($_GET['action'])) : (isset($_POST['action']) && !empty($_POST['action']) ? htmlentities(strtolower($_POST['action'])) : strtolower($default)));
+    if(check_internal_url())
+        return array('include' => false, 'page' => $page, 'do' => $do, 'msg' => error(_error_have_to_be_logged));
+    else if(($modul_file=API_CORE::load_additional_page($page_dir,$action)))
         return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file);
     else if(file_exists(($modul_file=basePath.'/'.$page_dir.'/pages/action_'.$action.'.php')))
         return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file);
@@ -1872,10 +2089,7 @@ function count_clicks($side_tag='',$clickedID=0,$update=true)
  **/
 function thumbgen_delete($filename,$width='100',$height='')
 {
-    if(!isset($filename) || empty($filename))
-        return false;
-
-    if(!file_exists(basePath.'/inc/images/uploads/'.$filename))
+    if(!isset($filename) || empty($filename) || !file_exists(basePath.'/inc/images/uploads/'.$filename))
         return false;
 
     list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/uploads/'.$filename);
@@ -1945,8 +2159,11 @@ if(!$ajaxThumbgen)
 }
 
 //-> Navigation einbinden
-if(file_exists(basePath.'/inc/menu-functions/navi.php') && !$ajaxThumbgen)
-    include_once(basePath.'/inc/menu-functions/navi.php');
+if(!$ajaxThumbgen)
+{
+    if(file_exists(basePath.'/inc/menu-functions/navi.php'))
+        include_once(basePath.'/inc/menu-functions/navi.php');
+}
 
 //-> Ausgabe des Indextemplates
 function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
@@ -2007,12 +2224,18 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         }
 
         //init templateswitch
-        $tmpldir=''; $tmps = get_files(basePath.'/inc/_templates_/',true,false);
-        foreach($tmps as $tmp)
+        if(!Cache::is_mem() || Cache::check('template_menu'))
         {
-            $selt = ($tmpdir == $tmp ? 'selected="selected"' : '');
-            $tmpldir .= show(_select_field, array("value" => "../user/?action=switch&amp;set=".$tmp,  "what" => $tmp,  "sel" => $selt));
+            $tmpldir=''; $tmps = get_files(basePath.'/inc/_templates_/',true,false);
+            foreach($tmps as $tmp)
+            {
+                $selt = ($tmpdir == $tmp ? 'selected="selected"' : '');
+                $tmpldir .= show(_select_field, array("value" => "../user/?action=switch&amp;set=".$tmp,  "what" => $tmp,  "sel" => $selt));
+            }
+
+            Cache::set('template_menu',$tmpldir,5);
         }
+        else $tmpldir = Cache::get('template_menu');
 
         //misc vars
         $template_switch = show("menu/tmp_switch", array("templates" => $tmpldir));
@@ -2022,16 +2245,17 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
         $rss = $clanname;
         $dir = $designpath;
         $title = re(strip_tags($title));
-        $charset = _charset;
+        $charset = !defined('_charset') ? 'iso-8859-1' : _charset;
         $lng_meta = language::get_meta();
         $index = empty($index) ? '' : (empty($check_msg) ? '' : $check_msg).'<table class="mainContent" cellspacing="1" style="margin-top:0">'.$index.'</table>';
+        $where = preg_replace_callback("#autor_(.*?)$#",create_function('$id', 'return data("$id[1]","nick");'),$where);
 
         //check if placeholders are given
         $pholder = file_get_contents($designpath."/index.html");
 
         //filter placeholders
         $pholdervars = '';
-        $blArr = array("[title]","[copyright]","[java_vars]","[login]", "[template_switch]","[headtitle]","[index]", "[time]","[rss]","[dir]","[charset]","[ukrss]","[lng_meta]");
+        $blArr = array("[title]","[copyright]","[java_vars]","[login]", "[template_switch]","[headtitle]","[index]", "[time]","[rss]","[dir]","[charset]","[ukrss]","[lng_meta]","[where]");
         foreach($blArr as $bl)
         {
             if(preg_match("#".$bl."#",$pholder))
@@ -2117,4 +2341,5 @@ function page($index,$title,$where,$time,$wysiwyg='',$index_templ=false)
 }
 
 //Initialisierung der Addon Calls
-API_CORE::call_addons_init();
+if(!$ajaxThumbgen)
+    API_CORE::call_addons_init();

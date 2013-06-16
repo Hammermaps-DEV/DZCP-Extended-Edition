@@ -50,4 +50,3 @@ else
     $nav = nav($entrys,$maxshoutarchiv,"?action=archiv");
     $index = show($dir."/shout", array("shout_part" => $show, "head" => _shout_archiv_head, "nav" => $nav));
 }
-?>

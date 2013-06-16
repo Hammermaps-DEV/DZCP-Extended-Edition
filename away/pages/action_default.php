@@ -19,7 +19,7 @@ else
     $where = $where.' - '._away_list;
     if($chkMe == "unlogged" || $chkMe < 2)
     {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     } else {
 
         if(isset($_GET['page'])) $page = $_GET['page'];
@@ -83,4 +83,3 @@ else
                 "nav" => $nav));
     }
 }
-?>

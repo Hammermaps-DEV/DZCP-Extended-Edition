@@ -48,7 +48,7 @@ else
                     wire_ipcheck("pwd(".$get['id'].")");
 
                     ## User E-Mail zusammenstellen und senden ##
-                    sendMail($_POST['email'],settings('eml_pwd_subj'),show(settings('eml_pwd'), array("user" => $_POST['user'], "pwd" => $pwd)));
+                    sendMail($_POST['email'],re(settings('eml_pwd_subj')),show(re(settings('eml_pwd')), array("user" => $_POST['user'], "pwd" => $pwd)));
 
                     ## Infobox anzeigen ##
                     $index = info(_lostpwd_valid, "../user/?action=login");
@@ -62,7 +62,7 @@ else
                         wire_ipcheck("trypwd(".$get['id'].")");
                     }
 
-                    $index = ($_POST['secure'] != $_SESSION['sec_lostpwd'] || empty($_SESSION['sec_lostpwd']) ? error(_error_invalid_regcode,1) : error(_lostpwd_failed, 1));
+                    $index = ($_POST['secure'] != $_SESSION['sec_lostpwd'] || empty($_SESSION['sec_lostpwd']) ? error(_error_invalid_regcode) : error(_lostpwd_failed));
                 }
             }
             else

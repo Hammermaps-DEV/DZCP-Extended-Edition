@@ -208,6 +208,3 @@
     echo $info;
     echo ",history:" . (isset($history) && is_object($history)?($history->getNumRestorable()):0)  . "";
     echo "}";
-
-
-?>

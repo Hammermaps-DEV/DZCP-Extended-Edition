@@ -24,10 +24,11 @@ $wysiwyg = "";
 $rootmenu = "";
 $settingsmenu = "";
 $contentmenu = "";
+$extendedmenu = "";
 
 ## SECTIONS ##
 if(!admin_perms($_SESSION['id']))
-    $index = error(_error_wrong_permissions, 1); //Keine Rechte
+    $index = error(_error_wrong_permissions); //Keine Rechte
 else
 {
     define('_adminMenu', true);
@@ -62,6 +63,12 @@ else
             {
                 if(file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
                     break;
+            }
+
+            if(!file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
+            {
+                $settings['file_name'] = 'unknown';
+                $end = 'gif';
             }
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
@@ -105,6 +112,15 @@ else
     else
         $contentadmin2 = ($contentadmin1 = '');
 
+    ## Extended Menu deaktivieren ##
+    if(empty($extendedmenu))
+    {
+        $extendedadmin1 = '/*';
+        $extendedadmin2 = '*/';
+    }
+    else
+        $extendedadmin2 = ($extendedadmin1 = '');
+
     if(isset($_GET['admin']))
     {
         if(file_exists(basePath."/admin/menu/".($inc_file=((string)$_GET['admin']).".php")))
@@ -114,22 +130,23 @@ else
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
-            $do = (isset($_GET['do']) ? $_GET['do'] : '');
+            $do = (isset($_GET['do']) ? $_GET['do'] : (isset($_POST['do']) ? $_POST['do'] : '') );
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                 require_once(basePath."/admin/menu/".$inc_file);
             else
-                $show = error(_error_wrong_permissions, 1);
+                $show = error(_error_wrong_permissions);
         }
     }
 
     $dzcp_version = show_dzcp_version();
     $index = show($dir."/admin", array("head" => _config_head,
             "version" => $dzcp_version['version'],
-            "old" => $dzcp_version['old'],
+            "version_img" => $dzcp_version['version_img'],
             "einst" => _config_einst,
             "content" => _content,
             "rootadmin" => _rootadmin,
+            "extended" => _extended,
             "rootmenu" => $rootmenu,
             "settingsmenu" => $settingsmenu,
             "contentmenu" => $contentmenu,
@@ -139,6 +156,9 @@ else
             "adminc2" => $adminc2,
             "content1" => $contentadmin1,
             "content2" => $contentadmin2,
+            "extended1" => $extendedadmin1,
+            "extended2" => $extendedadmin2,
+            "extendedmenu" => $extendedmenu,
             "show" => $show));
 }
 

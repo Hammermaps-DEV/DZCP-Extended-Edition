@@ -103,4 +103,3 @@
     echo $info;
     echo ",history:" . ($history->getNumRestorable()) . "\n";
     echo "}";
-?>

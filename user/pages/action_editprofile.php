@@ -15,7 +15,7 @@ if (!defined('IS_DZCP'))
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else if($chkMe == "unlogged")
-    $index = error(_error_have_to_be_logged, 1);
+    $index = error(_error_have_to_be_logged);
 else
 {
     ######################
@@ -57,23 +57,23 @@ else
             }
 
             if(empty($_POST['user']))
-                $index = error(_empty_user, 1);
+                $index = error(_empty_user);
             else if(empty($_POST['nick']))
-                $index = error(_empty_nick, 1);
+                $index = error(_empty_nick);
             else if(empty($_POST['email']))
-                $index = error(_empty_email, 1);
+                $index = error(_empty_email);
             else if(!check_email($_POST['email']))
-                $index = error(_error_invalid_email, 1);
+                $index = error(_error_invalid_email);
             else if(check_email_trash_mail($_POST['email']))
-                $index = error(_error_trash_mail, 1);
+                $index = error(_error_trash_mail);
             else if(!empty($_POST['pwd']) && $_POST['pwd'] != $_POST['pwd2'])
-                $index = error(_wrong_pwd, 1);
+                $index = error(_wrong_pwd);
             else if($check_user)
-                $index = error(_error_user_exists, 1);
+                $index = error(_error_user_exists);
             else if($check_nick)
-                $index = error(_error_nick_exists, 1);
+                $index = error(_error_nick_exists);
             else if($check_email)
-                $index = error(_error_email_exists, 1);
+                $index = error(_error_email_exists);
             else
             {
                 if(isset($_POST['pwd']) && !empty($_POST['pwd']))
@@ -214,7 +214,7 @@ else
             {
                 $qry = db("SELECT * FROM ".dba::get('users')." WHERE id = '".convert::ToInt($userid)."'");
                 if(!_rows($qry))
-                    $index = error(_user_dont_exist, 1);
+                    $index = error(_user_dont_exist);
                 else
                 {
                     $get = _fetch($qry);

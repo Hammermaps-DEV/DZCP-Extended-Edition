@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 	/**
 	 * This class provide all file upload functionalities
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -587,8 +586,5 @@ class Upload
 				@unlink($dirPath . $fileBaseName . $v . $fileExtension);			
 			}			
 		}
-	
-
 	}
 }
-?>

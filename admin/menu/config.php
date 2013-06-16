@@ -85,47 +85,50 @@ switch ($do)
                 `cache_news`         = '".convert::ToInt($_POST['cache_news'])."',
                 `cache_engine`       = '".convert::ToString($_POST['cache_engine'])."',
                 `l_nwars`            = '".convert::ToInt($_POST['l_nwars'])."',
-                `news_feed`   	     = '".convert::ToInt($_POST['feed'])."'
+                `news_feed`   	     = '".convert::ToInt($_POST['feed'])."',
+                `use_akl`   	     = '".convert::ToInt($_POST['akl'])."'
             WHERE id = 1");
 
             db("UPDATE ".dba::get('settings')." SET
-                `clanname`            = '".up($_POST['clanname'])."',
-                `pagetitel`           = '".up($_POST['pagetitel'])."',
-                `badwords`            = '".up($_POST['badwords'])."',
-                `gmaps_who`           = '".convert::ToInt($_POST['gmaps_who'])."',
-                `language`            = '".$_POST['language']."',
-                `regcode`             = '".convert::ToInt($_POST['regcode'])."',
-                `forum_vote`          = '".convert::ToInt($_POST['forum_vote'])."',
-                `reg_forum`           = '".convert::ToInt($_POST['reg_forum'])."',
-                `reg_artikel`         = '".convert::ToInt($_POST['reg_artikel'])."',
-                `reg_shout`           = '".convert::ToInt($_POST['reg_shout'])."',
-                `reg_cwcomments`      = '".convert::ToInt($_POST['reg_cwcomments'])."',
-                `reg_newscomments`    = '".convert::ToInt($_POST['reg_nc'])."',
-                `reg_dl`              = '".convert::ToInt($_POST['reg_dl'])."',
-                `reg_dlcomments`      = '".convert::ToInt($_POST['reg_dlcomments'])."',
-                `eml_reg_subj`        = '".up($_POST['eml_reg_subj'])."',
-                `eml_pwd_subj`        = '".up($_POST['eml_pwd_subj'])."',
-                `eml_nletter_subj`    = '".up($_POST['eml_nletter_subj'])."',
-                `eml_pn_subj`	      = '".up($_POST['eml_pn_subj'])."',
-                `double_post`	      = '".convert::ToInt($_POST['double_post'])."',
-                `gb_activ`	      	  = '".convert::ToInt($_POST['gb_activ'])."',
-                `eml_fabo_npost_subj` = '".up($_POST['eml_fabo_npost_subj'])."',
-                `eml_fabo_tedit_subj` = '".up($_POST['eml_fabo_tedit_subj'])."',
-                `eml_fabo_pedit_subj` = '".up($_POST['eml_fabo_pedit_subj'])."',
-                `eml_reg`             = '".up($_POST['eml_reg'])."',
-                `eml_pwd`             = '".up($_POST['eml_pwd'])."',
-                `eml_nletter`         = '".up($_POST['eml_nletter'])."',
-                `eml_pn`        	  = '".up($_POST['eml_pn'])."',
-                `eml_fabo_npost`      = '".up($_POST['eml_fabo_npost'])."',
-                `eml_fabo_tedit`      = '".up($_POST['eml_fabo_tedit'])."',
-                `eml_fabo_pedit`      = '".up($_POST['eml_fabo_pedit'])."',
-                `mailfrom`            = '".up($_POST['mailfrom'])."',
-                `tmpdir`              = '".up($_POST['tmpdir'])."',
-                `persinfo`            = '".convert::ToInt($_POST['persinfo'])."',
-                `wmodus`              = '".convert::ToInt($_POST['wmodus'])."',
-                `memcache_host`       = '".$_POST['memcache_host']."',
-                `memcache_port`       = '".convert::ToInt($_POST['memcache_port'])."',
-                `urls_linked`   	  = '".up($_POST['urls_linked'])."'
+                `clanname`              = '".up($_POST['clanname'])."',
+                `pagetitel`             = '".up($_POST['pagetitel'])."',
+                `badwords`              = '".up($_POST['badwords'])."',
+                `gmaps_who`             = '".convert::ToInt($_POST['gmaps_who'])."',
+                `language`              = '".$_POST['language']."',
+                `regcode`               = '".convert::ToInt($_POST['regcode'])."',
+                `forum_vote`            = '".convert::ToInt($_POST['forum_vote'])."',
+                `reg_forum`             = '".convert::ToInt($_POST['reg_forum'])."',
+                `reg_artikel`           = '".convert::ToInt($_POST['reg_artikel'])."',
+                `reg_shout`             = '".convert::ToInt($_POST['reg_shout'])."',
+                `reg_cwcomments`        = '".convert::ToInt($_POST['reg_cwcomments'])."',
+                `reg_newscomments`      = '".convert::ToInt($_POST['reg_nc'])."',
+                `reg_dl`                = '".convert::ToInt($_POST['reg_dl'])."',
+                `reg_dlcomments`        = '".convert::ToInt($_POST['reg_dlcomments'])."',
+                `eml_reg_subj`          = '".$_POST['eml_reg_subj']."',
+                `eml_pwd_subj`          = '".$_POST['eml_pwd_subj']."',
+                `eml_nletter_subj`      = '".$_POST['eml_nletter_subj']."',
+                `eml_pn_subj`           = '".$_POST['eml_pn_subj']."',
+                `double_post`           = '".convert::ToInt($_POST['double_post'])."',
+                `gb_activ`              = '".convert::ToInt($_POST['gb_activ'])."',
+                `eml_fabo_npost_subj`   = '".$_POST['eml_fabo_npost_subj']."',
+                `eml_fabo_tedit_subj`   = '".$_POST['eml_fabo_tedit_subj']."',
+                `eml_fabo_pedit_subj`   = '".$_POST['eml_fabo_pedit_subj']."',
+                `eml_akl_register_subj` = '".$_POST['eml_akl_regist_subj']."',
+                `eml_reg`               = '".$_POST['eml_reg']."',
+                `eml_pwd`               = '".$_POST['eml_pwd']."',
+                `eml_nletter`           = '".$_POST['eml_nletter']."',
+                `eml_pn`        	    = '".$_POST['eml_pn']."',
+                `eml_fabo_npost`        = '".$_POST['eml_fabo_npost']."',
+                `eml_fabo_tedit`        = '".$_POST['eml_fabo_tedit']."',
+                `eml_fabo_pedit`        = '".$_POST['eml_fabo_pedit']."',
+                `eml_akl_register`      = '".$_POST['eml_akl_regist']."',
+                `mailfrom`              = '".up($_POST['mailfrom'])."',
+                `tmpdir`                = '".up($_POST['tmpdir'])."',
+                `persinfo`              = '".convert::ToInt($_POST['persinfo'])."',
+                `wmodus`                = '".convert::ToInt($_POST['wmodus'])."',
+                `memcache_host`         = '".$_POST['memcache_host']."',
+                `memcache_port`         = '".convert::ToInt($_POST['memcache_port'])."',
+                `urls_linked`   	    = '".up($_POST['urls_linked'])."'
             WHERE id = 1");
 
             $show = info(_config_set, "?admin=config", 10);
@@ -182,6 +185,7 @@ if(empty($show))
     $sel_gba = ($gets['gb_activ'] ? 'selected="selected"' : '');
     $sel_url = ($gets['urls_linked'] ? 'selected="selected"' : '');
     $sel_feed = ($get['news_feed'] ? 'selected="selected"' : '');
+    $sel_akl = (!$get['use_akl'] ? 'selected="selected"' : '');
 
     $wysiwyg = '_word';
     $show_ = show($dir."/form_config", array("cache_select" => Cache::GetConfigMenu(),
@@ -205,6 +209,7 @@ if(empty($show))
                                              "c_eml_fabo_npost_subj" => $gets['eml_fabo_npost_subj'],
                                              "c_eml_fabo_tedit_subj" => $gets['eml_fabo_tedit_subj'],
                                              "c_eml_fabo_pedit_subj" => $gets['eml_fabo_pedit_subj'],
+                                             "c_eml_akl_regist_subj" => $gets['eml_akl_register_subj'],
                                              "c_eml_reg" => txtArea($gets['eml_reg']),
                                              "c_eml_pwd" => txtArea($gets['eml_pwd']),
                                              "c_eml_nletter" => txtArea($gets['eml_nletter']),
@@ -212,6 +217,7 @@ if(empty($show))
                                              "c_eml_fabo_tedit" => txtArea($gets['eml_fabo_tedit']),
                                              "c_eml_fabo_pedit" => txtArea($gets['eml_fabo_pedit']),
                                              "c_eml_fabo_nposr" => txtArea($gets['eml_fabo_npost']),
+                                             "c_eml_akl_regist" => txtArea($gets['eml_akl_register']),
                                              "memcache_host" => $gets['memcache_host'],
                                              "memcache_port" => $gets['memcache_port'],
                                              "tmpdir" => $tmpldir,
@@ -297,6 +303,7 @@ if(empty($show))
                                              "c_teamrow" => $get['teamrow'],
                                              "f_artikelcom" => $get['f_artikelcom'],
                                              "sel_url" => $sel_url,
+                                             "sel_akl" => $sel_akl,
                                              "pwde_options" => $pwde_options));
 
     $show = show($dir."/form", array("head" => _config_global_head, "what" => "config", "value" => _button_value_config, "show" => $show_));

@@ -20,13 +20,13 @@ if (!defined('IS_DZCP'))
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::get('artikel')." WHERE id = ".$artikel_id=convert::ToInt($_GET['id']),true))
-    $index = error(_id_dont_exist, 1);
+    $index = error(_id_dont_exist);
 else
 {
     $flood_artikelcom = config('f_artikelcom');
     $check = db("SELECT public FROM ".dba::get('artikel')." WHERE id = ".$artikel_id,false,true);
     if(!permission("artikel") && !$check['public'])
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     else
     {
         #################################### do case ####################################
@@ -40,7 +40,7 @@ else
                     if(db("SELECT `id` FROM ".dba::get('artikel')." WHERE `id` = '".$artikel_id."'",true) != 0)
                     {
                         if(settings("reg_artikel") == "1" && $chkMe == "unlogged")
-                            $index = error(_error_have_to_be_logged, 1);
+                            $index = error(_error_have_to_be_logged);
                         else
                         {
                             if(!ipcheck("artid(".$artikel_id.")", config('f_artikelcom')))
@@ -91,11 +91,11 @@ else
                                 }
                             }
                             else
-                                $index = error(show(_error_flood_post, array("sek" => $flood_artikelcom)), 1);
+                                $index = error(show(_error_flood_post, array("sek" => $flood_artikelcom)));
                         }
                     }
                     else
-                        $index = error(_id_dont_exist,1);
+                        $index = error(_id_dont_exist);
                 break;
                 case 'edit':
                     $get = db("SELECT * FROM ".dba::get('acomments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -125,7 +125,7 @@ else
                                 "eintraghead" => _eintrag));
                     }
                     else
-                        $index = error(_error_edit_post,1);
+                        $index = error(_error_edit_post);
                 break;
                 case 'editcom':
                     $get = db("SELECT reg FROM ".dba::get('acomments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -143,7 +143,7 @@ else
                         $index = info(_comment_edited, "?action=show&amp;id=".$artikel_id."");
                     }
                     else
-                        $index = error(_error_edit_post,1);
+                        $index = error(_error_edit_post);
                 break;
                 case 'delete':
                     $get = db("SELECT reg FROM ".dba::get('acomments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -153,7 +153,7 @@ else
                         $index = info(_comment_deleted, "?action=show&amp;id=".$artikel_id."");
                     }
                     else
-                        $index = error(_error_wrong_permissions, 1);
+                        $index = error(_error_wrong_permissions);
                 break;
             }
         }
@@ -170,6 +170,20 @@ else
             $links2 = (!empty($get['url2']) ? show(_artikel_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
             $links3 = (!empty($get['url3']) ? show(_artikel_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
             $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_artikel_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
+
+            $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".convert::ToInt($get['kat'])."'",false,true);
+            $artikelimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+            if($get['custom_image'])
+            {
+                foreach($picformat AS $end)
+                {
+                    if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                        break;
+                }
+
+                if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
+                    $artikelimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+            }
 
             if($get['comments'])
             {
@@ -251,22 +265,21 @@ else
             else
                 $showmore = show("page/comments_no_enabled");
 
-            $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".convert::ToInt($get['kat'])."'",false,true);
             $index = show($dir."/show_more", array("titel" => re($get['titel']),
-                    "id" => $get['id'],
-                    "comments" => "",
-                    "display" => "inline",
-                    "nautor" => _autor,
-                    "kat" => re($getkat['katimg']),
-                    "dir" => $designpath,
-                    "ndatum" => _datum,
-                    "showmore" => $showmore,
-                    "icq" => "",
-                    "text" => bbcode($get['text']),
-                    "datum" => date("j.m.y H:i", convert::ToInt($get['datum']))._uhr,
-                    "links" => $links,
-                    "autor" => autor($get['autor'])));
+                                                    "id" => $get['id'],
+                                                    "comments" => "",
+                                                    "display" => "inline",
+                                                    "nautor" => _autor,
+                                                    "artikelimage" => $artikelimage,
+                                                    "ndatum" => _datum,
+                                                    "showmore" => $showmore,
+                                                    "icq" => "",
+                                                    "text" => bbcode($get['text']),
+                                                    "datum" => date("j.m.y H:i", convert::ToInt($get['datum']))._uhr,
+                                                    "links" => $links,
+                                                    "autor" => autor($get['autor'])
+
+            ));
         }
     }
 }
-?>

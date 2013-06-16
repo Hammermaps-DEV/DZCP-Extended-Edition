@@ -285,6 +285,8 @@ function install_mysql_create()
       `cache_news` int(10) NOT NULL DEFAULT '5',
       `direct_refresh` int(1) NOT NULL DEFAULT '0',
       `news_feed` int(1) NOT NULL DEFAULT '1',
+      `use_akl` int(1) NOT NULL DEFAULT '1',
+      PRIMARY KEY (`id`),
       UNIQUE KEY `id` (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
@@ -678,6 +680,7 @@ function install_mysql_create()
       `public` int(1) NOT NULL DEFAULT '0',
       `timeshift` int(14) NOT NULL DEFAULT '0',
       `comments` int(1) NOT NULL DEFAULT '1',
+      `custom_image` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
@@ -732,6 +735,7 @@ function install_mysql_create()
       `pos` int(1) NOT NULL DEFAULT '0',
       `artikel` int(1) NOT NULL DEFAULT '0',
       `awards` int(1) NOT NULL DEFAULT '0',
+      `activateusers` int(1) NOT NULL DEFAULT '0',
       `backup` int(1) NOT NULL DEFAULT '0',
       `clear` int(1) NOT NULL DEFAULT '0',
       `config` int(1) NOT NULL DEFAULT '0',
@@ -770,7 +774,8 @@ function install_mysql_create()
       `support` int(1) NOT NULL DEFAULT '0',
       `votes` int(1) NOT NULL DEFAULT '0',
       `votesadmin` int(1) NOT NULL DEFAULT '0',
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      KEY `user` (`user`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
@@ -881,7 +886,7 @@ function install_mysql_create()
       `reg_artikel` int(1) NOT NULL DEFAULT '1',
       `reg_newscomments` int(1) NOT NULL DEFAULT '1',
       `reg_dlcomments` int(1) NOT NULL DEFAULT '1',
-      `tmpdir` varchar(100) NOT NULL DEFAULT 'version1.5',
+      `tmpdir` varchar(100) NOT NULL DEFAULT 'version1.6',
       `wmodus` int(1) NOT NULL DEFAULT '0',
       `persinfo` int(1) NOT NULL DEFAULT '1',
       `iban` varchar(100) NOT NULL DEFAULT '',
@@ -900,23 +905,25 @@ function install_mysql_create()
       `domain` varchar(200) NOT NULL DEFAULT '127.0.0.1',
       `regcode` int(1) NOT NULL DEFAULT '1',
       `mailfrom` varchar(200) NOT NULL DEFAULT 'info@127.0.0.1',
-      `eml_reg_subj` varchar(200) NOT NULL DEFAULT '',
-      `eml_pwd_subj` varchar(200) NOT NULL DEFAULT '',
-      `eml_nletter_subj` varchar(200) NOT NULL DEFAULT '',
-      `eml_reg` text NOT NULL,
-      `eml_pwd` text NOT NULL,
-      `eml_nletter` text NOT NULL,
+      `eml_reg_subj` text,
+      `eml_pwd_subj` text,
+      `eml_nletter_subj` text,
+      `eml_reg` text,
+      `eml_pwd` text,
+      `eml_nletter` text,
+      `eml_akl_register` text,
       `reg_shout` int(1) NOT NULL DEFAULT '1',
       `gmaps_who` int(1) NOT NULL DEFAULT '1',
       `prev` varchar(3) NOT NULL DEFAULT '',
-      `eml_fabo_npost_subj` varchar(200) NOT NULL,
-      `eml_fabo_tedit_subj` varchar(200) NOT NULL,
-      `eml_fabo_pedit_subj` varchar(200) NOT NULL,
-      `eml_pn_subj` varchar(200) NOT NULL,
-      `eml_fabo_npost` text NOT NULL,
-      `eml_fabo_tedit` text NOT NULL,
-      `eml_fabo_pedit` text NOT NULL,
-      `eml_pn` text NOT NULL,
+      `eml_fabo_npost_subj` text,
+      `eml_fabo_tedit_subj` text,
+      `eml_fabo_pedit_subj` text,
+      `eml_akl_register_subj` text,
+      `eml_pn_subj` text,
+      `eml_fabo_npost` text,
+      `eml_fabo_tedit` text,
+      `eml_fabo_pedit` text,
+      `eml_pn` text,
       `memcache_host` VARCHAR(50) NOT NULL DEFAULT '',
       `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211',
       `k_vwz` varchar(200) NOT NULL DEFAULT '',
@@ -926,7 +933,8 @@ function install_mysql_create()
       `urls_linked` int(1) NOT NULL DEFAULT '1',
       `default_pwd_encoder` int(1) NOT NULL DEFAULT '2',
       `db_version` varchar(4) NOT NULL DEFAULT '0000',
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `id` (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
@@ -953,6 +961,21 @@ function install_mysql_create()
       `text` text NOT NULL,
       `html` int(1) NOT NULL,
       PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
+    //-> Slideshow ==================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('slideshow')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('slideshow')."` (
+    `id` int(5) NOT NULL AUTO_INCREMENT,
+    `pos` int(5) NOT NULL DEFAULT '0',
+    `bez` varchar(200) NOT NULL DEFAULT '',
+    `showbez` int(1) NOT NULL default '1',
+    `desc` varchar(249) NOT NULL DEFAULT '',
+    `url` varchar(200) NOT NULL DEFAULT '',
+    `target` int(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
@@ -1097,6 +1120,7 @@ function install_mysql_create()
       `pwd_encoder` int(1) NOT NULL DEFAULT '2',
       `sessid` varchar(32) DEFAULT NULL,
       `pkey` varchar(50) NOT NULL DEFAULT '',
+      `actkey` varchar(50) NOT NULL DEFAULT '',
       `country` varchar(20) NOT NULL DEFAULT 'de',
       `language` varchar(15) NOT NULL DEFAULT 'default',
       `ip` varchar(50) NOT NULL DEFAULT '',
@@ -1158,7 +1182,8 @@ function install_mysql_create()
       `pnmail` int(1) NOT NULL DEFAULT '1',
       `profile_access` int(1) NOT NULL DEFAULT '0',
       `rss_key` varchar(50) NOT NULL DEFAULT '',
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `id` (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
@@ -1176,6 +1201,7 @@ function install_mysql_create()
       `profilhits` int(20) NOT NULL DEFAULT '0',
       `forumposts` int(5) NOT NULL DEFAULT '0',
       `cws` int(5) NOT NULL DEFAULT '0',
+      `akl` int(5) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 

@@ -3,7 +3,6 @@
 	{
 		die('Permission denied');
 	}
-?><?php
 /**
 	 * file listing
 	 * @author Logan Cai (cailongqun [at] yahoo [dot] com [dot] cn)
@@ -375,4 +374,3 @@ class manager
 		return true;	
 	}
 }
-?>

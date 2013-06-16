@@ -84,4 +84,3 @@ else
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
 }
-?>

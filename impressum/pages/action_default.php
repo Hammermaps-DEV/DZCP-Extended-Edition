@@ -25,4 +25,3 @@ else
             "show_domain" => $info['i_domain'],
             "show_autor" => bbcode($info['i_autor'])));
 }
-?>

@@ -380,8 +380,6 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
     */
     protected function process_dzcp_runtime()
     {
-        print_r($this->server_data_stream);
-
         $result = new GameQ_Result();
         if(!$this->server_data_stream['gq_online'])
         {
@@ -433,7 +431,7 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
         $result->add('game_num_bot', '');
         $result->add('game_password', $this->server_data_stream['password'] == '1' ? true : false);
         $result->add('game_secure', $secure);
-        $result->add('game_engine', 'bf3');
+        $result->add('game_engine', 'frostbite');
         $result->add('game_protocol', $this->server_data_stream['gq_protocol']);
         $result->add('game_transport', $this->server_data_stream['gq_transport']);
         $result->add('game_port', $this->server_data_stream['gq_port']);

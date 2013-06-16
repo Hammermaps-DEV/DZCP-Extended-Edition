@@ -21,9 +21,10 @@ else
     if(!$write)
     {
         $sql_text = file_get_contents(basePath.'/_installer/system/sql_vorlage.txt');
-        $var = array("{prefix}", "{host}", "{user}" ,"{pass}" ,"{db}");
-        $data = array($_SESSION['mysql_prefix'], $_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password'], $_SESSION['mysql_database']);
-        $sql_text = str_replace($var, $data, $sql_text);
-        $index = show("/msg/mysql_setup_fail",array("text" => $sql_text));
+        $sql_salt_text = file_get_contents(basePath.'/_installer/system/sql_salt_vorlage.txt');
+        $var = array("{prefix}", "{host}", "{user}" ,"{pass}" ,"{db}","{salt}");
+        $data = array($_SESSION['mysql_prefix'], $_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password'], $_SESSION['mysql_database'], $salt=mkpwd());
+        $_SESSION['mysql_salt'] = $salt;
+        $index = show("/msg/mysql_setup_fail",array("text" => str_replace($var, $data, $sql_text), "text2" => str_replace($var, $data, $sql_text) ));
     }
 }

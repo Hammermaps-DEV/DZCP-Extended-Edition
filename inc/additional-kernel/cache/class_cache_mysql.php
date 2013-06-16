@@ -151,13 +151,13 @@ class cache_mysql extends Cache
 
         $GetCache = _fetch($sqlCache);
 
-        if(empty($GetCache['stream_hash']) || empty($GetCache['original_file']))
+        if(empty($GetCache['stream_hash']) && !empty($GetCache['original_file']))
             return true;
 
-        if(!file_exists(basePath.'/'.$GetCache['original_file']))
+        if(!empty($GetCache['original_file']) && !file_exists(basePath.'/'.$GetCache['original_file']))
             return true;
 
-        if(convert::ToString(md5_file(basePath.'/'.$GetCache['original_file'])) != $GetCache['stream_hash'])
+        if(!empty($GetCache['original_file']) && convert::ToString(md5_file(basePath.'/'.$GetCache['original_file'])) != $GetCache['stream_hash'])
             return true;
 
         if(!isset($GetCache['cacheTime']))
@@ -165,11 +165,11 @@ class cache_mysql extends Cache
 
         if($GetCache['cacheTime'] != 0)
         {
-            $IsValid=db('SELECT qry FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" AND timestamp>'.(time()-$GetCache['cacheTime']).' LIMIT 1', true);
+            $IsValid=db('SELECT qry FROM '.dba::get('cache').' WHERE qry="'.md5($key).'" AND timestamp > '.(time()-$GetCache['cacheTime']).' LIMIT 1', true);
             return ($IsValid ? false : true);
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**

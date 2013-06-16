@@ -51,4 +51,3 @@ page($index, $title, $where, $time);
 ## OUTPUT BUFFER END ##
 #######################
 gz_output();
-?>

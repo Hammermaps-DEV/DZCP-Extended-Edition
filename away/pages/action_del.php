@@ -18,11 +18,10 @@ else
 {
     if($chkMe == "unlogged" || $chkMe < "2")
     {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     } else {
         $qry = db("DELETE FROM ".dba::get('away')." WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $index = info(_away_successful_del, "../away/");
     }
 }
-?>

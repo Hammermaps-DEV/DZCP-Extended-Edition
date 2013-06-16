@@ -40,7 +40,7 @@ else
 
     if($checks['intern'] == 1 && (!permission("intforum") && !fintern($checks['id'])))
     {
-        $index = error(_error_no_access, 1);
+        $index = error(_error_no_access);
     } else {
         if(isset($_GET['page']))  $page = $_GET['page'];
         else $page = 1;
@@ -184,4 +184,3 @@ else
                 "search" => $search));
     }
 }
-?>

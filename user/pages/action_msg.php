@@ -100,7 +100,7 @@ else
             $qry = db("SELECT * FROM ".dba::get('msg')." WHERE id = ".$msgID);
 
             if(!$msgID || empty($msgID) || !_rows($qry))
-                $index = error(_id_dont_exist, 1);
+                $index = error(_id_dont_exist);
             else
             {
                 $get = _fetch($qry);
@@ -124,7 +124,7 @@ else
             if($chkMe == "unlogged")
                 $index = error(_error_have_to_be_logged);
             else if($msgID == convert::ToInt($userid))
-                $index = error(_error_msg_self, 1);
+                $index = error(_error_msg_self);
             else
             {
                 $titel = show(_msg_from_nick, array("nick" => data(convert::ToInt($userid),"nick")));
@@ -142,9 +142,9 @@ else
         break;
         case 'sendanswer':
             if(empty($_POST['titel']))
-                $index = error(_empty_titel, 1);
+                $index = error(_empty_titel);
             else if(empty($_POST['eintrag']))
-                $index = error(_empty_eintrag, 1);
+                $index = error(_empty_eintrag);
             else
             {
                 db("INSERT INTO ".dba::get('msg')." SET

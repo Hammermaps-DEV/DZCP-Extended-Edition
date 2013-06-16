@@ -24,14 +24,14 @@ if($_GET['do'] == "delete")
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        @unlink(basePath."/inc/images/newskat/".$get['katimg']);
+        @unlink(basePath."/inc/images/uploads/newskat/".$get['katimg']);
 
         $del = db("DELETE FROM ".dba::get('newskat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_config_newskat_deleted, "?admin=news");
       } elseif($_GET['do'] == "add") {
-        $files = get_files(basePath.'/inc/images/newskat/',false,true);
+        $files = get_files(basePath.'/inc/images/uploads/newskat/',false,true);
         foreach($files as $file)
         {
           $img .= show(_select_field, array("value" => $file,
@@ -51,7 +51,7 @@ if($_GET['do'] == "delete")
       } elseif($_GET['do'] == "addnewskat") {
         if(empty($_POST['kat']))
         {
-          $show = error(_config_empty_katname,1);
+          $show = error(_config_empty_katname);
         } else {
           $qry = db("INSERT INTO ".dba::get('newskat')."
                      SET `katimg`     = '".up($_POST['img'])."',
@@ -64,7 +64,7 @@ if($_GET['do'] == "delete")
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $files = get_files(basePath.'/inc/images/newskat/',false,true);
+        $files = get_files(basePath.'/inc/images/uploads/newskat/',false,true);
         foreach($files as $file)
         {
           if($get['katimg'] == $file) $sel = "selected=\"selected\"";
@@ -91,7 +91,7 @@ if($_GET['do'] == "delete")
       } elseif($_GET['do'] == "editnewskat") {
         if(empty($_POST['kat']))
         {
-          $show = error(_config_empty_katname,1);
+          $show = error(_config_empty_katname);
         } else {
           if($_POST['img'] == "lazy") $katimg = "";
           else $katimg = "`katimg` = '".up($_POST['img'])."',";
@@ -104,4 +104,3 @@ if($_GET['do'] == "delete")
           $show = info(_config_newskats_edited, "?admin=news");
         }
       }
-?>

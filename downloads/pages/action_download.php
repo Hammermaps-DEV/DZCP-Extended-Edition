@@ -15,7 +15,7 @@ if (!defined('IS_DZCP'))
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::get('downloads')." WHERE id = ".$dl_id=convert::ToInt($_GET['id']),true))
-    $index = error(show(_id_dont_exist_dl,array('id' => $dl_id)), 1);
+    $index = error(show(_id_dont_exist_dl,array('id' => $dl_id)));
 else
 {
     if(settings("reg_dl") == 1 && $chkMe == "unlogged")
@@ -34,7 +34,7 @@ else
                     if(db("SELECT `id` FROM ".dba::get('downloads')." WHERE `id` = '".$dl_id."'",true) != 0)
                     {
                         if(settings("reg_dlcomments") && $chkMe == "unlogged")
-                            $index = error(_error_have_to_be_logged, 1);
+                            $index = error(_error_have_to_be_logged);
                         else
                         {
                             if(!ipcheck("dlid(".$dl_id.")", $downloadcomconfig['f_downloadcom']))
@@ -85,11 +85,11 @@ else
                                 }
                             }
                             else
-                                $index = error(show(_error_flood_post, array("sek" => $downloadcomconfig['f_downloadcom'])), 1);
+                                $index = error(show(_error_flood_post, array("sek" => $downloadcomconfig['f_downloadcom'])));
                         }
                     }
                     else
-                        $index = error(_id_dont_exist,1);
+                        $index = error(_id_dont_exist);
                     break;
                 case 'edit':
                     $get = db("SELECT * FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -119,7 +119,7 @@ else
                                 "eintraghead" => _eintrag));
                     }
                     else
-                        $index = error(_error_edit_post,1);
+                        $index = error(_error_edit_post);
                     break;
                 case 'editcom':
                     $get = db("SELECT reg FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -137,7 +137,7 @@ else
                         $index = info(_comment_edited, "?action=download&amp;id=".$dl_id."");
                     }
                     else
-                        $index = error(_error_edit_post,1);
+                        $index = error(_error_edit_post);
                     break;
                 case 'delete':
                     $get = db("SELECT reg FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
@@ -147,7 +147,7 @@ else
                         $index = info(_comment_deleted, "?action=download&amp;id=".$dl_id."");
                     }
                     else
-                        $index = error(_error_wrong_permissions, 1);
+                        $index = error(_error_wrong_permissions);
                 break;
             }
         }
@@ -278,4 +278,3 @@ else
         }
     }
 }
-?>

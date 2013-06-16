@@ -9,7 +9,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
 {
     case 'step2':
         if(empty($_POST['gallery']))
-            $show = error(_error_gallery,1);
+            $show = error(_error_gallery);
         else
         {
             $addfile = '';
@@ -143,4 +143,3 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
         $show = show($dir."/gallery",array("show" => $show));
     break;
 }
-?>

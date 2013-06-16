@@ -142,7 +142,3 @@
         default:
             include_once(DIR_AJAX_ROOT . '_ajax_get_details_listing.php');
     }
-
-
-
-?>

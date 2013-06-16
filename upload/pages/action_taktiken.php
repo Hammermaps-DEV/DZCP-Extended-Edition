@@ -18,7 +18,7 @@ else
 {
     if(!permission("edittactics"))
     {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     } else {
         $infos = show(_upload_usergallery_info, array("userpicsize" => 100));
 
@@ -40,9 +40,9 @@ else
 
             if(!$tmpname)
             {
-                $index = error(_upload_no_data, 1);
+                $index = error(_upload_no_data);
             } elseif($size > 1000000)  {
-                $index = error(_upload_wrong_size, 1);
+                $index = error(_upload_wrong_size);
             } else {
                 copy($tmpname, basePath."/inc/images/uploads/taktiken/".$_FILES['file']['name']."");
                 @unlink($_FILES['file']['tmp_name']);
@@ -52,4 +52,3 @@ else
         }
     }
 }
-?>

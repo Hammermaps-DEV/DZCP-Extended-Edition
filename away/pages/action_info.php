@@ -19,7 +19,7 @@ else
 $where = $where.' - '._info;
   if($chkMe == "unlogged" || $chkMe < "2")
   {
-    $index = error(_error_wrong_permissions, 1);
+    $index = error(_error_wrong_permissions);
   } else {
     $qry = db("SELECT * FROM ".dba::get('away')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -49,4 +49,3 @@ $where = $where.' - '._info;
                                       "addnew" => date("d.m.Y",$get['date'])." "._away_on." ".date("H:i",$get['date'])._uhr));
   }
 }
-?>

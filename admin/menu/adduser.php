@@ -134,8 +134,8 @@ if(!empty($do))
         db("INSERT INTO ".dba::get('userstats')." SET `user` = '".convert::ToInt($insert_id)."', `lastvisit`	= '".time()."'");
 
         ## E-Mail senden ##
-        $message = show(settings('eml_reg'), array("user" => up($username), "pwd" => $mkpwd));
-        $subject = settings('eml_reg_subj');
+        $message = show(re(settings('eml_reg')), array("user" => up($username), "pwd" => $mkpwd));
+        $subject = re(settings('eml_reg_subj'));
         sendMail($email,$subject,$message);
 
         $show = info(_uderadd_info, "../admin/");

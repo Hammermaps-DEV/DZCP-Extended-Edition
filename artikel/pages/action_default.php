@@ -40,4 +40,3 @@ else
     $seiten = nav($entrys,$martikel,"?page");
     $index = show($dir."/artikel", array("show" => $show, "nav" => $seiten));
 }
-?>

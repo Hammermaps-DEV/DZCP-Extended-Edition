@@ -53,4 +53,3 @@ else
             "gb" =>  _site_gb,
             "forum" => _site_forum));
 }
-?>

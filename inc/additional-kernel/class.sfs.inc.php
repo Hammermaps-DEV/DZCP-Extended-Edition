@@ -20,7 +20,6 @@ class sfs
     {
         global $userid;
         $userIP = visitorIp();
-        #$userIP = '77.93.60.90';
 
         ## http://de.wikipedia.org/wiki/Private_IP-Adresse ##
         if(!validateIpV4Range($userIP, '[192].[168].[0-255].[0-255]') && !validateIpV4Range($userIP, '[127].[0].[0-255].[0-255]') && !validateIpV4Range($userIP, '[10].[0-255].[0-255].[0-255]') && !validateIpV4Range($userIP, '[172].[16-31].[0-255].[0-255]'))
@@ -29,7 +28,7 @@ class sfs
             if(_rows($sql) >= 1)
             {
                 $get = _fetch($sql);
-                if((time()-$get['time']) > /*(2*86400)*/ 10 && $get['enable']) //48H
+                if((time()-$get['time']) > (2*86400) && $get['enable']) //48H
                 {
                     self::get(array('ip' => $userIP)); //Array ( [success] => 1 [ip] => Array ( [lastseen] => 2013-04-26 19:57:51 [frequency] => 1327 [appears] => 1 [confidence] => 99.89 ) )
                     $stopforumspam = self::$json;

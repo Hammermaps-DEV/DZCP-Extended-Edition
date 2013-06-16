@@ -21,22 +21,27 @@ else
     ################
     $where = _site_ulist;
     $maxuserlist = config('m_userlist');
-    $entrys = cnt(dba::get('users')," WHERE level != 0");
     $search = (isset($_GET['search']) && !empty($_GET['search']) ? $_GET['search'] : _nick);
+
+    if($chkMe == 4 || permission('editusers') || permission('activateusers'))
+        $sql_filter = "level != '0' OR ( level = '0' AND actkey IS NOT NULL )";
+    else
+        $sql_filter = "level != '0'";
 
     switch(isset($_GET['show']) ? $_GET['show'] : '')
     {
-        case 'search': $qry = " WHERE nick LIKE '%".$search."%' AND level != 0 LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'newreg': $qry = " WHERE regdatum > '".$_SESSION['lastvisit']."' AND level != '0' ORDER BY regdatum DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'lastlogin': $qry = " WHERE level != '0' ORDER BY time DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'lastreg': $qry = " WHERE level != '0' ORDER BY regdatum DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'online': $qry = " WHERE level != '0' ORDER BY time DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'country': $qry = " WHERE level != '0' ORDER BY country LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'sex': $qry = " WHERE level != '0' ORDER BY sex DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        case 'banned': $qry = " WHERE level = '0' ORDER BY id LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
-        default: $qry = " WHERE level != '0' ORDER BY level DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'search': $qry = " WHERE nick LIKE '%".$search."%' AND ".$sql_filter." LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'newreg': $qry = " WHERE regdatum > '".$_SESSION['lastvisit']."' AND ".$sql_filter." ORDER BY regdatum DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'lastlogin': $qry = " WHERE ".$sql_filter." ORDER BY time DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'lastreg': $qry = " WHERE ".$sql_filter." ORDER BY regdatum DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'online': $qry = " WHERE ".$sql_filter." ORDER BY time DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'country': $qry = " WHERE ".$sql_filter." ORDER BY country LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'sex': $qry = " WHERE ".$sql_filter." ORDER BY sex DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        case 'banned': $qry = " WHERE ".$sql_filter." AND actkey IS NULL ORDER BY id LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
+        default: $qry = " WHERE ".$sql_filter." ORDER BY level DESC LIMIT ".($page - 1)*$maxuserlist.",".$maxuserlist; break;
     }
 
+    $entrys = cnt(dba::get('users'),$qry);
     if(!_rows(($qry = db("SELECT id,nick,level,email,hp,xfire,bday,sex,icq,status,position,regdatum FROM ".dba::get('users').$qry))))
         $userliste = show(_no_entrys_yet_all, array("colspan" => "12"));
     else

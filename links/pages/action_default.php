@@ -28,4 +28,3 @@ else
 
     $index = show($dir."/links", array("head" => _links_head, "show" => $show));
 }
-?>

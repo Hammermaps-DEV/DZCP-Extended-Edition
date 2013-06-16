@@ -18,7 +18,7 @@ else
 {
     if(!permission("editsquads"))
     {
-        $index = error(_error_wrong_permissions, 1);
+        $index = error(_error_wrong_permissions);
     } else {
         $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
 
@@ -31,4 +31,3 @@ else
                 "infos" => $infos));
     }
 }
-?>
