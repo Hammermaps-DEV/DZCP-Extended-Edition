@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 #####################
 ## Admin Menu-File ##
 #####################
@@ -16,8 +23,8 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             for($i=1;$i<=$_POST['anzahl'];$i++)
             { $addfile .= show($dir."/form_gallery_addfile", array("file" => _gallery_image, "i" => $i)); }
 
-            db("INSERT INTO ".dba::get('gallery')." SET `kat` = '".up($_POST['gallery'])."', `beschreibung` = '".up($_POST['beschreibung'], 1)."', `datum` = '".time()."'");
-            $show = show($dir."/form_gallery_step2", array("what" => re($_POST['gallery']), "addfile" => $addfile, "id" => database::get_insert_id(), "do" => "add"));
+            db("INSERT INTO ".dba::get('gallery')." SET `kat` = '".string::encode($_POST['gallery'])."', `beschreibung` = '".string::encode($_POST['beschreibung'])."', `datum` = '".time()."'");
+            $show = show($dir."/form_gallery_step2", array("what" => string::decode($_POST['gallery']), "addfile" => $addfile, "id" => database::get_insert_id(), "do" => "add"));
         }
     break;
     case 'add':
@@ -69,10 +76,10 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
     break;
     case 'edit':
         $get = db("SELECT * FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);;
-        $show = show($dir."/form_gallery_edit", array("id" => $get['id'], "e_gal" => re($get['kat']), "e_beschr" => re($get['beschreibung'])));
+        $show = show($dir."/form_gallery_edit", array("id" => $get['id'], "e_gal" => string::decode($get['kat']), "e_beschr" => string::decode($get['beschreibung'])));
     break;
     case 'editgallery':
-        db("UPDATE ".dba::get('gallery')." SET `kat` = '".up($_POST['gallery'])."', `beschreibung` = '".up($_POST['beschreibung'], 1)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
+        db("UPDATE ".dba::get('gallery')." SET `kat` = '".string::encode($_POST['gallery'])."', `beschreibung` = '".string::encode($_POST['beschreibung'])."' WHERE id = '".convert::ToInt($_GET['id'])."'");
         $show = info(_gallery_edited, "?admin=gallery");
     break;
     case 'new':
@@ -80,14 +87,14 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
         for($i=1;$i<=100;$i++)
         { $option .= "<option value=\"".$i."\">".$i."</option>"; }
 
-        $show = show($dir."/form_gallery_new", array("gal" => re($get['kat']), "id" => $get['id'], "option" => $option));
+        $show = show($dir."/form_gallery_new", array("gal" => string::decode($get['kat']), "id" => $get['id'], "option" => $option));
     break;
     case 'editstep2':
         $get = db("SELECT * FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true); $addfile = '';
         for($i=1;$i<=$_POST['anzahl'];$i++)
         { $addfile .= show($dir."/form_gallery_addfile", array("file" => _gallery_image, "i" => $i)); }
 
-        $show = show($dir."/form_gallery_step2", array("what" => re($get['kat']),
+        $show = show($dir."/form_gallery_step2", array("what" => string::decode($get['kat']),
                                                        "do" => "editpics",
                                                        "addfile" => $addfile,
                                                        "id" => $get['id'],
@@ -125,18 +132,18 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             $cnt = convert::ToString($files ? count($files) : 0); unset($files);
 
             $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=gallery&amp;do=edit", "title" => _button_title_edit));
-            $del = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=gallery&amp;do=delgal", "title" => _button_title_del, "del" => convSpace(_confirm_del_gallery)));
+            $del = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=gallery&amp;do=delgal", "title" => _button_title_del, "del" => _confirm_del_gallery));
             $new = show(_gal_newicon, array("id" => $get['id'], "titel" => _button_value_newgal));
             $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show .= show($dir."/gallery_show", array("link" => re($get['kat']),
+            $show .= show($dir."/gallery_show", array("link" => string::decode($get['kat']),
                                                       "class" => $class,
                                                       "del" => $del,
                                                       "edit" => $edit,
                                                       "new" => $new,
                                                       "images" => $cntpics,
                                                       "id" => $get['id'],
-                                                      "beschreibung" => bbcode($get['beschreibung']),
+                                                      "beschreibung" => bbcode::parse_html($get['beschreibung']),
                                                       "cnt" => $cnt));
         }
 

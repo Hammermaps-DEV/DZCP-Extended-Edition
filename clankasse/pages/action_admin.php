@@ -23,9 +23,9 @@ else
             $qry = db("SELECT * FROM ".dba::get('c_kats')."");
             while($get = _fetch($qry))
             {
-                $trans .= show(_select_field, array("value" => re($get['kat']),
+                $trans .= show(_select_field, array("value" => string::decode($get['kat']),
                         "sel" => "",
-                        "what" => re($get['kat'])));
+                        "what" => string::decode($get['kat'])));
             }
 
             $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
@@ -68,9 +68,9 @@ else
                 $qry = db("INSERT INTO ".dba::get('clankasse')."
                    SET `datum`        = '".convert::ToInt($datum)."',
                        `member`       = '".$_POST['member']."',
-                       `transaktion`  = '".up($_POST['transaktion'])."',
+                       `transaktion`  = '".string::encode($_POST['transaktion'])."',
                        `pm`           = '".convert::ToInt($_POST['pm'])."',
-                       `betrag`       = '".up($betrag)."'");
+                       `betrag`       = '".string::encode($betrag)."'");
 
                 $index = info(_clankasse_saved, "../clankasse/");
             }
@@ -90,9 +90,9 @@ else
             } else {
                 $res = db("UPDATE ".dba::get('clankasse')."
                      SET `datum`        = '".convert::ToInt($_POST['datum'])."',
-                         `transaktion`  = '".up($_POST['transaktion'])."',
+                         `transaktion`  = '".string::encode($_POST['transaktion'])."',
                          `pm`           = '".convert::ToInt($_POST['pm'])."',
-                         `betrag`       = '".up($_POST['betrag'])."'
+                         `betrag`       = '".string::encode($_POST['betrag'])."'
                      WHERE id = ".convert::ToInt($_POST['id']));
 
                 $index = info(_clankasse_edited, "../clankasse/");
@@ -106,35 +106,28 @@ else
                     "month" => dropdown("month",date("m",$get['datum'])),
                     "year" => dropdown("year",date("Y",$get['datum']))));
 
-            if($get['pm'] == "0") $psel = "selected=\"selected\"";
-            else $msel = "selected=\"selected\"";
-
             $qryk = db("SELECT * FROM ".dba::get('c_kats')."");
             while($getk = _fetch($qryk))
             {
-                if($getk['kat'] == $get['transaktion']) $sel = "selected=\"selected\"";
-                else $sel = "";
-
-                $trans .= show(_select_field, array("value" => re($getk['kat']),
-                        "sel" => $sel,
-                        "what" => re($getk['kat'])));
+                $trans .= show(_select_field, array("value" => string::decode($getk['kat']), "sel" => ($getk['kat'] == $get['transaktion'] ? 'selected="selected"' : ''), "what" => string::decode($getk['kat'])));
             }
+
             $index = show($dir."/edit", array("newhead" => _clankasse_head_edit,
                     "betrag" => _clankasse_cbetrag,
                     "datum" => _datum,
                     "vonan" => _clankasse_for,
                     "dropdown_date" => $dropdown_date,
                     "id" => $_GET['id'],
-                    "psel" => $psel,
-                    "msel" => $msel,
+                    "psel" => (!$get['pm'] ? 'selected="selected"' : ''),
+                    "msel" => ($get['pm'] ? 'selected="selected"' : ''),
                     "value" => _button_value_edit,
                     "bsel" => $bsel,
                     "misel" => $misel,
                     "ssel" => $ssel,
                     "spsel" => $spsel,
                     "trans" => $trans,
-                    "evonan" => re($get['member']),
-                    "sum" => re($get['betrag']),
+                    "evonan" => string::decode($get['member']),
+                    "sum" => string::decode($get['betrag']),
                     "beitrag" => _clankasse_sbeitrag,
                     "miete" => _clankasse_smiete,
                     "ssonstiges" => _clankasse_ssonstiges,
@@ -161,10 +154,10 @@ else
 
                 $qry = db("UPDATE ".dba::get('clankasse')."
                    SET `datum`        = '".convert::ToInt($datum)."',
-                       `member`       = '".up($_POST['member'])."',
-                       `transaktion`  = '".up($_POST['transaktion'])."',
+                       `member`       = '".string::encode($_POST['member'])."',
+                       `transaktion`  = '".string::encode($_POST['transaktion'])."',
                        `pm`           = '".convert::ToInt($_POST['pm'])."',
-                       `betrag`       = '".up($betrag)."'
+                       `betrag`       = '".string::encode($betrag)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
                 $index = info(_clankasse_edited, "../clankasse/");

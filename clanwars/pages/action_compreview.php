@@ -58,7 +58,7 @@ else
         if($get_email) $email = '<br />'.show(_emailicon_forum, array("email" => eMailAddr($get_email)));
         $onoff = "";
         $avatar = "";
-        $nick = show(_link_mailto, array("nick" => re($get_nick),
+        $nick = show(_link_mailto, array("nick" => string::decode($get_nick),
                 "email" => $get_email));
     } else {
         $hp = "";
@@ -74,9 +74,9 @@ else
             "delete" => $delete));
 
     $index = show("page/comments_show", array("titel" => $titel,
-            "comment" => bbcode($_POST['comment'],1),
+            "comment" => bbcode::parse_html($_POST['comment']),
             "nick" => $nick,
-            "editby" => bbcode($editedby,1),
+            "editby" => bbcode::parse_html($editedby),
             "email" => $email,
             "hp" => $hp,
             "avatar" => useravatar($get_userid),

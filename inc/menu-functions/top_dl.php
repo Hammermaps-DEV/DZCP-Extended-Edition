@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function top_dl()
 {
     global $allowHover;
@@ -15,10 +26,10 @@ function top_dl()
                 if($allowHover == 1)
                 {
                     $getkat = db("SELECT name FROM ".dba::get('dl_kat')." WHERE id = '".$get['kat']."'",false,true);
-                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['download'])).'\', \''._datum.';'._dl_dlkat.';'._hits.'\', \''.date("d.m.Y H:i", $get['date'])._uhr.';'.jsconvert(re($getkat['name'])).';'.$get['hits'].'\')" onmouseout="DZCP.hideInfo()"';
+                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['download'])).'\', \''._datum.';'._dl_dlkat.';'._hits.'\', \''.date("d.m.Y H:i", $get['date'])._uhr.';'.jsconvert(string::decode($getkat['name'])).';'.$get['hits'].'\')" onmouseout="DZCP.hideInfo()"';
                 }
 
-                $top_dl .= show("menu/top_dl", array("id" => $get['id'], "titel" => cut(re($get['download']),config('l_topdl')), "info" => $info, "hits" => $get['hits']));
+                $top_dl .= show("menu/top_dl", array("id" => $get['id'], "titel" => cut(string::decode($get['download']),config('l_topdl')), "info" => $info, "hits" => $get['hits']));
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

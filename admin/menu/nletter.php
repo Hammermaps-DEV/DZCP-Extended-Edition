@@ -9,7 +9,7 @@ if(_adminMenu != 'true')
         if($_GET['do'] == 'preview')
     {
       $show = show($dir."/nletter_prev", array("head" => _nletter_prev_head,
-                                               "text" => bbcode_nletter($_POST['eintrag'])));
+                                               "text" => bbcode::nletter($_POST['eintrag'])));
       echo '<table class="mainContent" cellspacing="1">'.$show.'</table>';
       exit;
     } elseif($_GET['do'] == "send") {
@@ -20,29 +20,19 @@ if(_adminMenu != 'true')
 
             $error = show("errors/errortable", array("error" => $error));
 
-            $qry = db("SELECT id,name FROM ".dba::get('squads')."
-                       ORDER BY name");
+            $qry = db("SELECT id,name FROM ".dba::get('squads')." ORDER BY name");
             while($get = _fetch($qry))
             {
-          if($_POST['to'] == $get['id']) $selsq = "selected=\"selected\"";
-          else $selsq = "";
-
-          $squads .= show(_to_squads, array("id" => $get['id'],
-                                            "sel" => $selsq,
-                                            "name" => re($get['name'])));
-        }
-
-        if($_POST['to'] == "reg") $selr = "selected=\"selected\"";
-        elseif($_POST['to'] == "member") $selm = "selected=\"selected\"";
-        elseif($_POST['to'] == "leader") $sell = "selected=\"selected\"";
+                $squads .= show(_to_squads, array("id" => $get['id'], "sel" => ($_POST['to'] == $get['id'] ? 'selected="selected"' : ''), "name" => string::decode($get['name'])));
+            }
 
             $show = show($dir."/nletter", array("von" => convert::ToInt($userid),
                                                 "an" => _to,
                                                 "who" => _msg_global_who,
                                                 "reg" => _msg_global_reg,
-                                                "selr" => $selr,
-                                                "selm" => $selm,
-                                                "sell" => $sell,
+                                                "selr" => ($_POST['to'] == "reg" ? 'selected="selected"' : ''),
+                                                "selm" => ($_POST['to'] == "member" ? 'selected="selected"' : ''),
+                                                "sell" => ($_POST['to'] == "leader" ? 'selected="selected"' : ''),
                                                 "value" => _button_value_nletter,
                                                 "preview" => _preview,
                                                 "allmembers" => _msg_global_all,
@@ -50,7 +40,7 @@ if(_adminMenu != 'true')
                                                 "leader" => _msg_leader,
                                                 "squad" => _msg_global_squad,
                                                 "squads" => $squads,
-                                                "posteintrag" => re_bbcode($_POST['eintrag']),
+                                                "posteintrag" => string::decode($_POST['eintrag']),
                                                 "titel" => _nletter_head,
                                                 "nickhead" => _nick,
                                                 "error" => $error,
@@ -58,8 +48,8 @@ if(_adminMenu != 'true')
           } else {
         if($_POST['to'] == "reg")
         {
-                  $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = re(settings('eml_nletter_subj'));
+                  $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
+                  $subject = string::decode(settings('eml_nletter_subj'));
 
           $qry = db("SELECT email FROM ".dba::get('users')."
                      WHERE nletter = 1");
@@ -75,8 +65,8 @@ if(_adminMenu != 'true')
               $show = info(_msg_reg_answer_done, "?admin=nletter");
 
         } elseif($_POST['to'] == "member") {
-          $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = re(settings('eml_nletter_subj'));
+          $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
+                  $subject = string::decode(settings('eml_nletter_subj'));
 
           $qry = db("SELECT email FROM ".dba::get('users')."
                      WHERE level >= 2");
@@ -91,8 +81,8 @@ if(_adminMenu != 'true')
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } elseif($_POST['to'] == "leader") {
-          $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = re(settings('eml_nletter_subj'));
+          $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
+                  $subject = string::decode(settings('eml_nletter_subj'));
 
           $qry = db("SELECT s2.email	FROM ".dba::get('squaduser')." AS s1
                      LEFT JOIN ".dba::get('users')." AS s2 ON s2.id=s1.user
@@ -111,8 +101,8 @@ if(_adminMenu != 'true')
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } else {
-          $message = show(re(settings('eml_nletter')), array("text" => bbcode_nletter($_POST['eintrag'])));
-                  $subject = re(settings('eml_nletter_subj'));
+          $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
+                  $subject = string::decode(settings('eml_nletter_subj'));
 
           $qry = db("SELECT s2.email FROM ".dba::get('squaduser')." AS s1
                      LEFT JOIN ".dba::get('users')." AS s2
@@ -137,7 +127,7 @@ if(_adminMenu != 'true')
           {
               $squads .= show(_to_squads, array("id" => $get['id'],
                                                 "sel" => "",
-                                                   "name" => re($get['name'])));
+                                                   "name" => string::decode($get['name'])));
           }
 
       $show = show($dir."/nletter", array("von" => convert::ToInt($userid),

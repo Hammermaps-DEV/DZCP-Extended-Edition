@@ -68,7 +68,7 @@ else
 
       if(empty($getu['hp'])) $hp = "";
       else $hp = show(_hpicon_forum, array("hp" => $getu['hp']));
-      if(data($pUId, "signatur")) $sig = _sig.bbcode(data($pUId, "signatur"),1);
+      if(data($pUId, "signatur")) $sig = _sig.bbcode::parse_html(data($pUId, "signatur"),1);
       else $sig = "";
       $onoff = onlinecheck(convert::ToInt($userid));
       $userposts = show(_forum_user_posts, array("posts" => userstats($pUId, "forumposts")+1));
@@ -93,9 +93,9 @@ else
                   WHERE id = '".$getw['sid']."'");
     $kat = _fetch($qrykat);
 
-    $wheres = show(_forum_post_where_preview, array("wherepost" => re($_POST['topic']),
-                                                    "wherekat" => re($getw['kattopic']),
-                                                    "mainkat" => re($kat['name']),
+    $wheres = show(_forum_post_where_preview, array("wherepost" => string::decode($_POST['topic']),
+                                                    "wherekat" => string::decode($getw['kattopic']),
+                                                    "mainkat" => string::decode($kat['name']),
                                                     "tid" => $_GET['id'],
                                                     "kid" => $getw['kid']));
 
@@ -110,7 +110,7 @@ else
                                              "admin" => "",
                                              "class" => 'class="commentsRight"',
                                              "nick" => cleanautor($pUId, '', $_POST['nick'], $_POST['email']),
-                                             "threadhead" => re($_POST['topic']),
+                                             "threadhead" => string::decode($_POST['topic']),
                                              "titel" => $titel,
                                              "postnr" => "1",
                                              "pn" => $pn,
@@ -118,7 +118,7 @@ else
                                              "hp" => $hp,
                                              "email" => $email,
                                              "posts" => $userposts,
-                                             "text" =>  bbcode($_POST['eintrag'],1).$editedby,
+                                             "text" =>  bbcode::parse_html($_POST['eintrag']).$editedby,
                                              "status" => getrank($pUId),
                                              "avatar" => useravatar($pUId),
                                              "edited" => $get['edited'],
@@ -189,7 +189,7 @@ else
 
       if(empty($getu['hp'])) $hp = "";
       else $hp = show(_hpicon_forum, array("hp" => $getu['hp']));
-      if(data($pUId, "signatur")) $sig = _sig.bbcode(data($pUId, "signatur"),1);
+      if(data($pUId, "signatur")) $sig = _sig.bbcode::parse_html(data($pUId, "signatur"));
       else $sig = "";
     } else {
       $icq = "";
@@ -203,7 +203,7 @@ else
                                                   "postnr" => "#".($i+($page-1)*$maxfposts),
                                                   "p" => ($i+($page-1)*$maxfposts),
                                                   "class" => 'class="commentsRight"',
-                                                  "text" => bbcode($_POST['eintrag'],1).$editedby,
+                                                  "text" => bbcode::parse_html($_POST['eintrag']).$editedby,
                                                   "pn" => $pn,
                                                   "icq" => $icq,
                                                   "hp" => $hp,

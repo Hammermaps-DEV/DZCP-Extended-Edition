@@ -72,9 +72,9 @@ else
 
             ## Neuen User in die Datenbank schreiben ##
             db("INSERT INTO ".dba::get('users')." SET
-            `user` = '".up($_POST['user'])."',
-            `nick` = '".up($_POST['nick'])."',
-            `email` = '".up($_POST['email'])."',
+            `user` = '".string::encode($_POST['user'])."',
+            `nick` = '".string::encode($_POST['nick'])."',
+            `email` = '".string::encode($_POST['email'])."',
             `pwd` = '".pass_hash($mkpwd,settings('default_pwd_encoder'))."',
             `pwd_encoder` = '".settings('default_pwd_encoder')."',
             `regdatum` = '".($time=time())."',
@@ -104,10 +104,10 @@ else
             {
                 $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
                 $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
-                sendMail($_POST['email'],settings('eml_akl_register_subj'),show(settings('eml_akl_register'), array("nick" => up($_POST['user']), "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+                sendMail($_POST['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $_POST['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
             }
 
-            sendMail($_POST['email'],settings('eml_reg_subj'),show(settings('eml_reg'), array("user" => up($_POST['user']), "pwd" => $mkpwd)));
+            sendMail($_POST['email'],string::decode(settings('eml_reg_subj')),show(string::decode(settings('eml_reg')), array("user" => $_POST['user'], "pwd" => $mkpwd)));
 
             ## Nachricht anzeigen und zum  Userlogin weiterleiten ##
             $index = info(show($use_akl ? _info_reg_valid_akl : _info_reg_valid, array("email" => $_POST['email'])), "../user/?action=login",8);

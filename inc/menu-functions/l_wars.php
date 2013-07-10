@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function l_wars()
 {
     global $allowHover;
@@ -17,9 +28,9 @@ function l_wars()
             while($get = _fetch($qry))
             {
                 if($allowHover == 1 || $allowHover == 2)
-                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['name'])).' vs. '.jsconvert(re($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(re($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
+                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['name'])).' vs. '.jsconvert(string::decode($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(string::decode($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
 
-                $lwars .= show("menu/last_wars", array("id" => $get['id'],"clantag" => re(cut($get['clantag'],$lwarsconfig['l_lwars'])),"icon" => re($get['icon']),"info" => $info,"result" => cw_result_pic($get['punkte'],$get['gpunkte'])));
+                $lwars .= show("menu/last_wars", array("id" => $get['id'],"clantag" => string::decode(cut($get['clantag'],$lwarsconfig['l_lwars'])),"icon" => string::decode($get['icon']),"info" => $info,"result" => cw_result_pic($get['punkte'],$get['gpunkte'])));
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

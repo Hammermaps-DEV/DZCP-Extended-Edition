@@ -33,16 +33,16 @@ else
                 SET `datum`     = '".time()."',
                     `von`       = '0',
                     `an`        = '1',
-                    `titel`     = '".up($title)."',
-                    `nachricht` = '".up($msg)."'");
+                    `titel`     = '".string::encode($title)."',
+                    `nachricht` = '".string::encode($msg)."'");
 
         $insert = db("INSERT INTO ".dba::get('serverliste')."
                   SET `datum`     = '".time()."',
-                      `clanname`  = '".up($_POST['clanname'])."',
+                      `clanname`  = '".string::encode($_POST['clanname'])."',
                       `clanurl`   = '".links($_POST['clanurl'])."',
-                      `ip`        = '".up($_POST['ip'])."',
+                      `ip`        = '".string::encode($_POST['ip'])."',
                       `port`      = '".convert::ToInt($_POST['port'])."',
-                      `pwd`       = '".up($_POST['pwd'])."',
+                      `pwd`       = '".string::encode($_POST['pwd'])."',
                       `slots`     = '".convert::ToInt($_POST['slots'])."'");
 
         $index = info(_error_server_saved, "../serverliste/");

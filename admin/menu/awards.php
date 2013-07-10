@@ -50,14 +50,11 @@ if(_adminMenu != 'true')
                     ORDER BY game");
           while($gets = _fetch($qrym))
           {
-              if($get['squad'] == $gets['id']) $sel = "selected=\"selected\"";
-            else $sel = "";
-
              $squads .= show(_awards_admin_edit_select_field_squads, array("id" => $gets['id'],
-                                                                                                          "name" => re($gets['name']),
-                                                                                   "game" => re($gets['game']),
-                                                                        "icon" => re($gets['icon']),
-                                                                                                    "sel" => $sel));
+                                                                                                          "name" => string::decode($gets['name']),
+                                                                                   "game" => string::decode($gets['game']),
+                                                                        "icon" => string::decode($gets['icon']),
+                                                                                                    "sel" => ($get['squad'] == $gets['id'] ? 'selected="selected"' : '')));
           }
 
           $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",$get['date'])),
@@ -75,10 +72,10 @@ if(_adminMenu != 'true')
                                                 "what" => _button_value_edit,
                                                                   "squads" => $squads,
                                                                   "dropdown_date" => $dropdown_date,
-                                                                  "award_event" => re($get['event']),
+                                                                  "award_event" => string::decode($get['event']),
                                                                    "award_url" => $get['url'],
-                                                                  "award_place" => re($get['place']),
-                                                                  "award_prize" => re($get['prize'])));
+                                                                  "award_place" => string::decode($get['place']),
+                                                                  "award_prize" => string::decode($get['prize'])));
       } elseif($_GET['do'] == "add") {
           if(empty($_POST['event']) || empty($_POST['url']))
         {
@@ -101,10 +98,10 @@ if(_adminMenu != 'true')
                      SET `date`     = '".convert::ToInt($datum)."',
                          `postdate` = '".time()."',
                          `squad`    = '".convert::ToInt($_POST['squad'])."',
-                         `event`    = '".up($_POST['event'])."',
+                         `event`    = '".string::encode($_POST['event'])."',
                          `url`      = '".links($_POST['url'])."',
-                         `place`    = '".up($place)."',
-                         `prize`    = '".up($prize)."'");
+                         `place`    = '".string::encode($place)."',
+                         `prize`    = '".string::encode($prize)."'");
 
           $show = info(_awards_admin_added, "?admin=awards");
         }
@@ -130,10 +127,10 @@ if(_adminMenu != 'true')
             $qry = db("UPDATE ".dba::get('awards')."
                    SET `date`   = '".convert::ToInt($datum)."',
                                  `squad`  = '".convert::ToInt($_POST['squad'])."',
-                                 `event`  = '".up($_POST['event'])."',
+                                 `event`  = '".string::encode($_POST['event'])."',
                        `url`    = '".links($_POST['url'])."',
-                                 `place`  = '".up($place)."',
-                                 `prize`  = '".up($prize)."'
+                                 `place`  = '".string::encode($place)."',
+                                 `prize`  = '".string::encode($prize)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $show = info(_awards_admin_edited, "?admin=awards");
@@ -153,12 +150,12 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=awards&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_award)));
+                                                            "del" => _confirm_del_award));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
           $show_ .= show($dir."/awards_show", array("datum" => date("d.m.Y",$get['date']),
-                                                    "award" => re($get['event']),
+                                                    "award" => string::decode($get['event']),
                                                     "id" => $get['squad'],
                                                     "class" => $class,
                                                     "edit" => $edit,

@@ -1,230 +1,174 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 #####################
 ## Admin Menu-File ##
 #####################
 if(_adminMenu != 'true')
     exit();
 
-    $where = $where.': '._artikel;
-      $wysiwyg = '_word';
-      if($_GET['do'] == "add")
-      {
-        $qryk = db("SELECT * FROM ".dba::get('newskat')."");
-        while($getk = _fetch($qryk))
-        { $kat .= show(_select_field, array("value" => $getk['id'], "sel" => "", "what" => re($getk['kategorie']))); }
+$where = $where.': '._artikel;
+wysiwyg::set('advanced');
 
-        $show = show($dir."/artikel_form", array("head" => _artikel_add,
-                                                 "nautor" => _autor,
-                                                 "autor" => autor(convert::ToInt($userid)),
-                                                 "nkat" => _news_admin_kat,
-                                                 "kat" => $kat,
-                                                 "preview" => _preview,
-                                                 "ntitel" => _titel,
-                                                 "do" => "insert",
-                                                 "ntext" => _eintrag,
-                                                 "selr_ac" => 'selected="selected"',
-                                                 "error" => "",
-                                                 "titel" => "",
-                                                 "artikeltext" => "",
-                                                 "link1" => "",
-                                                 "link2" => "",
-                                                 "link3" => "",
-                                                 "url1" => "",
-                                                 "url2" => "",
-                                                 "url3" => "",
-                                                 "button" => _button_value_add,
-                                                 "nmore" => _news_admin_more,
-                                                 "linkname" => _linkname,
-                                                 "interna" => _news_admin_intern,
-                                                 "nurl" => _url));
-      }
-      elseif($_GET['do'] == "insert")
-      {
-          if(empty($_POST['titel']) || empty($_POST['artikel']))
-            {
-              if(empty($_POST['titel'])) $error = _empty_artikel_title;
-              elseif(empty($_POST['artikel'])) $error = _empty_artikel;
-
-          $qryk = db("SELECT * FROM ".dba::get('newskat')."");
-          while($getk = _fetch($qryk))
-          {
-            if($_POST['kat'] == $getk['id']) $sel = "selected=\"selected\"";
-            else $sel = "";
-
-            $kat .= show(_select_field, array("value" => $getk['id'],
-                                              "sel" => $sel,
-                                              "what" => $getk['kategorie']));
-          }
-
-              $error = show("errors/errortable", array("error" => $error));
-
-          $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
-          $show = show($dir."/artikel_form", array("head" => _artikel_add,
-                                                   "nautor" => _autor,
-                                                   "autor" => autor(convert::ToInt($userid)),
-                                                   "nkat" => _news_admin_kat,
-                                                   "kat" => $kat,
-                                                   "preview" => _preview,
-                                                   "do" => "insert",
-                                                   "ntitel" => _titel,
-                                                   "titel" => re($_POST['titel']),
-                                                   "artikeltext" => re_bbcode($_POST['artikel']),
-                                                   "link1" => re($_POST['link1']),
-                                                   "link2" => re($_POST['link2']),
-                                                   "link3" => re($_POST['link3']),
-                                                   "url1" => $_POST['url1'],
-                                                   "url2" => $_POST['url2'],
-                                                   "url3" => $_POST['url3'],
-                                                   "selr_ac" => $selr_ac,
-                                                   "ntext" => _eintrag,
-                                                   "button" => _button_value_add,
-                                                   "error" => $error,
-                                                   "nmore" => _news_admin_more,
-                                                   "linkname" => _linkname,
-                                                   "nurl" => _url));
-          } else {
-          if($_POST)
-          {
-            $qry = db("INSERT INTO ".dba::get('artikel')."
-                       SET `autor`  = '".convert::ToInt($userid)."',
-                           `kat`    = '".convert::ToInt($_POST['kat'])."',
-                           `titel`  = '".up($_POST['titel'])."',
-                           `text`   = '".up($_POST['artikel'],1)."',
-                           `comments` = '".convert::ToInt($_POST['comments'])."',
-                           `link1`  = '".up($_POST['link1'])."',
-                           `link2`  = '".up($_POST['link2'])."',
-                           `link3`  = '".up($_POST['link3'])."',
-                           `url1`   = '".links($_POST['url1'])."',
-                           `url2`   = '".links($_POST['url2'])."',
-                           `url3`   = '".links($_POST['url3'])."'");
-          }
-          $show = info(_artikel_added, "?admin=artikel");
-        }
-      } elseif($_GET['do'] == "edit") {
-        $qry = db("SELECT * FROM ".dba::get('artikel')."
-                   WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $get = _fetch($qry);
-
-        $qryk = db("SELECT * FROM ".dba::get('newskat')."");
-        while($getk = _fetch($qryk))
-        {
-          if($get['kat'] == $getk['id']) $sel = "selected=\"selected\"";
-          else $sel = "";
-
-          $kat .= show(_select_field, array("value" => $getk['id'],
-                                            "sel" => $sel,
-                                            "what" => re($getk['kategorie'])));
-        }
-
-        $do = show(_artikel_edit_link, array("id" => $_GET['id']));
-
-        $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
-        $show = show($dir."/artikel_form", array("head" => _artikel_edit,
-                                                 "nautor" => _autor,
-                                                 "autor" => autor(convert::ToInt($userid)),
-                                                 "nkat" => _news_admin_kat,
-                                                 "preview" => _preview,
-                                                 "kat" => $kat,
-                                                 "do" => $do,
-                                                 "ntitel" => _titel,
-                                                 "titel" => re($get['titel']),
-                                                 "artikeltext" => re_bbcode($get['text']),
-                                                 "link1" => re($get['link1']),
-                                                 "link2" => re($get['link2']),
-                                                 "link3" => re($get['link3']),
-                                                 "url1" => $get['url1'],
-                                                 "url2" => $get['url2'],
-                                                 "url3" => $get['url3'],
-                                                 "selr_ac" => $selr_ac,
-                                                 "ntext" => _eintrag,
-                                                 "error" => "",
-                                                 "button" => _button_value_edit,
-                                                 "linkname" => _linkname,
-                                                 "nurl" => _url));
-      } elseif($_GET['do'] == "editartikel") {
+switch($do)
+{
+    case 'add':
+        $error = '';
         if($_POST)
         {
-          $qry = db("UPDATE ".dba::get('artikel')."
-                     SET `kat`    = '".convert::ToInt($_POST['kat'])."',
-                         `titel`  = '".up($_POST['titel'])."',
-                         `text`   = '".up($_POST['artikel'],1)."',
-                         `comments` = '".convert::ToInt($_POST['comments'])."',
-                         `link1`  = '".up($_POST['link1'])."',
-                         `link2`  = '".up($_POST['link2'])."',
-                         `link3`  = '".up($_POST['link3'])."',
-                         `url1`   = '".links($_POST['url1'])."',
-                         `url2`   = '".links($_POST['url2'])."',
-                         `url3`   = '".links($_POST['url3'])."'
-                     WHERE id = '".convert::ToInt($_GET['id'])."'");
+            if(empty($_POST['titel']) || empty($_POST['artikel']))
+            {
+                if(empty($_POST['titel']))
+                    $error = show("errors/errortable", array("error" => _empty_artikel_title));
+                else if(empty($_POST['artikel']))
+                    $error = show("errors/errortable", array("error" => _empty_artikel));
+            }
+            else
+            {
+                db("INSERT INTO ".dba::get('artikel')."
+                    SET `autor`  = '".convert::ToInt($userid)."',
+                        `kat`    = '".convert::ToInt($_POST['kat'])."',
+                        `titel`  = '".string::encode($_POST['titel'])."',
+                        `text`   = '".string::encode($_POST['artikel'])."',
+                        `comments` = '".convert::ToInt($_POST['comments'])."',
+                        `link1`  = '".string::encode($_POST['link1'])."',
+                        `link2`  = '".string::encode($_POST['link2'])."',
+                        `link3`  = '".string::encode($_POST['link3'])."',
+                        `url1`   = '".links($_POST['url1'])."',
+                        `url2`   = '".links($_POST['url2'])."',
+                        `url3`   = '".links($_POST['url3'])."'");
+
+                $show = info(_artikel_added, "?admin=artikel");
+            }
         }
-        $show = info(_artikel_edited, "?admin=artikel");
-      } elseif($_GET['do'] == "delete") {
-        $qry = db("DELETE FROM ".dba::get('artikel')."
-                   WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_artikel_deleted, "?admin=artikel");
-      } elseif($_GET['do'] == 'public') {
-        if($_GET['what'] == 'set')
+
+        if(empty($show))
         {
-          $upd = db("UPDATE ".dba::get('artikel')."
-                     SET `public` = '1',
-                                   `datum`  = '".time()."'
-                     WHERE id = '".convert::ToInt($_GET['id'])."'");
-        } elseif($_GET['what'] == 'unset') {
-          $upd = db("UPDATE ".dba::get('artikel')."
-                     SET `public` = '0'
-                     WHERE id = '".convert::ToInt($_GET['id'])."'");
+            $qryk = db("SELECT * FROM ".dba::get('newskat').""); $kat = '';
+            while($getk = _fetch($qryk))
+            {
+                $sel = ((isset($_POST['kat']) ? $_POST['kat'] : '0') == $getk['id'] ? 'selected="selected"' : '');
+                $kat .= show(_select_field, array("value" => $getk['id'], "sel" => $sel, "what" => string::decode($getk['kategorie'])));
+            }
+
+            $selr_ac = ($_POST['comments'] ? 'selected="selected"' : '');
+            $show = show($dir."/artikel_form", array("head" => _artikel_add,
+                                                     "autor" => autor(convert::ToInt($userid)),
+                                                     "kat" => $kat,
+                                                     "do" => "add",
+                                                     "selr_ac" => $selr_ac,
+                                                     "error" => $error,
+                                                     "titel" => (isset($_POST['titel']) ? string::decode($_POST['titel']) : ''),
+                                                     "artikeltext" => (isset($_POST['artikel']) ? string::decode($_POST['artikel']) : ''),
+                                                     "link1" => (isset($_POST['link1']) ? string::decode($_POST['link1']) : ''),
+                                                     "link2" => (isset($_POST['link2']) ? string::decode($_POST['link2']) : ''),
+                                                     "link3" => (isset($_POST['link3']) ? string::decode($_POST['link3']) : ''),
+                                                     "url1" => (isset($_POST['url1']) ? $_POST['url1'] : ''),
+                                                     "url2" => (isset($_POST['url2']) ? $_POST['url2'] : ''),
+                                                     "url3" => (isset($_POST['url3']) ? $_POST['url3'] : ''),
+                                                     "button" => _button_value_add));
+        }
+    break;
+
+    case 'edit':
+        if($_POST)
+        {
+            if(empty($_POST['titel']) || empty($_POST['artikel']))
+            {
+                if(empty($_POST['titel']))
+                    $error = show("errors/errortable", array("error" => _empty_artikel_title));
+                else if(empty($_POST['artikel']))
+                    $error = show("errors/errortable", array("error" => _empty_artikel));
+            }
+            else
+            {
+                db("UPDATE ".dba::get('artikel')."
+                    SET `kat`    = '".convert::ToInt($_POST['kat'])."',
+                        `titel`  = '".string::encode($_POST['titel'])."',
+                        `text`   = '".string::encode($_POST['artikel'])."',
+                        `comments` = '".convert::ToInt($_POST['comments'])."',
+                        `link1`  = '".string::encode($_POST['link1'])."',
+                        `link2`  = '".string::encode($_POST['link2'])."',
+                        `link3`  = '".string::encode($_POST['link3'])."',
+                        `url1`   = '".links($_POST['url1'])."',
+                        `url2`   = '".links($_POST['url2'])."',
+                        `url3`   = '".links($_POST['url3'])."'
+                    WHERE id = '".convert::ToInt($_GET['id'])."'");
+
+                $show = info(_artikel_edited, "?admin=artikel");
+            }
         }
 
-        header("Location: ?admin=artikel");
-      } else {
-        if(isset($_GET['page']))  $page = $_GET['page'];
-        else $page = 1;
+        if(empty($show))
+        {
+            $get = db("SELECT * FROM ".dba::get('artikel')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            $qryk = db("SELECT * FROM ".dba::get('newskat').""); $kat = '';
+            while($getk = _fetch($qryk))
+            {
+                $sel = ((isset($_POST['kat']) ? $_POST['kat'] : $get['kat']) == $getk['id'] ? 'selected="selected"' : '');
+                $kat .= show(_select_field, array("value" => $getk['id'], "sel" => $sel, "what" => string::decode($getk['kategorie'])));
+            }
 
-        $entrys = cnt(dba::get('artikel'));
+            $do = show(_artikel_edit_link, array("id" => $_GET['id']));
+            $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
+            $show = show($dir."/artikel_form", array("head" => _artikel_edit,
+                                                     "autor" => autor(convert::ToInt($userid)),
+                                                     "kat" => $kat,
+                                                     "do" => $do,
+                                                     "artikeltext" => (isset($_POST['artikel']) ? string::decode($_POST['artikel']) : string::decode($get['text'])),
+                                                     "titel" => (isset($_POST['titel']) ? string::decode($_POST['titel']) : string::decode($get['titel'])),
+                                                     "link1" => (isset($_POST['link1']) ? string::decode($_POST['link1']) : string::decode($get['link1'])),
+                                                     "link2" => (isset($_POST['link2']) ? string::decode($_POST['link2']) : string::decode($get['link2'])),
+                                                     "link3" => (isset($_POST['link3']) ? string::decode($_POST['link3']) : string::decode($get['link3'])),
+                                                     "url1" => (isset($_POST['url1']) ? $_POST['url1'] : $get['url1']),
+                                                     "url2" => (isset($_POST['url2']) ? $_POST['url2'] : $get['url2']),
+                                                     "url3" => (isset($_POST['url3']) ? $_POST['url3'] : $get['url3']),
+                                                     "selr_ac" => $selr_ac,
+                                                     "error" => "",
+                                                     "button" => _button_value_edit));
+        }
+    break;
+
+    case 'editartikel':
+    break;
+
+    case 'delete':
+        $qry = db("DELETE FROM ".dba::get('artikel')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        $show = info(_artikel_deleted, "?admin=artikel");
+    break;
+
+    case 'public':
+        $get = db("SELECT public,id FROM ".dba::get('artikel')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+        db("UPDATE ".dba::get('artikel')." SET `public` = '".($get['public'] ? '0' : '1')."', `datum`  = '".($get['public'] ? '0' : time())."' WHERE id = '".$get['id']."'");
+        header("Location: ?admin=artikel");
+    break;
+
+    default:
+        $entrys = cnt(dba::get('artikel')); $show = ''; $color = 1;
         $qry = db("SELECT * FROM ".dba::get('artikel')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminartikel=config('m_adminartikel')).",".$maxadminartikel."");
         while($get = _fetch($qry))
         {
-          $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=artikel&amp;do=edit",
-                                                        "title" => _button_title_edit));
-
-          $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=artikel&amp;do=delete",
-                                                            "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_artikel)));
-
-          $titel = show(_artikel_show_link, array("titel" => re(cut($get['titel'],config('l_newsadmin'))),
-                                                  "id" => $get['id']));
-
-          $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-
-          $public = ($get['public'] == 1)
-               ? '<a href="?admin=artikel&amp;do=public&amp;id='.$get['id'].'&amp;what=unset"><img src="../inc/images/public.gif" alt="" title="'._non_public.'" /></a>'
-               : '<a href="?admin=artikel&amp;do=public&amp;id='.$get['id'].'&amp;what=set"><img src="../inc/images/nonpublic.gif" alt="" title="'._public.'" /></a>';
-
-          if(empty($get['datum'])) $datum = _no_public;
-          else $datum = date("d.m.y H:i", $get['datum'])._uhr;
-
-          $show_ .= show($dir."/admin_show", array("date" => $datum,
-                                                   "titel" => $titel,
-                                                   "class" => $class,
-                                                   "autor" => autor($get['autor']),
-                                                   "intnews" => "",
-                                                   "sticky" => "",
-                                                   "public" => $public,
-                                                   "edit" => $edit,
-                                                   "delete" => $delete));
+            $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=artikel&amp;do=edit","title" => _button_title_edit));
+            $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=artikel&amp;do=delete","title" => _button_title_del,"del" => _confirm_del_artikel));
+            $titel = show(_artikel_show_link, array("titel" => string::decode(cut($get['titel'],config('l_newsadmin'))),"id" => $get['id']));
+            $public = '<a href="?admin=artikel&amp;do=public&amp;id='.$get['id'].'"><img src="../inc/images/'.($get['public'] ? 'public.gif' : 'nonpublic.gif').'" alt="" title="'._public.'" /></a>';
+            $datum = (empty($get['datum']) ? _no_public : date("d.m.y H:i", $get['datum'])._uhr);
+            $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+            $show .= show($dir."/admin_show_artikel", array("date" => $datum,
+                                                            "titel" => $titel,
+                                                            "class" => $class,
+                                                            "autor" => autor($get['autor']),
+                                                            "public" => $public,
+                                                            "edit" => $edit,
+                                                            "delete" => $delete));
         }
 
         $nav = nav($entrys,config('m_adminnews'),"?admin=artikel");
-        $show = show($dir."/admin_news", array("head" => _artikel,
-                                               "nav" => $nav,
-                                               "autor" => _autor,
-                                               "titel" => _titel,
-                                               "date" => _datum,
-                                               "show" => $show_,
-                                               "val" => "artikel",
-                                               "edit" => _editicon_blank,
-                                               "delete" => _deleteicon_blank,
-                                               "add" => _artikel_add));
-      }
+        $show = show($dir."/admin_artikel", array("nav" => $nav,"show" => $show));
+    break;
+}

@@ -24,8 +24,8 @@ if(_adminMenu != 'true')
           elseif(preg_match("#[[:punct:]]#is",$_POST['link'])) $show = error(_glossar_specialchar);
         } else {
           $ins = db("INSERT INTO ".dba::get('glossar')."
-                     SET `word`    = '".up($_POST['link'])."',
-                         `glossar` = '".up($_POST['beschreibung'],1)."'");
+                     SET `word`    = '".string::encode($_POST['link'])."',
+                         `glossar` = '".string::encode($_POST['beschreibung'])."'");
 
           $show = info(_admin_glossar_added,'?admin=glossar');
         }
@@ -37,8 +37,8 @@ if(_adminMenu != 'true')
         $show = show($dir."/form_glossar", array("head" => _admin_glossar_add,
                                                  "link" => _glossar_bez,
                                                  "beschreibung" => _glossar_erkl,
-                                                 "llink" => re($get['word']),
-                                                 "lbeschreibung" => re_bbcode($get['glossar']),
+                                                 "llink" => string::decode($get['word']),
+                                                 "lbeschreibung" => string::decode($get['glossar']),
                                                  "do" => "update&amp;id=".$_GET['id'],
                                                  "value" => _button_value_edit
                                                  ));
@@ -50,8 +50,8 @@ if(_adminMenu != 'true')
           elseif(preg_match("#[[:punct:]]#is",$_POST['link'])) $show = error(_glossar_specialchar);
         } else {
           $ins = db("UPDATE ".dba::get('glossar')."
-                     SET `word`    = '".up($_POST['link'])."',
-                         `glossar` = '".up($_POST['beschreibung'],1)."'
+                     SET `word`    = '".string::encode($_POST['link'])."',
+                         `glossar` = '".string::encode($_POST['beschreibung'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_admin_glossar_edited,'?admin=glossar');
@@ -78,15 +78,15 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=glossar&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_entry)));
+                                                            "del" => _confirm_del_entry));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-          $show_ .= show($dir."/glossar_show", array("word" => re($get['word']),
+          $show_ .= show($dir."/glossar_show", array("word" => string::decode($get['word']),
                                                      "class" => $class,
                                                      "edit" => $edit,
                                                      "delete" => $delete,
-                                                     "glossar" => bbcode($get['glossar'])));
+                                                     "glossar" => bbcode::parse_html($get['glossar'])));
         }
 
         $show = show($dir."/glossar", array("head" => _glossar_head,

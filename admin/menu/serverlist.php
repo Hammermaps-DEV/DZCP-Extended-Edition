@@ -10,32 +10,26 @@ if(_adminMenu != 'true')
 
       while ($get = _fetch($qry))
       {
-        if($get['checked'] == '1')
-        {
-          $selected = "selected=\"selected\"";
-        } else {
-          $selected = "";
-        }
         $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                           "action" => "admin=serverlist&amp;do=delete",
                                                           "title" => _button_title_del,
-                                                          "del" => convSpace(_confirm_del_server)));
+                                                          "del" => _confirm_del_server));
 
         if(empty($get['clanurl']))
         {
-          $clanname = show(_slist_clanname_without_url, array("name" => re($get['clanname'])));
+          $clanname = show(_slist_clanname_without_url, array("name" => string::decode($get['clanname'])));
         } else {
-          $clanname = show(_slist_clanname_with_url, array("name" => re($get['clanname']),
-                                                           "url" => re($get['clanurl'])));
+          $clanname = show(_slist_clanname_with_url, array("name" => string::decode($get['clanname']),
+                                                           "url" => string::decode($get['clanurl'])));
         }
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $show_ .= show($dir."/slist_show", array("id" => $get['id'],
                                                  "clanname" => $clanname,
-                                                 "serverip" => re($get['ip']),
-                                                 "serverpwd" => re($get['pwd']),
+                                                 "serverip" => string::decode($get['ip']),
+                                                 "serverpwd" => string::decode($get['pwd']),
                                                  "class" => $class,
                                                  "delete" => $delete,
-                                                 "selected" => $selected,
+                                                 "selected" => ($get['checked'] ? 'selected="selected"' : ''),
                                                  "check" => $get['check'],
                                                  "serverport" => $get['port']));
       }

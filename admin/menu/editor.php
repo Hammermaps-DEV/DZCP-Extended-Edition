@@ -6,7 +6,7 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._editor_head;
-      $wysiwyg = '_word';
+wysiwyg::set('advanced');
       if($_GET['do'] == "add")
       {
         $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`
@@ -16,14 +16,14 @@ if(_adminMenu != 'true')
         {
           if($thiskat != $get['kat']) {
             $position .= '
-              <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
-              <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
+              <option class="dropdownKat" value="lazy">'.string::decode($get['katname']).'</option>
+              <option value="'.string::decode($get['placeholder']).'-1">-> '._admin_first.'</option>
             ';
           }
           $thiskat = $get['kat'];
           $sel = ($get['editor'] == $_GET['id']) ? 'selected="selected"' : '';
 
-          $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
+          $position .= empty($get['name']) ? '' : '<option value="'.string::decode($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(string::decode($get['name'])).'</option>';
         }
 
         $show = show($dir."/form_editor", array("head" => _editor_add_head,
@@ -66,15 +66,15 @@ if(_adminMenu != 'true')
           {
             if($thiskat != $get['kat']) {
               $position .= '
-                <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
-                <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
+                <option class="dropdownKat" value="lazy">'.string::decode($get['katname']).'</option>
+                <option value="'.string::decode($get['placeholder']).'-1">-> '._admin_first.'</option>
               ';
             }
 
             $thiskat = $get['kat'];
             $sel = ($get['kat'] == $kat_ && ($get['pos']+1) == $pos_) ? 'selected="selected"' : '';
 
-            $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
+            $position .= empty($get['name']) ? '' : '<option value="'.string::decode($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(string::decode($get['name'])).'</option>';
           }
 
           $show = show($dir."/form_editor", array("head" => _editor_add_head,
@@ -88,18 +88,18 @@ if(_adminMenu != 'true')
                                                   "nein" => _no,
                                                   "name" => _editor_linkname,
                                                   "position" => $position,
-                                                  "n_name" => re($_POST['name']),
+                                                  "n_name" => string::decode($_POST['name']),
                                                   "wichtig" => _navi_wichtig,
                                                   "titel" => _titel,
-                                                  "e_titel" => re($_POST['titel']),
-                                                  "e_inhalt" => re_bbcode($_POST['inhalt']),
+                                                  "e_titel" => string::decode($_POST['titel']),
+                                                  "e_inhalt" => string::decode($_POST['inhalt']),
                                                   "allow_html" => _editor_allow_html,
                                                   "inhalt" => _inhalt,
                                                   "do" => "addsite"));
         } else {
           $qry = db("INSERT INTO ".dba::get('sites')."
-                     SET `titel` = '".up($_POST['titel'])."',
-                         `text`  = '".up($_POST['inhalt'],1)."',
+                     SET `titel` = '".string::encode($_POST['titel'])."',
+                         `text`  = '".string::encode($_POST['inhalt'])."',
                          `html`  = '".convert::ToInt($_POST['html'])."'");
           $insert_id = database::get_insert_id();
 
@@ -117,9 +117,9 @@ if(_adminMenu != 'true')
 
           $posi = db("INSERT INTO ".dba::get('navi')."
                       SET `pos`     = '".convert::ToInt($pos)."',
-                          `kat`     = '".up($kat)."',
-                          `name`    = '".up($_POST['name'])."',
-                          `url`     = '".up($url)."',
+                          `kat`     = '".string::encode($kat)."',
+                          `name`    = '".string::encode($_POST['name'])."',
+                          `url`     = '".string::encode($url)."',
                           `shown`   = '1',
                           `type`    = '3',
                           `editor`  = '".convert::ToInt($insert_id)."',
@@ -139,14 +139,14 @@ if(_adminMenu != 'true')
         {
           if($thiskat != $get['kat']) {
             $position .= '
-              <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
-              <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
+              <option class="dropdownKat" value="lazy">'.string::decode($get['katname']).'</option>
+              <option value="'.string::decode($get['placeholder']).'-1">-> '._admin_first.'</option>
             ';
           }
           $thiskat = $get['kat'];
           $sel = ($get['editor'] == $_GET['id']) ? 'selected="selected"' : '';
 
-          $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
+          $position .= empty($get['name']) ? '' : '<option value="'.string::decode($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(string::decode($get['name'])).'</option>';
         }
 
         $qryn = db("SELECT * FROM ".dba::get('navi')."
@@ -160,12 +160,12 @@ if(_adminMenu != 'true')
                                                 "bbcode" => _bbcode,
                                                 "preview" => _preview,
                                                 "titel" => _titel,
-                                                "e_titel" => re($gets['titel']),
-                                                "e_inhalt" => re_bbcode($gets['text']),
+                                                "e_titel" => string::decode($gets['titel']),
+                                                "e_inhalt" => string::decode($gets['text']),
                                                 "checked" => $checked,
                                                 "pos" => _position,
                                                 "name" => _editor_linkname,
-                                                "n_name" => re($getn['name']),
+                                                "n_name" => string::decode($getn['name']),
                                                 "position" => $position,
                                                 "ja" => _yes,
                                                 "nein" => _no,
@@ -192,14 +192,14 @@ if(_adminMenu != 'true')
           {
             if($thiskat != $get['kat']) {
               $position .= '
-                <option class="dropdownKat" value="lazy">'.re($get['katname']).'</option>
-                <option value="'.re($get['placeholder']).'-1">-> '._admin_first.'</option>
+                <option class="dropdownKat" value="lazy">'.string::decode($get['katname']).'</option>
+                <option value="'.string::decode($get['placeholder']).'-1">-> '._admin_first.'</option>
               ';
             }
             $thiskat = $get['kat'];
             $sel = ($get['editor'] == $_GET['id']) ? 'selected="selected"' : '';
 
-            $position .= empty($get['name']) ? '' : '<option value="'.re($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(re($get['name'])).'</option>';
+            $position .= empty($get['name']) ? '' : '<option value="'.string::decode($get['placeholder']).'-'.($get['pos']+1).'" '.$sel.'>'._nach.' -> '.navi_name(string::decode($get['name'])).'</option>';
           }
 
           $show = show($dir."/form_editor", array("head" => _editor_edit_head,
@@ -213,18 +213,18 @@ if(_adminMenu != 'true')
                                                   "nein" => _no,
                                                   "name" => _editor_linkname,
                                                   "position" => $position,
-                                                  "n_name" => re($_POST['name']),
+                                                  "n_name" => string::decode($_POST['name']),
                                                   "wichtig" => _navi_wichtig,
                                                   "titel" => _titel,
-                                                  "e_titel" => re($_POST['titel']),
-                                                  "e_inhalt" => re_bbcode($_POST['inhalt']),
+                                                  "e_titel" => string::decode($_POST['titel']),
+                                                  "e_inhalt" => string::decode($_POST['inhalt']),
                                                   "allow_html" => _editor_allow_html,
                                                   "inhalt" => _inhalt,
                                                   "do" => "editsite&amp;id=".$_GET['id'].""));
         } else {
           $qry = db("UPDATE ".dba::get('sites')."
-                     SET `titel` = '".up($_POST['titel'])."',
-                         `text`  = '".up($_POST['inhalt'],1)."',
+                     SET `titel` = '".string::encode($_POST['titel'])."',
+                         `text`  = '".string::encode($_POST['inhalt'])."',
                          `html`   = '".convert::ToInt($_POST['html'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
@@ -242,9 +242,9 @@ if(_adminMenu != 'true')
 
           $posi = db("UPDATE ".dba::get('navi')."
                       SET `pos`     = '".convert::ToInt($pos)."',
-                          `kat`     = '".up($kat)."',
-                          `name`    = '".up($_POST['name'])."',
-                          `url`     = '".up($url)."'
+                          `kat`     = '".string::encode($kat)."',
+                          `name`    = '".string::encode($_POST['name'])."',
+                          `url`     = '".string::encode($url)."'
                       WHERE editor = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_site_edited, "?admin=editor");
@@ -266,9 +266,9 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=editor&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_site)));
+                                                            "del" => _confirm_del_site));
 
-          $show_ .= show($dir."/editor_show", array("name" => "<a href='../sites/?show=".$get['id']."'>".re($get['titel'])."</a>",
+          $show_ .= show($dir."/editor_show", array("name" => "<a href='../sites/?show=".$get['id']."'>".string::decode($get['titel'])."</a>",
                                                     "del" => $delete,
                                                     "edit" => $edit,
                                                     "class" => $class));

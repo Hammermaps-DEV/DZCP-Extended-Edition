@@ -53,8 +53,8 @@ class cache_memcache extends Cache
         if(empty($settings['memcache_host']) || empty($settings['memcache_port']))
             return false;
 
-        self::$_hash = md5($settings['memcache_host'].$settings['memcache_port']);
-        self::$_memconfig[self::$_hash] = array("host" => $settings['memcache_host'], "port" => $settings['memcache_port']);
+        self::$_hash = md5(string::decode($settings['memcache_host']).$settings['memcache_port']);
+        self::$_memconfig[self::$_hash] = array("host" => string::decode($settings['memcache_host']), "port" => convert::ToInt($settings['memcache_port']));
         return true;
     }
 

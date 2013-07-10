@@ -84,8 +84,8 @@ $where = $where.' - '._away_new;
                         SET `userid`= '".convert::ToInt($userid)."',
                                  `start`= '".convert::ToInt($abdata)."',
                                  `end`= '".convert::ToInt($time)."',
-                            `titel`= '".up($_POST['titel'])."',
-                            `reason`= '".up($_POST['reason'],1)."',
+                            `titel`= '".string::encode($_POST['titel'])."',
+                            `reason`= '".string::encode($_POST['reason'])."',
                             `date`= '".time()."'");
 
 

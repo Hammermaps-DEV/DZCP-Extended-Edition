@@ -6,12 +6,12 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._news_admin_head;
-      $wysiwyg = '_word';
+wysiwyg::set('advanced');
       if($_GET['do'] == "add")
       {
         $qryk = db("SELECT * FROM ".dba::get('newskat')."");
         while($getk = _fetch($qryk))
-        { $kat .= show(_select_field, array("value" => $getk['id'], "sel" => "", "what" => re($getk['kategorie']))); }
+        { $kat .= show(_select_field, array("value" => $getk['id'], "sel" => "", "what" => string::decode($getk['kategorie']))); }
         $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),
                                                               "month" => dropdown("month",date("m",time())),
                                                       "year" => dropdown("year",date("Y",time()))));
@@ -78,12 +78,7 @@ if(_adminMenu != 'true')
           $qryk = db("SELECT * FROM ".dba::get('newskat')."");
           while($getk = _fetch($qryk))
           {
-            if($_POST['kat'] == $getk['id']) $sel = "selected=\"selected\"";
-            else $sel = "";
-
-            $kat .= show(_select_field, array("value" => $getk['id'],
-                                              "sel" => $sel,
-                                              "what" => re($getk['kategorie'])));
+            $kat .= show(_select_field, array("value" => $getk['id'], "sel" => ($_POST['kat'] == $getk['id'] ? 'selected="selected"' : ''), "what" => string::decode($getk['kategorie'])));
           }
 
               $error = show("errors/errortable", array("error" => $error));
@@ -121,16 +116,16 @@ if(_adminMenu != 'true')
                                                 "do" => "insert",
                                                 "ntitel" => _titel,
                                                 "selr_nc" => $selr_nc,
-                                                "titel" => re($_POST['titel']),
-                                                "newstext" => re_bbcode($_POST['newstext']),
-                                                "morenews" => re_bbcode($_POST['morenews']),
-                                                "link1" => re($_POST['link1']),
-                                                "link2" => re($_POST['link2']),
-                                                "link3" => re($_POST['link3']),
+                                                "titel" => string::decode($_POST['titel']),
+                                                "newstext" => string::decode($_POST['newstext']),
+                                                "morenews" => string::decode($_POST['morenews']),
+                                                "link1" => string::decode($_POST['link1']),
+                                                "link2" => string::decode($_POST['link2']),
+                                                "link3" => string::decode($_POST['link3']),
                                                 "url1" => $_POST['url1'],
                                                 "url2" => $_POST['url2'],
                                                 "url3" => $_POST['url3'],
-                                                "klapplink" => re($_POST['klapptitel']),
+                                                "klapplink" => string::decode($_POST['klapptitel']),
                                                 "ntext" => _eintrag,
                                                 "button" => _button_value_add,
                                                 "error" => $error,
@@ -168,13 +163,13 @@ if(_adminMenu != 'true')
                 $qry = db("INSERT INTO ".dba::get('news')."
                      SET `autor`      = '".convert::ToInt($userid)."',
                          `kat`        = '".convert::ToInt($_POST['kat'])."',
-                         `titel`      = '".up($_POST['titel'])."',
-                         `text`       = '".up($_POST['newstext'],1)."',
-                         `klapplink`  = '".up($_POST['klapptitel'])."',
-                         `klapptext`  = '".up($_POST['morenews'],1)."',
-                         `link1`      = '".up($_POST['link1'])."',
-                         `link2`      = '".up($_POST['link2'])."',
-                         `link3`      = '".up($_POST['link3'])."',
+                         `titel`      = '".string::encode($_POST['titel'])."',
+                         `text`       = '".string::encode($_POST['newstext'])."',
+                         `klapplink`  = '".string::encode($_POST['klapptitel'])."',
+                         `klapptext`  = '".string::encode($_POST['morenews'])."',
+                         `link1`      = '".string::encode($_POST['link1'])."',
+                         `link2`      = '".string::encode($_POST['link2'])."',
+                         `link3`      = '".string::encode($_POST['link3'])."',
                          `url1`       = '".links($_POST['url1'])."',
                          `url2`       = '".links($_POST['url2'])."',
                          `url3`       = '".links($_POST['url3'])."',
@@ -207,12 +202,7 @@ if(_adminMenu != 'true')
         $qryk = db("SELECT * FROM ".dba::get('newskat')."");
         while($getk = _fetch($qryk))
         {
-          if($get['kat'] == $getk['id']) $sel = "selected=\"selected\"";
-          else $sel = "";
-
-          $kat .= show(_select_field, array("value" => $getk['id'],
-                                            "sel" => $sel,
-                                            "what" => re($getk['kategorie'])));
+            $kat .= show(_select_field, array("value" => $getk['id'], "sel" => ($get['kat'] == $getk['id'] ? 'selected="selected"' : ''), "what" => string::decode($getk['kategorie'])));
         }
         $do = show(_news_edit_link, array("id" => $_GET['id']));
 
@@ -282,16 +272,16 @@ if(_adminMenu != 'true')
                 "delnewspic" => $delnewspic,
                                               "preview" => _preview,
                                               "ntitel" => _titel,
-                                              "titel" => re($get['titel']),
-                                              "newstext" => re_bbcode($get['text']),
-                                              "morenews" => re_bbcode($get['klapptext']),
-                                              "link1" => re($get['link1']),
-                                              "link2" => re($get['link2']),
-                                              "link3" => re($get['link3']),
+                                              "titel" => string::decode($get['titel']),
+                                              "newstext" => string::decode($get['text']),
+                                              "morenews" => string::decode($get['klapptext']),
+                                              "link1" => string::decode($get['link1']),
+                                              "link2" => string::decode($get['link2']),
+                                              "link3" => string::decode($get['link3']),
                                               "url1" => $get['url1'],
                                               "url2" => $get['url2'],
                                               "url3" => $get['url3'],
-                                              "klapplink" => re($get['klapplink']),
+                                              "klapplink" => string::decode($get['klapplink']),
                                               "selr_nc" => $selr_nc,
                                               "dropdown_date" => $dropdown_date,
                                               "dropdown_time" => $dropdown_time,
@@ -335,15 +325,15 @@ if(_adminMenu != 'true')
 
           $qry = db("UPDATE ".dba::get('news')."
                      SET `kat`        = '".convert::ToInt($_POST['kat'])."',
-                         `titel`      = '".up($_POST['titel'])."',
-                         `text`       = '".up($_POST['newstext'],1)."',
-                         `klapplink`  = '".up($_POST['klapptitel'])."',
-                         `klapptext`  = '".up($_POST['morenews'],1)."',
-                         `link1`      = '".up($_POST['link1'])."',
+                         `titel`      = '".string::encode($_POST['titel'])."',
+                         `text`       = '".string::encode($_POST['newstext'])."',
+                         `klapplink`  = '".string::encode($_POST['klapptitel'])."',
+                         `klapptext`  = '".string::encode($_POST['morenews'])."',
+                         `link1`      = '".string::encode($_POST['link1'])."',
                          `url1`       = '".links($_POST['url1'])."',
-                         `link2`      = '".up($_POST['link2'])."',
+                         `link2`      = '".string::encode($_POST['link2'])."',
                          `url2`       = '".links($_POST['url2'])."',
-                         `link3`      = '".up($_POST['link3'])."',
+                         `link3`      = '".string::encode($_POST['link3'])."',
                                    `intern`     = '".convert::ToInt($_POST['intern'])."',
                          `url3`       = '".links($_POST['url3'])."',
                                                  ".$timeshift."
@@ -390,8 +380,8 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=newsadmin&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_news)));
-          $titel = show(_news_show_link, array("titel" => re(cut($get['titel'],config('l_newsadmin'))),
+                                                            "del" => _confirm_del_news));
+          $titel = show(_news_show_link, array("titel" => string::decode(cut($get['titel'],config('l_newsadmin'))),
                                                "id" => $get['id']));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

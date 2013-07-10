@@ -27,7 +27,7 @@ else
             if($get['reg'] != 0)
                 $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
             else
-                $form = show("page/editor_notregged", array("postemail" => re($get['email']), "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
+                $form = show("page/editor_notregged", array("postemail" => string::decode($get['email']), "posthp" => string::decode($get['hp']), "postnick" => string::decode($get['nick'])));
 
             $dowhat = show(_forum_dowhat_edit_post, array("id" => $_GET['id']));
             $index = show($dir."/post", array("titel" => _forum_edit_post_head,
@@ -48,7 +48,7 @@ else
                     "eintraghead" => _eintrag,
                     "error" => "",
                     "what" => _button_value_edit,
-                    "posteintrag" => re_bbcode($get['text'])));
+                    "posteintrag" => string::decode($get['text'])));
         } else {
             $index = error(_error_wrong_permissions);
         }
@@ -97,9 +97,9 @@ else
                         "kid" => $_GET['kid'],
                         "br1" => "<!--",
                         "br2" => "-->",
-                        "postemail" => re($get['email']),
-                        "postnick" => re($get['nick']),
-                        "posteintrag" => re_bbcode($_POST['eintrag']),
+                        "postemail" => string::decode($get['email']),
+                        "postnick" => string::decode($get['nick']),
+                        "posteintrag" => string::decode($_POST['eintrag']),
                         "error" => $error,
                         "eintraghead" => _eintrag));
             } else {
@@ -111,9 +111,9 @@ else
                         "time" => date("d.m.Y H:i", time())._uhr));
 
                 $qry = db("UPDATE ".dba::get('f_posts')."
-                   SET `nick`   = '".up($_POST['nick'])."',
-                       `email`  = '".up($_POST['email'])."',
-                       `text`   = '".up($_POST['eintrag'],1)."',
+                   SET `nick`   = '".string::encode($_POST['nick'])."',
+                       `email`  = '".string::encode($_POST['email'])."',
+                       `text`   = '".string::encode($_POST['eintrag'])."',
                        `hp`     = '".links($_POST['hp'])."',
                        `edited` = '".addslashes($editedby)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -133,9 +133,9 @@ else
                         if($entrys == "0") $pagenr = "1";
                         else $pagenr = ceil($entrys/$maxfposts);
 
-                        $subj = show(re(settings('eml_fabo_pedit_subj')), array("titel" => $title));
+                        $subj = show(string::decode(settings('eml_fabo_pedit_subj')), array("titel" => $title));
 
-                        $message = show(re(settings('eml_fabo_pedit')), array("nick" => re($getabo['nick']),
+                        $message = show(string::decode(settings('eml_fabo_pedit')), array("nick" => string::decode($getabo['nick']),
                                 "postuser" => fabo_autor(convert::ToInt($userid)),
                                 "topic" => $gettopic['topic'],
                                 "titel" => $title,
@@ -143,10 +143,10 @@ else
                                 "id" => $getp['sid'],
                                 "entrys" => $entrys+1,
                                 "page" => $pagenr,
-                                "text" => bbcode($_POST['eintrag']),
+                                "text" => bbcode::parse_html($_POST['eintrag']),
                                 "clan" => $clanname));
 
-                        sendMail(re($getabo['email']),$subj,$message);
+                        sendMail(string::decode($getabo['email']),$subj,$message);
                     }
                 }
                 $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$getp['sid']);
@@ -198,7 +198,7 @@ else
                         if($getzitat['reg'] == "0") $nick = $getzitat['nick'];
                         else                        $nick = autor($getzitat['reg']);
 
-                        $zitat = zitat($nick, $getzitat['text']);
+                        $zitat = bbcode::zitat($nick, $getzitat['text']);
                     } elseif($_GET['zitatt']) {
                         $qryzitat = db("SELECT t_nick,t_reg,t_text FROM ".dba::get('f_threads')."
                             WHERE id = '".convert::ToInt($_GET['zitatt'])."'");
@@ -207,7 +207,7 @@ else
                         if($getzitat['t_reg'] == "0") $nick = $getzitat['t_nick'];
                         else                          $nick = data($getzitat['t_reg'], "nick");
 
-                        $zitat = zitat($nick, $getzitat['t_text']);
+                        $zitat = bbcode::zitat($nick, $getzitat['t_text']);
                     } else {
                         $zitat = "";
                     }
@@ -223,7 +223,7 @@ else
                     {
                         $getl = _fetch($qryl);
 
-                        if(data($getl['reg'], "signatur")) $sig = _sig.bbcode(data($getl['reg'], "signatur"));
+                        if(data($getl['reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($getl['reg'], "signatur"));
                         else                               $sig = "";
 
                         if($getl['reg'] != "0") $userposts = show(_forum_user_posts, array("posts" => userstats($getl['reg'], "forumposts")));
@@ -232,7 +232,7 @@ else
                         if($getl['reg'] == "0") $onoff = "";
                         else                    $onoff = onlinecheck($getl['reg']);
 
-                        $text = bbcode($getl['text']);
+                        $text = bbcode::parse_html($getl['text']);
 
                         if($chkMe == "4") $posted_ip = $getl['ip'];
                         else              $posted_ip = _logged;
@@ -294,7 +294,7 @@ else
                         AND id = '".convert::ToInt($_GET['id'])."'");
                         $gett = _fetch($qryt);
 
-                        if(data($gett['t_reg'], "signatur")) $sig = _sig.bbcode(data($gett['t_reg'], "signatur"));
+                        if(data($gett['t_reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($gett['t_reg'], "signatur"));
                         else $sig = "";
 
                         if($gett['t_reg'] != "0")
@@ -305,8 +305,8 @@ else
                         else                      $onoff = onlinecheck($gett['t_reg']);
 
                         $ftxt = hl($gett['t_text'], $_GET['hl']);
-                        if($_GET['hl']) $text = bbcode($ftxt['text']);
-                        else $text = bbcode($gett['t_text']);
+                        if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
+                        else $text = bbcode::parse_html($gett['t_text']);
 
                         if($chkMe == "4") $posted_ip = $gett['ip'];
                         else                 $posted_ip = _logged;
@@ -370,7 +370,7 @@ else
                     else
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
-                    $title = re($gett['topic']).' - '.$title;
+                    $title = string::decode($gett['topic']).' - '.$title;
                     $index = show($dir."/post", array("titel" => _forum_new_post_head,
                             "nickhead" => _nick,
                             "emailhead" => _email,
@@ -450,7 +450,7 @@ else
                     {
                         $getl = _fetch($qryl);
 
-                        if(data($getl['reg'], "signatur")) $sig = _sig.bbcode(data($getl['reg'], "signatur"));
+                        if(data($getl['reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($getl['reg'], "signatur"));
                         else $sig = "";
 
                         if($getl['reg'] != "0") $userposts = show(_forum_user_posts, array("posts" => userstats($getl['reg'], "forumposts")));
@@ -460,8 +460,8 @@ else
                         else $onoff = onlinecheck($getl['reg']);
 
                         $ftxt = hl($getl['text'], $_GET['hl']);
-                        if($_GET['hl']) $text = bbcode($ftxt['text']);
-                        else $text = bbcode($getl['text']);
+                        if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
+                        else $text = bbcode::parse_html($getl['text']);
 
                         if($chkMe == "4") $posted_ip = $getl['ip'];
                         else $posted_ip = _logged;
@@ -530,7 +530,7 @@ else
                                                 AND id = '".convert::ToInt($_GET['id'])."'");
                         $gett = _fetch($qryt);
 
-                        if(data($gett['t_reg'], "signatur")) $sig = _sig.bbcode(data($gett['t_reg'], "signatur"));
+                        if(data($gett['t_reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($gett['t_reg'], "signatur"));
                         else $sig = "";
 
                         if($gett['t_reg'] != "0") $userposts = show(_forum_user_posts, array("posts" => userstats($gett['t_reg'], "forumposts")));
@@ -540,8 +540,8 @@ else
                         else $onoff = onlinecheck($gett['t_reg']);
 
                         $ftxt = hl($gett['t_text'], $_GET['hl']);
-                        if($_GET['hl']) $text = bbcode($ftxt['text']);
-                        else $text = bbcode($gett['t_text']);
+                        if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
+                        else $text = bbcode::parse_html($gett['t_text']);
 
                         if($chkMe == "4") $posted_ip = $gett['ip'];
                         else $posted_ip = _logged;
@@ -619,8 +619,8 @@ else
                             "kid" => $_GET['kid'],
                             "postemail" => $_POST['email'],
                             "posthp" => $_POST['hp'],
-                            "postnick" => re($_POST['nick']),
-                            "posteintrag" => re_bbcode($_POST['eintrag']),
+                            "postnick" => string::decode($_POST['nick']),
+                            "posteintrag" => string::decode($_POST['eintrag']),
                             "error" => $error,
                             "eintraghead" => _eintrag));
                 } else {
@@ -666,7 +666,7 @@ else
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
                                 "ltext" => addslashes($getdp['text']),
-                                "ntext" => up($_POST['eintrag'],1)));
+                                "ntext" => string::encode($_POST['eintrag'])));
 
                         $qry = db("UPDATE ".dba::get('f_threads')."
                                                                                          SET `lp` = '".time()."'
@@ -683,7 +683,7 @@ else
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
                                 "ltext" => addslashes($gettdp['t_text']),
-                                "ntext" => up($_POST['eintrag'],1)));
+                                "ntext" => string::encode($_POST['eintrag'])));
 
                         $qry = db("UPDATE ".dba::get('f_threads')."
                                                  SET `lp`   = '".time()."',
@@ -694,11 +694,11 @@ else
                                          SET `kid`   = '".convert::ToInt($get_threadkid['kid'])."',
                                                  `sid`   = '".convert::ToInt($_GET['id'])."',
                                                  `date`  = '".time()."',
-                                                 `nick`  = '".up($_POST['nick'])."',
-                                                 `email` = '".up($_POST['email'])."',
+                                                 `nick`  = '".string::encode($_POST['nick'])."',
+                                                 `email` = '".string::encode($_POST['email'])."',
                                                  `hp`    = '".links($_POST['hp'])."',
-                                                 `reg`   = '".up(convert::ToInt($userid))."',
-                                                 `text`  = '".up($_POST['eintrag'],1)."',
+                                                 `reg`   = '".string::encode(convert::ToInt($userid))."',
+                                                 `text`  = '".string::encode($_POST['eintrag'])."',
                                                  `ip`    = '".visitorIp()."'");
 
                        db("UPDATE ".dba::get('f_threads')." SET `lp`    = '".time()."', `first` = '0' WHERE id    = '".convert::ToInt($_GET['id'])."'");
@@ -725,9 +725,9 @@ else
                             if($entrys == "0") $pagenr = "1";
                             else $pagenr = ceil($entrys/$maxfposts);
 
-                            $subj = show(re(settings('eml_fabo_npost_subj')), array("titel" => $title));
+                            $subj = show(string::decode(settings('eml_fabo_npost_subj')), array("titel" => $title));
 
-                            $message = show(re(settings('eml_fabo_npost')), array("nick" => re($getabo['nick']),
+                            $message = show(string::decode(settings('eml_fabo_npost')), array("nick" => string::decode($getabo['nick']),
                                     "postuser" => fabo_autor(convert::ToInt($userid)),
                                     "topic" => $gettopic['topic'],
                                     "titel" => $title,
@@ -735,10 +735,10 @@ else
                                     "id" => convert::ToInt($_GET['id']),
                                     "entrys" => $entrys+1,
                                     "page" => $pagenr,
-                                    "text" => bbcode($_POST['eintrag']),
+                                    "text" => bbcode::parse_html($_POST['eintrag']),
                                     "clan" => $clanname));
 
-                            sendMail(re($getabo['email']),$subj,$message);
+                            sendMail(string::decode($getabo['email']),$subj,$message);
                         }
                     }
 

@@ -35,7 +35,7 @@ else
             $display = "none";
         }
 
-        $squad = show(_member_squad_squadlink, array("squad" => re($get['name']),
+        $squad = show(_member_squad_squadlink, array("squad" => string::decode($get['name']),
                 "id" => $get['id'],
                 "shown" => $shown));
 
@@ -61,13 +61,13 @@ else
             elseif($getm['place'] == "3") $replace = _awards_dritter_img;
             else $replace = $getm['place'];
 
-            $event = show(_awards_event, array("event" => re($getm['event']),
+            $event = show(_awards_event, array("event" => string::decode($getm['event']),
                     "url" => $getm['url']));
 
             $awards .= show($dir."/awards_show", array("class" => $class,
                     "date" => date("d.m.Y", $getm['date']),
                     "place" => $replace,
-                    "prize" => re($getm['prize']),
+                    "prize" => string::decode($getm['prize']),
                     "event" => $event));
         }
 
@@ -102,7 +102,7 @@ else
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $img = squad($get['icon']);
-        $legende .= show(_awards_legende, array("game" => re($get['game']),
+        $legende .= show(_awards_legende, array("game" => string::decode($get['game']),
                 "img" => $img,
                 "class" => $class));
     }

@@ -20,8 +20,8 @@ if(_adminMenu != 'true')
           {
             if(!empty($getk['kattopic']))
             {
-              $subkat = show(_config_forum_subkats, array("topic" => re($getk['kattopic']),
-                                                          "subtopic" => re($getk['subtopic']),
+              $subkat = show(_config_forum_subkats, array("topic" => string::decode($getk['kattopic']),
+                                                          "subtopic" => string::decode($getk['subtopic']),
                                                           "id" => $getk['id']));
 
               $edit = show("page/button_edit_single", array("id" => $getk['id'],
@@ -30,7 +30,7 @@ if(_adminMenu != 'true')
               $delete = show("page/button_delete_single", array("id" => $getk['id'],
                                                                 "action" => "admin=forum&amp;do=deletesubkat",
                                                                 "title" => _button_title_del,
-                                                                "del" => convSpace(_confirm_del_entry)));
+                                                                "del" => _confirm_del_entry));
 
               $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
               $subkats .= show($dir."/forum_show_subkats_show", array("subkat" => $subkat,
@@ -39,7 +39,7 @@ if(_adminMenu != 'true')
                                                                       "edit" => $edit));
             }
 
-            $skathead = show(_config_forum_subkathead, array("kat" => re($getk['name'])));
+            $skathead = show(_config_forum_subkathead, array("kat" => string::decode($getk['name'])));
             $add = show(_config_forum_subkats_add, array("id" => $_GET['id']));
 
             $show = show($dir."/forum_show_subkats", array("head" => _config_forum_head,
@@ -55,7 +55,7 @@ if(_adminMenu != 'true')
                      ORDER BY kid");
         while($get = _fetch($qry))
         {
-          $kat = show(_config_forum_kats_titel, array("kat" => re($get['name']),
+          $kat = show(_config_forum_kats_titel, array("kat" => string::decode($get['name']),
                                                       "id" => $get['id']));
 
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -64,7 +64,7 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=".$_GET['admin']."&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_entry)));
+                                                            "del" => _confirm_del_entry));
           if($get['intern'] == 1)
           {
             $status = _config_forum_intern;
@@ -95,7 +95,7 @@ if(_adminMenu != 'true')
           while($get = _fetch($qry))
           {
             $positions .= show(_select_field, array("value" => $get['kid']+1,
-                                                    "what" => _nach.' '.re($get['name']),
+                                                    "what" => _nach.' '.string::decode($get['name']),
                                                     "sel" => ""));
           }
 
@@ -120,7 +120,7 @@ if(_adminMenu != 'true')
 
             $qry = db("INSERT INTO ".dba::get('f_kats')."
                        SET `kid`    = '".convert::ToInt($_POST['kid'])."',
-                           `name`   = '".up($_POST['kat'])."',
+                           `name`   = '".string::encode($_POST['kat'])."',
                            `intern` = '".convert::ToInt($_POST['intern'])."'");
 
             $show = info(_config_forum_kat_added, "?admin=forum");
@@ -157,24 +157,22 @@ if(_adminMenu != 'true')
               if($get['name'] != $getpos['name'])
               {
                 $positions .= show(_select_field, array("value" => $getpos['kid']+1,
-                                                        "what" => _nach.' '.re($getpos['name'])));
+                                                        "what" => _nach.' '.string::decode($getpos['name'])));
               }
             }
-
-            if($get['intern'] == "1") $sel = "selected=\"selected\"";
 
             $show = show($dir."/katform_edit", array("fkat" => _config_katname,
                                                      "head" => _config_forum_kat_head_edit,
                                                      "fkid" => _position,
                                                      "fart" => _kind,
                                                      "id" => $get['id'],
-                                                     "sel" => $sel,
+                                                     "sel" => ($get['intern'] ? 'selected="selected"' : ''),
                                                      "nothing" => _nothing,
                                                      "positions" => $positions,
                                                      "public" => _config_forum_public,
                                                      "intern" => _config_forum_intern,
                                                      "value" => _button_value_edit,
-                                                     "kat" => re($get['name'])));
+                                                     "kat" => string::decode($get['name'])));
           }
         } elseif($_GET['do'] == "editkat") {
           if(empty($_POST['kat']))
@@ -195,7 +193,7 @@ if(_adminMenu != 'true')
 
 
             $qry = db("UPDATE ".dba::get('f_kats')."
-                       SET `name`    = '".up($_POST['kat'])."',
+                       SET `name`    = '".string::encode($_POST['kat'])."',
                            ".$kid."
                            `intern`  = '".convert::ToInt($_POST['intern'])."'
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -208,7 +206,7 @@ if(_adminMenu != 'true')
           while($get = _fetch($qry))
           {
             $positions .= show(_select_field, array("value" => $get['pos']+1,
-                                                    "what" => _nach.' '.re($get['kattopic']),
+                                                    "what" => _nach.' '.string::decode($get['kattopic']),
                                                     "sel" => ""));
           }
           $show = show($dir."/skatform", array("head" => _config_forum_add_skat,
@@ -237,8 +235,8 @@ if(_adminMenu != 'true')
             $qry = db("INSERT INTO ".dba::get('f_skats')."
                        SET `sid`      = '".convert::ToInt($_GET['id'])."',
                            `pos`    = '".convert::ToInt($_POST['order'])."',
-                           `kattopic` = '".up($_POST['skat'])."',
-                           `subtopic` = '".up($_POST['stopic'])."'");
+                           `kattopic` = '".string::encode($_POST['skat'])."',
+                           `subtopic` = '".string::encode($_POST['stopic'])."'");
 
             $show = info(_config_forum_skat_added, "?admin=forum&show=subkats&amp;id=".$_GET['id']."");
           }
@@ -254,16 +252,16 @@ if(_adminMenu != 'true')
               if($get['kattopic'] != $getpos['kattopic'])
               {
                 $positions .= show(_select_field, array("value" => $getpos['pos']+1,
-                                                        "what" => _nach.' '.re($getpos['kattopic'])));
+                                                        "what" => _nach.' '.string::decode($getpos['kattopic'])));
               }
             }
 
           $show = show($dir."/skatform", array("head" => _config_forum_edit_skat,
                                                "fkat" => _config_forum_skatname,
                                                "fstopic" => _config_forum_stopic,
-                                               "skat" => re($get['kattopic']),
+                                               "skat" => string::decode($get['kattopic']),
                                                "what" => "editskat",
-                                               "stopic" => re($get['subtopic']),
+                                               "stopic" => string::decode($get['subtopic']),
                                                "id" => $_GET['id'],
                                                "sid" => $get['sid'],
                                                "nothing" => _nothing,
@@ -290,9 +288,9 @@ if(_adminMenu != 'true')
             }
 
             $qry = db("UPDATE ".dba::get('f_skats')."
-                       SET `kattopic` = '".up($_POST['skat'])."',
+                       SET `kattopic` = '".string::encode($_POST['skat'])."',
                            ".$order."
-                           `subtopic` = '".up($_POST['stopic'])."'
+                           `subtopic` = '".string::encode($_POST['stopic'])."'
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             $show = info(_config_forum_skat_edited, "?admin=forum&show=subkats&amp;id=".$_POST['sid']."");

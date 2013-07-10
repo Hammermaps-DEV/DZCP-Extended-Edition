@@ -26,18 +26,21 @@ else
             while($getdl = _fetch($qrydl))
             {
                 if((isset($_GET['hl']) ? convert::ToInt($_GET['hl']) : 0) == $getdl['id'])
-                    $download = highlight(re($getdl['download']));
+                {
+                    $download = string::decode($getdl['download']);
+                    $download = str_ireplace($download,'<span class="fontRed">'.$download.'</span>',$download);
+                }
                 else
-                    $download = re($getdl['download']);
+                    $download = string::decode($getdl['download']);
 
-                $link = show(_downloads_link, array("id" => $getdl['id'], "download" => $download, "titel" => re($getdl['download'])));
+                $link = show(_downloads_link, array("id" => $getdl['id'], "download" => $download, "titel" => string::decode($getdl['download'])));
                 $class = ($color_ % 2) ? "contentMainSecond" : "contentMainFirst"; $color_++;
                 $show .= show($dir."/downloads_show", array("class" => $class, "link" => $link, "hits" => $getdl['hits']));
             }
 
             $cntKat = cnt(dba::get('downloads'), " WHERE kat = '".$get['id']."'");
             $dltitel = ($cntKat == 1 ? _dl_file : _site_stats_files);
-            $kat = show(_dl_titel, array("file" => $dltitel, "cnt" => $cntKat, "name" => re($get['name'])));
+            $kat = show(_dl_titel, array("file" => $dltitel, "cnt" => $cntKat, "name" => string::decode($get['name'])));
             $kats .= show($dir."/download_kats", array("kat" => $kat, "kid" => $get['id'], "show" => $show));
         }
     }

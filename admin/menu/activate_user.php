@@ -6,12 +6,13 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-/* Admin Menu-File */
+#####################
+## Admin Menu-File ##
+#####################
 if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_activate_user;
-
 switch ($do)
 {
     case 'activate':
@@ -36,10 +37,53 @@ switch ($do)
             db("UPDATE `".dba::get('users')."` SET `actkey` = '".($guid=GenGuid())."' WHERE `id` = ".$get['id']);
             $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
             $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
-            sendMail($get['email'],re(settings('eml_akl_register_subj')),show(settings('eml_akl_register'), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+            sendMail($get['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
             $show = info(show(_admin_akl_resend,array('email' => $get['email'])), "?admin=activate_user", 4);
         }
-        break;
+    break;
+    case 'send-all': //Checkbox
+        if(isset($_POST['userid']) && count($_POST['userid']) >= 1)
+        {
+            $emails = ''; $i = 0;
+            foreach ($_POST['userid'] as $id)
+            {
+                $get = db_stmt("SELECT user,id,email FROM `".dba::get('users')."` WHERE `id` = ?",array('i', $id),false,true);
+                db("UPDATE ".dba::get('userstats')." SET akl=akl+1 WHERE user = ".$get['id']);
+                db("UPDATE `".dba::get('users')."` SET `actkey` = '".($guid=GenGuid())."' WHERE `id` = ".$get['id']);
+                $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
+                $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
+                sendMail($get['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+                $emails .= (!$i ? $get['email'] : ', '.$get['email']); $i++;
+            }
+
+            $show = info(show(_admin_akl_resend,array('email' => $emails)), "?admin=activate_user", 8);
+        }
+    break;
+    case 'delete-all': //Checkbox
+        if(isset($_POST['userid']) && count($_POST['userid']) >= 1)
+        {
+            foreach ($_POST['userid'] as $id)
+            {
+                db_stmt("DELETE FROM `".dba::get('users')."` WHERE `id` = ?",array('i', $id));
+                db_stmt("DELETE FROM `".dba::get('permissions')."` WHERE `user` = ?",array('i', $id));
+                db_stmt("DELETE FROM `".dba::get('userstats')."` WHERE `user` = ?",array('i', $id));
+                db_stmt("DELETE FROM `".dba::get('rss')."` WHERE `userid` = ?",array('i', $id));
+            }
+
+            $show = info(_users_deleted, "?admin=activate_user", 4);
+        }
+    break;
+    case 'enable-all': //Checkbox
+        if(isset($_POST['userid']) && count($_POST['userid']) >= 1)
+        {
+            foreach ($_POST['userid'] as $id)
+            {
+                db_stmt("UPDATE `".dba::get('users')."` SET `level` = 1, `status` = 1, `actkey` = '' WHERE `id` = ?",array('i', $id));
+            }
+
+            $show = info(_actived_all, "?admin=activate_user", 3);
+        }
+    break;
     default:
         $qry = db("SELECT * FROM ".dba::get('users')." WHERE level = 0 AND actkey IS NOT NULL ORDER BY nick LIMIT 25"); $activate = ''; $color = 1;
         while($get = _fetch($qry))
@@ -57,6 +101,7 @@ switch ($do)
                                                                 "edit" => $edit,
                                                                 "delete" => $delete,
                                                                 "class" => $class,
+                                                                "id" => $get['id'],
                                                                 "onoff" => onlinecheck($get['id'])));
         }
 

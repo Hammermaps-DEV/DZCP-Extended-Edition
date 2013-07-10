@@ -15,12 +15,12 @@ if(_adminMenu != 'true')
         $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                           "action" => "admin=dl&amp;do=delete",
                                                           "title" => _button_title_del,
-                                                          "del" => convSpace(_confirm_del_kat)));
+                                                          "del" => _confirm_del_kat));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
         $show_ .= show($dir."/dlkats_show", array("gameicon" => $gameicon,
                                                  "edit" => $edit,
-                                                 "name" => re($get['name']),
+                                                 "name" => string::decode($get['name']),
                                                  "class" => $class,
                                                  "delete" => $delete));
       }
@@ -41,7 +41,7 @@ if(_adminMenu != 'true')
 
         $show = show($dir."/dlkats_form", array("newhead" => _dl_edit_head,
                                                 "do" => "editkat&amp;id=".$_GET['id']."",
-                                                "kat" => re($get['name']),
+                                                "kat" => string::decode($get['name']),
                                                 "what" => _button_value_edit,
                                                 "dlkat" => _dl_dlkat));
       } elseif($_GET['do'] == "editkat") {
@@ -50,7 +50,7 @@ if(_adminMenu != 'true')
           $show = error(_dl_empty_kat);
         } else {
           $qry = db("UPDATE ".dba::get('dl_kat')."
-                     SET `name` = '".up($_POST['kat'])."'
+                     SET `name` = '".string::encode($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_dl_admin_edited, "?admin=dl");
@@ -73,7 +73,7 @@ if(_adminMenu != 'true')
           $show = error(_dl_empty_kat);
         } else {
           $qry = db("INSERT INTO ".dba::get('dl_kat')."
-                     SET `name` = '".up($_POST['kat'])."'");
+                     SET `name` = '".string::encode($_POST['kat'])."'");
 
           $show = info(_dl_admin_added, "?admin=dl");
         }

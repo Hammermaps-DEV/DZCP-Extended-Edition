@@ -34,11 +34,11 @@ else
                 while($getpos = _fetch($qrypos))
                 {
                     $sel = (db("SELECT id FROM ".dba::get('userpos')." WHERE posi = '".$getpos['id']."' AND squad = '".$getsq['id']."' AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '');
-                    $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
+                    $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => string::decode($getpos['position'])));
                 }
 
                 $check = (db("SELECT squad FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '');
-                $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
+                $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => string::decode($getsq['name'])));
                 unset($posi,$check);
             }
 
@@ -146,7 +146,7 @@ else
 
                         $level_sql = ($_POST['level'] == 4 ? (data(convert::ToInt($userid), "level") == 4 || convert::ToInt($userid) == convert::ToInt($rootAdmin) ? ", `level`  = '".convert::ToInt($_POST['level'])."' " : '') : ", `level`  = '".convert::ToInt($_POST['level'])."' ");
                         db("UPDATE ".dba::get('users')." SET ".(isset($_POST['passwd']) && !empty($_POST['passwd']) ? $newpwd : '')."
-                           `nick`   = '".convert::ToString(up($_POST['nick']))."',
+                           `nick`   = '".convert::ToString(string::encode($_POST['nick']))."',
                            `email`  = '".convert::ToString($_POST['email'])."',
                            `user`   = '".convert::ToString($_POST['loginname'])."',
                            `listck` = '".convert::ToInt(isset($_POST['listck']) ? $_POST['listck'] : 0)."'
@@ -251,17 +251,17 @@ else
                             WHERE posi = '".$getpos['id']."'
                             AND squad = '".$getsq['id']."'
                             AND user = '".convert::ToInt($_GET['edit'])."'",true) ? 'selected="selected"' : '';
-                            $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => re($getpos['position'])));
+                            $posi .= show(_select_field_posis, array("value" => $getpos['id'], "sel" => $sel, "what" => string::decode($getpos['position'])));
                         }
 
                         $check = db("SELECT squad FROM ".dba::get('squaduser')." WHERE user = '".convert::ToInt($_GET['edit'])."' AND squad = '".$getsq['id']."'",true) ? 'checked="checked"' : '';
-                        $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => re($getsq['name'])));
+                        $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => $check, "eposi" => $posi, "squad" => string::decode($getsq['name'])));
                     }
 
                     $get_identy = show(_admin_user_get_identitat, array("id" => $_GET['edit']));
                     $editpwd = show($dir."/admin_editpwd", array("pwd" => _new_pwd, "epwd" => ""));
                     $index = show($dir."/admin", array(
-                                        "enick" => re($get['nick']),
+                                        "enick" => string::decode($get['nick']),
                                         "user" => convert::ToInt($_GET['edit']),
                                         "value" => _button_value_edit,
                                         "eemail" => $get['email'],

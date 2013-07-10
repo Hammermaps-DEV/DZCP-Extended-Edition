@@ -43,13 +43,13 @@ else
     {
         $getk = db("SELECT kategorie FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
         $comments = cnt(dba::get('newscomments'), " WHERE news = ".$get['id']."");
-        $titel = show(_news_show_link, array("titel" => cut(re($get['titel']),$narchivconfig['l_newsarchiv']), "id" => $get['id']));
+        $titel = show(_news_show_link, array("titel" => cut(string::decode($get['titel']),$narchivconfig['l_newsarchiv']), "id" => $get['id']));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $show .= show($dir."/archiv_show", array("autor" => autor($get['autor']),
                                                          "date" => date("d.m.y", $get['datum']),
                                                          "titel" => $titel,
                                                          "class" => $class,
-                                                         "kat" => re($getk['kategorie']),
+                                                         "kat" => string::decode($getk['kategorie']),
                                                          "comments" => $comments));
     }
 

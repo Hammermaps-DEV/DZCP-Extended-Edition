@@ -75,8 +75,8 @@ else
                 $threads = cnt(dba::get('f_threads'), " WHERE kid = '".$gets['id']."'");
                 $posts = cnt(dba::get('f_posts'), " WHERE kid = '".$gets['id']."'");
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                $showt .= show($dir."/kats_show", array("topic" => re($gets['kattopic']),
-                        "subtopic" => re($gets['subtopic']),
+                $showt .= show($dir."/kats_show", array("topic" => string::decode($gets['kattopic']),
+                        "subtopic" => string::decode($gets['subtopic']),
                         "lpost" => $lpost,
                         "new" => check_new_old($lpdate),
                         "threads" => $threads,
@@ -87,8 +87,8 @@ else
             }
         }
 
-        if($get['intern'] == 1) $katname =  show(_forum_katname_intern, array("katname" => re($get['name'])));
-        else $katname = re($get['name']);
+        if($get['intern'] == 1) $katname =  show(_forum_katname_intern, array("katname" => string::decode($get['name'])));
+        else $katname = string::decode($get['name']);
 
         if(!empty($showt))
         {

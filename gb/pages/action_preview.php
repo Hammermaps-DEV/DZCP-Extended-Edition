@@ -45,7 +45,7 @@ else
         {
             $get_hp = $_POST['hp'];
             $get_email = $_POST['email'];
-            $get_nick = show(_link_mailto, array("nick" => re($_POST['nick']), "email" => eMailAddr($get_email)));
+            $get_nick = show(_link_mailto, array("nick" => string::decode($_POST['nick']), "email" => eMailAddr($get_email)));
         }
         else
             $get_nick = autor(convert::ToInt($userid));
@@ -77,7 +77,7 @@ else
         {
             $get_hp = $_POST['hp'];
             $get_email = $_POST['email'];
-            $get_nick = show(_link_mailto, array("nick" => re($_POST['nick']), "email" => eMailAddr($get_email)));
+            $get_nick = show(_link_mailto, array("nick" => string::decode($_POST['nick']), "email" => eMailAddr($get_email)));
         }
         else
         {
@@ -121,9 +121,9 @@ else
 
 
     if(isset($_GET['view']) ? ($_GET['view'] == 'comment' ? true : false) : false)
-        $index = str_replace("<br /><br />", "", show($dir."/commentlayout", array("nick" => $get_nick, "datum" => date("d.m.Y H:i", $get_date), "comment" => bbcode($_POST['eintrag'],1), "editby" => bbcode($editby,1), "edit" => '', "delete" => '')));
+        $index = str_replace("<br /><br />", "", show($dir."/commentlayout", array("nick" => $get_nick, "datum" => date("d.m.Y H:i", $get_date), "comment" => bbcode::parse_html($_POST['eintrag']), "editby" => bbcode($editby,1), "edit" => '', "delete" => '')));
     else
-        $index = show($dir."/gb_show", array("gbtitel" => $gbtitel, "nachricht" => bbcode($_POST['eintrag'],1), "editby" => bbcode($editby,1), "ip" => $posted_ip, "comments" => ''));
+        $index = show($dir."/gb_show", array("gbtitel" => $gbtitel, "nachricht" => bbcode::parse_html($_POST['eintrag']), "editby" => bbcode::parse_html($editby), "ip" => $posted_ip, "comments" => ''));
 
     update_user_status_preview();
     exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');

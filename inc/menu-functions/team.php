@@ -1,5 +1,15 @@
 <?php
-//-> Teamausgabe in der Navigation
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function team($tID = '')
 {
   $teamRow = config('teamrow');
@@ -70,7 +80,7 @@ function team($tID = '')
 
 //Output
     $team = show("menu/team", array("row" => $teamRow,
-                                    "team" => re($get['name']),
+                                    "team" => string::decode($get['name']),
                                     "id" => $get['id'],
                                     "next" => $next['id'],
                                     "last" => $last['id'],

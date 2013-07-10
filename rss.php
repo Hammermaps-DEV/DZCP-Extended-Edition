@@ -9,7 +9,7 @@
 define('basePath', dirname(__FILE__));
 require_once(basePath."/inc/debugger.php");
 require_once(basePath."/inc/config.php");
-require_once(basePath."/inc/bbcode.php");
+require_once(basePath."/inc/common.php");
 
 header("Content-Type: text/xml; charset=ISO-8859-1");
 if(isset($_GET['key']) || !empty($_GET['key']))
@@ -22,7 +22,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
     {
         $host = $_SERVER['HTTP_HOST'];
         $pfad = dirname($_SERVER['PHP_SELF']);
-        rss_feed::set_main_config('pagetitle',$clanname.' - RSS-Feed für '.re($user['user']));
+        rss_feed::set_main_config('pagetitle',$clanname.' - RSS-Feed für '.string::decode($user['user']));
 
         // Intern News
         if($rss_uconf['show_intern_news'])
@@ -31,7 +31,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item(re('News-Intern: '.$get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],$get['text'],re($get_user['nick']),
+                rss_feed::add_item(string::decode('News-Intern: '.$get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],$get['text'],string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'] : ''),date("r", $get['datum']));
             }
         }
@@ -43,7 +43,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item('News: '.re($get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],$get['text'],re($get_user['nick']),
+                rss_feed::add_item('News: '.string::decode($get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],$get['text'],string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'] : ''),date("r", $get['datum']));
             }
         }
@@ -55,7 +55,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item('Artikel: '.re($get['titel']),'http://'.$host.$pfad.'/artikel/?action=show&id='.$get['id'],$get['text'],re($get_user['nick']),
+                rss_feed::add_item('Artikel: '.string::decode($get['titel']),'http://'.$host.$pfad.'/artikel/?action=show&id='.$get['id'],$get['text'],string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/artikel/?action=show&id='.$get['id'] : ''),date("r", $get['datum']));
             }
         }
@@ -66,7 +66,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             $qry = db("SELECT * FROM ".dba::get('downloads')." ORDER BY date DESC LIMIT ".$rss_uconf['show_downloads_max']);
             while($get = _fetch($qry))
             {
-                rss_feed::add_item('Downloads: '.re($get['download']),'http://'.$host.$pfad.'/downloads/?action=download&id='.$get['id'],$get['beschreibung'],'',
+                rss_feed::add_item('Downloads: '.string::decode($get['download']),'http://'.$host.$pfad.'/downloads/?action=download&id='.$get['id'],$get['beschreibung'],'',
                 ($get['comments'] ? 'http://'.$host.$pfad.'/downloads/?action=download&id='.$get['id'] : ''),date("r", $get['date']));
             }
         }
@@ -92,7 +92,7 @@ else
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item(re($get['titel']),'http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'],$get['text'],re($get_user['nick']),
+                rss_feed::add_item(string::decode($get['titel']),'http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'],$get['text'],string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'] : ''),date("r", $get['datum']));
             }
 

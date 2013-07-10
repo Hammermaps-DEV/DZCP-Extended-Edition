@@ -37,9 +37,9 @@ else
                 {
                     switch($getcustom['type'])
                     {
-                        case 2: $custom .= show(_profil_custom_url, array("name" => re(pfields_name($getcustom['name'])), "value" => re($getcontent[$getcustom['feldname']]))); break;
-                        case 3: $custom .= show(_profil_custom_mail, array("name" => re(pfields_name($getcustom['name'])), "value" => eMailAddr(re($getcontent[$getcustom['feldname']])))); break;
-                        default: $custom .= show(_profil_custom, array("name" => re(pfields_name($getcustom['name'])), "value" => re($getcontent[$getcustom['feldname']]))); break;
+                        case 2: $custom .= show(_profil_custom_url, array("name" => string::decode(pfields_name($getcustom['name'])), "value" => string::decode($getcontent[$getcustom['feldname']]))); break;
+                        case 3: $custom .= show(_profil_custom_mail, array("name" => string::decode(pfields_name($getcustom['name'])), "value" => eMailAddr(string::decode($getcontent[$getcustom['feldname']])))); break;
+                        default: $custom .= show(_profil_custom, array("name" => string::decode(pfields_name($getcustom['name'])), "value" => string::decode($getcontent[$getcustom['feldname']]))); break;
                     }
 
                     $count++;
@@ -94,7 +94,7 @@ else
                         if($get['reg'] != 0)
                             $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                         else
-                            $form = show("page/editor_notregged", array("postemail" => re($get['email']), "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
+                            $form = show("page/editor_notregged", array("postemail" => string::decode($get['email']), "posthp" => string::decode($get['hp']), "postnick" => string::decode($get['nick'])));
 
                         $index = show($dir."/usergb_add", array("nickhead" => _nick,
                                 "add_head" => _gb_edit_head,
@@ -110,8 +110,8 @@ else
                                 "form" => $form,
                                 "postemail" => $get['email'],
                                 "posthp" => $get['hp'],
-                                "postnick" => re($get['nick']),
-                                "posteintrag" => re_bbcode($get['nachricht']),
+                                "postnick" => string::decode($get['nick']),
+                                "posteintrag" => string::decode($get['nachricht']),
                                 "error" => '',
                                 "ip" => _iplog_info,
                                 "eintraghead" => _eintrag));
@@ -134,7 +134,7 @@ else
                             while($getgl = _fetch($qrygl))
                             {
                                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                                $gal .= show($dir."/profil_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".convert::ToInt($_GET['id'])."_".$getgl['pic']), "beschreibung" => bbcode($getgl['beschreibung']), "class" => $class));
+                                $gal .= show($dir."/profil_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".convert::ToInt($_GET['id'])."_".$getgl['pic']), "beschreibung" => bbcode::parse_html($getgl['beschreibung']), "class" => $class));
                             } //while end
                         }
 
@@ -159,7 +159,7 @@ else
                                 if(permission('editusers') || $view_userID == convert::ToInt($userid))
                                 {
                                     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=user&amp;show=gb&amp;do=edit&amp;gbid=".$getgb['id'], "title" => _button_title_edit));
-                                    $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "action=user&amp;show=gb&amp;do=delete&amp;gbid=".$getgb['id'], "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
+                                    $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "action=user&amp;show=gb&amp;do=delete&amp;gbid=".$getgb['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                                 }
 
                                 if(!$getgb['reg'])
@@ -169,7 +169,7 @@ else
                                     $email = (!empty($getgb['email']) ? '<br />'.show(_emailicon_forum, array("email" => eMailAddr($getgb['email']))) : '');
                                     $onoff = "";
                                     $avatar = "";
-                                    $nick = show(_link_mailto, array("nick" => re($getgb['nick']), "email" => eMailAddr($getgb['email'])));
+                                    $nick = show(_link_mailto, array("nick" => string::decode($getgb['nick']), "email" => eMailAddr($getgb['email'])));
                                 }
                                 else
                                 {
@@ -187,10 +187,10 @@ else
                                                                     "delete" => $delete));
 
                                 $membergb .= show("page/comments_show", array("titel" => $titel,
-                                                                              "comment" => bbcode($getgb['nachricht']),
+                                                                              "comment" => bbcode::parse_html($getgb['nachricht']),
                                                                               "nick" => $nick,
                                                                               "hp" => $hp,
-                                                                              "editby" => bbcode($getgb['editby']),
+                                                                              "editby" => bbcode::parse_html($getgb['editby']),
                                                                               "email" => $email,
                                                                               "avatar" => useravatar($getgb['reg']),
                                                                               "onoff" => $onoff,
@@ -237,12 +237,12 @@ else
                         $pn = show(_pn_write, array("id" => $_GET['id'], "nick" => $get['nick']));
                         $bday = ($get['bday'] == ".." || $get['bday'] == 0 || empty($get['bday']) ? '-' : $get['bday']);
                         $icq = (!empty($get['icq']) ? show(_icqstatus, array("uin" => $get['icq'])) : '-');
-                        $icqnr = (!empty($get['icq']) ? re($get['icq']) : '');
+                        $icqnr = (!empty($get['icq']) ? string::decode($get['icq']) : '');
                         $status = ($get['status'] == 1 || ($get['level'] != 1 && isset($_GET['sq'])) ? _aktiv_icon : _inaktiv_icon);
                         $buddyadd = show(_addbuddyicon, array("id" => $_GET['id']));
                         $edituser = (permission("editusers") ? str_replace("&amp;id=","",show("page/button_edit_single", array("id" => "", "action" => "action=admin&amp;edit=".$view_userID, "title" => _button_title_edit))) : '');
-                        $xfire = (!empty($get['xfire']) ? '<div id="infoXfire_'.re($get['xfire']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.re($get['xfire']).'","xfire","&username='.re($get['xfire']).'");</script></div>' : '-');
-                        $rlname = (!empty($get['rlname']) ? re($get['rlname']) : '-');
+                        $xfire = (!empty($get['xfire']) ? '<div id="infoXfire_'.string::decode($get['xfire']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>' : '-');
+                        $rlname = (!empty($get['rlname']) ? string::decode($get['rlname']) : '-');
 
                         //Zeige Clan Informationen an
                         $clan = "";
@@ -286,8 +286,8 @@ else
                         unset($custom_favos_data,$custom_hardware_data);
                         //Custom profil fields
 
-                        $city = re($get['city']);
-                        $beschreibung = bbcode($get['beschreibung']);
+                        $city = string::decode($get['city']);
+                        $beschreibung = bbcode::parse_html($get['beschreibung']);
                         $show = show($dir."/profil_show",array(
                                 "hardware_head" => $hardware_head,
                                 "city" => (!empty($city) ? $city : '-') ,
@@ -299,7 +299,7 @@ else
                                 "regdatum" => date("d.m.Y H:i", $get['regdatum'])._uhr,
                                 "lastvisit" => date("d.m.Y H:i", userstats($view_userID, "lastvisit"))._uhr,
                                 "hp" => $hp,
-                                "xfire_name" => re($get['xfire']),
+                                "xfire_name" => string::decode($get['xfire']),
                                 "xfire" => $xfire,
                                 "buddyadd" => $buddyadd,
                                 "nick" => autor($view_userID),

@@ -28,10 +28,10 @@ else
             $index = error(_error_wrong_permissions);
         else
         {
-            $where = re($get['titel']);
+            $where = string::decode($get['titel']);
             $title = $pagetitle." - ".$where."";
-            $inhalt = ($get['html'] ? bbcode_html($get['text']) : bbcode($get['text']));
-            $index = show($dir."/sites", array("titel" => re($get['titel']), "inhalt" => $inhalt));
+            $inhalt = bbcode::parse_html($get['text']);
+            $index = show($dir."/sites", array("titel" => string::decode($get['titel']), "inhalt" => $inhalt));
         }
     }
     else

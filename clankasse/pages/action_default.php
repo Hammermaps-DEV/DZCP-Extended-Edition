@@ -36,13 +36,13 @@ else
                 $pm = show(_clankasse_minus, array("betrag" => $betrag,"w" => $w));
 
             $edit = show("page/button_edit_single", array("id" => $get['id'], "title" => _button_title_edit, "action" => "action=admin&amp;do=edit"));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "title" => _button_title_delete, "action" => "action=admin&amp;do=delete", "del" => convSpace(_confirm_del_entry)));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "title" => _button_title_delete, "action" => "action=admin&amp;do=delete", "del" => _confirm_del_entry));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $show .= show($dir."/clankasse_show", array("betrag" => $pm,
                     "id" => $get['id'],
                     "class" => $class,
-                    "for" => re($get['member']),
-                    "transaktion" => re($get['transaktion']),
+                    "for" => string::decode($get['member']),
+                    "transaktion" => string::decode($get['transaktion']),
                     "delete" => $delete,
                     "edit" => $edit,
                     "datum" => date("d.m.Y",$get['datum'])));

@@ -24,7 +24,7 @@ else
     $kats = ''; $i = 1;
     while($get = _fetch($qry))
     {
-        $kats .= re($get['kategorie']).($i == $allkats ? '' : ',');
+        $kats .= string::decode($get['kategorie']).($i == $allkats ? '' : ',');
         $i++;
     }
 

@@ -53,7 +53,7 @@ else
 
         if(!empty($getm['rlname']))
         {
-            $real = explode(" ", re($getm['rlname']));
+            $real = explode(" ", string::decode($getm['rlname']));
             $nick = '<b>'.$real[0].' &#x93;</b> '.$nick.' <b>&#x94; '.$real[1].'</b>';
         }
 
@@ -71,19 +71,19 @@ else
                 "pic" => userpic($getm['id'],60,80)));
     }
 
-    $squad = re($get['name']);
+    $squad = string::decode($get['name']);
     foreach($picformat AS $end)
     {
         if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end))
         {
             $style = 'padding:0;';
-            $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
+            $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.string::decode($get['name']).'" />';
             break;
         }
     }
 
     $index = show($dir."/squads_full", array("member" => (empty($member) ? _member_squad_no_entrys : $member),
-            "desc" => empty($get['beschreibung']) ? '' : '<tr><td class="contentMainSecond">'.bbcode($get['beschreibung']).'</td></tr>',
+            "desc" => empty($get['beschreibung']) ? '' : '<tr><td class="contentMainSecond">'.bbcode::parse_html($get['beschreibung']).'</td></tr>',
             "squad" => $squad,
             "style" => $style,
             "back" => _error_back,

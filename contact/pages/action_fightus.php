@@ -22,8 +22,8 @@ else
     while($get = _fetch($qry))
     {
         $squads .= show(_select_field_fightus, array("id" => $get['id'],
-                "squad" => re($get['name']),
-                "game" => re($get['game'])));
+                "squad" => string::decode($get['name']),
+                "game" => string::decode($get['game'])));
     }
 
     $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",time())),

@@ -41,9 +41,9 @@ else
             }
         }
 
-        $squad = show(_member_squad_squadlink, array("squad" => re($get['name']),
+        $squad = show(_member_squad_squadlink, array("squad" => string::decode($get['name']),
                 "id" => $get['id']));
-        $img = show(_gameicon, array("icon" => re($get['icon'])));
+        $img = show(_gameicon, array("icon" => string::decode($get['icon'])));
 
         $qrym = db("SELECT s1.id,s1.squad,s1.date,s1.place,s1.prize,s1.url,s1.event,s2.icon,s2.name FROM ".dba::get('awards')." AS s1
                 LEFT JOIN ".dba::get('awards')." AS s2 ON s1.squad = s2.id
@@ -102,7 +102,7 @@ else
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $img = squad($get['icon']);
-        $legende .= show(_awards_legende, array("game" => re($get['game']),
+        $legende .= show(_awards_legende, array("game" => string::decode($get['game']),
                 "img" => $img,
                 "class" => $class));
     }

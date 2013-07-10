@@ -39,39 +39,38 @@ function install_mysql_insert($db_infos)
     //-> Settings ===================================================
     //===============================================================
     db("INSERT INTO `".dba::get('settings')."` SET
-    `clanname`             = '".up($db_infos['clanname'])."',
+    `clanname`             = '".string::encode($db_infos['clanname'])."',
     `badwords`             = 'arsch,Arsch,arschloch,Arschloch,hure,Hure',
-    `pagetitel`            = '".up($db_infos['seitentitel'])."',
+    `pagetitel`            = '".string::encode($db_infos['seitentitel'])."',
     `i_domain`             = '".$_SERVER['SERVER_NAME']."',
     `domain`               = '".$_SERVER['SERVER_ADDR']."',
     `mailfrom`             = '".$db_infos['emailweb']."',
-    `prev`                 = '".strtolower(mkpwd(3,false))."',
+    `prev`                 = '".string::encode(strtolower(mkpwd(3,false)))."',
     `memcache_host`        = 'localhost',
     `memcache_port`        = '11211',
     `db_version`           = '1600',
-    `eml_reg_subj`         = '".emlv('eml_reg_subj')."',
-    `eml_pwd_subj`         = '".emlv('eml_pwd_subj')."',
-    `eml_reg`              = '".emlv('eml_reg')."',
-    `eml_pwd`              = '".emlv('eml_pwd')."',
-    `eml_nletter_subj`     = '".emlv('eml_nletter_subj')."',
-    `eml_nletter`          = '".emlv('eml_nletter')."',
-    `eml_fabo_npost_subj`  = '".emlv('eml_fabo_npost_subj')."',
-    `eml_fabo_tedit_subj`  = '".emlv('eml_fabo_tedit_subj')."',
-    `eml_fabo_pedit_subj`  = '".emlv('eml_fabo_pedit_subj')."',
-    `eml_pn_subj`          = '".emlv('eml_pn_subj')."',
-    `eml_fabo_npost`       = '".emlv('eml_fabo_npost')."',
-    `eml_fabo_tedit`       = '".emlv('eml_fabo_tedit')."',
-    `eml_fabo_pedit`       = '".emlv('eml_fabo_pedit')."',
-    `eml_akl_register_subj`= '".emlv('eml_akl_register_subj')."',
-    `eml_akl_register`     = '".emlv('eml_akl_register')."',
-    `eml_pn`               = '".emlv('eml_pn')."';",false,false,true);
+    `eml_reg_subj`         = '".string::encode(emlv('eml_reg_subj'))."',
+    `eml_pwd_subj`         = '".string::encode(emlv('eml_pwd_subj'))."',
+    `eml_reg`              = '".string::encode(emlv('eml_reg'))."',
+    `eml_pwd`              = '".string::encode(emlv('eml_pwd'))."',
+    `eml_nletter_subj`     = '".string::encode(emlv('eml_nletter_subj'))."',
+    `eml_nletter`          = '".string::encode(emlv('eml_nletter'))."',
+    `eml_fabo_npost_subj`  = '".string::encode(emlv('eml_fabo_npost_subj'))."',
+    `eml_fabo_tedit_subj`  = '".string::encode(emlv('eml_fabo_tedit_subj'))."',
+    `eml_fabo_pedit_subj`  = '".string::encode(emlv('eml_fabo_pedit_subj'))."',
+    `eml_pn_subj`          = '".string::encode(emlv('eml_pn_subj'))."',
+    `eml_fabo_npost`       = '".string::encode(emlv('eml_fabo_npost'))."',
+    `eml_fabo_tedit`       = '".string::encode(emlv('eml_fabo_tedit'))."',
+    `eml_fabo_pedit`       = '".string::encode(emlv('eml_fabo_pedit'))."',
+    `eml_akl_register_subj`= '".string::encode(emlv('eml_akl_register_subj'))."',
+    `eml_akl_register`     = '".string::encode(emlv('eml_akl_register'))."',
+    `eml_pn`               = '".string::encode(emlv('eml_pn'))."';",false,false,true);
 
     //===============================================================
     //-> Teamspeak ==================================================
     //===============================================================
     db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'ts.revoplay.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 0, `show_navi` = 0;",false,false,true);
     db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'ts.hammermaps.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 1, `show_navi` = 1;",false,false,true);
-    db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'kampai.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 0, `show_navi` = 0;",false,false,true);
 
     //===============================================================
     //-> Forum: Kategorien ==========================================
@@ -148,7 +147,6 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_user', `name` = '_logout_', `url` = '../user/?action=logout', `type` = 1, `internal` = 0, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
 
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_member', `name` = '_clankasse_', `url` = '../clankasse/', `type` = 1, `internal` = 1, `wichtig` = 0, `extended_perm` = 'clankasse';",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_member', `name` = '_taktiken_', `url` = '../taktik/', `type` = 1, `internal` = 1, `wichtig` = 0, `extended_perm` = 'edittactics';",false,false,true);
 
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_main', `name` = '_news_send_', `url` = '../news/?action=send', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_trial', `name` = '_awaycal_', `url` = '../away/', `type` = 2, `internal` = 1, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
@@ -217,7 +215,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Rechte =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `edittactics` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1;",false,false,true);
 
     //===============================================================
     //-> Positionen =================================================
@@ -261,7 +259,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Users ======================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('users')."` SET `user` = '".$db_infos['login']."', `nick` = '".up($db_infos['nick'])."', `pwd` = '".($pwd_hash=pass_hash($db_infos['pwd'],2))."', `country` = 'de',
+    db("INSERT INTO `".dba::get('users')."` SET `user` = '".$db_infos['login']."', `nick` = '".string::encode($db_infos['nick'])."', `pwd` = '".($pwd_hash=pass_hash($db_infos['pwd'],2))."', `country` = 'de',
     `language` = 'default', `regdatum`  = '".time()."', `email` = '".$db_infos['email']."', `level` = 4, `sex` = 0, `position` = 1, `status` = 1, `time` = '".time()."', `pnmail` = 1, `profile_access` = 0, `rss_key` = '".mkpwd(8,false)."';",false,false,true);
     $userid=database::get_insert_id();
 
@@ -308,7 +306,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Clanwars ===================================================
     //===============================================================
-    db("INSERT INTO ".dba::get('cw')." SET `squad_id` = 1, `gcountry` = 'de', `datum` = ".(time()-90000).", `clantag` = 'DZCP', `gegner` = '".up("deV!L'z Clanportal")."', `url` = 'http://www.dzcp.de', `xonx` = '5on5', `liga` = 'DZCP', `punkte` = 0, `gpunkte` = 21, `maps` = 'de_dzcp', `top` = 1;",false,false,true);
+    db("INSERT INTO ".dba::get('cw')." SET `squad_id` = 1, `gcountry` = 'de', `datum` = ".(time()-90000).", `clantag` = 'DZCP', `gegner` = '".string::encode("deV!L'z Clanportal")."', `url` = 'http://www.dzcp.de', `xonx` = '5on5', `liga` = 'DZCP', `punkte` = 0, `gpunkte` = 21, `maps` = 'de_dzcp', `top` = 1;",false,false,true);
 
     //===============================================================
     //-> Clankassenkategorien =======================================
@@ -328,11 +326,11 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Sponsoren ==================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP', `link` = 'http://www.dzcp.de', `beschreibung` = '".up("<p>deV!L'z Clanportal, das CMS for Online-Clans!</p>")."', `box` = 1, `pos` = 1;",false,false,true);
-    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP Rotationsbanner', `link` = 'http://www.dzcp.de', `beschreibung` = '".up("<p>deV!L`z Clanportal</p>")."', `banner` = 1, `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `pos` = 2;",false,false,true);
+    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L'z Clanportal, das CMS for Online-Clans!</p>")."', `box` = 1, `pos` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP Rotationsbanner', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal</p>")."', `banner` = 1, `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `pos` = 2;",false,false,true);
 
     //===============================================================
     //-> Glossar ====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('glossar')."` SET `word` = 'DZCP', `glossar` = '".up("<p>deV!L'z Clanportal - kurz DZCP - ist ein CMS-System speziell f&uuml;r Onlinegaming Clans.</p>\r\n<p>Viele schon in der Grundinstallation vorhandene Module erleichtern die Verwaltung einer Clan-Homepage ungemein.</p>")."';",false,false,true);
+    db("INSERT INTO `".dba::get('glossar')."` SET `word` = 'DZCP', `glossar` = '".string::encode("<p>deV!L'z Clanportal - kurz DZCP - ist ein CMS-System speziell f&uuml;r Onlinegaming Clans.</p>\r\n<p>Viele schon in der Grundinstallation vorhandene Module erleichtern die Verwaltung einer Clan-Homepage ungemein.</p>")."';",false,false,true);
 }

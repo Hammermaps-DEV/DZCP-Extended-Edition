@@ -7,7 +7,7 @@
  */
 
 ####################################
-## Wird in einer Index ausgefÃ¼hrt ##
+## Wird in einer Index ausgeführt ##
 ####################################
 if (!defined('IS_DZCP'))
     exit();
@@ -16,42 +16,30 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-  if(!empty($_GET['word']))
-  {
-    $a = substr($_GET['word'],0,1);
+    bbcode::use_glossar(false); $glword_sql = '';
+    if(isset($_GET['word']) || isset($_GET['bst']))
+    {
+        if(isset($_GET['word']) && !empty($_GET['word']))
+            $glword_sql = "WHERE word = '".string::encode($_GET['word'])."' OR word LIKE '".string::encode(substr($_GET['word'],0,1))."%' ";
+        elseif(isset($_GET['bst']) && !empty($_GET['bst']) && $_GET['bst'] != 'all')
+            $glword_sql = "WHERE word LIKE '".string::encode($_GET['bst'])."%' ";
+    }
 
-    $glword = "WHERE word = '".up($_GET['word'])."'
-               OR word LIKE '".up($a)."%' ";
-  } elseif(!empty($_GET['bst'])) {
-    $glword = "WHERE word LIKE '".up($_GET['bst'])."%' ";
-    $a = $_GET['bst'];
-  }
+    $qry = db("SELECT * FROM ".dba::get('glossar')." ".$glword_sql." ORDER BY word"); $color = 1; $show = '';
+    while($get = _fetch($qry))
+    {
+        $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+        $class = (isset($_GET['word']) && $_GET['word'] == $get['word'] ? 'highlightSearchTarget' : '');
+        $show .= show($dir."/glossar_show", array("word" => string::decode($get['word']), "class" => $class, "glossar" => bbcode::parse_html($get['glossar'])));
+    }
 
-  $qry = db("SELECT * FROM ".dba::get('glossar')." ".$glword." ORDER BY word");
-  while($get = _fetch($qry))
-  {
-    $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+    $bsta = array(_all,"A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"); $abc = '';
+    foreach ($bsta as $bst)
+    {
+        $bclass = ((((isset($_GET['bst']) && !empty($_GET['bst']) && strtolower($bst) == strtolower($_GET['bst'])) || (isset($_GET['bst']) && $_GET['bst'] == 'all' && $bst == _all)) || (empty($_GET['bst']) || !isset($_GET['bst'])) && $bst == _all) ? 'fontWichtig' : '');
+        $ret = ($bst == _all) ? '?bst=all' : "?bst=".$bst;
+        $abc .= "<a href=\"".$ret."\" title=\"".$bst."\"><span class=\"".$bclass."\">".$bst."</span></a> ";
+    }
 
-    if($_GET['word'] == $get['word']) $class = 'highlightSearchTarget';
-
-    $show .= show($dir."/glossar_show", array("word" => re($get['word']),
-                                              "class" => $class,
-                                              "glossar" => bbcode($get['glossar'])));
-  }
-  $bst = array(_all,"A","B","C","D","E","F","G","H","I","J","K",
-               "L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z");
-  for($i=0;$i<count($bst);$i++)
-  {
-    $bclass = (empty($a) && ($bst[$i]) == _all || strtolower($bst[$i]) == strtolower($a)) ? 'fontWichtig' : '';
-    $ret = ($bst[$i] == _all) ? '' : "?bst=".$bst[$i];
-
-    $abc .= "<a href=\"".$ret."\" title=\"".$bst[$i]."\"><span class=\"".$bclass."\">".$bst[$i]."</span></a> ";
-  }
-
-  $index = show($dir."/glossar", array("head" => _glossar_head,
-                                       "word" => _glossar_bez,
-                                       "bez" => _glossar_erkl,
-                                       "abc" => $abc,
-                                       "show" => $show
-                                      ));
+    $index = show($dir."/glossar", array("abc" => $abc, "show" => $show));
 }

@@ -15,7 +15,7 @@ if(_adminMenu != 'true')
         {
           $positions .= show(_select_field, array("value" => $get['pos']+1,
                                                   "sel" => "",
-                                                  "what" => _nach.' '.re($get['name'])));
+                                                  "what" => _nach.' '.string::decode($get['name'])));
           $posname = $get['name'];
         }
 
@@ -74,12 +74,9 @@ if(_adminMenu != 'true')
                           AND pos = '".convert::ToInt(($_POST['position']-1))."'");
               $mp = _fetch($mpos);
 
-              if($getpos['pos'] == $mp['pos']) $sel = "selected=\"selected\"";
-              else $sel = '';
-
               $positions .= show(_select_field, array("value" => $getpos['pos']+1,
-                                                      "what" => _nach.' '.re($getpos['name']),
-                                                      "sel" => $sel));
+                                                      "what" => _nach.' '.string::decode($getpos['name']),
+                                                      "sel" => ($getpos['pos'] == $mp['pos'] ? 'selected="selected"' : '')));
             }
           }
 
@@ -115,7 +112,7 @@ if(_adminMenu != 'true')
                                                       "link" => _links_link,
                                                       "slink" => $_POST['link'],
                                                       "beschreibung" => _beschreibung,
-                                                      "sbeschreibung" => re($_POST['beschreibung']),
+                                                      "sbeschreibung" => string::decode($_POST['beschreibung']),
                                                       "site" => _sponsors_admin_site,
                                                       "addsite" => _sponsors_admin_addsite,
                                                       "schecked" => $schecked,
@@ -156,15 +153,15 @@ if(_adminMenu != 'true')
                       WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
 
           $qry = db("INSERT INTO ".dba::get('sponsoren')."
-                     SET `name`         = '".up($_POST['name'])."',
+                     SET `name`         = '".string::encode($_POST['name'])."',
                                      `link`         = '".links($_POST['link'])."',
-                                     `beschreibung` = '".up($_POST['beschreibung'],1)."',
+                                     `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                                      `site`         = '".convert::ToInt($_POST['site'])."',
                                      `slink`        = '".links($_POST['slink'])."',
                                      `banner`       = '".convert::ToInt($_POST['banner'])."',
                          `blink`        = '".links($_POST['blink'])."',
                          `box`       	= '".convert::ToInt($_POST['box'])."',
-                         `xlink` 		= '".up($_POST['xlink'])."',
+                         `xlink` 		= '".string::encode($_POST['xlink'])."',
                                      `pos`    		= '".convert::ToInt($_POST['position'])."'");
 
           $id = database::get_insert_id();
@@ -234,13 +231,9 @@ if(_adminMenu != 'true')
                           WHERE name != '".$get['name']."'
                           AND pos = '".convert::ToInt(($get['pos']-1))."'");
               $mp = _fetch($mpos);
-
-              if($getpos['pos'] == $mp['pos']) $sel = "selected=\"selected\"";
-              else $sel = '';
-
               $positions .= show(_select_field, array("value" => $getpos['pos']+1,
-                                                      "what" => _nach.' '.re($getpos['name']),
-                                                      "sel" => $sel));
+                                                      "what" => _nach.' '.string::decode($getpos['name']),
+                                                      "sel" => ($getpos['pos'] == $mp['pos'] ? 'selected="selected"' : '')));
               $posname = $getpos['name'];
             }
           }
@@ -253,6 +246,7 @@ if(_adminMenu != 'true')
           $schecked = "";
           $snone = "none";
         }
+
         if($get['banner'] == 1)
         {
           $bchecked = "checked=\"checked\"";
@@ -261,6 +255,7 @@ if(_adminMenu != 'true')
           $bchecked = "";
           $bnone = "none";
         }
+
         if($get['box'] == 1)
         {
           $xchecked = "checked=\"checked\"";
@@ -304,7 +299,7 @@ if(_adminMenu != 'true')
                                                    "link" => _links_link,
                                                    "slink" => $get['link'],
                                                    "beschreibung" => _beschreibung,
-                                                   "sbeschreibung" => re($get['beschreibung']),
+                                                   "sbeschreibung" => string::decode($get['beschreibung']),
                                                    "site" => _sponsors_admin_site,
                                                    "addsite" => _sponsors_admin_addsite,
                                                    "schecked" => $schecked,
@@ -355,13 +350,9 @@ if(_adminMenu != 'true')
                           WHERE name != '".$get['name']."'
                           AND pos = '".convert::ToInt(($_POST['position']-1))."'");
               $mp = _fetch($mpos);
-
-              if($getpos['pos'] == $mp['pos']) $sel = "selected=\"selected\"";
-              else $sel = '';
-
               $positions .= show(_select_field, array("value" => $getpos['pos']+1,
-                                                      "what" => _nach.' '.re($getpos['name']),
-                                                      "sel" => $sel));
+                                                      "what" => _nach.' '.string::decode($getpos['name']),
+                                                      "sel" => ($getpos['pos'] == $mp['pos'] ? 'selected="selected"' : '')));
               $posname = $getpos['name'];
             }
           }
@@ -425,7 +416,7 @@ if(_adminMenu != 'true')
                                                        "link" => _links_link,
                                                        "slink" => $_POST['link'],
                                                        "beschreibung" => _beschreibung,
-                                                       "sbeschreibung" => re($_POST['beschreibung']),
+                                                       "sbeschreibung" => string::decode($_POST['beschreibung']),
                                                        "site" => _sponsors_admin_site,
                                                        "addsite" => _sponsors_admin_addsite,
                                                        "schecked" => $schecked,
@@ -476,15 +467,15 @@ if(_adminMenu != 'true')
           else $newpos = "`pos` = '".convert::ToInt($_POST['position'])."'";
 
             $qry = db("UPDATE ".dba::get('sponsoren')."
-                       SET 	 `name`         = '".up($_POST['name'])."',
+                       SET 	 `name`         = '".string::encode($_POST['name'])."',
                              `link`         = '".links($_POST['link'])."',
-                             `beschreibung` = '".up($_POST['beschreibung'],1)."',
+                             `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                              `site`         = '".convert::ToInt($_POST['site'])."',
                              `slink`        = '".links($_POST['slink'])."',
                              `banner`       = '".convert::ToInt($_POST['banner'])."',
                              `blink`        = '".links($_POST['blink'])."',
                              `box`       	= '".convert::ToInt($_POST['box'])."',
-                             `xlink` 		= '".up($_POST['xlink'])."',
+                             `xlink` 		= '".string::encode($_POST['xlink'])."',
                              ".$newpos."
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
 
@@ -577,11 +568,11 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=sponsors&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_link)));
+                                                            "del" => _confirm_del_link));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-          $show .= show($dir."/sponsors_show", array("link" => cut(re($get['link']),40),
+          $show .= show($dir."/sponsors_show", array("link" => cut(string::decode($get['link']),40),
                                                        "class" => $class,
                                                        "name" => $get['name'],
                                                        "edit" => $edit,

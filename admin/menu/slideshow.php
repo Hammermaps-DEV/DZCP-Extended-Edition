@@ -49,7 +49,7 @@ switch ($do)
                                                     "v_url" => "http://",
                                                     "selected0" => "",
                                                     "selected1" => "",
-                                                    "selected_txt" => "selected=\"selected\"",
+                                                    "selected_txt" => 'selected="selected"',
                                                     "v_pic" => ""));
     break;
 
@@ -73,7 +73,7 @@ switch ($do)
             {
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
                 $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=slideshow&amp;do=edit", "title" => _button_title_edit));
-                $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=slideshow&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_slider_admin_del)));
+                $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=slideshow&amp;do=delete", "title" => _button_title_del, "del" => _slider_admin_del));
                 $entry .= show($dir."/slideshow_show", array("id" => $get['id'], "class" => $class, "bez" => $get['bez'], "edit" => $edit, "del" => $delete));
             }
         }
@@ -92,15 +92,10 @@ if($_GET['do'] == 'add'){
 
         $error = show("errors/errortable", array("error" => $error));
 
-        if($_POST['target'] == 1) $selected = "selected=\"selected\"";
-        if($_POST['showbez'] == 1) $selected_txt = "selected=\"selected\"";
-
-        $qry = db("SELECT * FROM ".dba::get('slideshow')."
-                  ORDER BY `pos` ASC;");
-        while($get = _fetch($qry)) {
-            $positions .= show(_select_field, array("value" => $get['pos']+1,
-                                                    "what" => _nach.': '.$get['bez'],
-                                                    "sel" => ""));
+        $qry = db("SELECT * FROM ".dba::get('slideshow')." ORDER BY `pos` ASC;");
+        while($get = _fetch($qry))
+        {
+            $positions .= show(_select_field, array("value" => $get['pos']+1, "what" => _nach.': '.$get['bez'], "sel" => ""));
         }
 
         $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
@@ -114,7 +109,7 @@ if($_GET['do'] == 'add'){
                                                 "nein" => _no,
                                                 "bezeichnung" => _slider_bezeichnung,
                                                 "desc" => _slider_desc,
-                                                "tdesc" => re($_POST['desc']),
+                                                "tdesc" => string::decode($_POST['desc']),
                                                 "t_zeichen" => _zeichen,
                                                 "noch" => _noch,
                                                 "url" => _slider_url,
@@ -122,12 +117,12 @@ if($_GET['do'] == 'add'){
                                                 "pic" => _slider_pic,
                                                 "position" => _slider_position,
                                                 "first" => _slider_position_first,
-                                                "v_bezeichnung" => re($_POST['bez']),
+                                                "v_bezeichnung" => string::decode($_POST['bez']),
                                                 "v_pos_none" => "",
                                                 "v_position" => $positions,
-                                                "v_url" => re($_POST['url']),
-                                                "selected" => $selected,
-                                                "selected_txt" => $selected_txt,
+                                                "v_url" => string::decode($_POST['url']),
+                                                "selected" => ($_POST['target'] ? 'selected="selected"' : ''),
+                                                "selected_txt" => ($_POST['showbez'] ? 'selected="selected"' : ''),
                                                 "v_pic" => ""));
     } else {
         if($_POST['position'] == "1" || "2") $sign = ">= ";
@@ -139,11 +134,11 @@ if($_GET['do'] == 'add'){
 
         $qry = db("INSERT INTO ".dba::get('slideshow')."
                    SET `pos` = '".((int)$_POST['position'])."',
-                       `bez` = '".up($_POST['bez'])."',
+                       `bez` = '".string::encode($_POST['bez'])."',
                        `showbez` = '".((int)($_POST['showbez']))."',
-                       `desc` = '".up($_POST['desc'])."',
-                       `url` = '".up($_POST['url'])."',
-                       `target` = '".up($_POST['target'])."'");
+                       `desc` = '".string::encode($_POST['desc'])."',
+                       `url` = '".string::encode($_POST['url'])."',
+                       `target` = '".string::encode($_POST['target'])."'");
 
         move_uploaded_file($_FILES['bild']['tmp_name'], basePath."/inc/images/uploads/slideshow/".database::get_insert_id().".jpg");
         $tmpname = $_FILES['bild']['tmp_name'];
@@ -165,11 +160,8 @@ if($_GET['do'] == 'add'){
                                                 "sel" => ""));
     }
 
-    if($get['target'] == 1) $selected = "selected=\"selected\"";
-    if($_POST['showbez'] == 1) $selected_txt = "selected=\"selected\"";
-
     $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
-    $show = show($dir."/slideshow_form", array("id" => re($get['id']),
+    $show = show($dir."/slideshow_form", array("id" => string::decode($get['id']),
                                                "error" => "",
                                                 "infos" => $infos,
                                                 "do" => "editdo",
@@ -179,7 +171,7 @@ if($_GET['do'] == 'add'){
                                                 "nein" => _no,
                                                 "bezeichnung" => _slider_bezeichnung,
                                                 "desc" => _slider_desc,
-                                                "tdesc" => re($get['desc']),
+                                                "tdesc" => string::decode($get['desc']),
                                                 "t_zeichen" => _zeichen,
                                                 "noch" => _noch,
                                                 "url" => _slider_url,
@@ -187,12 +179,12 @@ if($_GET['do'] == 'add'){
                                                 "pic" => _slider_pic,
                                                 "position" => _slider_position,
                                                 "first" => _slider_position_first,
-                                                "v_bezeichnung" => re($get['bez']),
+                                                "v_bezeichnung" => string::decode($get['bez']),
                                                 "v_pos_none" => _slider_position_lazy,
                                                 "v_position" => $positions,
-                                                "v_url" => re($get['url']),
-                                                "selected" => $selected,
-                                                "selected_txt" => $selected_txt,
+                                                "v_url" => string::decode($get['url']),
+                                                "selected" => ($get['target'] ? 'selected="selected"' : ''),
+                                                "selected_txt" => ($_POST['showbez'] ? 'selected="selected"' : ''),
                                                 "v_pic" => img_size('slideshow/'.$get['id'].'.jpg',100)."<br />"));
 }elseif($_GET['do'] == 'editdo'){
     if(empty($_POST['bez']) || empty($_POST['url']) || $_POST['url'] == "http://") {
@@ -200,12 +192,8 @@ if($_GET['do'] == 'add'){
         elseif(empty($_POST['url']) OR $_POST['url'] == "http://") $error = _slider_admin_error_empty_url;
 
         $error = show("errors/errortable", array("error" => $error));
-
-        if($_POST['target']) $selected = "selected=\"selected\"";
-        if($_POST['showbez']) $selected_txt = "selected=\"selected\"";
-
         $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
-        $show = show($dir."/slideshow_form", array("id" => re($_POST['id']),
+        $show = show($dir."/slideshow_form", array("id" => string::decode($_POST['id']),
                                                     "error" => $error,
                                                     "infos" => $infos,
                                                     "do" => "editdo",
@@ -215,7 +203,7 @@ if($_GET['do'] == 'add'){
                                                     "nein" => _no,
                                                     "bezeichnung" => _slider_bezeichnung,
                                                     "desc" => _slider_desc,
-                                                    "tdesc" => re($_POST['desc']),
+                                                    "tdesc" => string::decode($_POST['desc']),
                                                     "t_zeichen" => _zeichen,
                                                     "noch" => _noch,
                                                     "url" => _slider_url,
@@ -223,12 +211,12 @@ if($_GET['do'] == 'add'){
                                                     "pic" => _slider_pic,
                                                     "position" => _slider_position,
                                                     "first" => _slider_position_first,
-                                                    "v_bezeichnung" => re($_POST['bez']),
+                                                    "v_bezeichnung" => string::decode($_POST['bez']),
                                                     "v_pos_none" => _slider_position_lazy,
                                                     "v_position" => $positions,
-                                                    "v_url" => re($_POST['url']),
-                                                    "selected" => $selected,
-                                                    "selected_txt" => $selected_txt,
+                                                    "v_url" => string::decode($_POST['url']),
+                                                    "selected" => ($_POST['target'] ? 'selected="selected"' : ''),
+                                                    "selected_txt" => ($_POST['showbez'] ? 'selected="selected"' : ''),
                                                     "v_pic" => img_size('slideshow/'.$_POST['id'].'.jpg',100)."<br />"));
     } else {
         if($_POST['position'] != "lazy") {
@@ -244,10 +232,10 @@ if($_GET['do'] == 'add'){
 
         $qry = db("UPDATE ".dba::get('slideshow')."
                   SET ".$pos."
-                      `bez` = '".up($_POST['bez'])."',
-                      `url` = '".up($_POST['url'])."',
-                      `desc` = '".up($_POST['desc'])."',
-                      `target` = '".up($_POST['target'])."'
+                      `bez` = '".string::encode($_POST['bez'])."',
+                      `url` = '".string::encode($_POST['url'])."',
+                      `desc` = '".string::encode($_POST['desc'])."',
+                      `target` = '".string::encode($_POST['target'])."'
                   WHERE `id` = '".intval($_POST['id'])."'");
 
         if($_FILES['bild']['tmp_name'])

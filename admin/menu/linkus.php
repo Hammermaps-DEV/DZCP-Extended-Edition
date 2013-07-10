@@ -30,9 +30,9 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("INSERT INTO ".dba::get('linkus')."
                      SET `url`          = '".links($_POST['link'])."',
-                         `text`         = '".up($_POST['text'])."',
-                         `banner`       = '".up($_POST['banner'])."',
-                         `beschreibung` = '".up($_POST['beschreibung'])."'");
+                         `text`         = '".string::encode($_POST['text'])."',
+                         `banner`       = '".string::encode($_POST['banner'])."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."'");
 
           $show = info(_linkus_added, "?admin=linkus");
         }
@@ -48,7 +48,7 @@ if(_adminMenu != 'true')
                                                 "text" => _linkus_admin_textlink,
                                                 "banner" => _linkus_admin_bannerlink,
                                                 "llink" => $get['url'],
-                                                "lbeschreibung" => re($get['beschreibung']),
+                                                "lbeschreibung" => string::decode($get['beschreibung']),
                                                 "btext" => _linkus_text,
                                                 "ltext" => $get['text'],
                                                 "what" => _button_value_edit,
@@ -62,9 +62,9 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("UPDATE ".dba::get('linkus')."
                      SET `url`          = '".links($_POST['link'])."',
-                         `text`         = '".up($_POST['text'])."',
-                         `banner`       = '".up($_POST['banner'])."',
-                         `beschreibung` = '".up($_POST['beschreibung'])."'
+                         `text`         = '".string::encode($_POST['text'])."',
+                         `banner`       = '".string::encode($_POST['banner'])."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_linkus_edited, "?admin=linkus");
@@ -83,7 +83,7 @@ if(_adminMenu != 'true')
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
           $banner = show(_linkus_bannerlink, array("id" => $get['id'],
-                                                   "banner" => re($get['text'])));
+                                                   "banner" => string::decode($get['text'])));
 
           $edit = show("page/button_edit", array("id" => $get['id'],
                                                  "action" => "admin=linkus&amp;do=edit",
@@ -93,12 +93,12 @@ if(_adminMenu != 'true')
                                                      "title" => _button_title_del));
 
           $show_ .= show($dir."/linkus_show", array("class" => $class,
-                                                    "beschreibung" => re($get['beschreibung']),
+                                                    "beschreibung" => string::decode($get['beschreibung']),
                                                     "edit" => $edit,
                                                     "delete" => $delete,
                                                     "cnt" => $cnt,
                                                     "banner" => $banner,
-                                                    "besch" => re($get['beschreibung']),
+                                                    "besch" => string::decode($get['beschreibung']),
                                                                           "url" => $get['url']));
           $cnt++;
         }

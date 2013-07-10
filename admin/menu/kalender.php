@@ -35,8 +35,8 @@ if(_adminMenu != 'true')
 
         db("INSERT INTO ".dba::get('events')."
                       SET `datum` = '".convert::ToInt($time)."',
-                          `title` = '".up($_POST['title'])."',
-                          `event` = '".up($_POST['event'],1)."'");
+                          `title` = '".string::encode($_POST['title'])."',
+                          `event` = '".string::encode($_POST['event'])."'");
 
         //Recache
         if(Cache::is_mem())
@@ -63,8 +63,8 @@ if(_adminMenu != 'true')
                                                 "beschreibung" => _beschreibung,
                                                 "what" => _button_value_edit,
                                                 "do" => "editevent&amp;id=".$_GET['id'],
-                                                "k_event" => re($get['title']),
-                                                "k_beschreibung" => re_bbcode($get['event']),
+                                                "k_event" => string::decode($get['title']),
+                                                "k_beschreibung" => string::decode($get['event']),
                                                 "head" => _kalender_admin_head_edit));
     } elseif($_GET['do'] == "editevent") {
       if(empty($_POST['title']) || empty($_POST['event']))
@@ -76,8 +76,8 @@ if(_adminMenu != 'true')
 
         db("UPDATE ".dba::get('events')."
                       SET `datum` = '".convert::ToInt($time)."',
-                          `title` = '".up($_POST['title'])."',
-                          `event` = '".up($_POST['event'],1)."'
+                          `title` = '".string::encode($_POST['title'])."',
+                          `event` = '".string::encode($_POST['event'])."'
                       WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         //Recache
@@ -105,12 +105,12 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=kalender&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_kalender)));
+                                                            "del" => _confirm_del_kalender));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
           $show_ .= show($dir."/kalender_show", array("datum" => date("d.m.y H:i", $get['datum'])._uhr,
-                                                      "event" => re($get['title']),
+                                                      "event" => string::decode($get['title']),
                                                       "time" => $get['datum'],
                                                       "id" => $get['sqid'],
                                                       "class" => $class,

@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function l_artikel()
 {
     global $allowHover;
@@ -15,8 +26,8 @@ function l_artikel()
             {
                 $getkat = db("SELECT kategorie FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
                 $text = strip_tags($get['text']);
-                $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['titel'])).'\', \''._datum.';'._autor.';'._news_admin_kat.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.fabo_autor($get['autor']).';'.jsconvert(re($getkat['kategorie'])).';'.cnt(dba::get('acomments'),"WHERE artikel = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"' : '');
-                $l_articles .= show("menu/last_artikel", array("id" => $get['id'], "titel" => re(cut($get['titel'],$lartikelconfig['l_lartikel'])), "text" => cut(bbcode($text),260), "datum" => date("d.m.Y", $get['datum']), "info" => $info));
+                $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['titel'])).'\', \''._datum.';'._autor.';'._news_admin_kat.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.fabo_autor($get['autor']).';'.jsconvert(string::decode($getkat['kategorie'])).';'.cnt(dba::get('acomments'),"WHERE artikel = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"' : '');
+                $l_articles .= show("menu/last_artikel", array("id" => $get['id'], "titel" => string::decode(cut($get['titel'],$lartikelconfig['l_lartikel'])), "text" => cut(bbcode::parse_html($text),260), "datum" => date("d.m.Y", $get['datum']), "info" => $info));
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

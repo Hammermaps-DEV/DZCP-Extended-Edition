@@ -21,6 +21,6 @@ else
     require_once(basePath."/inc/debugger.php");
     require_once(basePath."/inc/config.php");
     require_once(basePath."/inc/buffer.php");
-    require_once(basePath."/inc/bbcode.php");
+    require_once(basePath."/inc/common.php");
     header('Location: '.(cookie::get('id') != false && cookie::get('pkey') != false ? 'user/?action=userlobby' : 'news/'));
 }

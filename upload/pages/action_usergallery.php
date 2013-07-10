@@ -51,8 +51,8 @@ else
 
                 $qry = db("INSERT INTO ".dba::get('usergallery')."
                    SET `user`         = '".convert::ToInt($userid)."',
-                       `beschreibung` = '".up($_POST['beschreibung'],1)."',
-                       `pic`          = '".up($_FILES['file']['name'])."'");
+                       `beschreibung` = '".string::encode($_POST['beschreibung'])."',
+                       `pic`          = '".string::encode($_FILES['file']['name'])."'");
 
                 $index = info(_info_upload_success, "../user/?action=editprofile&show=gallery");
             }
@@ -69,7 +69,7 @@ else
                         "file" => _upload_file,
                         "showpic" => img_size("inc/images/uploads/usergallery/".$get['user']."_".$get['pic']),
                         "id" => $_GET['gid'],
-                        "showbeschreibung" => re($get['beschreibung']),
+                        "showbeschreibung" => string::decode($get['beschreibung']),
                         "name" => "file",
                         "upload" => _button_value_edit,
                         "beschreibung" => _upload_beschreibung,
@@ -105,7 +105,7 @@ else
 
             $qry = db("UPDATE ".dba::get('usergallery')."
                  SET ".$pic."
-                     `beschreibung` = '".up($_POST['beschreibung'],1)."'
+                     `beschreibung` = '".string::encode($_POST['beschreibung'])."'
                  WHERE id = '".convert::ToInt($_POST['id'])."'
                  AND `user` = '".convert::ToInt($userid)."'");
 

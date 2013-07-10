@@ -30,7 +30,7 @@ $where = $where.' - '._info;
     if($get['end'] < time()) $status = _away_status_done;
 
     if(empty($get['lastedit'])) $edit = "&nbsp;";
-    else $edit = bbcode($get['lastedit']);
+    else $edit = bbcode::parse_html($get['lastedit']);
 
      $index = show($dir."/info", array("head" => _away_info_head,
                                       "i_reason" => _away_reason,
@@ -42,8 +42,8 @@ $where = $where.' - '._info;
                                       "nick" => autor($get['userid']),
                                       "von" => date("d.m.Y",$get['start']),
                                       "bis" => date("d.m.Y",$get['end']),
-                                      "text" => bbcode($get['reason']),
-                                      "titel" => re($get['titel']),
+                                      "text" => bbcode::parse_html($get['reason']),
+                                      "titel" => string::decode($get['titel']),
                                       "edit" => $edit,
                                       "status" => $status,
                                       "addnew" => date("d.m.Y",$get['date'])." "._away_on." ".date("H:i",$get['date'])._uhr));

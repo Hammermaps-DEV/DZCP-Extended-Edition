@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function l_reg()
 {
     $menu_xml = get_menu_xml('l_reg');
@@ -11,7 +22,7 @@ function l_reg()
         {
             while($get = _fetch($qry))
             {
-                $lreg .= show("menu/last_reg", array("nick" => re(cut($get['nick'], $lregconfig['l_lreg'])), "country" => flag($get['country']), "reg" => date("d.m.", $get['regdatum']), "id" => $get['id']));
+                $lreg .= show("menu/last_reg", array("nick" => string::decode(cut($get['nick'], $lregconfig['l_lreg'])), "country" => flag($get['country']), "reg" => date("d.m.", $get['regdatum']), "id" => $get['id']));
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

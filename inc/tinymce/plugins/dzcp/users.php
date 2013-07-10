@@ -7,7 +7,7 @@ require_once("../../../../inc/buffer.php");
 ## INCLUDES ##
 require_once(basePath."/inc/debugger.php");
 require_once(basePath."/inc/config.php");
-require_once(basePath."/inc/bbcode.php");
+require_once(basePath."/inc/common.php");
 
 if(empty($_GET['sort']) || $_GET['sort'] == 'clan')
 {

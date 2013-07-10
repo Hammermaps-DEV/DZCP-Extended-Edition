@@ -27,7 +27,7 @@ else
     $get_hp = isset($_POST['hp']) ? $_POST['hp'] : '';
     $get_email = isset($_POST['email']) ? $_POST['email'] : '';
     $get_nick = isset($_POST['nick']) ? $_POST['nick'] : '';
-    $get_comment = isset($_POST['comment']) ? bbcode($_POST['comment'],1) : '';
+    $get_comment = isset($_POST['comment']) ? bbcode::parse_html($_POST['comment']) : '';
 
     switch (isset($_GET['do']) ? $_GET['do'] : '')
     {
@@ -67,7 +67,7 @@ else
     $hp = $regCheck ? '' : (!empty($get_hp) ? show(_hpicon_forum, array("hp" => links($get_hp))) : '');
     $email = $regCheck ? '' : (!empty($get_email) ? '<br />'.show(_emailicon_forum, array("email" => eMailAddr($get_email))) : '');
     $onoff = $regCheck ? onlinecheck($get_userid) : '';
-    $nick = $regCheck ? cleanautor($get_userid) : show(_link_mailto, array("nick" => re($get_nick), "email" => $get_email));
+    $nick = $regCheck ? cleanautor($get_userid) : show(_link_mailto, array("nick" => string::decode($get_nick), "email" => $get_email));
 
     $titel = show(_eintrag_titel, array("postid" => $get_id,
                                         "datum" => date("d.m.Y", $get_date),
@@ -78,7 +78,7 @@ else
     $index = show("page/comments_show", array("titel" => $titel,
                                               "comment" => $get_comment,
                                               "nick" => $nick,
-                                              "editby" => bbcode($editedby,1),
+                                              "editby" => bbcode::parse_html($editedby),
                                               "email" => $email,
                                               "hp" => $hp,
                                               "avatar" => useravatar($get_userid),

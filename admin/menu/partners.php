@@ -32,7 +32,7 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("INSERT INTO ".dba::get('partners')."
                      SET `link`     = '".links($_POST['link'])."',
-                         `banner`   = '".up(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
+                         `banner`   = '".string::encode(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
                          `textlink` = '".convert::ToInt(empty($_POST['textlink']) ? 0 : 1)."'");
 
           $show = info(_partners_added, "?admin=partners");
@@ -45,19 +45,16 @@ if(_adminMenu != 'true')
         $files = get_files(basePath.'/banner/partners/',false,true);
         foreach($files as $file)
         {
-          if(re($get['banner']) == $file) $sel = "selected=\"selected\"";
-          else $sel = "";
-
-          $banners .= show(_partners_select_icons, array("icon" => $file,
-                                                         "sel" => $sel));
+            $banners .= show(_partners_select_icons, array("icon" => $file, "sel" => (string::decode($get['banner']) == $file ? 'selected="selected"' : '')));
         }
+
         $show = show($dir."/form_partners", array("do" => "editbutton&amp;id=".$get['id']."",
                                                   "head" => _partners_edit_head,
                                                   "nothing" => "",
                                                   "banner" => _partners_button,
                                                   "link" => _link,
-                                                  "e_link" => re($get['link']),
-                                                  "e_textlink" => (empty($get['textlink']) ? '' : re($get['banner'])),
+                                                  "e_link" => string::decode($get['link']),
+                                                  "e_textlink" => (empty($get['textlink']) ? '' : string::decode($get['banner'])),
                                                   "or" => _or,
                                                   "textlink" => _partnerbuttons_textlink,
                                                   "banners" => $banners,
@@ -69,7 +66,7 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("UPDATE ".dba::get('partners')."
                      SET `link`     = '".links($_POST['link'])."',
-                         `banner`   = '".up(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
+                         `banner`   = '".string::encode(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
                          `textlink` = '".convert::ToInt(empty($_POST['textlink']) ? 0 : 1)."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
@@ -91,15 +88,15 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=partners&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_entry)));
+                                                            "del" => _confirm_del_entry));
 
           $color = 1;
-          $rlink = str_replace('http://', '', re($get['link']));
-          $button = '<img src="../banner/partners/'.re($get['banner']).'" alt="'.$rlink.'" title="'.$rlink.'" />';
+          $rlink = str_replace('http://', '', string::decode($get['link']));
+          $button = '<img src="../banner/partners/'.string::decode($get['banner']).'" alt="'.$rlink.'" title="'.$rlink.'" />';
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
           $show_ .= show($dir."/partners_show", array("class" => $class,
-                                                      "button" => (empty($get['textlink']) ? $button : '<center>'._partnerbuttons_textlink.': <b>'.re($get['banner']).'</b></center>'),
-                                                      "link" => re($get['link']),
+                                                      "button" => (empty($get['textlink']) ? $button : '<center>'._partnerbuttons_textlink.': <b>'.string::decode($get['banner']).'</b></center>'),
+                                                      "link" => string::decode($get['link']),
                                                       "id" => $get['id'],
                                                       "edit" => $edit,
                                                       "delete" => $delete));

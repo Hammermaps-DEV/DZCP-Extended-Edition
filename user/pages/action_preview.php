@@ -43,7 +43,7 @@ else
     {
         $get_hp = $_POST['hp'];
         $get_email = $_POST['email'];
-        $get_nick = show(_link_mailto, array("nick" => re($_POST['nick']), "email" => eMailAddr($get_email)));
+        $get_nick = show(_link_mailto, array("nick" => string::decode($_POST['nick']), "email" => eMailAddr($get_email)));
     }
     else
     {
@@ -58,7 +58,7 @@ else
     $posted_ip = ($chkMe == 4 ? visitorIp() : _logged);
 
     $index = show("page/comments_show", array("titel" => $titel,
-                                              "comment" => bbcode($_POST['eintrag']),
+                                              "comment" => bbcode::parse_html($_POST['eintrag']),
                                               "nick" => $get_nick,
                                               "hp" => $gbhp,
                                               "editby" => $editby,

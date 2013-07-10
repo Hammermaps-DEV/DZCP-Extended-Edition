@@ -1,5 +1,15 @@
 <?php
-//kalender
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function kalender($month="",$year="")
 {
     $menu_xml = get_menu_xml('kalender');
@@ -70,7 +80,7 @@ function kalender($month="",$year="")
                 while($get = _fetch($qry))
                 {
                   $cws = "set";
-                  $titlecw .= jsconvert(_kal_cw.re($get['gegner']));
+                  $titlecw .= jsconvert(_kal_cw.string::decode($get['gegner']));
                 }
               } else {
                 $cws = "";
@@ -83,7 +93,7 @@ function kalender($month="",$year="")
                 while($get = _fetch($qry))
                 {
                   $event = "set";
-                  $titleev .= jsconvert(_kal_event.re($get['title']));
+                  $titleev .= jsconvert(_kal_event.string::decode($get['title']));
                 }
               } else {
                 $event = "";

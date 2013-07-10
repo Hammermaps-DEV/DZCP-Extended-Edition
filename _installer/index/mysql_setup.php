@@ -12,9 +12,10 @@ else
         if(write_sql_config()) //Config Schreiben
         {
             $write=true;
+            $from = '<form action="" method="post" id="from"><from>';
             $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup_tb'));
             $index = writemsg(mysql_setup_saved,false);
-            $index = $index.$nextlink;
+            $index = $from.$index.$nextlink;
         }
     }
 

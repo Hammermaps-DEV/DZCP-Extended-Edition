@@ -13,7 +13,7 @@ if(_adminMenu != 'true')
                     ORDER BY game ASC");
         while($gets = _fetch($qrys))
         {
-          $squads .= show(_select_field_ranking_add, array("what" => re($gets['name']),
+          $squads .= show(_select_field_ranking_add, array("what" => string::decode($gets['name']),
                                                                                  "value" => $gets['id'],
                                                            "icon" => $gets['icon'],
                                                            "sel" => ""));
@@ -37,8 +37,8 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['rank'])) $show = error(_error_empty_rank);
         } else {
           $qry = db("INSERT INTO ".dba::get('rankings')."
-                     SET `league`   = '".up($_POST['league'])."',
-                         `squad`    = '".up($_POST['squad'])."',
+                     SET `league`   = '".string::encode($_POST['league'])."',
+                         `squad`    = '".string::encode($_POST['squad'])."',
                          `url`      = '".links($_POST['url'])."',
                          `rank`     = '".convert::ToInt($_POST['rank'])."',
                          `postdate` = '".time()."'");
@@ -50,18 +50,12 @@ if(_adminMenu != 'true')
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        $qrys = db("SELECT * FROM ".dba::get('squads')."
-                    WHERE status = '1'
-                    ORDER BY game ASC");
+        $qrys = db("SELECT * FROM ".dba::get('squads')." WHERE status = '1' ORDER BY game ASC");
         while($gets = _fetch($qrys))
         {
-          if($get['squad'] == $gets['id']) $sel = "selected=\"selected\"";
-          else $sel = "";
-          $squads .= show(_select_field_ranking_add, array("what" => re($gets['name']),
-                                                                                 "value" => $gets['id'],
-                                                           "icon" => $gets['icon'],
-                                                           "sel" => $sel));
+            $squads .= show(_select_field_ranking_add, array("what" => string::decode($gets['name']), "value" => $gets['id'], "icon" => $gets['icon'], "sel" => ($get['squad'] == $gets['id'] ? 'selected="selected"' : '')));
         }
+
         $show = show($dir."/form_rankings", array("head" => _rankings_edit_head,
                                                   "do" => "editranking&amp;id=".$_GET['id']."",
                                                   "what" => _button_value_edit,
@@ -69,9 +63,9 @@ if(_adminMenu != 'true')
                                                   "league" => _rankings_league,
                                                   "rank" => _rankings_admin_place,
                                                   "squads" => $squads,
-                                                  "e_league" => re($get['league']),
+                                                  "e_league" => string::decode($get['league']),
                                                   "e_rank" => $get['rank'],
-                                                  "e_url" => re($get['url']),
+                                                  "e_url" => string::decode($get['url']),
                                                   "url" => _rankings_teamlink));
       } elseif($_GET['do'] == "editranking") {
         if(empty($_POST['league']) || empty($_POST['url']) || empty($_POST['rank']))
@@ -85,8 +79,8 @@ if(_adminMenu != 'true')
           $get = _fetch($qry);
 
           $qry = db("UPDATE ".dba::get('rankings')."
-                     SET `league`       = '".up($_POST['league'])."',
-                         `squad`        = '".up($_POST['squad'])."',
+                     SET `league`       = '".string::encode($_POST['league'])."',
+                         `squad`        = '".string::encode($_POST['squad'])."',
                          `url`          = '".links($_POST['url'])."',
                          `rank`         = '".convert::ToInt($_POST['rank'])."',
                          `lastranking`  = '".convert::ToInt($get['rank'])."',
@@ -113,12 +107,12 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=rankings&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_ranking)));
+                                                            "del" => _confirm_del_ranking));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-          $show_ .= show($dir."/rankings_show", array("squad" => re($get['name']),
-                                                      "league" => re($get['league']),
+          $show_ .= show($dir."/rankings_show", array("squad" => string::decode($get['name']),
+                                                      "league" => string::decode($get['league']),
                                                       "id" => $get['sqid'],
                                                       "class" => $class,
                                                       "edit" => $edit,

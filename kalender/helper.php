@@ -41,8 +41,8 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
         {
             $get_squad_icon = db("SELECT icon FROM `".dba::get('squads')."` WHERE `id` = '".$get['squad_id']."' LIMIT 1",false,true);
             $p_tag = ($cw_count >= 2 && $i_cw != $cw_count ? '<p>' : '');
-            $test = '<img align="absmiddle" src="../inc/images/gameicons/'.re($get_squad_icon['icon']).'" alt="" /> ';
-            $infoCW .= jsconvert($test._kal_cw.re($get['gegner']).$p_tag); $i_cw++;
+            $test = '<img align="absmiddle" src="../inc/images/gameicons/'.string::decode($get_squad_icon['icon']).'" alt="" /> ';
+            $infoCW .= jsconvert($test._kal_cw.string::decode($get['gegner']).$p_tag); $i_cw++;
         }
 
         $info = ' onmouseover="DZCP.showInfo(\''.$infoCW.'\')" onmouseout="DZCP.hideInfo()"';
@@ -58,7 +58,7 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
         while($get = _fetch($qry))
         {
             $p_tag = ($event_count >= 2 && $i_event != $event_count ? '<p>' : '');
-            $infoEvent .= jsconvert(_kal_event.re($get['title']).$p_tag);  $i_event++;
+            $infoEvent .= jsconvert(_kal_event.string::decode($get['title']).$p_tag);  $i_event++;
         }
 
         $info = ' onmouseover="DZCP.showInfo(\''.$infoEvent.'\')" onmouseout="DZCP.hideInfo()"';

@@ -26,13 +26,13 @@ else
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $serverlist .= show($dir."/serverliste_show", array("aktplayers" => $aktplayers,
                     "maxplayers" => $maxplayers,
-                    "clanurl" => re($get['clanurl']),
+                    "clanurl" => string::decode($get['clanurl']),
                     "slots" => $get['slots'],
                     "class" => $class,
                     "serverip" => $get['ip'],
                     "serverport" => $get['port'],
-                    "clanname" => re($get['clanname']),
-                    "serverpwd" => re($get['pwd']),
+                    "clanname" => string::decode($get['clanname']),
+                    "serverpwd" => string::decode($get['pwd']),
                     "map" => $map));
         }
     } else {

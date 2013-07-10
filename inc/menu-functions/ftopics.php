@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function ftopics()
 {
     global $allowHover;
@@ -22,8 +33,8 @@ function ftopics()
                     $lp = cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'");
                     $pagenr = ceil($lp/$ftopicsconfig['m_fposts']);
                     $page = (!$pagenr ? 1 : $pagenr);
-                    $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['topic'])).'\', \''._forum_posts.';'._forum_lpost.'\', \''.$lp.';'.date("d.m.Y H:i", $get['lp'])._uhr.'\')" onmouseout="DZCP.hideInfo()"' : '');
-                    $ftopics .= show("menu/forum_topics", array("id" => $get['id'], "pagenr" => $page, "p" => $lp + 1, "titel" => cut(re($get['topic']),$ftopicsconfig['l_ftopics']), "info" => $info, "kid" => $get['kid']));
+                    $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['topic'])).'\', \''._forum_posts.';'._forum_lpost.'\', \''.$lp.';'.date("d.m.Y H:i", $get['lp'])._uhr.'\')" onmouseout="DZCP.hideInfo()"' : '');
+                    $ftopics .= show("menu/forum_topics", array("id" => $get['id'], "pagenr" => $page, "p" => $lp + 1, "titel" => cut(string::decode($get['topic']),$ftopicsconfig['l_ftopics']), "info" => $info, "kid" => $get['kid']));
                     $f++;
                 }
             }

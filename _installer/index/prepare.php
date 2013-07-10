@@ -29,7 +29,6 @@ else
             'inc/images/maps',
             'inc/images/smileys',
             'inc/images/uploads',
-            'inc/images/uploads/taktiken',
             'inc/images/uploads/useravatare',
             'inc/images/uploads/usergallery',
             'inc/images/uploads/userpics',

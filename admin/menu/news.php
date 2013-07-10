@@ -11,10 +11,10 @@ $kats = ''; $color = 1;
 while($get = _fetch($qry))
 {
     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=news&amp;do=edit", "title" => _button_title_edit));
-    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=news&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_kat)));
-    $img = show(_config_newskats_img, array("img" => re($get['katimg'])));
+    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=news&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_kat));
+    $img = show(_config_newskats_img, array("img" => string::decode($get['katimg'])));
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-    $kats .= show($dir."/newskats_show", array("mainkat" => re($get['kategorie']), "class" => $class, "img" => $img, "delete" => $delete, "edit" => $edit));
+    $kats .= show($dir."/newskats_show", array("mainkat" => string::decode($get['kategorie']), "class" => $class, "img" => $img, "delete" => $delete, "edit" => $edit));
 }
 
 $show = show($dir."/newskats", array("head" => _config_newskats_head, "kats" => $kats, "add" => _config_newskats_add_head, "img" => _config_newskats_katbild, "delete" => _deleteicon_blank, "edit" => _editicon_blank, "mainkat" => _config_newskats_kat));
@@ -54,8 +54,8 @@ if($_GET['do'] == "delete")
           $show = error(_config_empty_katname);
         } else {
           $qry = db("INSERT INTO ".dba::get('newskat')."
-                     SET `katimg`     = '".up($_POST['img'])."',
-                         `kategorie`  = '".up($_POST['kat'])."'");
+                     SET `katimg`     = '".string::encode($_POST['img'])."',
+                         `kategorie`  = '".string::encode($_POST['kat'])."'");
 
           $show = info(_config_newskats_added, "?admin=news");
         }
@@ -67,12 +67,7 @@ if($_GET['do'] == "delete")
         $files = get_files(basePath.'/inc/images/uploads/newskat/',false,true);
         foreach($files as $file)
         {
-          if($get['katimg'] == $file) $sel = "selected=\"selected\"";
-          else $sel = '';
-
-          $img .= show(_select_field, array("value" => $file,
-                                            "sel" => $sel,
-                                            "what" => $file));
+            $img .= show(_select_field, array("value" => $file, "sel" => ($get['katimg'] == $file ? 'selected="selected"' : ''), "what" => $file));
         }
 
         $upload = show(_config_neskats_katbild_upload_edit, array("id" => $_GET['id']));
@@ -80,7 +75,7 @@ if($_GET['do'] == "delete")
 
         $show = show($dir."/newskatform", array("head" => _config_newskats_edit_head,
                                                 "nkat" => _config_katname,
-                                                "kat" => re($get['kategorie']),
+                                                "kat" => string::decode($get['kategorie']),
                                                 "value" => _button_value_edit,
                                                 "id" => $_GET['id'],
                                                 "nothing" => _nothing,
@@ -94,11 +89,11 @@ if($_GET['do'] == "delete")
           $show = error(_config_empty_katname);
         } else {
           if($_POST['img'] == "lazy") $katimg = "";
-          else $katimg = "`katimg` = '".up($_POST['img'])."',";
+          else $katimg = "`katimg` = '".string::encode($_POST['img'])."',";
 
           $qry = db("UPDATE ".dba::get('newskat')."
                      SET ".$katimg."
-                         `kategorie` = '".up($_POST['kat'])."'
+                         `kategorie` = '".string::encode($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_config_newskats_edited, "?admin=news");

@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function partners()
 {
     $menu_xml = get_menu_xml('partners');
@@ -11,7 +22,7 @@ function partners()
         {
             while($get = _fetch($qry))
             {
-                $partners .= $get['textlink'] ? show("menu/partners_textlink", array("link" => $get['link'], "name" => re($get['banner']))) : show("menu/partners", array("link" => re($get['link']), "title" => htmlspecialchars(str_replace('http://', '', re($get['link']))), "banner" => re($get['banner'])));
+                $partners .= $get['textlink'] ? show("menu/partners_textlink", array("link" => $get['link'], "name" => string::decode($get['banner']))) : show("menu/partners", array("link" => string::decode($get['link']), "title" => htmlspecialchars(str_replace('http://', '', string::decode($get['link']))), "banner" => string::decode($get['banner'])));
                 $table = strstr($partners, '<tr>') ? true : false;
             }
 

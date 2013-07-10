@@ -15,7 +15,7 @@
 
 <br />[msg]
 <form action="index.php?action=mysql&amp;do=test_mysql" method="POST">
-<table width="100%" cellpadding="3" cellspacing="1">
+<table width="100%" border="0" cellpadding="3" cellspacing="1">
   <tr>
     <td colspan="6" align="justify" class="head"><br /><b>&raquo; MySQL Zugangsdaten</b></td>
   </tr>
@@ -27,8 +27,9 @@
     <td width="5%" height="10"></td>
   </tr>
   <tr>
-    <td><b>Host:</b></td><td width="37%"><input type="text" name="host" [disabled] value="[mysql_host]"></td>
-    <td width="11%"><b>Datenbank:</b></td><td width="20%"><input type="text" [disabled] name="database" value="[mysql_database]"></td>
+    <td><b>Host:</b></td><td width="27%"><input type="text" name="host" [disabled] value="[mysql_host]"></td>
+    <td width="15%"><b>Datenbank:</b></td>
+    <td width="26%"><input type="text" [disabled] name="database" value="[mysql_database]"></td>
     <td width="7%"><b>Prefix:</b></td><td width="20%"><input type="text" [disabled] name="prefix" value="[mysql_prefix]"></td>
   </tr>
   <tr>
@@ -40,9 +41,10 @@
     <td height="25" colspan="6"><hr /></td>
   </tr>
   <tr>
-    <td colspan="6"><table width="289" border="0" cellpadding="0" cellspacing="0">
+    <td colspan="6"><table width="478" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td width="42%"><strong>MySQL DB-Engine:</strong></td><td width="58%">
+    <td width="30%"><strong>MySQL DB-Engine:</strong></td>
+    <td width="70%">
       <select name="dbEngine" id="dbEngine">
         <option [dbe_selected0] [disabled] value="0">Server Standard</option>
         <option [dbe_selected1] [disabled] value="1">MyISAM Engine</option>

@@ -59,7 +59,7 @@ else
 
             while($getp = _fetch($qryp))
             {
-                if(data($getp['reg'], "signatur")) $sig = _sig.bbcode(data($getp['reg'], "signatur"));
+                if(data($getp['reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($getp['reg'], "signatur"));
                 else                               $sig = "";
 
                 if($getp['reg'] != 0) $userposts = show(_forum_user_posts, array("posts" => userstats($getp['reg'], "forumposts")));
@@ -81,15 +81,15 @@ else
                     $delete = show("page/button_delete_single", array("id" => $getp['id'],
                             "action" => "action=post&amp;do=delete",
                             "title" => _button_title_del,
-                            "del" => convSpace(_confirm_del_entry)));
+                            "del" => _confirm_del_entry));
                 } else {
                     $delete = "";
                     $edit = "";
                 }
 
                 $ftxt = hl($getp['text'], $_GET['hl']);
-                if($_GET['hl']) $text = bbcode($ftxt['text']);
-                else $text = bbcode($getp['text']);
+                if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
+                else $text = bbcode::parse_html($getp['text']);
 
                 if($chkMe == 4) $posted_ip = $getp['ip'];
                 else $posted_ip = _logged;
@@ -171,9 +171,9 @@ else
                     WHERE id = '".$getw['sid']."'");
             $kat = _fetch($qrykat);
 
-            $wheres = show(_forum_post_where, array("wherepost" => re($getw['topic']),
-                    "wherekat" => re($getw['kattopic']),
-                    "mainkat" => re($kat['name']),
+            $wheres = show(_forum_post_where, array("wherepost" => string::decode($getw['topic']),
+                    "wherekat" => string::decode($getw['kattopic']),
+                    "mainkat" => string::decode($kat['name']),
                     "tid" => $_GET['id'],
                     "kid" => $getw['kid']));
             if($get['t_reg'] == "0")
@@ -198,7 +198,7 @@ else
 
             $nav = nav($entrys,$maxfposts,"?action=showthread&amp;id=".$_GET['id'].$hL);
 
-            if(data($get['t_reg'], "signatur")) $sig = _sig.bbcode(data($get['t_reg'], "signatur"));
+            if(data($get['t_reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($get['t_reg'], "signatur"));
             else $sig = "";
 
             if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
@@ -231,11 +231,11 @@ else
                     while($geto = _fetch($qryo))
                     {
                         $skat .= show(_forum_select_field_skat, array("value" => $geto['id'],
-                                "what" => re($geto['kattopic'])));
+                                "what" => string::decode($geto['kattopic'])));
                     }
 
                     $move .= show(_forum_select_field_kat, array("value" => "lazy",
-                            "what" => re($getok['name']),
+                            "what" => string::decode($getok['name']),
                             "skat" => $skat));
                 }
 
@@ -255,8 +255,8 @@ else
             }
 
             $ftxt = hl($get['t_text'], $_GET['hl']);
-            if($_GET['hl']) $text = bbcode($ftxt['text']);
-            else $text = bbcode($get['t_text']);
+            if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
+            else $text = bbcode::parse_html($get['t_text']);
 
             if($chkMe == "4") $posted_ip = $get['ip'];
             else $posted_ip = _logged;
@@ -324,12 +324,12 @@ else
                 $vote = '<tr><td>'.fvote($get['vote']).'</td></tr>';
             }
 
-            $title = re($getw['topic']).' - '.$title;
+            $title = string::decode($getw['topic']).' - '.$title;
             $index = show($dir."/forum_posts", array("head" => _forum_head,
                     "where" => $wheres,
                     "admin" => $admin,
                     "nick" => $nick,
-                    "threadhead" => re($getw['topic']),
+                    "threadhead" => string::decode($getw['topic']),
                     "titel" => $titel,
                     "postnr" => "1",
                     "class" => $ftxt['class'],

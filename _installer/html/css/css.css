@@ -115,3 +115,10 @@ A:hover {
   font-size: 11px;
   font-family: Arial; 
 }
+
+input, td, .error, .info, .warn, .done, .emph {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    behavior: url(border-radius.htc);
+}

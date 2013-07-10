@@ -41,8 +41,8 @@ else
                         SET `datum`     = '".time()."',
                             `von`       = '0',
                             `an`        = '".convert::ToInt($_POST['users'])."',
-                            `titel`     = '".up(_buddy_title)."',
-                            `nachricht` = '".up($msg, 1)."'");
+                            `titel`     = '".string::encode(_buddy_title)."',
+                            `nachricht` = '".string::encode($msg)."'");
 
                     $index = info(_add_buddy_successful, "?action=buddys");
                 }
@@ -64,8 +64,8 @@ else
                         SET `datum`     = '".time()."',
                             `von`       = '0',
                             `an`        = '".convert::ToInt($user)."',
-                            `titel`     = '".up(_buddy_title)."',
-                            `nachricht` = '".up($msg, 1)."'");
+                            `titel`     = '".string::encode(_buddy_title)."',
+                            `nachricht` = '".string::encode($msg)."'");
 
                     $index = info(_add_buddy_successful, "?action=buddys");
                 }
@@ -77,8 +77,8 @@ else
                       SET `datum`     = '".time()."',
                           `von`       = '0',
                           `an`        = '".convert::ToInt($_GET['id'])."',
-                          `titel`     = '".up(_buddy_title)."',
-                          `nachricht` = '".up($msg, 1)."'");
+                          `titel`     = '".string::encode(_buddy_title)."',
+                          `nachricht` = '".string::encode($msg)."'");
 
                 $index = info(_buddys_delete_successful, "../user/?action=buddys");
             break;
@@ -95,15 +95,17 @@ else
                         $yesnocheck = db("SELECT * FROM ".dba::get('buddys')." where user = '".$get['buddy']."' AND buddy = '".convert::ToInt($userid)."'");
                         $too = (_rows($yesnocheck) ? _buddys_yesicon : _buddys_noicon);
                         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                        $buddys .= show($dir."/buddys_show", array(
-                                "nick" => autor($get['buddy']),
-                                "onoff" => onlinecheck($get['buddy']),
-                                "pn" => $pn,
-                                "class" => $class,
-                                "too" => $too,
-                                "delete" => $delete));
+                        $buddys .= show($dir."/buddys_show", array("nick" => autor($get['buddy']),
+                                                                   "onoff" => onlinecheck($get['buddy']),
+                                                                   "pn" => $pn,
+                                                                   "class" => $class,
+                                                                   "too" => $too,
+                                                                   "delete" => $delete));
                     } //while end
                 }
+
+                if(empty($buddys))
+                    $buddys = show(_no_entrys_yet_all, array("colspan" => "1"));
 
                 $qry = db("SELECT id,nick FROM ".dba::get('users')." WHERE level != 0 ORDER BY nick"); $users = '';
                 if(_rows($qry) >= 1)

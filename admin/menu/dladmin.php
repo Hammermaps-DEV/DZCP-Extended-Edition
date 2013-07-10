@@ -11,7 +11,7 @@ if(_adminMenu != 'true')
         $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
         while($get = _fetch($qry))
         {
-          $kats .= show(_select_field, array("value" => $get['id'], "what" => re($get['name']), "sel" => ""));
+          $kats .= show(_select_field, array("value" => $get['id'], "what" => string::decode($get['name']), "sel" => ""));
         }
 
         $files = get_files(basePath.'/downloads/files/',false,true); $dl = '';
@@ -44,14 +44,14 @@ if(_adminMenu != 'true')
         } else {
 
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
-          else                                    $dl = up($_POST['url']);
+          else                                    $dl = string::encode($_POST['url']);
 
           $qry = db("INSERT INTO ".dba::get('downloads')."
-                     SET `download`     = '".up($_POST['download'])."',
+                     SET `download`     = '".string::encode($_POST['download'])."',
                          `url`          = '".$dl."',
                          `date`         = '".time()."',
                          `comments`     = '".convert::ToInt($_POST['comments'])."',
-                         `beschreibung` = '".up($_POST['beschreibung'],1)."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                          `kat`          = '".convert::ToInt($_POST['kat'])."'");
 
           $show = info(_downloads_added, "?admin=dladmin");
@@ -65,16 +65,13 @@ if(_adminMenu != 'true')
         $qryk = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
         while($getk = _fetch($qryk))
         {
-          if($getk['id'] == $get['kat']) $sel = "selected=\"selected\"";
-          else $sel = "";
-
-          $kats .= show(_select_field, array("value" => $getk['id'], "what" => re($getk['name']), "sel" => $sel));
+            $kats .= show(_select_field, array("value" => $getk['id'], "what" => string::decode($getk['name']), "sel" => ($getk['id'] == $get['kat'] ? 'selected="selected"' : '')));
         }
 
         $selr_dc = ($get['comments'] ? 'selected="selected"' : '');
         $show = show($dir."/form_dl", array("admin_head" => _downloads_admin_head_edit,
-                                            "ddownload" => re($get['download']),
-                                            "durl" => re($get['url']),
+                                            "ddownload" => string::decode($get['download']),
+                                            "durl" => string::decode($get['url']),
                                             "file" => $dl,
                                             "selr_dc" => $selr_dc,
                                             "lokal" => _downloads_lokal,
@@ -82,7 +79,7 @@ if(_adminMenu != 'true')
                                             "nothing" => _nothing,
                                             "nofile" => _downloads_nofile,
                                             "oder" => _or,
-                                            "dbeschreibung" => re_bbcode($get['beschreibung']),
+                                            "dbeschreibung" => string::decode($get['beschreibung']),
                                             "kat" => _downloads_kat,
                                             "what" => _button_value_edit,
                                             "do" => "editdl&amp;id=".$_GET['id']."",
@@ -97,13 +94,13 @@ if(_adminMenu != 'true')
           elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
         } else {
           if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
-          else                                    $dl = up($_POST['url']);
+          else                                    $dl = string::encode($_POST['url']);
 
           $qry = db("UPDATE ".dba::get('downloads')."
-                     SET `download`     = '".up($_POST['download'])."',
+                     SET `download`     = '".string::encode($_POST['download'])."',
                          `url`          = '".$dl."',
                          `comments`     = '".convert::ToInt($_POST['comments'])."',
-                         `beschreibung` = '".up($_POST['beschreibung'],1)."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                          `date`         = '".time()."',
                          `kat`          = '".convert::ToInt($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -128,11 +125,11 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=dladmin&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_dl)));
+                                                            "del" => _confirm_del_dl));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
           $show_ .= show($dir."/downloads_show", array("id" => $get['id'],
-                                                       "dl" => re($get['download']),
+                                                       "dl" => string::decode($get['download']),
                                                        "class" => $class,
                                                        "edit" => $edit,
                                                        "delete" => $delete

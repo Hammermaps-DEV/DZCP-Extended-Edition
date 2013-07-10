@@ -25,7 +25,7 @@ class GameQ_Protocols_Svencoop extends GameQ_Protocols_Source
 {
     //Game or Mod
     protected $name = "svencoop";
-    protected $name_long = "Sven Co-op";
+    protected $name_long = "Half-Life: Sven Co-op";
     protected $name_short = "SC";
 
     //Basic Game

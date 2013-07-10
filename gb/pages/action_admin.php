@@ -34,7 +34,7 @@ else
                             `datum`    = '".time()."',
                             `editby`   = '',
                             `reg`      = '".convert::ToInt($userid)."',
-                            `comment`  = '".up($_POST['eintrag'])."',
+                            `comment`  = '".string::encode($_POST['eintrag'])."',
                             `ip`       = '".visitorIp()."'");
                     $index = info(_gb_comment_added, "../gb/");
                 }
@@ -49,7 +49,7 @@ else
                 if(!$get['reg'])
                 {
                     $gbtitel = show(_gb_titel_noreg, array("postid" => "?",
-                                                           "nick" => re($get['nick']),
+                                                           "nick" => string::decode($get['nick']),
                                                            "edit" => "",
                                                            "delete" => "",
                                                            "comment" => "",
@@ -75,7 +75,7 @@ else
                 }
 
 
-                $entry = show($dir."/gb_show", array("comments" => '', "gbtitel" => $gbtitel, "nachricht" => show(bbcode($get['nachricht']),array(),array('gb_addcomment_from' => _gb_addcomment_from)), "editby" => bbcode($get['editby']), "ip" => $get['ip']));
+                $entry = show($dir."/gb_show", array("comments" => '', "gbtitel" => $gbtitel, "nachricht" => show(bbcode::parse_html($get['nachricht']),array(),array('gb_addcomment_from' => _gb_addcomment_from)), "editby" => bbcode($get['editby']), "ip" => $get['ip']));
                 $index = show($dir."/gb_addcomment", array("error" => $error, "entry" => $entry, "id" => $_GET['id'], "ed" => ""));
             }
         break;
@@ -125,13 +125,13 @@ else
                 if($get['reg'] != 0)
                     $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                 else
-                    $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
+                    $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => string::decode($get['hp']), "postnick" => string::decode($get['nick'])));
 
                 $index = show($dir."/edit_com", array("whaturl" => "editgbc&amp;id=".$get['id'],
                                                      "ed" => "&edit=".$get['id']."&amp;postid=".$_GET['postid'],
                                                      "id" => $get['id'],
                                                      "form" => $form,
-                                                     "posteintrag" => re_bbcode($get['comment']),
+                                                     "posteintrag" => string::decode($get['comment']),
                                                      "eintraghead" => _eintrag));
             }
             else
@@ -144,7 +144,7 @@ else
                 if($get['reg'] != 0)
                     $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                 else
-                    $form = show("page/editor_notregged", array("postemail" => re($get['email']), "posthp" => re($get['hp']), "postnick" => re($get['nick'])));
+                    $form = show("page/editor_notregged", array("postemail" => string::decode($get['email']), "posthp" => string::decode($get['hp']), "postnick" => string::decode($get['nick'])));
 
                 $index = show($dir."/add", array("what" => _button_value_edit,
                                                  "reg" => $get['reg'],
@@ -153,7 +153,7 @@ else
                                                  "ed" => "&edit=".$get['id']."&id=".$_GET['postid'],
                                                  "id" => $get['id'],
                                                  "form" => $form,
-                                                 "posteintrag" => re_bbcode($get['nachricht']),
+                                                 "posteintrag" => string::decode($get['nachricht']),
                                                  "error" => "",
                                                  "eintraghead" => _gb_edit_head));
             }
@@ -164,10 +164,10 @@ else
             if(convert::ToInt($_POST['reg']) == convert::ToInt($userid) || permission('gb'))
             {
                 if(!convert::ToInt($_POST['reg']))
-                    $addme = "`nick` = '".up($_POST['nick'])."', `email` = '".up($_POST['email'])."', `hp` = '".up($_POST['hp'])."',";
+                    $addme = "`nick` = '".string::encode($_POST['nick'])."', `email` = '".string::encode($_POST['email'])."', `hp` = '".string::encode($_POST['hp'])."',";
 
                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                db("UPDATE ".dba::get('gb')." SET ".$addme." `nachricht`  = '".up($_POST['eintrag'], 1)."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".addslashes($editedby)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
+                db("UPDATE ".dba::get('gb')." SET ".$addme." `nachricht`  = '".string::encode($_POST['eintrag'])."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".addslashes($editedby)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $index = info(_gb_edited, "../gb/");
             }
             else
@@ -179,10 +179,10 @@ else
             {
                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
                 db("UPDATE ".dba::get('gb_comments')." SET
-                    ".(isset($_POST['nick']) ? " `nick`     = '".up($_POST['nick'])."'," : "")."
-                    ".(isset($_POST['email']) ? " `email`   = '".up($_POST['email'])."'," : "")."
-                    ".(isset($_POST['hp']) ? " `hp`         = '".up($_POST['hp'])."'," : "")."
-                    `comment`  = '".up($_POST['eintrag'],1)."',
+                    ".(isset($_POST['nick']) ? " `nick`     = '".string::encode($_POST['nick'])."'," : "")."
+                    ".(isset($_POST['email']) ? " `email`   = '".string::encode($_POST['email'])."'," : "")."
+                    ".(isset($_POST['hp']) ? " `hp`         = '".string::encode($_POST['hp'])."'," : "")."
+                    `comment`  = '".string::encode($_POST['eintrag'])."',
                     `editby`   = '".addslashes($editedby)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 

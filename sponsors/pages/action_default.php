@@ -22,8 +22,8 @@ else
         $show = '';
         while($get = _fetch($qry))
         {
-            $banner = show(_sponsors_bannerlink, array("id" => $get['id'], "title" => str_replace('http://', '', re($get['link'])), "banner" => (empty($get['slink']) ? "../banner/sponsors/site_".$get['id'].".".re($get['send']) : $get['slink'])));
-            $show .= show($dir."/sponsors_show", array("beschreibung" => bbcode($get['beschreibung']), "hits" => $get['hits'], "banner" => $banner));
+            $banner = show(_sponsors_bannerlink, array("id" => $get['id'], "title" => str_replace('http://', '', string::decode($get['link'])), "banner" => (empty($get['slink']) ? "../banner/sponsors/site_".$get['id'].".".string::decode($get['send']) : $get['slink'])));
+            $show .= show($dir."/sponsors_show", array("beschreibung" => bbcode::parse_html($get['beschreibung']), "hits" => $get['hits'], "banner" => $banner));
         }
     }
     else

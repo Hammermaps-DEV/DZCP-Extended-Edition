@@ -73,7 +73,7 @@ else
                     "status" => _status,
                     "head" => _cw_players_head));
 
-            $serverpwd = show(_cw_serverpwd, array("cw_serverpwd" => re($get['serverpwd'])));
+            $serverpwd = show(_cw_serverpwd, array("cw_serverpwd" => string::decode($get['serverpwd'])));
         } else {
             $serverpwd = "";
         }
@@ -82,15 +82,15 @@ else
         $players = "";
     }
     $img = squad($get['icon']);
-    $show = show(_cw_details_squad, array("game" => re($get['game']),
-            "name" => re($get['name']),
+    $show = show(_cw_details_squad, array("game" => string::decode($get['game']),
+            "name" => string::decode($get['name']),
             "id" => $get['squad_id'],
             "img" => $img));
     $flagge = flag($get['gcountry']);
-    $gegner = show(_cw_details_gegner_blank, array("gegner" => re($get['clantag']." - ".$get['gegner']),
-            "url" => !empty($get['url']) ? re($get['url']) : "#"));
-    $server = show(_cw_details_server, array("servername" => re($get['servername']),
-            "serverip" => re($get['serverip'])));
+    $gegner = show(_cw_details_gegner_blank, array("gegner" => string::decode($get['clantag']." - ".$get['gegner']),
+            "url" => !empty($get['url']) ? string::decode($get['url']) : "#"));
+    $server = show(_cw_details_server, array("servername" => string::decode($get['servername']),
+            "serverip" => string::decode($get['serverip'])));
 
     if($get['punkte'] == "0" && $get['gpunkte'] == "0") $result = _cw_no_results;
     else $result = cw_result_details($get['punkte'], $get['gpunkte']);
@@ -155,7 +155,7 @@ else
             $delete = show("page/button_delete_single", array("id" => $_GET['id'],
                     "action" => "action=details&amp;do=delete&amp;cid=".$getc['id'],
                     "title" => _button_title_del,
-                    "del" => convSpace(_confirm_del_entry)));
+                    "del" => _confirm_del_entry));
         } else {
             $edit = "";
             $delete = "";
@@ -169,7 +169,7 @@ else
             else $email = "";
             $onoff = "";
             $avatar = "";
-            $nick = show(_link_mailto, array("nick" => re($getc['nick']),
+            $nick = show(_link_mailto, array("nick" => string::decode($getc['nick']),
                     "email" => $getc['email']));
         } else {
             $hp = "";
@@ -189,8 +189,8 @@ else
         else $posted_ip = _logged;
 
         $comments .= show("page/comments_show", array("titel" => $titel,
-                "comment" => bbcode($getc['comment']),
-                "editby" => bbcode($getc['editby']),
+                "comment" => bbcode::parse_html($getc['comment']),
+                "editby" => bbcode::parse_html($getc['editby']),
                 "nick" => $nick,
                 "hp" => $hp,
                 "email" => $email,
@@ -251,7 +251,7 @@ else
     }
 
     $logos = ($logo_squad == '_defaultlogo.jpg') && ($logo_gegner == '_defaultlogo.jpg');
-    $pagetitle = re($get['name']).' vs. '.re($get['gegner']).' - '.$pagetitle;
+    $pagetitle = string::decode($get['name']).' vs. '.string::decode($get['gegner']).' - '.$pagetitle;
 
     $index = show($dir."/details", array("head" => _cw_head_details,
             "result_head" => _cw_head_results,
@@ -265,11 +265,11 @@ else
             "logo_squad" => $logo_squad,
             "logo_gegner" => $logo_gegner,
             "squad" => $show,
-            "squad_name" => re($get['name']),
-            "gametype" => empty($get['gametype']) ? '-' : re($get['gametype']),
-            "lineup" => preg_replace("#\,#","<br />",re($get['lineup'])),
-            "glineup" => preg_replace("#\,#","<br />",re($get['glineup'])),
-            "match_admins" => empty($get['matchadmins']) ? '-' : re($get['matchadmins']),
+            "squad_name" => string::decode($get['name']),
+            "gametype" => empty($get['gametype']) ? '-' : string::decode($get['gametype']),
+            "lineup" => preg_replace("#\,#","<br />",string::decode($get['lineup'])),
+            "glineup" => preg_replace("#\,#","<br />",string::decode($get['glineup'])),
+            "match_admins" => empty($get['matchadmins']) ? '-' : string::decode($get['matchadmins']),
             "datum" => _datum,
             "gegner" => _cw_head_gegner,
             "xonx" => _cw_head_xonx,
@@ -284,9 +284,9 @@ else
             "serverpwd" => $serverpwd,
             "cw_datum" => date("d.m.Y H:i", $get['datum'])._uhr,
             "cw_gegner" => $gegner,
-            "cw_xonx" => empty($get['xonx']) ? '-' : re($get['xonx']),
-            "cw_liga" => empty($get['liga']) ? '-' : re($get['liga']),
-            "cw_maps" => empty($get['maps']) ? '-' : re($get['maps']),
+            "cw_xonx" => empty($get['xonx']) ? '-' : string::decode($get['xonx']),
+            "cw_liga" => empty($get['liga']) ? '-' : string::decode($get['liga']),
+            "cw_maps" => empty($get['maps']) ? '-' : string::decode($get['maps']),
             "cw_server" => $server,
             "cw_result" => $result,
             "cw_bericht" => $bericht,
@@ -340,19 +340,19 @@ else
                                 "show" => "",
                                 "postemail" => $_POST['email'],
                                 "posthp" => links($_POST['hp']),
-                                "postnick" => re($_POST['nick']),
-                                "posteintrag" => re_bbcode($_POST['comment']),
+                                "postnick" => string::decode($_POST['nick']),
+                                "posteintrag" => string::decode($_POST['comment']),
                                 "error" => $error,
                                 "eintraghead" => _eintrag));
                     } else {
                         $qry = db("INSERT INTO ".dba::get('cw_comments')."
                                              SET `cw`       = '".convert::ToInt($_GET['id'])."',
                                                      `datum`    = '".time()."',
-                                                     `nick`     = '".up($_POST['nick'])."',
-                                                     `email`    = '".up($_POST['email'])."',
+                                                     `nick`     = '".string::encode($_POST['nick'])."',
+                                                     `email`    = '".string::encode($_POST['email'])."',
                                                      `hp`       = '".links($_POST['hp'])."',
                                                      `reg`      = '".convert::ToInt($userid)."',
-                                                     `comment`  = '".up($_POST['comment'],1)."',
+                                                     `comment`  = '".string::encode($_POST['comment'])."',
                                                      `ip`       = '".visitorIp()."'");
 
 
@@ -394,10 +394,10 @@ else
             $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
                     "time" => date("d.m.Y H:i", time())._uhr));
             $qry = db("UPDATE ".dba::get('cw_comments')."
-                   SET `nick`     = '".up($_POST['nick'])."',
-                       `email`    = '".up($_POST['email'])."',
+                   SET `nick`     = '".string::encode($_POST['nick'])."',
+                       `email`    = '".string::encode($_POST['email'])."',
                        `hp`       = '".links($_POST['hp'])."',
-                       `comment`  = '".up($_POST['comment'],1)."',
+                       `comment`  = '".string::encode($_POST['comment'])."',
                        `editby`   = '".addslashes($editedby)."'
                    WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
@@ -415,7 +415,7 @@ else
             if($get['reg'] != 0)
                 $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
             else
-                $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => re($get['nick'])));
+                $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => string::decode($get['nick'])));
 
             $index = show("page/comments_add", array("titel" => _comments_edit,
                     "nickhead" => _nick,
@@ -431,7 +431,7 @@ else
                     "id" => $_GET['id'],
                     "what" => _button_value_edit,
                     "show" => "",
-                    "posteintrag" => re_bbcode($get['comment']),
+                    "posteintrag" => string::decode($get['comment']),
                     "error" => "",
                     "eintraghead" => _eintrag));
         } else {

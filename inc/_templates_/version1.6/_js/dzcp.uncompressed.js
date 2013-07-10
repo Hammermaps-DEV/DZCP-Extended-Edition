@@ -2,31 +2,21 @@
   var doc = document, ie4 = document.all, opera = window.opera;
   var innerLayer, layer, x, y, doWheel = false, offsetX = 15, offsetY = 5;
   var tickerc = 0, mTimer = new Array(), tickerTo = new Array(), tickerSpeed = new Array();
-  var shoutInterval = 15000; // refresh interval of the shoutbox in ms
-  var teamspeakInterval = 15000; // refresh interval of the teamspeak viewer in ms
   var isIE  = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
   var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
   var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
+  var json = jQuery.parseJSON(json_from_php);
 
 // DZCP JAVASCRIPT LIBARY FOR JQUERY >= V1.9
   var DZCP = {
-
   //init
     init: function()
     {
         doc.body.id = 'dzcp-ee-engine-1.6';
         $('body').append('<div id="infoDiv"></div>');
-
+        $('body').append('<div id="dialog"></div>');
         layer = $('#infoDiv')[0];
         doc.body.onmousemove = DZCP.trackMouse;
-
-        // refresh shoutbox
-        if($('#navShout')[0])
-            window.setInterval("$('#navShout').load('../inc/ajax.php?i=shoutbox');", shoutInterval);
-
-        // refresh teamspeak
-        if($('#navTeamspeakContent')[0])
-            window.setInterval("DZCP.initDynLoader('navTeamspeakServer','teamspeak','');", teamspeakInterval);
 
         // init jquery-ui
         DZCP.initJQueryUI();
@@ -105,6 +95,38 @@
         $(".slidetabs").tabs(".images > div", { effect: 'fade', rotate: true }).slideshow({ autoplay: true, interval: 6000 });
         $(".tabs").tabs("> .switchs", { effect: 'fade' });
         $(".nav" ).button({ text: true });
+        $( "#rerun" ).button().click(function() { return false; }).next().button({ text: false, icons: { primary: "ui-icon-triangle-1-s" } }).click(function() {
+            var menu = $( this ).parent().next().show().position({
+              my: "left top",
+              at: "left bottom",
+              of: this
+            });
+
+            $( document ).one( "click", function() { menu.hide(); });
+            return false;
+        }).parent().buttonset().next().hide().menu();
+        $( document ).tooltip({ track: true });
+
+        $("#dialog").dialog({ modal: true, bgiframe: true, width: 'auto', height: 'auto', autoOpen: false, title: 'Info' });
+        $("a.confirm").click(function(link)
+        {
+            link.preventDefault();
+            var default_message_for_dialog = ''
+            var theHREF = $(this).attr("href");
+            var theREL = $(this).attr("rel");
+            var theMESSAGE = (theREL == undefined || theREL == '') ? default_message_for_dialog : theREL;
+            var theICON = '<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0;"></span>';
+
+            var btns = {};
+            btns[decodeURIComponent(escape(json.dialog_button_00))] = function() { window.location.href = theHREF; };
+            btns[decodeURIComponent(escape(json.dialog_button_01))] = function() { $(this).dialog("close"); };
+
+            // set windows content
+            $('#dialog').html('<P>' + theICON + theMESSAGE + '</P>');
+            $("#dialog").dialog('option', 'buttons', btns);
+            $('#dialog').dialog('option', 'position', ['center', (document.body.clientHeight / 3)]);
+            $("#dialog").dialog("open");
+        });
     },
 
   // handle events
@@ -387,14 +409,7 @@
       });
     },
 
-    // confirm delete
-    del: function(txt) {
-        txt = txt.replace(/\+/g, ' ');
-        txt = txt.replace(/oe/g, 'ö');
-        return confirm(txt + '?');
-    },
-
-  // forum search
+    // forum search
     hideForumFirst: function() {
         $('#allkat').prop('checked', false);
     },
@@ -455,6 +470,19 @@
       var thisObj = $('#' + obj)[0];
       if(tickerTo[subID] == 'h') thisObj.style.left = (parseInt(thisObj.style.left) <= (0-(width/2)+2)) ? 0 : parseInt(thisObj.style.left)-1 + 'px';
       else thisObj.style.top = (thisObj.style.top == '' || (parseInt(thisObj.style.top)<(0-(width/2)+6))) ? 0 : parseInt(thisObj.style.top)-1 + 'px';
+    },
+
+    check_all: function(name, obj) {
+        if(!obj || !obj.form) return false;
+        var box = obj.form.elements[name];
+        if(!box) return false;
+        if(!box.length) box.checked = obj.checked; else
+        for(var i = 0; i < box.length; i++)  box[i].checked = obj.checked;
+    },
+
+    sendFrom: function(do_obj,do_a,formId) {
+        $('input[name='+ do_obj +']').val(do_a);
+        $("#" + formId).submit();
     },
 }
 

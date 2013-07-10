@@ -82,6 +82,6 @@ else
 
     if(!empty($Show_sID) && $Show_sID != 0 && $Show_sID == $get['id'])
     { $display = "show"; $moreicon = "collapse"; } else { $display = "none"; $moreicon = "expand"; }
-    $klapp = show(_klapptext_server_link, array("link" => empty($results['ts3']['virtualserver_name']) ? 'Error on this Server!' : $results['ts3']['virtualserver_name'], "id" => $get['id'], "moreicon" => $moreicon));
-    die(show($dir."/servers", array("id" => $get['id'], "user" => $users, "display" => $display, "klapp" => $klapp, "uchannels" => TS3Renderer::render(true), "info" => bbcode(TS3Renderer::welcome(),0,0,1), "userstats" => $userstats)));
+    $klapp = show(_klapptext_server_link, array("link" => empty($results['ts3']['virtualserver_name']) ? 'Error on this V-Server!' : $results['ts3']['virtualserver_name'], "id" => $get['id'], "moreicon" => $moreicon));
+    die(show($dir."/servers", array("id" => $get['id'], "user" => $users, "display" => $display, "klapp" => $klapp, "uchannels" => TS3Renderer::render(true), "info" => bbcode::parse_ts3(TS3Renderer::welcome()), "userstats" => $userstats)));
 }

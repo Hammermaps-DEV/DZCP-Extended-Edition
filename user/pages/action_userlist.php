@@ -68,9 +68,9 @@ else
 
             $xfire = '-';
             if(!empty($get['xfire']))
-            $xfire = '<div id="infoXfire_'.re($get['xfire']).'">
+            $xfire = '<div id="infoXfire_'.string::decode($get['xfire']).'">
             <div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.re($get['xfire']).'","xfire","&username='.re($get['xfire']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>';
 
             $userliste .= show($dir."/userliste_show", array("nick" => autor($get['id'],'','',10),
                                                              "level" => getrank($get['id']),

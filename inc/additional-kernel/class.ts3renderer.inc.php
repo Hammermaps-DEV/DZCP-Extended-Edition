@@ -445,10 +445,14 @@ class TS3Renderer
         $minutes = floor(($time%3600)/60);
         $seconds = floor($time%60);
 
-        if($day>0) return $day."d ".$hours."h ".$minutes."m ".$seconds."s";
-        elseif($hours>0) return $hours."h ".$minutes."m ".$seconds."s";
-        elseif($minutes>0) return $minutes."m ".$seconds."s";
-        else return $seconds."s";
+        if($day>0)
+            return $day." ".($day >= 2 ? _days : _day ).", ".$hours." ".($hours >= 2 ? _hours : _hour ).", ".$minutes." ".($minutes >= 2 ? _minutes : _minute ).", ".$seconds." ".($seconds >= 2 ? _seconds : _second );
+        elseif($hours>0)
+            return $hours." ".($hours >= 2 ? _hours : _hour ).", ".$minutes." ".($minutes >= 2 ? _minutes : _minute ).", ".$seconds." ".($seconds >= 2 ? _seconds : _second );
+        elseif($minutes>0)
+            return $minutes." ".($minutes >= 2 ? _minutes : _minute ).", ".$seconds." ".($seconds >= 2 ? _seconds : _second );
+        else
+            return $seconds." ".($seconds >= 2 ? _seconds : _second );
     }
 
     /**

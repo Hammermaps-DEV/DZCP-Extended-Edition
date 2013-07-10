@@ -136,5 +136,34 @@ class API extends API_CORE
      * @return boolean
      */
     public static function add_bbcode_rep($bbcode = array(), $html_replacement = array())
-    { self::add_additional_bbcode($bbcode,$html_replacement); }
+    { return self::add_additional_bbcode($bbcode,$html_replacement); }
+
+    /**
+     * Aktiviert am WYSIWYG-Editor den Advanced Modus oder deaktiviert ihn.
+     *
+     * @param boolean $bool
+     */
+    public static function set_advanced_wysiwyg($bool = false)
+    { wysiwyg::set($bool ? 'advanced' : 'normal'); }
+
+    /**
+     * Codiert Strings und Texte in UTF8.
+     * Schreiben von Werten in die Datenbank.
+     *
+     * @param string $txt
+     * @return uft8 string
+     */
+    public static function up($txt = '')
+    { return string::encode($txt); }
+
+    /**
+     *
+     * Decodiert Strings und Texte von UTF8.
+     * Auslesen von Werten aus der Datenbank.
+     *
+     * @param string $txt
+     * @return string
+     */
+    public static function re($txt = '')
+    { return string::decode($txt); }
 }

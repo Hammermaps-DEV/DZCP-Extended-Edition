@@ -17,10 +17,8 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     header("Content-type: text/html; charset=utf-8");
-    if($_POST['html'] == "1") $inhalt = bbcode_html($_POST['inhalt'],1);
-    else $inhalt = bbcode($_POST['inhalt'],1);
-
-    $index = show($dir."/sites", array("titel" => re($_POST['titel']),
+    $inhalt = bbcode::parse_html($_POST['inhalt']);
+    $index = show($dir."/sites", array("titel" => string::decode($_POST['titel']),
             "inhalt" => $inhalt));
 
     echo '<table class="mainContent" cellspacing="1"'.$index.'</table>';

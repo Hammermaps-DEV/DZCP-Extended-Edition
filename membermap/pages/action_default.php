@@ -36,7 +36,7 @@ else
                 $mm_coords .= ',';
                 $mm_infos .= "</tr>','<tr>";
             }
-            $mm_infos .= '<td><b style="font-size:13px">&nbsp;' . re($mm_get['city']) .
+            $mm_infos .= '<td><b style="font-size:13px">&nbsp;' . string::decode($mm_get['city']) .
             '</td></tr><tr>';
             $mm_coords .= 'new google.maps.LatLng' . $mm_get['gmaps_koord'];
             $realCount++;

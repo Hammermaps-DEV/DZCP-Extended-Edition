@@ -82,12 +82,12 @@ else
                                     db("INSERT INTO ".dba::get('newscomments')."
                                        SET `news`     = '".$news_id."',
                                            `datum`    = '".time()."',
-                                           ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : '')."
-                                           ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : '')."
+                                           ".(isset($_POST['email']) ? "`email` = '".string::encode($_POST['email'])."'," : '')."
+                                           ".(isset($_POST['nick']) ? "`nick` = '".string::encode($_POST['nick'])."'," : '')."
                                            ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : '')."
                                            `editby`   = '',
                                            `reg`      = '".convert::ToInt($userid)."',
-                                           `comment`  = '".up($_POST['comment'])."',
+                                           `comment`  = '".string::encode($_POST['comment'])."',
                                            `ip`       = '".visitorIp()."'");
 
                                     wire_ipcheck("ncid(".$news_id.")");
@@ -167,8 +167,8 @@ else
                                     "action" => '?action=show&amp;do=editcom&amp;id='.$news_id.'&amp;cid='.$_GET['cid'],
                                     "postemail" => $get['email'],
                                     "posthp" => $get['hp'],
-                                    "postnick" =>re($get['nick']),
-                                    "posteintrag" => re_bbcode($get['comment']),
+                                    "postnick" =>string::decode($get['nick']),
+                                    "posteintrag" => string::decode($get['comment']),
                                     "error" => $error));
                         }
                         else
@@ -178,10 +178,10 @@ else
                             {
                                 $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
                                 db("UPDATE ".dba::get('newscomments')." SET
-                                    ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : "")."
-                                    ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : "")."
+                                    ".(isset($_POST['email']) ? "`email` = '".string::encode($_POST['email'])."'," : "")."
+                                    ".(isset($_POST['nick']) ? "`nick` = '".string::encode($_POST['nick'])."'," : "")."
                                     ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : "")."
-                                    `comment`  = '".up($_POST['comment'])."',
+                                    `comment`  = '".string::encode($_POST['comment'])."',
                                     `editby`   = '".addslashes($editedby)."'
                                     WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
@@ -201,7 +201,7 @@ else
                         if($get['reg'] != 0)
                             $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                         else
-                            $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp, "postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => re($get['nick'])));
+                            $form = show("page/editor_notregged", array("nickhead" => _nick, "emailhead" => _email, "hphead" => _hp, "postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => string::decode($get['nick'])));
 
                         $index = show("page/comments_add", array("titel" => _comments_edit,
                                 "nickhead" => _nick,
@@ -215,7 +215,7 @@ else
                                 "ip" => _iplog_info,
                                 "id" => $news_id,
                                 "what" => _button_value_edit,
-                                "posteintrag" => re_bbcode($get['comment']),
+                                "posteintrag" => string::decode($get['comment']),
                                 "error" => ""));
                     }
                     else
@@ -232,14 +232,14 @@ else
 
                 $get = _fetch($qry);
                 $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
-                $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "collapse", "id" => $get['id'])) : '');
+                $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => string::decode($get['klapplink']), "which" => "collapse", "id" => $get['id'])) : '');
                 $viewed = show(_news_viewed, array("viewed" => $get['viewed']));
-                $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => re($get['link1']), "url" => $get['url1'])) : '');
-                $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
-                $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
+                $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => string::decode($get['link1']), "url" => $get['url1'])) : '');
+                $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => string::decode($get['link2']), "url" => $get['url2'])) : '');
+                $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => string::decode($get['link3']), "url" => $get['url3'])) : '');
                 $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-                $newsimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+                $newsimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
                 if($get['custom_image'])
                 {
                     foreach($picformat AS $end)
@@ -265,14 +265,14 @@ else
                         if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("news"))
                         {
                             $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=show&amp;do=edit&amp;cid=".$getc['id']."&amp;postid=".$i, "title" => _button_title_edit));
-                            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=show&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
+                            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=show&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                         }
 
                         if(!$getc['reg'])
                         {
                             $hp = ($getc['hp'] ? show(_hpicon_forum, array("hp" => $getc['hp'])) : '');
                             $email = ($getc['email'] ? '<br />'.show(_emailicon_forum, array("email" => eMailAddr($getc['email']))) : '');
-                            $nick = show(_link_mailto, array("nick" => re($getc['nick']), "email" => eMailAddr($getc['email'])));
+                            $nick = show(_link_mailto, array("nick" => string::decode($getc['nick']), "email" => eMailAddr($getc['email'])));
                         }
                         else
                         {
@@ -283,10 +283,10 @@ else
                         $titel = show(_eintrag_titel, array("postid" => $i, "datum" => date("d.m.Y", $getc['datum']), "zeit" => date("H:i", $getc['datum'])._uhr, "edit" => $edit, "delete" => $delete));
                         $posted_ip = ($chkMe == 4 ? $getc['ip'] : _logged);
                         $comments .= show("page/comments_show", array("titel" => $titel,
-                                                                      "comment" => bbcode($getc['comment']),
+                                                                      "comment" => bbcode::parse_html($getc['comment']),
                                                                       "nick" => $nick,
                                                                       "hp" => $hp,
-                                                                      "editby" => bbcode($getc['editby']),
+                                                                      "editby" => bbcode::parse_html($getc['editby']),
                                                                       "email" => $email,
                                                                       "avatar" => useravatar($getc['reg']),
                                                                       "onoff" => $onoff,
@@ -321,8 +321,8 @@ else
                                                                     "prevurl" => '../news/?action=compreview&id='.$news_id,
                                                                     "postemail" => (isset($_POST['email']) && !empty($error) ? $_POST['email'] : ''),
                                                                     "posthp" => (isset($_POST['hp']) && !empty($error) ? $_POST['hp'] : ''),
-                                                                    "postnick" => (isset($_POST['nick']) && !empty($error) ? re($_POST['nick']) : ''),
-                                                                    "posteintrag" => (isset($_POST['comment']) && !empty($error) ? re_bbcode($_POST['comment']) : ''),
+                                                                    "postnick" => (isset($_POST['nick']) && !empty($error) ? string::decode($_POST['nick']) : ''),
+                                                                    "posteintrag" => (isset($_POST['comment']) && !empty($error) ? string::decode($_POST['comment']) : ''),
                                                                     "error" => $error));
                         }
                     }
@@ -337,8 +337,8 @@ else
                     $showmore = show("page/comments_no_enabled");
 
                 $intern = ($get['intern'] ? _votes_intern : '');
-                $title = re($get['titel']).' - '.$title;
-                $index = show($dir."/news_show_full", array("titel" => re($get['titel']),
+                $title = string::decode($get['titel']).' - '.$title;
+                $index = show($dir."/news_show_full", array("titel" => string::decode($get['titel']),
                                                             "newsimage" => $newsimage,
                                                             "id" => $get['id'],
                                                             "comments" => "",
@@ -351,9 +351,9 @@ else
                                                             "ncomments" => "",
                                                             "showmore" => $showmore,
                                                             "klapp" => $klapp,
-                                                            "more" => bbcode($get['klapptext']),
+                                                            "more" => bbcode::parse_html($get['klapptext']),
                                                             "viewed" => "",
-                                                            "text" => bbcode($get['text']),
+                                                            "text" => bbcode::parse_html($get['text']),
                                                             "datum" => date("j.m.y H:i", (empty($get['datum']) ? time() : $get['datum']))._uhr,
                                                             "links" => $links,
                                                             "autor" => autor($get['autor'])));

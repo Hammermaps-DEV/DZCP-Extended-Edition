@@ -39,7 +39,7 @@ else
                 $rawpercent = $stimmen_summe && $getv['stimmen'] ? round($getv['stimmen']/$stimmen_summe*100,0) : 0;
                 $balken = show(_votes_balken, array("width" => $rawpercent));
                 $result_head = _votes_results_head;
-                $results .= show($dir."/votes_results", array("answer" => re($getv['sel']),
+                $results .= show($dir."/votes_results", array("answer" => string::decode($getv['sel']),
                                                               "percent" => $percent,
                                                               "lng_stimmen" => _votes_stimmen,
                                                               "class" => $class,
@@ -50,10 +50,11 @@ else
             {
                 $result_head = _votes_results_head_vote;
                 $votebutton = '<input id="voteSubmit_'.$get['id'].'" type="submit" value="'._button_value_vote.'" class="submit" />';
-                $results .= show($dir."/votes_vote", array("id" => $getv['id'], "answer" => re($getv['sel']), "class" => $class));
+                $results .= show($dir."/votes_vote", array("id" => $getv['id'], "answer" => string::decode($getv['sel']), "class" => $class));
             }
         }
 
+        $showVoted = '';
         if($get['intern'] && $stimmen_summe && ($get['von'] == convert::ToInt($userid) || permission('votes')))
         {
             $showVoted = ' <a href="?action=show&amp;id=' . convert::ToInt($get['id']) .
@@ -71,34 +72,23 @@ else
             $display = "none";
         }
 
-        if($get['forum'] == 1) $ftitel = re($get['titel']).' (Forum)';
-        else $ftitel = re($get['titel']);
-
+        $ftitel = ($get['forum'] ? string::decode($get['titel']).' (Forum)' : string::decode($get['titel']));
         $titel = show(_votes_titel, array("titel" => $ftitel, "vid" => $get['id'], "icon" => $moreicon, "intern" => $intern));
-
-        if($get['closed'] == 1) $closed = _closedicon_votes;
-        else                    $closed = "";
-
+        $closed = ($get['closed'] ? _closedicon_votes : '');
         $class = ($color2 % 2) ? "contentMainSecond" : "contentMainFirst"; $color2++;
         $show .= show($dir."/votes_show", array("datum" => date("d.m.Y", $get['datum']),
-                "titel" => $titel,
-                "vid" => $get['id'],
-                "display" => $display,
-                "result_head" => $result_head,
-                "results" => $results,
-                "show" => $showVoted,
-                "closed" => $closed,
-                "autor" => autor($get['von']),
-                "menu" => $menu,
-                "class" => $class,
-                "votebutton" => $votebutton,
-                "stimmen" => $stimmen_summe));
+                                                "titel" => $titel,
+                                                "vid" => $get['id'],
+                                                "display" => $display,
+                                                "result_head" => $result_head,
+                                                "results" => $results,
+                                                "show" => $showVoted,
+                                                "closed" => $closed,
+                                                "autor" => autor($get['von']),
+                                                "class" => $class,
+                                                "votebutton" => $votebutton,
+                                                "stimmen" => $stimmen_summe));
     }
 
-    $index = show($dir."/votes", array("head" => _votes_head,
-            "show" => $show,
-            "titel" => _titel,
-            "autor" => _autor,
-            "datum" => _datum,
-            "stimmen" => _votes_stimmen));
+    $index = show($dir."/votes", array("head" => _votes_head, "show" => $show));
 }

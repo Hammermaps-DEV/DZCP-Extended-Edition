@@ -24,7 +24,7 @@ $ajaxThumbgen = ((isset($_GET['loader']) ? $_GET['loader'] : false) == 'thumbgen
 ## INCLUDES ##
 include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
-include(basePath."/inc/bbcode.php");
+include(basePath."/inc/common.php");
 include(basePath."/inc/thumbgen.php");
 
 ## FUNCTIONS ##
@@ -63,7 +63,7 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
                 die('<table class="hperc" cellspacing="0">'.teamspeak().'</table>');
             break;
             case 'xfire';
-                die(xfire($_GET['username']));
+                die(xfistring::decode($_GET['username']));
             break;
             case 'menu';
                 if(array_key_exists($_GET['hash'], $menu_index))

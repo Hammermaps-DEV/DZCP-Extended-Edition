@@ -22,7 +22,7 @@ else
         while($get = _fetch($qry))
         {
             $edit = (permission("editkalender") ? show("page/button_edit_nolink", array("action" => "../admin/?admin=kalender&amp;do=edit&amp;id=".$get['id'], "title" => _button_title_edit)) : '');
-            $events .= show($dir."/event_show", array("edit" => $edit, "show_time" => date("H:i", $get['datum'])._uhr, "show_event" => bbcode($get['event']), "show_title" => re($get['title'])));
+            $events .= show($dir."/event_show", array("edit" => $edit, "show_time" => date("H:i", $get['datum'])._uhr, "show_event" => bbcode::parse_html($get['event']), "show_title" => string::decode($get['title'])));
         }
 
         $head = show(_kalender_events_head, array("datum" => date("d.m.Y",$_GET['time'])));

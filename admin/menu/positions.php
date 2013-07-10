@@ -15,12 +15,12 @@ if(_adminMenu != 'true')
         $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                           "action" => "admin=positions&amp;do=delete",
                                                           "title" => _button_title_del,
-                                                          "del" => convSpace(_confirm_del_entry)));
+                                                          "del" => _confirm_del_entry));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
         $show_ .= show($dir."/dlkats_show", array("gameicon" => $gameicon,
                                                   "edit" => $edit,
-                                                  "name" => re($get['position']),
+                                                  "name" => string::decode($get['position']),
                                                   "class" => $class,
                                                   "delete" => $delete));
       }
@@ -40,7 +40,7 @@ if(_adminMenu != 'true')
         while($get1 = _fetch($qry1))
         {
           $positions .= show(_select_field, array("value" => $get1['pid']+1,
-                                                  "what" => _nach.' '.re($get1['position']),
+                                                  "what" => _nach.' '.string::decode($get1['position']),
                                                   "sel" => ""));
         }
 
@@ -80,7 +80,7 @@ if(_adminMenu != 'true')
               }
 
           $qry = db("UPDATE ".dba::get('pos')."
-                     SET `position` = '".up($_POST['kat'])."'
+                     SET `position` = '".string::encode($_POST['kat'])."'
                          ".$pid."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
     // permissions
@@ -117,7 +117,7 @@ if(_adminMenu != 'true')
         while($get = _fetch($qry))
         {
           $positions .= show(_select_field, array("value" => $get['pid']+1,
-                                                            "what" => _nach.' '.re($get['position']),
+                                                            "what" => _nach.' '.string::decode($get['position']),
                                                             "sel" => ""));
         }
         $show = show($dir."/form_pos", array("newhead" => _pos_new_head,
@@ -146,7 +146,7 @@ if(_adminMenu != 'true')
 
           $qry = db("INSERT INTO ".dba::get('pos')."
                      SET `pid`        = '".convert::ToInt($_POST['pos'])."',
-                         `position`  = '".up($_POST['kat'])."'");
+                         `position`  = '".string::encode($_POST['kat'])."'");
           $posID = database::get_insert_id();
     // permissions
           foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";

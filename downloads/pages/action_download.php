@@ -72,12 +72,12 @@ else
                                     db("INSERT INTO ".dba::get('dl_comments')."
                                        SET `download`     = '".$dl_id."',
                                            `datum`    = '".time()."',
-                                           ".(isset($_POST['email']) ? "`email` = '".up($_POST['email'])."'," : '')."
-                                           ".(isset($_POST['nick']) ? "`nick` = '".up($_POST['nick'])."'," : '')."
+                                           ".(isset($_POST['email']) ? "`email` = '".string::encode($_POST['email'])."'," : '')."
+                                           ".(isset($_POST['nick']) ? "`nick` = '".string::encode($_POST['nick'])."'," : '')."
                                            ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : '')."
                                            `editby`   = '',
                                            `reg`      = '".convert::ToInt($userid)."',
-                                           `comment`  = '".up($_POST['comment'])."',
+                                           `comment`  = '".string::encode($_POST['comment'])."',
                                            `ip`       = '".visitorIp()."'");
 
                                     wire_ipcheck("dlid(".$dl_id.")");
@@ -98,7 +98,7 @@ else
                         if($get['reg'] != 0)
                             $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
                         else
-                            $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => re($get['nick'])));
+                            $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => links($get['hp']), "postnick" => string::decode($get['nick'])));
 
                         $index = show("page/comments_add", array("titel" => _comments_edit,
                                 "nickhead" => _nick,
@@ -114,7 +114,7 @@ else
                                 "id" => $dl_id,
                                 "what" => _button_value_edit,
                                 "show" => "",
-                                "posteintrag" => re_bbcode($get['comment']),
+                                "posteintrag" => string::decode($get['comment']),
                                 "error" => "",
                                 "eintraghead" => _eintrag));
                     }
@@ -127,10 +127,10 @@ else
                     {
                         $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
                         db("UPDATE ".dba::get('dl_comments')." SET
-                                ".(isset($_POST['nick']) ? " `nick`     = '".up($_POST['nick'])."'," : "")."
-                                ".(isset($_POST['email']) ? " `email`   = '".up($_POST['email'])."'," : "")."
+                                ".(isset($_POST['nick']) ? " `nick`     = '".string::encode($_POST['nick'])."'," : "")."
+                                ".(isset($_POST['email']) ? " `email`   = '".string::encode($_POST['email'])."'," : "")."
                                 ".(isset($_POST['hp']) ? " `hp`         = '".links($_POST['hp'])."'," : "")."
-                               `comment`  = '".up($_POST['comment'],1)."',
+                               `comment`  = '".string::encode($_POST['comment'])."',
                                `editby`   = '".addslashes($editedby)."'
                            WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
@@ -158,7 +158,7 @@ else
             $get = db("SELECT * FROM ".dba::get('downloads')." WHERE id = '".$dl_id."'",false,true);
             $file = preg_replace("#added...#Uis", "files/", $get['url']);
             $size = filesize_extended($file);
-            $getfile = show(_dl_getfile, array("file" => re($get['download'])));
+            $getfile = show(_dl_getfile, array("file" => string::decode($get['download'])));
 
             if(!$size)
             { $dlsize = $traffic = 'n/a'; $br1 = '<!--'; $br2 = '-->'; }
@@ -188,14 +188,14 @@ else
                     if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("downloads"))
                     {
                         $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=download&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
-                        $delete = show("page/button_delete_single", array("id" => $dl_id, "action" => "action=download&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
+                        $delete = show("page/button_delete_single", array("id" => $dl_id, "action" => "action=download&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                     }
 
                     if(!$getc['reg'])
                     {
                         $hp = ($getc['hp'] ? show(_hpicon_forum, array("hp" => $getc['hp'])) : '');
                         $email = ($getc['email'] ? '<br />'.show(_emailicon_forum, array("email" => eMailAddr($getc['email']))) : '');
-                        $nick = show(_link_mailto, array("nick" => re($getc['nick']), "email" => eMailAddr($getc['email'])));
+                        $nick = show(_link_mailto, array("nick" => string::decode($getc['nick']), "email" => eMailAddr($getc['email'])));
                     }
                     else
                     {
@@ -206,8 +206,8 @@ else
                     $titel = show(_eintrag_titel, array("postid" => $i, "datum" => date("d.m.Y", $getc['datum']), "zeit" => date("H:i", $getc['datum'])._uhr, "edit" => $edit, "delete" => $delete));
                     $posted_ip = ($chkMe == 4 ? $getc['ip'] : _logged);
                     $comments .= show("page/comments_show", array("titel" => $titel,
-                                                                  "comment" => bbcode($getc['comment']),
-                                                                  "editby" => bbcode($getc['editby']),
+                                                                  "comment" => bbcode::parse_html($getc['comment']),
+                                                                  "editby" => bbcode::parse_html($getc['editby']),
                                                                   "nick" => $nick,
                                                                   "email" => $email,
                                                                   "hp" => $hp,
@@ -244,8 +244,8 @@ else
                                                                 "prevurl" => '../downloads/?action=compreview&id='.$dl_id,
                                                                 "postemail" => (isset($_POST['email']) && !empty($error) ? $_POST['email'] : ''),
                                                                 "posthp" => (isset($_POST['hp']) && !empty($error) ? $_POST['hp'] : ''),
-                                                                "postnick" => (isset($_POST['nick']) && !empty($error) ? re($_POST['nick']) : ''),
-                                                                "posteintrag" => (isset($_POST['comment']) && !empty($error) ? re_bbcode($_POST['comment']) : ''),
+                                                                "postnick" => (isset($_POST['nick']) && !empty($error) ? string::decode($_POST['nick']) : ''),
+                                                                "posteintrag" => (isset($_POST['comment']) && !empty($error) ? string::decode($_POST['comment']) : ''),
                                                                 "error" => $error));
                     }
                 }
@@ -258,7 +258,7 @@ else
 
             //////////////////////////////////////////////////////////////////////////////////////////
 
-            $rawfile = (!links_check_url($file) ? @basename($file) : re($get['download']));
+            $rawfile = (!links_check_url($file) ? @basename($file) : string::decode($get['download']));
             $date = (empty($get['date']) ? (!$size ? 'n/a' : date("d.m.Y H:i",@filemtime($file))._uhr) : date("d.m.Y H:i",$get['date'])._uhr);
             $lastdate = date("d.m.Y H:i",$get['last_dl'])._uhr;
             $index = show($dir."/info", array("getfile" => $getfile,
@@ -268,13 +268,13 @@ else
                                               "date" => $date,
                                               "lastdate" => $lastdate,
                                               "id" => $_GET['id'],
-                                              "dlname" => re($get['download']),
+                                              "dlname" => string::decode($get['download']),
                                               "loaded" => $get['hits'],
                                               "traffic" => $traffic,
                                               "dsl_speed" => download_time($size),
                                               "size" => $dlsize,
                                               "showmore" => $showmore,
-                                              "besch" => bbcode($get['beschreibung'])));
+                                              "besch" => bbcode::parse_html($get['beschreibung'])));
         }
     }
 }

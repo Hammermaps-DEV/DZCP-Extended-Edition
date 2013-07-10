@@ -16,7 +16,7 @@ include("../inc/buffer.php");
 ##############
 include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
-include(basePath."/inc/bbcode.php");
+include(basePath."/inc/common.php");
 
 ##############
 ## SETTINGS ##

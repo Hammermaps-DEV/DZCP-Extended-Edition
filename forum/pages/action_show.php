@@ -90,7 +90,7 @@ else
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $gets = _fetch($qrys);
 
-                $threadlink = show(_forum_thread_link, array("topic" => re(cut($get['topic'],config('l_forumtopic'))),
+                $threadlink = show(_forum_thread_link, array("topic" => string::decode(cut($get['topic'],config('l_forumtopic'))),
                         "id" => $get['id'],
                         "kid" => $gets['id'],
                         "sticky" => $sticky,
@@ -99,7 +99,7 @@ else
                         "lpid" => $cntpage+1,
                         "page" => $pagenr));
             } else {
-                $threadlink = show(_forum_thread_search_link, array("topic" => re(cut($get['topic'],config('l_forumtopic'))),
+                $threadlink = show(_forum_thread_search_link, array("topic" => string::decode(cut($get['topic'],config('l_forumtopic'))),
                         "id" => $get['id'],
                         "sticky" => $sticky,
                         "hl" => $_POST['suche'],
@@ -125,7 +125,7 @@ else
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $threads .= show($dir."/forum_show_threads", array("new" => check_new_old($get['lp']),
                     "topic" => $threadlink,
-                    "subtopic" => re(cut($get['subtopic'],config('l_forumsubtopic'))),
+                    "subtopic" => string::decode(cut($get['subtopic'],config('l_forumsubtopic'))),
                     "hits" => $get['hits'],
                     "replys" => cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'"),
                     "class" => $class,
@@ -140,7 +140,7 @@ else
 
         $search = show($dir."/forum_skat_search", array("head_search" => _forum_head_skat_search,
                 "id" => $_GET['id'],
-                "suchwort" => re($_POST['suche'])));
+                "suchwort" => string::decode($_POST['suche'])));
         $nav = nav($entrys,$maxfthreads,"?action=show&amp;id=".$_GET['id']."");
 
         if(!empty($_POST['suche']))
@@ -174,12 +174,12 @@ else
                 WHERE id = '".$subkat['sid']."'");
         $kat = _fetch($qryk);
 
-        $wheres = show(_forum_subkat_where, array("where" => re($gets['kattopic']),
+        $wheres = show(_forum_subkat_where, array("where" => string::decode($gets['kattopic']),
                 "id" => $gets['id']));
 
         $index = show($dir."/forum_show", array("head" => _forum_head,
                 "where" => $wheres,
-                "mainkat" => re($kat['name']),
+                "mainkat" => string::decode($kat['name']),
                 "what" => $what,
                 "search" => $search));
     }

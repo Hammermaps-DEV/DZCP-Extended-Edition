@@ -26,11 +26,11 @@ else
             $cnt = convert::ToString($files ? count($files) : 0);
             $image = '../inc/ajax.php?loader=thumbgen&file=uploads/gallery/'.$files[rand(0,$cnt-1)];
             $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
-            $show .= show($dir."/gallery_show", array("link" => re($get['kat']),
+            $show .= show($dir."/gallery_show", array("link" => string::decode($get['kat']),
                                                       "images" => $cntpics,
                                                       "image" => $image,
                                                       "id" => $get['id'],
-                                                      "beschreibung" => bbcode($get['beschreibung']),
+                                                      "beschreibung" => bbcode::parse_html($get['beschreibung']),
                                                       "cnt" => $cnt));
         }
     }

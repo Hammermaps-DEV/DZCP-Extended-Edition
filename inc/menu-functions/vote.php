@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function vote($ajax = false)
 {
     $qry = db("SELECT * FROM ".dba::get('votes')." WHERE menu = '1' AND forum = 0");
@@ -6,7 +17,7 @@ function vote($ajax = false)
     {
       $get = _fetch($qry);
       $qryv = db("SELECT * FROM ".dba::get('vote_results')." WHERE vid = '".$get['id']."' ORDER BY what");
-      $results = "";
+      $results = ""; $votebutton = ""; $stimmen = "";
       while ($getv = _fetch($qryv))
       {
         $stimmen = sum(dba::get('vote_results'), " WHERE vid = '".$get['id']."'", "stimmen");
@@ -17,24 +28,23 @@ function vote($ajax = false)
           {
             $percent = round($getv['stimmen']/$stimmen*100,1);
             $rawpercent = round($getv['stimmen']/$stimmen*100,0);
-            $votebutton = "";
-            $results .= show("menu/vote_results", array("answer" => re($getv['sel']),
+            $results .= show("menu/vote_results", array("answer" => string::decode($getv['sel']),
                                                         "percent" => $percent,
                                                         "stimmen" => $getv['stimmen'],
                                                         "width" => $rawpercent));
           } else {
             $votebutton = '<input id="contentSubmitVote" type="submit" value="'._button_value_vote.'" class="voteSubmit" />';
             $results .= show("menu/vote_vote", array("id" => $getv['id'],
-                                                     "answer" => re($getv['sel'])));
+                                                     "answer" => string::decode($getv['sel'])));
           }
         } else {
           $votebutton = '<input id="contentSubmitVote" type="submit" value="'._button_value_vote.'" class="voteSubmit" />';
           $results .= show("menu/vote_vote", array("id" => $getv['id'],
-                                                   "answer" => re($getv['sel'])));
+                                                   "answer" => string::decode($getv['sel'])));
         }
       }
 
-      $vote = show("menu/vote", array("titel" => re($get['titel']),
+      $vote = show("menu/vote", array("titel" => string::decode($get['titel']),
                                       "vid" => $get['id'],
                                       "results" => $results,
                                       "votebutton" => $votebutton,

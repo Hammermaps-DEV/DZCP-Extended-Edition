@@ -29,7 +29,7 @@ if(_adminMenu != 'true')
           $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
 
           $add = db("INSERT INTO ".dba::get('profile')."
-                     SET `name` = '".up($name)."',
+                     SET `name` = '".string::encode($name)."',
                                    `type` = '".convert::ToInt($_POST['type'])."',
                          `kid`  = '".convert::ToInt($_POST['kat'])."'");
               $insID = database::get_insert_id();
@@ -61,7 +61,7 @@ if(_adminMenu != 'true')
           $type = str_replace("<option value='".$get['type']."'>", "<option selected=\"selected\" value='".$get['type']."'>", _profile_type_dropdown);
 
         $show = show($dir."/form_profil_edit", array("name" => _profile_name,
-                                                                             "p_name" => re($get['name']),
+                                                                             "p_name" => string::decode($get['name']),
                                                                              "kat" => _profile_kat,
                                                                              "type" => _profile_type,
                                                                              "id" => $_GET['id'],
@@ -79,7 +79,7 @@ if(_adminMenu != 'true')
           $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
 
               $add = db("UPDATE ".dba::get('profile')."
-                     SET `name`  = '".up($name)."',
+                     SET `name`  = '".string::encode($name)."',
                                    `kid`   = '".convert::ToInt($_POST['kat'])."',
                                    `type`  = '".convert::ToInt($_POST['type'])."',
                                    `shown` = '".convert::ToInt($_POST['shown'])."'
@@ -120,9 +120,9 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=profile&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_profil)));
+                                                            "del" => _confirm_del_profil));
           $show_about .= show($dir."/profil_show", array("class" => $class,
-                                                         "name" => re($get['name']),
+                                                         "name" => string::decode($get['name']),
                                                                                "type" => $type,
                                                                                    "shown" => $shown,
                                                          "edit" => $edit,
@@ -149,9 +149,9 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=profile&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_profil)));
+                                                            "del" => _confirm_del_profil));
           $show_clan .= show($dir."/profil_show", array("class" => $class,
-                                                        "name" => re($get['name']),
+                                                        "name" => string::decode($get['name']),
                                                                               "type" => $type,
                                                                                   "shown" => $shown,
                                                         "edit" => $edit,
@@ -177,9 +177,9 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=profile&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_profil)));
+                                                            "del" => _confirm_del_profil));
           $show_contact .= show($dir."/profil_show", array("class" => $class,
-                                                           "name" => re($get['name']),
+                                                           "name" => string::decode($get['name']),
                                                                                  "type" => $type,
                                                                                        "shown" => $shown,
                                                            "edit" => $edit,
@@ -205,9 +205,9 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=profile&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_profil)));
+                                                            "del" => _confirm_del_profil));
           $show_favos .= show($dir."/profil_show", array("class" => $class,
-                                                         "name" => re($get['name']),
+                                                         "name" => string::decode($get['name']),
                                                                                "type" => $type,
                                                                                    "shown" => $shown,
                                                          "edit" => $edit,
@@ -233,9 +233,9 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=profile&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_profil)));
+                                                            "del" => _confirm_del_profil));
           $show_hardware .= show($dir."/profil_show", array("class" => $class,
-                                                            "name" => re($get['name']),
+                                                            "name" => string::decode($get['name']),
                                                                                   "type" => $type,
                                                                                         "shown" => $shown,
                                                             "edit" => $edit,

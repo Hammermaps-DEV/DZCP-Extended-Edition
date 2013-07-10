@@ -96,7 +96,7 @@ else
                                               "br2" => "",
                                               "tgl" => $toggle,
                                                                     "display" => $display,
-                                              "question1" => re($getv['titel']),
+                                              "question1" => string::decode($getv['titel']),
                                               "a1" => voteanswer("a1", $getv['id']),
                                               "a2" => voteanswer("a2", $getv['id']),
                                               "a3" => voteanswer("a3", $getv['id']),
@@ -134,14 +134,14 @@ else
                                           "what" => _button_value_edit,
                                           "dowhat" => $dowhat,
                                           "error" => "",
-                                          "posttopic" => re($get['topic']),
-                                          "postsubtopic" => re($get['subtopic']),
-                                          "postnick" => re($get['t_nick']),
+                                          "posttopic" => string::decode($get['topic']),
+                                          "postsubtopic" => string::decode($get['subtopic']),
+                                          "postnick" => string::decode($get['t_nick']),
                                           "postemail" => $get['t_email'],
                                           "posthp" => $get['t_hp'],
                                           "admin" => $admin,
                                           "vote" => $vote,
-                                          "posteintrag" => bbcode($get['t_text'],0,1)));
+                                          "posteintrag" => bbcode::parse_html($get['t_text'])));
     } else {
       $index = error(_error_wrong_permissions);
     }
@@ -212,7 +212,7 @@ else
           $vote = show($dir."/form_vote", array("head" => _votes_admin_head,
                                               "value" => _button_value_add,
                                               "what" => "&amp;do=add",
-                                              "question1" => re($_POST['question']),
+                                              "question1" => string::decode($_POST['question']),
                                               "a1" => $_POST['a1'],
                                               "closed" => $closed,
                         "tgl" => "expand",
@@ -252,10 +252,10 @@ else
                                             "dowhat" => $dowhat,
                                             "posthp" => $_POST['hp'],
                                               "postemail" => $_POST['email'],
-                                              "postnick" => re($_POST['nick']),
-                                              "posteintrag" => re_bbcode($_POST['eintrag']),
-                                            "posttopic" => re($_POST['topic']),
-                                            "postsubtopic" => re($_POST['subtopic']),
+                                              "postnick" => string::decode($_POST['nick']),
+                                              "posteintrag" => string::decode($_POST['eintrag']),
+                                            "posttopic" => string::decode($_POST['topic']),
+                                            "postsubtopic" => string::decode($_POST['subtopic']),
                                               "error" => $error,
                                             "admin" => $admin,
                                                 "vote" => $vote,
@@ -273,18 +273,18 @@ else
        $vid = $gett['vote'];
 
         $upd = db("UPDATE ".dba::get('votes')."
-                   SET `titel`  = '".up($_POST['question'])."',
+                   SET `titel`  = '".string::encode($_POST['question'])."',
                        `intern` = '".convert::ToInt($_POST['intern'])."',
                        `closed` = '".convert::ToInt($_POST['closed'])."'
                    WHERE id = '".$gett['vote']."'");
 
         $upd1 = db("UPDATE ".dba::get('vote_results')."
-                    SET `sel` = '".up($_POST['a1'])."'
+                    SET `sel` = '".string::encode($_POST['a1'])."'
                     WHERE what = 'a1'
                     AND vid = '".$gett['vote']."'");
 
         $upd2 = db("UPDATE ".dba::get('vote_results')."
-                    SET `sel` = '".up($_POST['a2'])."'
+                    SET `sel` = '".string::encode($_POST['a2'])."'
                     WHERE what = 'a2'
                     AND vid = '".$gett['vote']."'");
 
@@ -295,14 +295,14 @@ else
             if(cnt(dba::get('vote_results'), " WHERE vid = '".$gett['vote']."' AND what = 'a".$i."'") != 0)
             {
               $upd = db("UPDATE ".dba::get('vote_results')."
-                         SET `sel` = '".up($_POST['a'.$i.''])."'
+                         SET `sel` = '".string::encode($_POST['a'.$i.''])."'
                          WHERE what = 'a".$i."'
                          AND vid = '".$gett['vote']."'");
             } else {
               $ins = db("INSERT INTO ".dba::get('vote_results')."
                          SET `vid` = '".$gett['vote']."',
                              `what` = 'a".$i."',
-                             `sel` = '".up($_POST['a'.$i.''])."'");
+                             `sel` = '".string::encode($_POST['a'.$i.''])."'");
             }
           }
 
@@ -316,7 +316,7 @@ else
         } elseif(empty($gett['vote']) && !empty($_POST['question'])) {
           $qry = db("INSERT INTO ".dba::get('votes')."
                      SET `datum`  = '".time()."',
-                         `titel`  = '".up($_POST['question'])."',
+                         `titel`  = '".string::encode($_POST['question'])."',
                          `intern` = '".convert::ToInt($_POST['intern'])."',
                                      `forum`  = 1,
                          `von`    = '".convert::ToInt($userid)."'");
@@ -326,68 +326,68 @@ else
           $qry = db("INSERT INTO ".dba::get('vote_results')."
                     SET `vid`   = '".convert::ToInt($vid)."',
                         `what`  = 'a1',
-                        `sel`   = '".up($_POST['a1'])."'");
+                        `sel`   = '".string::encode($_POST['a1'])."'");
 
           $qry = db("INSERT INTO ".dba::get('vote_results')."
                      SET `vid`  = '".convert::ToInt($vid)."',
                          `what` = 'a2',
-                         `sel`  = '".up($_POST['a2'])."'");
+                         `sel`  = '".string::encode($_POST['a2'])."'");
 
           if(!empty($_POST['a3']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a3',
-                           `sel`  = '".up($_POST['a3'])."'");
+                           `sel`  = '".string::encode($_POST['a3'])."'");
           }
           if(!empty($_POST['a4']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a4',
-                           `sel`  = '".up($_POST['a4'])."'");
+                           `sel`  = '".string::encode($_POST['a4'])."'");
           }
           if(!empty($_POST['a5']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a5',
-                           `sel`  = '".up($_POST['a5'])."'");
+                           `sel`  = '".string::encode($_POST['a5'])."'");
           }
           if(!empty($_POST['a6']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a6',
-                           `sel`  = '".up($_POST['a6'])."'");
+                           `sel`  = '".string::encode($_POST['a6'])."'");
           }
           if(!empty($_POST['a7']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a7',
-                           `sel`  = '".up($_POST['a7'])."'");
+                           `sel`  = '".string::encode($_POST['a7'])."'");
           }
           if(!empty($_POST['a8']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a8',
-                           `sel`  = '".up($_POST['a8'])."'");
+                           `sel`  = '".string::encode($_POST['a8'])."'");
           }
           if(!empty($_POST['a9']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a9',
-                           `sel`  = '".up($_POST['a9'])."'");
+                           `sel`  = '".string::encode($_POST['a9'])."'");
           }
           if(!empty($_POST['a10']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a10',
-                           `sel`  = '".up($_POST['a10'])."'");
+                           `sel`  = '".string::encode($_POST['a10'])."'");
           }
         } else { $vid = ""; }
 
@@ -408,12 +408,12 @@ else
                                            "time" => date("d.m.Y H:i", time())._uhr));
 
           $qry = db("UPDATE ".dba::get('f_threads')."
-                             SET `topic`    = '".up($_POST['topic'])."',
-                       `subtopic` = '".up($_POST['subtopic'])."',
-                       `t_nick`   = '".up($_POST['nick'])."',
-                       `t_email`  = '".up($_POST['email'])."',
+                             SET `topic`    = '".string::encode($_POST['topic'])."',
+                       `subtopic` = '".string::encode($_POST['subtopic'])."',
+                       `t_nick`   = '".string::encode($_POST['nick'])."',
+                       `t_email`  = '".string::encode($_POST['email'])."',
                        `t_hp`     = '".links($_POST['hp'])."',
-                       `t_text`   = '".up($_POST['eintrag'],1)."',
+                       `t_text`   = '".string::encode($_POST['eintrag'],1)."',
                        `sticky`   = '".convert::ToInt($_POST['sticky'])."',
                        `global`   = '".convert::ToInt($_POST['global'])."',
                                             `vote`     = '".$vid."',
@@ -430,9 +430,9 @@ else
           $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
           $gettopic = _fetch($topic);
 
-          $subj = show(re(settings('eml_fabo_tedit_subj')), array("titel" => $title));
+          $subj = show(string::decode(settings('eml_fabo_tedit_subj')), array("titel" => $title));
 
-           $message = show(re(settings('eml_fabo_tedit')), array("nick" => re($getabo['nick']),
+           $message = show(string::decode(settings('eml_fabo_tedit')), array("nick" => string::decode($getabo['nick']),
                                                                 "postuser" => fabo_autor(convert::ToInt($userid)),
                                                             "topic" => $gettopic['topic'],
                                                             "titel" => $title,
@@ -440,10 +440,10 @@ else
                                                             "id" => convert::ToInt($_GET['id']),
                                                             "entrys" => "1",
                                                             "page" => "1",
-                                                            "text" => bbcode($_POST['eintrag']),
+                                                            "text" => bbcode::parse_html($_POST['eintrag']),
                                                             "clan" => $clanname));
 
-          sendMail(re($getabo['email']),$subj,$message);
+          sendMail(string::decode($getabo['email']),$subj,$message);
         }
       }
 
@@ -600,7 +600,7 @@ else
             $vote = show($dir."/form_vote", array("head" => _votes_admin_head,
                             "value" => _button_value_add,
                             "what" => "&amp;do=add",
-                            "question1" => re($_POST['question']),
+                            "question1" => string::decode($_POST['question']),
                             "a1" => $_POST['a1'],
                             "closed" => $closed,
                             "br1" => "<!--",
@@ -639,11 +639,11 @@ else
                                                                                             "dowhat" => $dowhat,
                                                                                             "posthp" => $_POST['hp'],
                                                 "postemail" => $_POST['email'],
-                                                "postnick" => re($_POST['nick']),
+                                                "postnick" => string::decode($_POST['nick']),
                                                                                             "ip" => _iplog_info,
-                                                "posteintrag" => re_bbcode($_POST['eintrag']),
-                                                                                            "posttopic" => re($_POST['topic']),
-                                                                                            "postsubtopic" => re($_POST['subtopic']),
+                                                "posteintrag" => string::decode($_POST['eintrag']),
+                                                                                            "posttopic" => string::decode($_POST['topic']),
+                                                                                            "postsubtopic" => string::decode($_POST['subtopic']),
                                                 "error" => $error,
                                                                                             "admin" => $admin,
                                                 "vote" => $vote,
@@ -660,7 +660,7 @@ else
 
                         $qry = db("INSERT INTO ".dba::get('votes')."
                                              SET `datum`  = '".time()."',
-                                                     `titel`  = '".up($_POST['question'])."',
+                                                     `titel`  = '".string::encode($_POST['question'])."',
                                                      ".$ivote."
                                                      `forum`  = 1,
                                                      `von`    = '".convert::ToInt($userid)."'");
@@ -670,81 +670,81 @@ else
                         $qry = db("INSERT INTO ".dba::get('vote_results')."
                                             SET `vid`   = '".convert::ToInt($vid)."',
                                                     `what`  = 'a1',
-                                                    `sel`   = '".up($_POST['a1'])."'");
+                                                    `sel`   = '".string::encode($_POST['a1'])."'");
 
                         $qry = db("INSERT INTO ".dba::get('vote_results')."
                                              SET `vid`  = '".convert::ToInt($vid)."',
                                                      `what` = 'a2',
-                                                     `sel`  = '".up($_POST['a2'])."'");
+                                                     `sel`  = '".string::encode($_POST['a2'])."'");
 
                         if(!empty($_POST['a3']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a3',
-                                                         `sel`  = '".up($_POST['a3'])."'");
+                                                         `sel`  = '".string::encode($_POST['a3'])."'");
                         }
                         if(!empty($_POST['a4']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a4',
-                                                         `sel`  = '".up($_POST['a4'])."'");
+                                                         `sel`  = '".string::encode($_POST['a4'])."'");
                         }
                         if(!empty($_POST['a5']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a5',
-                                                         `sel`  = '".up($_POST['a5'])."'");
+                                                         `sel`  = '".string::encode($_POST['a5'])."'");
                         }
                         if(!empty($_POST['a6']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a6',
-                                                         `sel`  = '".up($_POST['a6'])."'");
+                                                         `sel`  = '".string::encode($_POST['a6'])."'");
                         }
                         if(!empty($_POST['a7']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a7',
-                                                         `sel`  = '".up($_POST['a7'])."'");
+                                                         `sel`  = '".string::encode($_POST['a7'])."'");
                         }
                         if(!empty($_POST['a8']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a8',
-                                                         `sel`  = '".up($_POST['a8'])."'");
+                                                         `sel`  = '".string::encode($_POST['a8'])."'");
                         }
                         if(!empty($_POST['a9']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a9',
-                                                         `sel`  = '".up($_POST['a9'])."'");
+                                                         `sel`  = '".string::encode($_POST['a9'])."'");
                         }
                         if(!empty($_POST['a10']))
                         {
                             $qry = db("INSERT INTO ".dba::get('vote_results')."
                                                  SET `vid`  = '".convert::ToInt($vid)."',
                                                          `what` = 'a10',
-                                                         `sel`  = '".up($_POST['a10'])."'");
+                                                         `sel`  = '".string::encode($_POST['a10'])."'");
                         }
             } else { $vid = ""; }
 
             $qry = db("INSERT INTO ".dba::get('f_threads')."
                                  SET 	`kid`      = '".convert::ToInt($_GET['kid'])."',
                                                 `t_date`   = '".time()."',
-                                                `topic`    = '".up($_POST['topic'])."',
-                                                `subtopic` = '".up($_POST['subtopic'])."',
-                                                `t_nick`   = '".up($_POST['nick'])."',
-                                                `t_email`  = '".up($_POST['email'])."',
+                                                `topic`    = '".string::encode($_POST['topic'])."',
+                                                `subtopic` = '".string::encode($_POST['subtopic'])."',
+                                                `t_nick`   = '".string::encode($_POST['nick'])."',
+                                                `t_email`  = '".string::encode($_POST['email'])."',
                                                 `t_hp`     = '".links($_POST['hp'])."',
                                                 `t_reg`    = '".convert::ToInt($userid)."',
-                                                `t_text`   = '".up($_POST['eintrag'],1)."',
+                                                `t_text`   = '".string::encode($_POST['eintrag'])."',
                                                 `sticky`   = '".convert::ToInt($_POST['sticky'])."',
                                                 `global`   = '".convert::ToInt($_POST['global'])."',
                                                 `ip`       = '".visitorIp()."',

@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function l_news()
 {
     global $allowHover;
@@ -13,8 +24,8 @@ function l_news()
             while($get = _fetch($qry))
             {
                 $getkat = db("SELECT kategorie FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
-                $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['titel'])).'\', \''._datum.';'._autor.';'._news_admin_kat.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.fabo_autor($get['autor']).';'.jsconvert(re($getkat['kategorie'])).';'.cnt(dba::get('newscomments'),"WHERE news = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"' : '');
-                $l_news .= show("menu/last_news", array("id" => $get['id'], "titel" => re(cut($get['titel'],$lnewsconfig['l_lnews'])), "datum" => date("d.m.Y", $get['datum']), "info" => $info));
+                $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['titel'])).'\', \''._datum.';'._autor.';'._news_admin_kat.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.fabo_autor($get['autor']).';'.jsconvert(string::decode($getkat['kategorie'])).';'.cnt(dba::get('newscomments'),"WHERE news = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"' : '');
+                $l_news .= show("menu/last_news", array("id" => $get['id'], "titel" => string::decode(cut($get['titel'],$lnewsconfig['l_lnews'])), "datum" => date("d.m.Y", $get['datum']), "info" => $info));
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

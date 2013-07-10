@@ -35,8 +35,8 @@ else
                     db("UPDATE `".dba::get('users')."` SET `actkey` = '".($guid=GenGuid())."' WHERE `id` = ".$get['id']);
                     $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
                     $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
-                    sendMail($get['email'],re(settings('eml_akl_register_subj')),show(settings('eml_akl_register'), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
-                    $index = info(show(_reg_akl_sended,array('email' => re($get['email']))), "../user/?action=login");
+                    sendMail($get['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+                    $index = info(show(_reg_akl_sended,array('email' => string::decode($get['email']))), "../user/?action=login");
                 }
                 else if(!$get['level'] && empty($get['actkey']))
                     $index = info(_reg_akl_locked, "../news/index.php");

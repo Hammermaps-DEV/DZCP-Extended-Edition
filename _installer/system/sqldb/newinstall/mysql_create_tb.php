@@ -46,6 +46,7 @@ function install_mysql_create()
       `viewed` int(11) NOT NULL DEFAULT '0',
       `public` int(1) NOT NULL DEFAULT '0',
       `comments` int(1) NOT NULL DEFAULT '1',
+      `custom_image` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
@@ -633,6 +634,7 @@ function install_mysql_create()
       `kat` varchar(20) DEFAULT '',
       `shown` int(1) NOT NULL DEFAULT '1',
       `name` varchar(249) DEFAULT '',
+      `title` varchar(249) NOT NULL DEFAULT '',
       `url` varchar(249) DEFAULT '',
       `target` int(1) NOT NULL DEFAULT '0',
       `type` int(1) NOT NULL DEFAULT '0',
@@ -746,7 +748,6 @@ function install_mysql_create()
       `editkalender` int(1) NOT NULL DEFAULT '0',
       `editserver` int(1) NOT NULL DEFAULT '0',
       `editteamspeak` int(1) NOT NULL DEFAULT '0',
-      `edittactics` int(1) NOT NULL DEFAULT '0',
       `editsquads` int(1) NOT NULL DEFAULT '0',
       `editusers` int(1) NOT NULL DEFAULT '0',
       `editor` int(1) NOT NULL DEFAULT '0',
@@ -1027,22 +1028,6 @@ function install_mysql_create()
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `squad` int(2) NOT NULL DEFAULT '0',
-      PRIMARY KEY (`id`)
-    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-
-    //===============================================================
-    //-> Taktiken ===================================================
-    //===============================================================
-    db("DROP TABLE IF EXISTS `".dba::get('taktik')."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".dba::get('taktik')."` (
-      `id` int(10) NOT NULL AUTO_INCREMENT,
-      `datum` int(20) NOT NULL DEFAULT '0',
-      `map` varchar(20) NOT NULL DEFAULT '',
-      `spart` text NOT NULL,
-      `standardt` text NOT NULL,
-      `sparct` text NOT NULL,
-      `standardct` text NOT NULL,
-      `autor` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 

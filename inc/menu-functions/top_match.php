@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function top_match()
 {
     global $allowHover,$picformat;
@@ -22,12 +33,12 @@ function top_match()
             }
 
             if($allowHover == 1 || $allowHover == 2)
-                $hover = 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['name'])).' vs. '.jsconvert(re($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(re($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
+                $hover = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['name'])).' vs. '.jsconvert(string::decode($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(string::decode($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
 
             $topmatch = show("menu/top_match", array("id" => $get['id'],
-                                                     "clantag" => re(cut($get['clantag'],($llwars=config('l_lwars')))),
-                                                     "team" => re(cut($get['name'],$llwars)),
-                                                     //"game" => substr(strtoupper(str_replace('.'.re($get['icon']), '', re($get['icon']))), 0, 5), // unused
+                                                     "clantag" => string::decode(cut($get['clantag'],($llwars=config('l_lwars')))),
+                                                     "team" => string::decode(cut($get['name'],$llwars)),
+                                                     //"game" => substr(strtoupper(str_replace('.'.string::decode($get['icon']), '', string::decode($get['icon']))), 0, 5), // unused
                                                      "id" => $get['id'],
                                                      "gegner" => $gegner,
                                                      "squad" => $squad,

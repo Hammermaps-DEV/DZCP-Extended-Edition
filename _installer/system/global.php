@@ -49,6 +49,7 @@ define('no_nick', 'Sie haben keinen Nicknamen eingegeben!<br />&Uuml;berpr&uuml;
 define('no_email', 'Sie haben keine E-Mail Adresse eingetragen!<br />&Uuml;berpr&uuml;fen Sie ihre Eingaben und wiederholen Sie den Vorgang.');
 define('no_clanname', 'Sie haben keinen Clannamen eingetragen!<br />&Uuml;berpr&uuml;fen Sie ihre Eingaben und wiederholen Sie den Vorgang.');
 define('mysql_no_prefix', 'Der SQL-Prefix muss angegeben werden!');
+define('mysql_no_ext', 'Die PHP-MySQLi Erweiterung fehlt!');
 define('mysql_no_login', 'Es konnte keine Verbindung zur Datenbank aufgebaut werden!<br />&Uuml;berpr&uuml;fen Sie User und Passwort!');
 define('mysql_no_db', 'Die angegebene Datenbank konnte nicht gefunden werden!<br />&Uuml;berpr&uuml;fen Sie den eingegebenen Datenbanknamen!');
 define('mysql_no_con_server', 'Es konnte keine Verbindung zur Datenbank aufgebaut werden!<br />&Uuml;berpr&uuml;fen Sie Host und Port des Servers.');
@@ -62,3 +63,4 @@ define('saved_user', 'Die Datenbank Informationen wurden erfolgreich gespeichert
 define('no_db_update', 'Die Datenbank ist bereits aktuell, es ist kein Update deiner Datenbank notwendig.');
 define('no_db_update_selected', 'Du musst die zuvor installierte Version von DZCP ausw&auml;hlen um mit dem Update zu beginnen!');
 define('_error_invalid_email', 'Du hast eine ung&uuml;ltige Emailadresse angegeben!');
+define('php_version_error', 'Die DZCP Extended Edition erfordert PHP 5.3.0 oder höher!');

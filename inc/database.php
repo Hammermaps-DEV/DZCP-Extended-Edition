@@ -35,7 +35,10 @@ function db_stmt($query,$params=array(),$rows=false,$fetch=false,$log=false)
         database::stmt_query($query,$params,$log);
 
         if($fetch && !$rows)
-            $return = database::fetch(false)[0];
+        {
+            $return = database::fetch(false);
+            $return = $return[0];
+        }
         else
             $return = database::rows();
 
@@ -216,7 +219,8 @@ class database
             if(!mysqli_options(self::$mysqli, MYSQLI_OPT_CONNECT_TIMEOUT, 5))
                 die('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
 
-            if (!self::$mysqli=mysqli_connect($db_array['host'], $db_array['user'], $db_array['pass'], $db_array['db']))
+            $use_persistconns = (ini_get('mysqli.allow_persistent') == '0' || ini_get('mysqli.max_persistent') == '0' ? false : runtime_sql_persistconns);
+            if (!self::$mysqli=mysqli_connect(($use_persistconns ? 'p:' : '').$db_array['host'], $db_array['user'], $db_array['pass'], $db_array['db']))
                 self::print_db_error();
         }
         else

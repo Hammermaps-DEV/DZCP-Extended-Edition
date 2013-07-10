@@ -177,17 +177,24 @@ function mysqlTableEngine($con, $db, $table)
         $engineValue = 'Engine';
 
     $sql = "SHOW TABLE STATUS FROM " . $db . " LIKE '" . $table . "'";
-    $result = @mysql_query($sql,$con);
-    $row = @mysql_fetch_array( $result, MYSQL_ASSOC );
+    $result = @mysqli_query($con,$sql);
+    $row = @mysqli_fetch_assoc($result);
     return $row[$engineValue];
+}
+
+function mysqli_result($res, $row, $field=0)
+{
+    $res->data_seek($row);
+    $datarow = $res->fetch_array();
+    return $datarow[$field];
 }
 
 function mysqlVersion($con)
 {
     $vers = array();
     $sql = 'SELECT VERSION( ) AS versionsinfo';
-    $result = @mysql_query($sql,$con);
-    $version = @mysql_result( $result, 0, "versionsinfo" );
+    $result = @mysqli_query($con,$sql);
+    $version = @mysqli_result( $result, 0, "versionsinfo" );
     $match = explode( '.', $version );
     $vers['txt'] = $version;
     $vers['int'] = sprintf( '%d%02d%02d', $match[0], $match[1], convert::ToInt( $match[2] ) );
@@ -197,14 +204,14 @@ function mysqlVersion($con)
 //-> Prüft MySQL Server auf ndb Erweiterung
 function check_db_ndb($con)
 {
-    $db = mysql_get_server_info($con);
+    $db = mysqli_get_server_info($con);
     return (stristr($db, "ndb") !== false && stristr($db, "cluster") !== false);
 }
 
 //-> Prüft MySQL Server auf Aria Erweiterung
 function check_db_aria($con)
 {
-    $db = mysql_get_server_info($con);
+    $db = mysqli_get_server_info($con);
     return (stristr($db, "MariaDB") !== false && stristr($db, "Maria") !== false);
 }
 
@@ -367,14 +374,6 @@ function is_writable_array($array)
     }
 
     return array('return' => $data, 'status' => $status);
-}
-
-//-> Funktion um sauber in die DB einzutragen
-function up($txt, $bbcode=false, $charset=_charset)
-{
-    $txt = str_replace("& ","&amp; ",$txt);
-    $txt = spChars($txt);
-    return trim($txt);
 }
 
 //-> EMail wird auf korrekten Syntax überprüft

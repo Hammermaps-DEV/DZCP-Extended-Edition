@@ -15,8 +15,8 @@ WHERE status = '1'
 ORDER BY game ASC");
         while($get = _fetch($qry))
         {
-          $squads .= show(_cw_add_select_field_squads, array("name" => re($get['name']),
-                                                            "game" => re($get['game']),
+          $squads .= show(_cw_add_select_field_squads, array("name" => string::decode($get['name']),
+                                                            "game" => string::decode($get['game']),
    "id" => $get['id'],
    "icon" => $get['icon']));
         }
@@ -100,14 +100,11 @@ WHERE status = '1'
 ORDER BY game");
         while($gets = _fetch($qrym))
         {
-   if($get['squad_id'] == $gets['id']) $sel = "selected=\"selected\"";
-          else $sel = "";
-
-          $squads .= show(_cw_edit_select_field_squads, array("id" => $gets['id'],
-   "name" => re($gets['name']),
-                                                          "game" => re($gets['game']),
-   "sel" => $sel,
-   "icon" => $gets['icon']));
+            $squads .= show(_cw_edit_select_field_squads, array("id" => $gets['id'],
+                                                                "name" => string::decode($gets['name']),
+                                                                "game" => string::decode($gets['game']),
+                                                                "sel" => ($get['squad_id'] == $gets['id'] ? 'selected="selected"' : ''),
+                                                                "icon" => $gets['icon']));
    }
 
         $dropdown_date = show(_dropdown_date, array("day" => dropdown("day",date("d",$get['datum'])),
@@ -149,22 +146,22 @@ ORDER BY game");
                                            "serverpwd" => _server_password,
                                            "do" => "editcw&amp;id=".$_GET['id']."",
                                            "what" => _button_value_edit,
-                                           "cw_clantag" => re($get['clantag']),
-                                           "cw_gegner" => re($get['gegner']),
+                                           "cw_clantag" => string::decode($get['clantag']),
+                                           "cw_gegner" => string::decode($get['gegner']),
                                            "cw_url" => $get['url'],
                                            "cw_xonx1" => $xonx1,
                                            "logo" => _cw_logo,
                                            "cw_xonx2" => $xonx2,
-                                           "cw_maps" => re($get['maps']),
-   "cw_matchadmins" => re($get['matchadmins']),
-     "cw_lineup" => re($get['lineup']),
-   "cw_glineup" => re($get['glineup']),
-                                           "cw_servername" => re($get['servername']),
+                                           "cw_maps" => string::decode($get['maps']),
+   "cw_matchadmins" => string::decode($get['matchadmins']),
+     "cw_lineup" => string::decode($get['lineup']),
+   "cw_glineup" => string::decode($get['glineup']),
+                                           "cw_servername" => string::decode($get['servername']),
                                            "cw_serverip" => $get['serverip'],
-                                           "cw_serverpwd" => re($get['serverpwd']),
+                                           "cw_serverpwd" => string::decode($get['serverpwd']),
                                            "cw_punkte" => $get['punkte'],
                                            "cw_gpunkte" => $get['gpunkte'],
-                                           "cw_bericht" => re_bbcode($get['bericht']),
+                                           "cw_bericht" => string::decode($get['bericht']),
                                            "day" => date("d", $get['datum']),
    "dropdown_date" => $dropdown_date,
    "dropdown_time" => $dropdown_time,
@@ -177,9 +174,9 @@ ORDER BY game");
    "squad_info" => _cw_admin_head_squads,
                                            "game" => _member_admin_game,
                                            "squads" => $squads,
-                                           "cw_liga" => re($get['liga']),
+                                           "cw_liga" => string::decode($get['liga']),
    "country" => _cw_admin_head_country,
-   "cw_gametype" => re($get['gametype'])));
+   "cw_gametype" => string::decode($get['gametype'])));
       } elseif($_GET['do'] == "add") {
         if(empty($_POST['gegner']) || empty($_POST['clantag']) || empty($_POST['t']))
         {
@@ -200,21 +197,21 @@ SET ".$kid."
 ".$xonx."
 `datum` = '".convert::ToInt($datum)."',
 `squad_id` = '".convert::ToInt($_POST['squad'])."',
-`clantag` = '".up($_POST['clantag'])."',
-`gegner` = '".up($_POST['gegner'])."',
+`clantag` = '".string::encode($_POST['clantag'])."',
+`gegner` = '".string::encode($_POST['gegner'])."',
 `url` = '".links($_POST['url'])."',
-`liga` = '".up($_POST['liga'])."',
-`gametype` = '".up($_POST['gametype'])."',
+`liga` = '".string::encode($_POST['liga'])."',
+`gametype` = '".string::encode($_POST['gametype'])."',
 `punkte` = '".convert::ToInt($_POST['punkte'])."',
 `gpunkte` = '".convert::ToInt($_POST['gpunkte'])."',
-`maps` = '".up($_POST['maps'])."',
-`serverip` = '".up($_POST['serverip'])."',
-`servername` = '".up($_POST['servername'])."',
-`serverpwd` = '".up($_POST['serverpwd'])."',
-`lineup` = '".up($_POST['lineup'])."',
-`glineup` = '".up($_POST['glineup'])."',
-`matchadmins` = '".up($_POST['match_admins'])."',
-`bericht` = '".up($_POST['bericht'],1)."'");
+`maps` = '".string::encode($_POST['maps'])."',
+`serverip` = '".string::encode($_POST['serverip'])."',
+`servername` = '".string::encode($_POST['servername'])."',
+`serverpwd` = '".string::encode($_POST['serverpwd'])."',
+`lineup` = '".string::encode($_POST['lineup'])."',
+`glineup` = '".string::encode($_POST['glineup'])."',
+`matchadmins` = '".string::encode($_POST['match_admins'])."',
+`bericht` = '".string::encode($_POST['bericht'])."'");
 
           $cwid = database::get_insert_id();
 
@@ -316,21 +313,21 @@ SET ".$xonx."
 ".$kid."
 `datum` = '".convert::ToInt($datum)."',
 `squad_id` = '".convert::ToInt($_POST['squad'])."',
-`clantag` = '".up($_POST['clantag'])."',
-`gegner` = '".up($_POST['gegner'])."',
+`clantag` = '".string::encode($_POST['clantag'])."',
+`gegner` = '".string::encode($_POST['gegner'])."',
 `url` = '".links($_POST['url'])."',
-`liga` = '".up($_POST['liga'])."',
-`gametype` = '".up($_POST['gametype'])."',
+`liga` = '".string::encode($_POST['liga'])."',
+`gametype` = '".string::encode($_POST['gametype'])."',
 `punkte` = '".convert::ToInt($_POST['punkte'])."',
 `gpunkte` = '".convert::ToInt($_POST['gpunkte'])."',
-`maps` = '".up($_POST['maps'])."',
-`serverip` = '".up($_POST['serverip'])."',
-`servername` = '".up($_POST['servername'])."',
-`serverpwd` = '".up($_POST['serverpwd'])."',
-`lineup` = '".up($_POST['lineup'])."',
-`glineup` = '".up($_POST['glineup'])."',
-`matchadmins` = '".up($_POST['match_admins'])."',
-`bericht` = '".up($_POST['bericht'],1)."'
+`maps` = '".string::encode($_POST['maps'])."',
+`serverip` = '".string::encode($_POST['serverip'])."',
+`servername` = '".string::encode($_POST['servername'])."',
+`serverpwd` = '".string::encode($_POST['serverpwd'])."',
+`lineup` = '".string::encode($_POST['lineup'])."',
+`glineup` = '".string::encode($_POST['glineup'])."',
+`matchadmins` = '".string::encode($_POST['match_admins'])."',
+`bericht` = '".string::encode($_POST['bericht'])."'
 WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $cwid = $_GET['id'];
@@ -491,7 +488,7 @@ ORDER BY game ASC");
         {
 if($gets['id'] == $_GET['squad']) { $sel = ' class="dropdownKat"'; } else { $sel = ""; }
 
-          $squads .= show(_cw_edit_select_field_squads, array("name" => re($gets['name']),
+          $squads .= show(_cw_edit_select_field_squads, array("name" => string::decode($gets['name']),
 "sel" => $sel,
 "id" => "?admin=cw&amp;squad=".$gets['id'].""));
         }
@@ -507,11 +504,11 @@ if($gets['id'] == $_GET['squad']) { $sel = ' class="dropdownKat"'; } else { $sel
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=cw&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_cw)));
+                                                            "del" => _confirm_del_cw));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
           $show_ .= show($dir."/clanwars_show", array("class" => $class,
-                                                      "cw" => re($get['clantag'])." - ".re($get['gegner']),
+                                                      "cw" => string::decode($get['clantag'])." - ".string::decode($get['gegner']),
                                                       "datum" => date("d.m.Y H:i",$get['datum'])._uhr,
                                                       "top" => $top,
                                                       "id" => $get['id'],

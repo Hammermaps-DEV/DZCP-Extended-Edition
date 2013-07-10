@@ -15,12 +15,12 @@ if(_adminMenu != 'true')
         $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                           "action" => "admin=squads&amp;do=delete",
                                                           "title" => _button_title_del,
-                                                          "del" => convSpace(_confirm_del_team)));
+                                                          "del" => _confirm_del_team));
         $icon = show(_gameicon, array("icon" => $get['icon']));
 
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-        $squads .= show($dir."/squads_show", array("squad" => '<a href="../squads/?action=shows&amp;id='.$get['id'].'" style="display:block">'.re($get['name']).'</a>',
-                                                   "game" => re($get['game']),
+        $squads .= show($dir."/squads_show", array("squad" => '<a href="../squads/?action=shows&amp;id='.$get['id'].'" style="display:block">'.string::decode($get['name']).'</a>',
+                                                   "game" => string::decode($get['game']),
                                                    "icon" => $icon,
                                                    "edit" => $edit,
                                                    "class" => $class,
@@ -42,13 +42,13 @@ if(_adminMenu != 'true')
         {
           if($thiskat != $getnav['kat']) {
             $navigation .= '
-              <option class="dropdownKat" value="lazy">'.re($getnav['katname']).'</option>
-              <option value="'.re($getnav['placeholder']).'-1">-> '._admin_first.'</option>
+              <option class="dropdownKat" value="lazy">'.string::decode($getnav['katname']).'</option>
+              <option value="'.string::decode($getnav['placeholder']).'-1">-> '._admin_first.'</option>
             ';
           }
           $thiskat = $getnav['kat'];
 
-          $navigation .= empty($getnav['name']) ? '' : '<option value="'.re($getnav['placeholder']).'-'.($getnav['pos']+1).'">'._nach.' -> '.navi_name(re($getnav['name'])).'</option>';
+          $navigation .= empty($getnav['name']) ? '' : '<option value="'.string::decode($getnav['placeholder']).'-'.($getnav['pos']+1).'">'._nach.' -> '.navi_name(string::decode($getnav['name'])).'</option>';
         }
 
         $qry = db("SELECT * FROM ".dba::get('squads')." ORDER BY pos");
@@ -56,7 +56,7 @@ if(_adminMenu != 'true')
         {
           $positions .= show(_select_field, array("value" => $get['pos']+1,
                                                   "sel" => "",
-                                                  "what" => _nach.' '.re($get['name'])));
+                                                  "what" => _nach.' '.string::decode($get['name'])));
         }
 
         $files = get_files(basePath.'/inc/images/gameicons/custom/',false,true,array('gif','jpg','png'));
@@ -109,10 +109,10 @@ if(_adminMenu != 'true')
 
           db("UPDATE ".dba::get('squads')." SET `pos` = pos+1 WHERE pos ".$sign." '".convert::ToInt($_POST['position'])."'");
           $qry = db("INSERT INTO ".dba::get('squads')."
-                     SET `name`         = '".up($_POST['squad'])."',
-                         `game`         = '".up($_POST['game'])."',
-                         `icon`         = '".up($_POST['icon'])."',
-                         `beschreibung` = '".up($_POST['beschreibung'],1)."',
+                     SET `name`         = '".string::encode($_POST['squad'])."',
+                         `game`         = '".string::encode($_POST['game'])."',
+                         `icon`         = '".string::encode($_POST['icon'])."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                          `shown`        = '".convert::ToInt($_POST['show'])."',
                          `navi`       	= '".convert::ToInt($_POST['roster'])."',
                          `team_show`    = '".convert::ToInt($_POST['team_show'])."',
@@ -132,8 +132,8 @@ if(_adminMenu != 'true')
 
                         db("INSERT INTO ".dba::get('navi')."
                                 SET `pos`       = '".convert::ToInt($pos)."',
-                                        `kat`       = '".up($kat)."',
-                                        `name`      = '".up($_POST['squad'])."',
+                                        `kat`       = '".string::encode($kat)."',
+                                        `name`      = '".string::encode($_POST['squad'])."',
                                         `url`       = '../squads/?action=shows&amp;id=".$insert_id."',
                                         `shown`     = '1',
                                         `type`      = '2'");
@@ -186,12 +186,9 @@ if(_adminMenu != 'true')
                         AND pos = '".convert::ToInt(($get['pos']-1))."'");
             $mp = _fetch($mpos);
 
-            if($getpos['pos'] == $mp['pos']) $sel = "selected=\"selected\"";
-            else $sel = '';
-
             $positions .= show(_select_field, array("value" => $getpos['pos']+1,
-                                                    "what" => _nach.' '.re($getpos['name']),
-                                                    "sel" => $sel));
+                                                    "what" => _nach.' '.string::decode($getpos['name']),
+                                                    "sel" => ($getpos['pos'] == $mp['pos'] ? 'selected="selected"' : '')));
           }
         }
 
@@ -203,32 +200,24 @@ if(_adminMenu != 'true')
         {
           if($thiskat != $getnav['kat']) {
             $navigation .= '
-              <option class="dropdownKat" value="lazy">'.re($getnav['katname']).'</option>
-              <option value="'.re($getnav['placeholder']).'-1">-> '._admin_first.'</option>
+              <option class="dropdownKat" value="lazy">'.string::decode($getnav['katname']).'</option>
+              <option value="'.string::decode($getnav['placeholder']).'-1">-> '._admin_first.'</option>
             ';
           }
           $thiskat = $getnav['kat'];
           $sel[$i] = ($getnav['url'] == '../squads/?action=shows&amp;id='.convert::ToInt($_GET['id'])) ? 'selected="selected"' : '';
 
-          $navigation .= empty($getnav['name']) ? '' : '<option value="'.re($getnav['placeholder']).'-'.($getnav['pos']+1).'" '.$sel[$i].'>'._nach.' -> '.navi_name(re($getnav['name'])).'</option>';
+          $navigation .= empty($getnav['name']) ? '' : '<option value="'.string::decode($getnav['placeholder']).'-'.($getnav['pos']+1).'" '.$sel[$i].'>'._nach.' -> '.navi_name(string::decode($getnav['name'])).'</option>';
 
           $i++;
         }
 
-        if($get['shown'] == 1)  		$sshown = "checked=\"checked\"";
-        if($get['navi'] == 1)				$roster = "selected=\"selected\"";
-        if($get['status'] == 1) 		$status = "selected=\"selected\"";
-                if($get['team_show'] == 1) 	$team_show = "selected=\"selected\"";
-
         $files = get_files(basePath.'/inc/images/gameicons/custom/',false,true);
         foreach($files as $file)
         {
-          if($file == $get['icon']) $sel = "selected=\"selected\"";
-          else $sel = "";
-
           if(preg_match("#\.gif|.jpg|.png#Uis",$file))
             $gameicons .= show(_select_field, array("value" => $file,
-                                                    "sel" => $sel,
+                                                    "sel" => ($file == $get['icon'] ? 'selected="selected"' : ''),
                                                     "what" => strtoupper(preg_replace("#\.(.*?)$#","",$file))));
         }
 
@@ -266,16 +255,16 @@ if(_adminMenu != 'true')
                                                 "image" => $image,
                                                 "logoimage" => $logoimage,
                                                 "desc" => _dl_besch,
-                                                "beschreibung" => re_bbcode($get['beschreibung']),
-                                                "cstatus" => $status,
+                                                "beschreibung" => string::decode($get['beschreibung']),
+                                                "cstatus" => ($get['status'] ? 'selected="selected"' : ''),
                                                 "first" => _admin_first,
                                                 "info" => _admin_squad_show_info,
                                                 "navi" => _admin_squads_nav,
                                                 "upload" => _member_admin_icon_upload,
-                                                "sshown" => $sshown,
+                                                "sshown" => ($get['shown'] ? 'selected="selected"' : ''),
                                                 "nothing" => _nothing,
-                                                "selr" => $roster,
-                                                                                                "selt" => $team_show,
+                                                "selr" => ($get['navi'] ? 'selected="selected"' : ''),
+                                                                                                "selt" => ($get['team_show'] ? 'selected="selected"' : ''),
                                                                                                 "navigation" => $navigation,
                                                                                                 "roster" => _admin_sqauds_roster,
                                                                                               "navigation" => $navigation,
@@ -284,8 +273,8 @@ if(_adminMenu != 'true')
                                                                                               "teams" => _admin_squads_teams,
                                                                                               "show" => _show,
                                                 "dontshow" => _dont_show,
-                                                "ssquad" => re($get['name']),
-                                                "sgame" => re($get['game']),
+                                                "ssquad" => string::decode($get['name']),
+                                                "sgame" => string::decode($get['game']),
                                                 "positions" => $positions,
                                                 "check_show" => _button_value_show,
                                                 "game" => _member_admin_game));
@@ -314,14 +303,14 @@ if(_adminMenu != 'true')
               if($_POST['position'] == "lazy") $newpos = "";
               else $newpos = "`pos` = '".convert::ToInt($_POST['position'])."',";
               if($_POST['icon'] == "lazy") $newicon = "";
-              else $newicon = "`icon` = '".up($_POST['icon'])."',";
+              else $newicon = "`icon` = '".string::encode($_POST['icon'])."',";
 
           $qry = db("UPDATE ".dba::get('squads')."
-                     SET `name`         = '".up($_POST['squad'])."',
-                         `game`         = '".up($_POST['game'])."',
+                     SET `name`         = '".string::encode($_POST['squad'])."',
+                         `game`         = '".string::encode($_POST['game'])."',
                          ".$newpos."
                          ".$newicon."
-                         `beschreibung` = '".up($_POST['beschreibung'],1)."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                          `shown`        = '".convert::ToInt($_POST['show'])."',
                          `navi`         = '".convert::ToInt($_POST['roster'])."',
                          `team_show`	= '".convert::ToInt($_POST['team_show'])."',
@@ -346,8 +335,8 @@ if(_adminMenu != 'true')
 
                             $posi = db("UPDATE ".dba::get('navi')."
                                                     SET `pos`       = '".convert::ToInt($pos)."',
-                                                            `kat`       = '".up($kat)."',
-                                                            `name`      = '".up($_POST['squad'])."',
+                                                            `kat`       = '".string::encode($kat)."',
+                                                            `name`      = '".string::encode($_POST['squad'])."',
                                                             `url`       = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'
                                                     WHERE id = '".convert::ToInt($get['id'])."'");
                         } else {
@@ -361,8 +350,8 @@ if(_adminMenu != 'true')
 
                             db("INSERT INTO ".dba::get('navi')."
                                     SET `pos`       = '".convert::ToInt($pos)."',
-                                            `kat`       = '".up($kat)."',
-                                            `name`      = '".up($_POST['squad'])."',
+                                            `kat`       = '".string::encode($kat)."',
+                                            `name`      = '".string::encode($_POST['squad'])."',
                                             `url`       = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."',
                                             `shown`     = '1',
                                             `type`      = '2'");

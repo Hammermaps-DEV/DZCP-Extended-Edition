@@ -109,7 +109,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : false)
                 $smileys = "../inc/images/smileys/".$file;
                 $bbc = ":".preg_replace("=.gif=Uis","",$file).":";
                 $edit = show("page/button_edit_single", array("id" => $file, "action" => "admin=smileys&amp;do=edit", "title" => _button_title_edit));
-                $delete = show("page/button_delete_single", array("id" => $file, "action" => "admin=smileys&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_smiley)));
+                $delete = show("page/button_delete_single", array("id" => $file, "action" => "admin=smileys&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_smiley));
                 $show_default .= show($dir."/smileys_show", array("bbcode" => $bbc, "smiley" => $smileys, "class" => $class, "del" => $delete, "edit" => $edit, "id" => $file));
             }
         }

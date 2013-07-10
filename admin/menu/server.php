@@ -41,8 +41,8 @@ switch($do)
             }
         }
 
-        $show = show($dir."/server_edit", array("sip" => re($get['ip']),
-                                                "sname" => re($get['name']),
+        $show = show($dir."/server_edit", array("sip" => string::decode($get['ip']),
+                                                "sname" => string::decode($get['name']),
                                                 "id" => $_GET['id'],
                                                 "sport" => $get['port'],
                                                 "qport" => $get['qport'],
@@ -60,20 +60,20 @@ switch($do)
         else
         {
             if($_POST['game'] == "lazy") $game = "";
-            else $game = "`game` = '".up($_POST['status'])."',";
+            else $game = "`game` = '".string::encode($_POST['status'])."',";
 
             $get = db("SELECT ip,port,game FROM ".dba::get('server')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             $cache_hash = md5($get['ip'].':'.$get['port'].'_'.$get['game']);
             Cache::delete('server_'.$cache_hash);
 
             db("UPDATE ".dba::get('server')."
-                     SET `ip`         = '".up($_POST['ip'])."',
+                     SET `ip`         = '".string::encode($_POST['ip'])."',
                          `port`       = '".convert::ToInt($_POST['port'])."',
-                         `qport`      = '".up($_POST['qport'])."',
-                         `name`       = '".up($_POST['name'])."',
-                         `custom_icon`= '".up($_POST['custom_game_icon'])."',
+                         `qport`      = '".string::encode($_POST['qport'])."',
+                         `name`       = '".string::encode($_POST['name'])."',
+                         `custom_icon`= '".string::encode($_POST['custom_game_icon'])."',
                          ".$game."
-                         `pwd`        = '".up($_POST['pwd'])."'
+                         `pwd`        = '".string::encode($_POST['pwd'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
             $show = info(_server_admin_edited, "?admin=server");
@@ -113,13 +113,13 @@ switch($do)
         else
         {
             db("INSERT INTO ".dba::get('server')."
-                     SET `ip`         = '".up($_POST['ip'])."',
+                     SET `ip`         = '".string::encode($_POST['ip'])."',
                          `port`       = '".convert::ToInt($_POST['port'])."',
-                         `qport`      = '".up($_POST['qport'])."',
-                         `name`       = '".up($_POST['name'])."',
-                         `pwd`        = '".up($_POST['pwd'])."',
-                         `custom_icon`= '".up($_POST['custom_game_icon'])."',
-                         `game`       = '".up($_POST['status'])."'");
+                         `qport`      = '".string::encode($_POST['qport'])."',
+                         `name`       = '".string::encode($_POST['name'])."',
+                         `pwd`        = '".string::encode($_POST['pwd'])."',
+                         `custom_icon`= '".string::encode($_POST['custom_game_icon'])."',
+                         `game`       = '".string::encode($_POST['status'])."'");
 
             $show = info(_server_admin_added, "?admin=server");
         }
@@ -149,16 +149,16 @@ switch($do)
             }
 
             $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=server&amp;do=edit", "title" => _button_title_edit));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=server&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_server)));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=server&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_server));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $menu = ($get['navi'] ? show(_server_menu_icon_no, array("id" => $get['id'])) : show(_server_menu_icon_yes, array("id" => $get['id'])));
 
             $show_servers .= show($dir."/server_show", array("gameicon" => $gameicon,
-                    "serverip" => re($get['ip']).":".$get['port'],
-                    "serverpwd" => re($get['pwd']),
+                    "serverip" => string::decode($get['ip']).":".$get['port'],
+                    "serverpwd" => string::decode($get['pwd']),
                     "menu" => $menu,
                     "edit" => $edit,
-                    "name" => re($get['name']),
+                    "name" => string::decode($get['name']),
                     "class" => $class,
                     "delete" => $delete));
         }

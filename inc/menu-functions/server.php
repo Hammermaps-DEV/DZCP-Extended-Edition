@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function server($serverID = 0)
 {
     global $picformat;
@@ -113,7 +124,7 @@ function server($serverID = 0)
                 }
 
                 if(!empty($server['game_hostname']))
-                    db("UPDATE `".dba::get('server')."` SET `name` = '".up($server['game_hostname'])."' WHERE `id` = ".$get['id'].";"); //Update Hostname to DB
+                    db("UPDATE `".dba::get('server')."` SET `name` = '".string::encode($server['game_hostname'])."' WHERE `id` = ".$get['id'].";"); //Update Hostname to DB
             }
             else //Offlne
             {
@@ -132,7 +143,7 @@ function server($serverID = 0)
                 $server['game_pwd'] = false;
                 $server['game_os'] = false;
 
-                $image_secure = ''; $players = '';
+                $image_secure = ''; $players = '-';
                 $image_status = '../inc/images/offline.png'; //Server Status
                 $image_map = 'offline.gif'; //Map Image
                 $game_icon = '../inc/images/gameicons/unknown.gif';
@@ -150,16 +161,15 @@ function server($serverID = 0)
             $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server
             $os = ($server['game_os'] ? '<img src="../inc/images/'.$server['game_os'].'_os.png" alt="" title="'.($server['game_os'] == 'windows' ? 'Windows' : 'Linux').' Server" class="icon" />' : ''); //Server OS
             $mod = (!empty($server['game_mod_name_long']) ? '<span class="fontBold">Mod:</span> '.$server['game_mod_name_long'].' <img src="'.$icon_mod.'" alt="" class="icon" /><br />' : '');
-            $pwds = (!empty($get['pwd']) && permission("gs_showpw") && $server['game_password'] ? show(_server_pwd, array("pwd" => re($get['pwd']))) : '');
-            $gtype = (!empty($server['game_type']) ? show(_server_gtype, array("type" => re($server['game_type']))) : '');
-            $bots = (!empty($server['game_num_bot']) ? show(_server_bots, array("bots" => re($server['game_num_bot']))) : '');
+            $pwds = (!empty($get['pwd']) && permission("gs_showpw") && $server['game_password'] ? show(_server_pwd, array("pwd" => string::decode($get['pwd']))) : '');
+            $gtype = (!empty($server['game_type']) ? show(_server_gtype, array("type" => string::decode($server['game_type']))) : '');
+            $bots = (!empty($server['game_num_bot']) ? show(_server_bots, array("bots" => string::decode($server['game_num_bot']))) : '');
 
-            $servername = jsconvert(re(cut($server['hostname'],($servermenu=config('l_servernavi')))));
+            $servername = jsconvert(string::decode(cut($server['hostname'],($servermenu=config('l_servernavi')))));
             $servernameout = (!empty($server['game_hostname'])) ? $server['game_hostname'] : _navi_gsv_no_name_available;
 
-            $info = 'onmouseover="DZCP.showInfo(\''.$servernameout.'\', \'IP/Port:;;'._navi_gsv_game.':;Map:;'._navi_gsv_players_online.':;'._navi_gsv_on_the_game.':\', \''.$get['ip'].':'.$get['port'].';;'.jsconvert(re('<img src="'.$game_icon.'" alt=""  class="icon" />')).' '.$server['game_name_long'].';'.(array_key_exists('game_maptitle', $server) ? $server['game_maptitle'] : (empty($server['game_map']) ? '-' : $server['game_map'])).';'.$server['game_num_players'].' / '.$server['game_max_players'].';'.$players.'\')" onmouseout="DZCP.hideInfo()"';
-
-            return show("menu/server", array("host" => cut(re($server['game_hostname']),$servermenu,true),
+            $info = 'onmouseover="DZCP.showInfo(\''.$servernameout.'\', \'IP/Port:;;'._navi_gsv_game.':;Map:;'._navi_gsv_players_online.':;'._navi_gsv_on_the_game.':\', \''.$get['ip'].':'.$get['port'].';;'.jsconvert(string::decode('<img src="'.$game_icon.'" alt=""  class="icon" />')).' '.$server['game_name_long'].';'.(array_key_exists('game_maptitle', $server) ? $server['game_maptitle'] : (empty($server['game_map']) ? '-' : $server['game_map'])).';'.$server['game_num_players'].' / '.$server['game_max_players'].';'.$players.'\')" onmouseout="DZCP.hideInfo()"';
+            return show("menu/server", array("host" => cut(string::decode($server['game_hostname']),$servermenu,true),
                                              "ip" => $get['ip'],
                                              "map" =>  (array_key_exists('game_maptitle', $server) ? $server['game_maptitle'] : (empty($server['game_map']) ? '-' : $server['game_map'])),
                                              "image_map" => $image_map,

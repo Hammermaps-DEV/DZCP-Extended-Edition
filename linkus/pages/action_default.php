@@ -23,7 +23,7 @@ else
         while($get = _fetch($qry))
         {
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $banner = show(_linkus_bannerlink, array("id" => $get['id'], "banner" => re($get['text'])));
+            $banner = show(_linkus_bannerlink, array("id" => $get['id'], "banner" => string::decode($get['text'])));
 
             $edit = ''; $delete = '';
             if(permission("links"))
@@ -33,10 +33,10 @@ else
             }
 
             $show .= show($dir."/linkus_show", array("class" => $class,
-                                                     "beschreibung" => re($get['beschreibung']),
+                                                     "beschreibung" => string::decode($get['beschreibung']),
                                                      "cnt" => $cnt,
                                                      "banner" => $banner,
-                                                     "besch" => re($get['beschreibung']),
+                                                     "besch" => string::decode($get['beschreibung']),
                                                      "url" => $get['url']));
             $cnt++;
         }

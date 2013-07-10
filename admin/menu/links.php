@@ -49,9 +49,9 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("INSERT INTO ".dba::get('links')."
                      SET `url`          = '".links($_POST['link'])."',
-                         `text`         = '".up($_POST['text'])."',
-                         `banner`       = '".up($_POST['banner'])."',
-                         `beschreibung` = '".up($_POST['beschreibung'], 1)."'");
+                         `text`         = '".string::encode($_POST['text'])."',
+                         `banner`       = '".string::encode($_POST['banner'])."',
+                         `beschreibung` = '".string::encode($_POST['beschreibung'])."'");
 
           $show = info(_link_added, "?admin=links");
         }
@@ -81,9 +81,9 @@ if(_adminMenu != 'true')
                                                "tchecked" => $tchecked,
                                                "bnone" => $bnone,
                                                "llink" => $get['url'],
-                                               "lbeschreibung" => re($get['beschreibung']),
+                                               "lbeschreibung" => string::decode($get['beschreibung']),
                                                "btext" => _links_text,
-                                               "ltext" => re($get['text']),
+                                               "ltext" => string::decode($get['text']),
                                                "what" => _button_value_edit,
                                                "do" => "editlink&amp;id=".$_GET['id'].""));
       } elseif($_GET['do'] == "editlink") {
@@ -95,9 +95,9 @@ if(_adminMenu != 'true')
         } else {
             $qry = db("UPDATE ".dba::get('links')."
                        SET `url`          = '".links($_POST['link'])."',
-                           `text`         = '".up($_POST['text'])."',
-                           `banner`       = '".up($_POST['banner'])."',
-                           `beschreibung` = '".up($_POST['beschreibung'],1)."'
+                           `text`         = '".string::encode($_POST['text'])."',
+                           `banner`       = '".string::encode($_POST['banner'])."',
+                           `beschreibung` = '".string::encode($_POST['beschreibung'])."'
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
 
           $show = info(_link_edited, "?admin=links");
@@ -118,11 +118,11 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=links&amp;do=delete&amp;type=links",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_link)));
+                                                            "del" => _confirm_del_link));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-          $show1 .= show($dir."/links_show", array("link" => cut(re($get['url']),40),
+          $show1 .= show($dir."/links_show", array("link" => cut(string::decode($get['url']),40),
                                                    "class" => $class,
                                                    "type" => "links",
                                                    "edit" => $edit,

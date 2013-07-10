@@ -44,7 +44,7 @@ if(_adminMenu != 'true')
           $show = show($dir."/form_vote", array("head" => _votes_admin_head,
                                                 "value" => _button_value_add,
                                                 "what" => "&amp;do=add",
-                                                "question1" => re($_POST['question']),
+                                                "question1" => string::decode($_POST['question']),
                                                 "a1" => $_POST['a1'],
                                                 "closed" => "",
                                                 "br1" => "<!--",
@@ -66,7 +66,7 @@ if(_adminMenu != 'true')
         } else {
           $qry = db("INSERT INTO ".dba::get('votes')."
                      SET `datum`  = '".time()."',
-                         `titel`  = '".up($_POST['question'])."',
+                         `titel`  = '".string::encode($_POST['question'])."',
                          `intern` = '".convert::ToInt($_POST['intern'])."',
                          `von`    = '".convert::ToInt($userid)."'");
 
@@ -75,68 +75,68 @@ if(_adminMenu != 'true')
           $qry = db("INSERT INTO ".dba::get('vote_results')."
                     SET `vid`   = '".convert::ToInt($vid)."',
                         `what`  = 'a1',
-                        `sel`   = '".up($_POST['a1'])."'");
+                        `sel`   = '".string::encode($_POST['a1'])."'");
 
           $qry = db("INSERT INTO ".dba::get('vote_results')."
                      SET `vid`  = '".convert::ToInt($vid)."',
                          `what` = 'a2',
-                         `sel`  = '".up($_POST['a2'])."'");
+                         `sel`  = '".string::encode($_POST['a2'])."'");
 
           if(!empty($_POST['a3']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a3',
-                           `sel`  = '".up($_POST['a3'])."'");
+                           `sel`  = '".string::encode($_POST['a3'])."'");
           }
           if(!empty($_POST['a4']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a4',
-                           `sel`  = '".up($_POST['a4'])."'");
+                           `sel`  = '".string::encode($_POST['a4'])."'");
           }
           if(!empty($_POST['a5']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a5',
-                           `sel`  = '".up($_POST['a5'])."'");
+                           `sel`  = '".string::encode($_POST['a5'])."'");
           }
           if(!empty($_POST['a6']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a6',
-                           `sel`  = '".up($_POST['a6'])."'");
+                           `sel`  = '".string::encode($_POST['a6'])."'");
           }
           if(!empty($_POST['a7']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a7',
-                           `sel`  = '".up($_POST['a7'])."'");
+                           `sel`  = '".string::encode($_POST['a7'])."'");
           }
           if(!empty($_POST['a8']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a8',
-                           `sel`  = '".up($_POST['a8'])."'");
+                           `sel`  = '".string::encode($_POST['a8'])."'");
           }
           if(!empty($_POST['a9']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a9',
-                           `sel`  = '".up($_POST['a9'])."'");
+                           `sel`  = '".string::encode($_POST['a9'])."'");
           }
           if(!empty($_POST['a10']))
           {
             $qry = db("INSERT INTO ".dba::get('vote_results')."
                        SET `vid`  = '".convert::ToInt($vid)."',
                            `what` = 'a10',
-                           `sel`  = '".up($_POST['a10'])."'");
+                           `sel`  = '".string::encode($_POST['a10'])."'");
           }
 
           $show = info(_vote_admin_successful, "?admin=votes");
@@ -170,7 +170,7 @@ if(_adminMenu != 'true')
                                               "value" => _button_value_edit,
                                               "br1" => "",
                                               "br2" => "",
-                                              "question1" => re($get['titel']),
+                                              "question1" => string::decode($get['titel']),
                                               "a1" => voteanswer("a1",$_GET['id']),
                                               "a2" => voteanswer("a2",$_GET['id']),
                                               "a3" => voteanswer("a3",$_GET['id']),
@@ -194,18 +194,18 @@ if(_adminMenu != 'true')
         $get = _fetch($qry);
 
         $upd = db("UPDATE ".dba::get('votes')."
-                   SET `titel`  = '".up($_POST['question'])."',
+                   SET `titel`  = '".string::encode($_POST['question'])."',
                        `intern` = '".convert::ToInt($_POST['intern'])."',
                        `closed` = '".convert::ToInt($_POST['closed'])."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
         $upd1 = db("UPDATE ".dba::get('vote_results')."
-                    SET `sel` = '".up($_POST['a1'])."'
+                    SET `sel` = '".string::encode($_POST['a1'])."'
                     WHERE what = 'a1'
                     AND vid = '".convert::ToInt($_GET['id'])."'");
 
         $upd2 = db("UPDATE ".dba::get('vote_results')."
-                    SET `sel` = '".up($_POST['a2'])."'
+                    SET `sel` = '".string::encode($_POST['a2'])."'
                     WHERE what = 'a2'
                     AND vid = '".convert::ToInt($_GET['id'])."'");
 
@@ -216,14 +216,14 @@ if(_adminMenu != 'true')
             if(cnt(dba::get('vote_results'), " WHERE vid = '".convert::ToInt($_GET['id'])."' AND what = 'a".$i."'") != 0)
             {
               $upd = db("UPDATE ".dba::get('vote_results')."
-                         SET `sel` = '".up($_POST['a'.$i.''])."'
+                         SET `sel` = '".string::encode($_POST['a'.$i.''])."'
                          WHERE what = 'a".$i."'
                          AND vid = '".convert::ToInt($_GET['id'])."'");
             } else {
               $ins = db("INSERT INTO ".dba::get('vote_results')."
                          SET `vid` = '".$_GET['id']."',
                              `what` = 'a".$i."',
-                             `sel` = '".up($_POST['a'.$i.''])."'");
+                             `sel` = '".string::encode($_POST['a'.$i.''])."'");
             }
           }
 
@@ -277,14 +277,14 @@ if(_adminMenu != 'true')
           $delete = show("page/button_delete_single", array("id" => $get['id'],
                                                             "action" => "admin=votes&amp;do=delete",
                                                             "title" => _button_title_del,
-                                                            "del" => convSpace(_confirm_del_vote)));
+                                                            "del" => _confirm_del_vote));
           if($get['menu'] == "1") $icon = "yes";
           else $icon = "no";
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
           $show_ .= show($dir."/votes_show", array("date" => date("d.m.Y",$get['datum']),
-                                                   "vote" => re($get['titel']),
+                                                   "vote" => string::decode($get['titel']),
                                                    "class" => $class,
                                                    "edit" => $edit,
                                                    "icon" => $icon,

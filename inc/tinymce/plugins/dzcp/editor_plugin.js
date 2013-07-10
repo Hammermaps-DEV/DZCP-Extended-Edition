@@ -8,7 +8,6 @@
 (function() {
     // Load plugin specific language pack
     tinymce.PluginManager.requireLangPack('dzcp');
-    tinymce.PluginManager.requireLangPack('dzcp');
 
     tinymce.create('tinymce.plugins.DZCP', {
 

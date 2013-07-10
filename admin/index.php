@@ -12,7 +12,7 @@ include("../inc/buffer.php");
 ## INCLUDES ##
 include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
-include(basePath."/inc/bbcode.php");
+include(basePath."/inc/common.php");
 include(basePath."/admin/helper.php");
 
 ## SETTINGS ##
@@ -20,7 +20,6 @@ $where = _site_config;
 $dir = "admin";
 $show = "";
 $cache_cleanup = false;
-$wysiwyg = "";
 $rootmenu = "";
 $settingsmenu = "";
 $contentmenu = "";
@@ -131,6 +130,7 @@ else
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
             $do = (isset($_GET['do']) ? $_GET['do'] : (isset($_POST['do']) ? $_POST['do'] : '') );
+            $page = (isset($_GET['page']) ? $_GET['page'] : '1');
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || ($chkMe == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
                 require_once(basePath."/admin/menu/".$inc_file);
@@ -141,32 +141,32 @@ else
 
     $dzcp_version = show_dzcp_version();
     $index = show($dir."/admin", array("head" => _config_head,
-            "version" => $dzcp_version['version'],
-            "version_img" => $dzcp_version['version_img'],
-            "einst" => _config_einst,
-            "content" => _content,
-            "rootadmin" => _rootadmin,
-            "extended" => _extended,
-            "rootmenu" => $rootmenu,
-            "settingsmenu" => $settingsmenu,
-            "contentmenu" => $contentmenu,
-            "radmin1" => $radmin1,
-            "radmin2" => $radmin2,
-            "adminc1" => $adminc1,
-            "adminc2" => $adminc2,
-            "content1" => $contentadmin1,
-            "content2" => $contentadmin2,
-            "extended1" => $extendedadmin1,
-            "extended2" => $extendedadmin2,
-            "extendedmenu" => $extendedmenu,
-            "show" => $show));
+                                       "version" => $dzcp_version['version'],
+                                       "version_img" => $dzcp_version['version_img'],
+                                       "einst" => _config_einst,
+                                       "content" => _content,
+                                       "rootadmin" => _rootadmin,
+                                       "extended" => _extended,
+                                       "rootmenu" => $rootmenu,
+                                       "settingsmenu" => $settingsmenu,
+                                       "contentmenu" => $contentmenu,
+                                       "radmin1" => $radmin1,
+                                       "radmin2" => $radmin2,
+                                       "adminc1" => $adminc1,
+                                       "adminc2" => $adminc2,
+                                       "content1" => $contentadmin1,
+                                       "content2" => $contentadmin2,
+                                       "extended1" => $extendedadmin1,
+                                       "extended2" => $extendedadmin2,
+                                       "extendedmenu" => $extendedmenu,
+                                       "show" => $show));
 }
 
 ## SETTINGS ##
 $time_end = generatetime();
 $time = round($time_end - $time_start,4);
 $title = $pagetitle." - ".$where."";
-page($index, $title, $where ,$time,$wysiwyg);
+page($index, $title, $where ,$time);
 
 if($cache_cleanup)
     Cache::clean();

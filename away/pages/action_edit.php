@@ -84,8 +84,8 @@ else
                 $qry = db("UPDATE ".dba::get('away')."
                     SET `start`= '".convert::ToInt($abdata)."',
                           `end`= '".convert::ToInt($time)."',
-                        `titel`= '".up($_POST['titel'])."',
-                        `reason`= '".up($_POST['reason'], 1)."',
+                        `titel`= '".string::encode($_POST['titel'])."',
+                        `reason`= '".string::encode($_POST['reason'])."',
                         `lastedit`= '".addslashes($editedby)."'
                         WHERE id = '".convert::ToInt($_GET['id'])."'");
 

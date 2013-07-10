@@ -13,8 +13,8 @@ define('_teamspeak_default_icon_no', '<a href="?admin=teamspeak&amp;do=default_s
 define('_teamspeak_default_icon_yes_no', '<img src="../inc/images/default_server_yesno.png" alt="" class="icon" />');
 define('_teamspeak_menu_icon_yes', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_no.gif" alt="" class="icon" /></a>');
 define('_teamspeak_menu_icon_no', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_yes.gif" alt="" class="icon" /></a>');
-define('_ipban_menu_icon_enable', '<a href="[action]" onclick="return(DZCP.del(\'[info]\'))"><img src="../inc/images/admin_lock_closed.jpg" alt="" class="icon" /></a>');
-define('_ipban_menu_icon_disable', '<a href="[action]" onclick="return(DZCP.del(\'[info]\'))"><img src="../inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
+define('_ipban_menu_icon_enable', '<a href="[action]" title="[lang_ipban_disable]" rel="[info]" class="confirm"><img src="../inc/images/admin_lock_closed.jpg" alt="" class="icon" /></a>');
+define('_ipban_menu_icon_disable', '<a href="[action]" title="[lang_ipban_enable]" rel="[info]" class="confirm"><img src="../inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
 define('_news_img', '<img src="../inc/images/uploads/news/[img]" alt="" />');
 define('_emailicon_blank', '<img src="../inc/images/email.gif" alt="" class="icon" />');
 
@@ -138,6 +138,7 @@ define('_dropdown_date', '<select id="t" name="t" class="dropdown">[day]</select
 
 ## Umfragen ##
 define('_votes_titel', '<a href="javascript:DZCP.toggle(\'[vid]\')"><img src="../inc/images/[icon].gif" alt="" id="img[vid]" class="icon" />[intern][titel]</a>');
+define('_votes_balken', '<div style="width:[width]%" class="statsBalkenShader"></div>');
 
 ## Downloads ##
 define('_downloads_files_exists', '<option value="[dl]" [sel]>[dl]</option>');
@@ -179,7 +180,7 @@ define('_linkus_admin', '<a href="?action=admin&amp;do=new">[new]</a>');
 
 ## Admin ##
 define('_news_edit_link', "editnews&amp;id=[id]");
-define('_artikel_edit_link', 'editartikel&amp;id=[id]');
+define('_artikel_edit_link', 'edit&amp;id=[id]');
 define('_config_forum_kats_titel', '<a href="?admin=forum&amp;show=subkats&amp;id=[id]" style="display:block">[kat]</a>');
 define('_config_newskats_img', '<img src="../inc/images/uploads/newskat/[img]" alt="" />');
 define('_config_neskats_katbild_upload', '<a href="../upload/?action=newskats">upload</a>');

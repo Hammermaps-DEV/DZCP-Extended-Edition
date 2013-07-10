@@ -1,5 +1,15 @@
 <?php
-//-> Forum Vote
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function fvote($id, $ajax=false)
 {
         if(!permission("votes")) $intern = ' AND intern = 0';
@@ -23,26 +33,26 @@ function fvote($id, $ajax=false)
             $balken = show(_votes_balken, array("width" => $rawpercent));
 
             $votebutton = "";
-            $results .= show("forum/vote_results", array("answer" => re($getv['sel']),
+            $results .= show("forum/vote_results", array("answer" => string::decode($getv['sel']),
                                                         "percent" => $percent,
                                                         "stimmen" => $getv['stimmen'],
                                                         "balken" => $balken));
           } else {
             $votebutton = '<input id="contentSubmitFVote" type="submit" value="'._button_value_vote.'" class="voteSubmit" />';
             $results .= show("forum/vote_vote", array("id" => $getv['id'],
-                                                      "answer" => re($getv['sel'])));
+                                                      "answer" => string::decode($getv['sel'])));
           }
         } else {
           $votebutton = '<input id="contentSubmitFVote" type="submit" value="'._button_value_vote.'" class="voteSubmit" />';
           $results .= show("forum/vote_vote", array("id" => $getv['id'],
-                                                    "answer" => re($getv['sel'])));
+                                                    "answer" => string::decode($getv['sel'])));
         }
       }
 
       $qryf = db("SELECT id,kid FROM ".dba::get('f_threads')." WHERE vote = '".$get['id']."'");
       $getf = _fetch($qryf);
 
-      $vote = show("forum/vote", array("titel" => re($get['titel']),
+      $vote = show("forum/vote", array("titel" => string::decode($get['titel']),
                                      "vid" => $get['id'],
                                                        "fid" => $getf['id'],
                                                        "kid" => $getf['kid'],

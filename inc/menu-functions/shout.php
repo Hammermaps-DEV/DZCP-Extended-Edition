@@ -1,5 +1,15 @@
 <?php
-//-> Shoutbox
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function shout($ajax = 0)
 {
     global $userid,$chkMe;
@@ -12,7 +22,7 @@ function shout($ajax = 0)
         $class = ($color % 2) ? "navShoutContentFirst" : "navShoutContentSecond"; $color++;
 
         if(permission("shoutbox"))
-            $delete = '<a href="../shout/?action=admin&amp;do=delete&amp;id='.$get['id'].'" onclick="return(DZCP.del(\''._confirm_del_shout.'\'))"><img src="../inc/images/delete_small.gif" title="'._button_title_del.'" alt="'._button_title_del.'" /></a>';
+            $delete = '<a href="../shout/?action=admin&amp;do=delete&amp;id='.$get['id'].'" rel="'._confirm_del_shout.'" class="confirm"><img src="../inc/images/delete_small.gif" title="'._button_title_del.'" alt="'._button_title_del.'" /></a>';
         else
             $delete = "";
 
@@ -25,7 +35,7 @@ function shout($ajax = 0)
 
         $show .= show("menu/shout_part", array( "nick" => $nick,
                                                 "datum" => date("j.m.Y H:i", $get['datum'])._uhr,
-                                                "text" => bbcode(wrap(re($get['text']), $shoutconfig['l_shouttext']),0,0,0,1),
+                                                "text" => bbcode::parse_html(wrap(string::decode($get['text']), $shoutconfig['l_shouttext'])),
                                                 "class" => $class,
                                                 "del" => $delete));
         $i++;

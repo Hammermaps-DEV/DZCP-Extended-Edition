@@ -35,7 +35,7 @@ else
         while($getcustom = _fetch($qrycustom))
         {
             $getcontent = db("SELECT ".$getcustom['feldname']." FROM ".dba::get('users')." WHERE id = '".convert::ToInt($userid)."'",false,true);
-            $custom .= show(_profil_edit_custom, array("name" => pfields_name($getcustom['name']).":", "feldname" => $getcustom['feldname'], "value" => re($getcontent[$getcustom['feldname']])));
+            $custom .= show(_profil_edit_custom, array("name" => pfields_name($getcustom['name']).":", "feldname" => $getcustom['feldname'], "value" => string::decode($getcontent[$getcustom['feldname']])));
         } //while end
         unset($qrycustom,$getcustom);
         return $custom;
@@ -99,40 +99,40 @@ else
                         if($getcustom['type'] == 2)
                             $customfields .= " ".$getcustom['feldname']." = '".convert::ToString(links($_POST[$getcustom['feldname']]))."', ";
                         else
-                            $customfields .= " ".$getcustom['feldname']." = '".convert::ToString(up($_POST[$getcustom['feldname']]))."', ";
+                            $customfields .= " ".$getcustom['feldname']." = '".convert::ToString(string::encode($_POST[$getcustom['feldname']]))."', ";
                     } //while end
                 }
 
                 $get = db("SELECT user,xfire FROM ".dba::get('users')." WHERE id = '".convert::ToInt($userid)."'",false,true);
 
-                if($get['xfire'] != convert::ToString(up($_POST['xfire'])))
+                if($get['xfire'] != convert::ToString(string::encode($_POST['xfire'])))
                 { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
 
                 db("UPDATE ".dba::get('users')." SET	".$newpwd." ".$customfields."
                                                  `country`          = '".convert::ToString($_POST['land'])."',
-                                                 `user`             = '".convert::ToString(up($_POST['user']))."',
-                                                 `nick`             = '".convert::ToString(up($_POST['nick']))."',
-                                                 `rlname`           = '".convert::ToString(up($_POST['rlname']))."',
+                                                 `user`             = '".convert::ToString(string::encode($_POST['user']))."',
+                                                 `nick`             = '".convert::ToString(string::encode($_POST['nick']))."',
+                                                 `rlname`           = '".convert::ToString(string::encode($_POST['rlname']))."',
                                                  `sex`              = '".convert::ToInt($_POST['sex'])."',
                                                  `status`           = '".convert::ToInt($_POST['status'])."',
                                                  `bday`             = '".convert::ToString($bday)."',
-                                                 `email`            = '".convert::ToString(up($_POST['email']))."',
+                                                 `email`            = '".convert::ToString(string::encode($_POST['email']))."',
                                                  `nletter`          = '".convert::ToInt($_POST['nletter'])."',
                                                  `pnmail`           = '".convert::ToInt($_POST['pnmail'])."',
-                                                 `city`             = '".convert::ToString(up($_POST['city']))."',
-                                                 `gmaps_koord`      = '".convert::ToString(up($_POST['gmaps_koord']))."',
-                                                 `language`         = '".convert::ToString(up($_POST['language']))."',
+                                                 `city`             = '".string::encode($_POST['city'])."',
+                                                 `gmaps_koord`      = '".string::encode($_POST['gmaps_koord'])."',
+                                                 `language`         = '".string::encode($_POST['language'])."',
                                                  `hp`               = '".convert::ToString(links($_POST['hp']))."',
                                                  `icq`              = '".convert::ToInt($icq)."',
-                                                 `xfire`            = '".convert::ToString(up($_POST['xfire']))."',
-                                                 `signatur`         = '".convert::ToString(up($_POST['sig'],1))."',
+                                                 `xfire`            = '".string::encode($_POST['xfire'])."',
+                                                 `signatur`         = '".string::encode($_POST['sig'])."',
                                                  `profile_access`   = '".convert::ToInt(isset($_POST['paccess']) ? $_POST['paccess'] : 0)."',
-                                                 `beschreibung`     = '".convert::ToString(up($_POST['ich'],1))."'
+                                                 `beschreibung`     = '".string::encode($_POST['ich'])."'
                                                   WHERE id = ".convert::ToInt($userid));
 
                 //-> Change Language
-                if(($language=data($userid,'language')) != 'default')
-                    language::set_language(re($language));
+                if(($language=string::decode(data($userid,'language'))) != 'default')
+                    language::set_language($language);
             }
         break;
         case 'editrss':
@@ -232,7 +232,7 @@ else
                                         $edit = show(_gallery_editicon, array("id" => $getgl['id']));
                                         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
                                         $gal .= show($dir."/edit_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".convert::ToInt($userid)."_".$getgl['pic']),
-                                                                                      "beschreibung" => bbcode($getgl['beschreibung']),
+                                                                                      "beschreibung" => bbcode::parse_html($getgl['beschreibung']),
                                                                                       "class" => $class,
                                                                                       "delete" => $delete,
                                                                                       "edit" => $edit));
@@ -280,41 +280,41 @@ else
                                 $deletepic = (!preg_match("#nopic#",$pic) ? "| "._profil_delete_pic : '');
                                 $deleteava = (!preg_match("#noavatar#",$avatar) ? "| "._profil_delete_ava : '');
 
-                                $delete = (convert::ToInt($userid) == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => convSpace(_confirm_del_account))));
+                                $delete = (convert::ToInt($userid) == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => _confirm_del_account)));
                                 $show = show($dir."/edit_profil", array("country" => show_countrys($get['country']),
-                                        "city" => re($get['city']),
+                                        "city" => string::decode($get['city']),
                                         "pnl" => $pnl,
                                         "pnm" => $pnm,
                                         "paccess" => $paccess,
                                         "pwd" => "",
                                         "dropdown_age" => $dropdown_age,
                                         "ava" => $avatar,
-                                        "hp" => re($get['hp']),
+                                        "hp" => string::decode($get['hp']),
                                         "gmaps" => $gmaps,
-                                        "nick" => re($get['nick']),
-                                        "name" => re($get['user']),
-                                        "gmaps_koord" => re($get['gmaps_koord']),
-                                        "rlname" => re($get['rlname']),
+                                        "nick" => string::decode($get['nick']),
+                                        "name" => string::decode($get['user']),
+                                        "gmaps_koord" => string::decode($get['gmaps_koord']),
+                                        "rlname" => string::decode($get['rlname']),
                                         "bdayday" => $bdayday,
                                         "bdaymonth" => $bdaymonth,
                                         "bdayyear" =>$bdayyear,
                                         "sex" => $sex,
-                                        "email" => re($get['email']),
+                                        "email" => string::decode($get['email']),
                                         "icqnr" => $icq,
-                                        "sig" => re_bbcode($get['signatur']),
+                                        "sig" => string::decode($get['signatur']),
                                         "xfire" => $get['xfire'],
                                         "clan" => $clan,
                                         "pic" => $pic,
                                         "deleteava" => $deleteava,
                                         "deletepic" => $deletepic,
                                         "position" => getrank($get['id']),
-                                        "language" => language::get_menu($get['language']),
+                                        "language" => language::get_menu(string::decode($get['language'])),
                                         "status" => $status,
                                         "custom_about" => custom_fields(convert::ToInt($userid),1),
                                         "custom_contact" => custom_fields(convert::ToInt($userid),3),
                                         "custom_favos" => custom_fields(convert::ToInt($userid),4),
                                         "custom_hardware" => custom_fields(convert::ToInt($userid),5),
-                                        "ich" => re_bbcode($get['beschreibung']),
+                                        "ich" => string::decode($get['beschreibung']),
                                         "delete" => $delete));
                         break;
                     }

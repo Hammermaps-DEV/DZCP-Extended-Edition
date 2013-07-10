@@ -51,7 +51,7 @@ else
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['id'])."',
                         `titel`     = '"._contact_title."',
-                        `nachricht` = '".up($text, 1)."'");
+                        `nachricht` = '".string::encode($text)."'");
             }
 
             $qry = db("SELECT s2.`user` FROM ".dba::get('permissions')." AS s1
@@ -64,7 +64,7 @@ else
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['user'])."',
                         `titel`     = '"._contact_title."',
-                        `nachricht` = '".up($text, 1)."'");
+                        `nachricht` = '".string::encode($text)."'");
             }
             $index = info(_contact_sended, "../news/");
         }
@@ -105,7 +105,7 @@ else
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['id'])."',
                         `titel`     = '"._contact_title_joinus."',
-                        `nachricht` = '".up($text, 1)."'");
+                        `nachricht` = '".string::encode($text)."'");
             }
 
             $qry = db("SELECT s2.`user` FROM ".dba::get('permissions')." AS s1
@@ -118,7 +118,7 @@ else
                         `von`       = '0',
                         `an`        = '".convert::ToInt($get['user'])."',
                         `titel`     = '"._contact_title_joinus."',
-                        `nachricht` = '".up($text, 1)."'");
+                        `nachricht` = '".string::encode($text)."'");
             }
 
             $index = info(_contact_joinus_sended, "../news/");
@@ -181,7 +181,7 @@ else
                        `von`        = '0',
                        `an`         = '".convert::ToInt($get['user'])."',
                        `titel`      = '"._contact_title_fightus."',
-                       `nachricht`  = '".up($msg, 1)."'");
+                       `nachricht`  = '".string::encode($msg)."'");
 
             }
 
@@ -197,7 +197,7 @@ else
                        `von`        = '0',
                        `an`         = '".convert::ToInt($get['user'])."',
                        `titel`      = '"._contact_title_fightus."',
-                       `nachricht`  = '".up($msg, 1)."'");
+                       `nachricht`  = '".string::encode($msg)."'");
             }
             $index = info(_contact_fightus_sended, "../news/");
         }

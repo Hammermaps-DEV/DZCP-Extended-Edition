@@ -63,7 +63,7 @@ else
                                                             "id" => $_GET['id'],
                                                             "reg" => $_POST['reg'],
                                                             "form" => $form,
-                                                            "posteintrag" => re_bbcode($_POST['eintrag']),
+                                                            "posteintrag" => string::decode($_POST['eintrag']),
                                                             "error" => $error));
                 }
                 else
@@ -75,11 +75,11 @@ else
                         db("INSERT INTO ".dba::get('usergb')." SET
                                `user`       = '".convert::ToInt($_GET['id'])."',
                                `datum`      = '".time()."',
-                               `nick`       = '".convert::ToString(up($userdata['nick']))."',
-                               `email`      = '".convert::ToString(up($userdata['email']))."',
+                               `nick`       = '".convert::ToString(string::encode($userdata['nick']))."',
+                               `email`      = '".convert::ToString(string::encode($userdata['email']))."',
                                `hp`         = '".convert::ToString(links($userdata['hp']))."',
                                `reg`        = '".convert::ToInt($userid)."',
-                               `nachricht`  = '".convert::ToString(up($_POST['eintrag'],1))."',
+                               `nachricht`  = '".convert::ToString(string::encode($_POST['eintrag']))."',
                                `ip`         = '".convert::ToString(visitorIp())."'");
                         unset($userdata);
                     }
@@ -88,11 +88,11 @@ else
                         db("INSERT INTO ".dba::get('usergb')." SET
                                `user`       = '".convert::ToInt($_GET['id'])."',
                                `datum`      = '".time()."',
-                               `nick`       = '".convert::ToString(up($_POST['nick']))."',
-                               `email`      = '".convert::ToString(up($_POST['email']))."',
+                               `nick`       = '".convert::ToString(string::encode($_POST['nick']))."',
+                               `email`      = '".convert::ToString(string::encode($_POST['email']))."',
                                `hp`         = '".convert::ToString(links($_POST['hp']))."',
                                `reg`        = '".convert::ToInt($userid)."',
-                               `nachricht`  = '".convert::ToString(up($_POST['eintrag'],1))."',
+                               `nachricht`  = '".convert::ToString(string::encode($_POST['eintrag']))."',
                                `ip`         = '".convert::ToString(visitorIp())."'");
                     }
 
@@ -103,9 +103,9 @@ else
             default:
                 if($_POST['reg'] == convert::ToInt($userid) || permission('editusers'))
                 {
-                    $addme = (!$_POST['reg'] ? "`nick` = '".up($_POST['nick'])."', `email` = '".up($_POST['email'])."', `hp` = '".links($_POST['hp'])."'," : '');
+                    $addme = (!$_POST['reg'] ? "`nick` = '".string::encode($_POST['nick'])."', `email` = '".string::encode($_POST['email'])."', `hp` = '".links($_POST['hp'])."'," : '');
                     $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
-                    db("UPDATE ".dba::get('usergb')." SET ".$addme." `nachricht` = '".convert::ToString(up($_POST['eintrag'],1))."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".convert::ToString(addslashes($editedby))."' WHERE id = '".convert::ToInt($_GET['gbid'])."'");
+                    db("UPDATE ".dba::get('usergb')." SET ".$addme." `nachricht` = '".convert::ToString(string::encode($_POST['eintrag']))."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".convert::ToString(addslashes($editedby))."' WHERE id = '".convert::ToInt($_GET['gbid'])."'");
                     $index = info(_gb_edited, "?action=user&show=gb&id=".$_GET['id']);
                 }
                 else

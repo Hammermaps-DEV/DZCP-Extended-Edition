@@ -73,7 +73,7 @@ else
     //Kats anzeigen, je nach Berechtigung
     while($get = _fetch($qry))
     {
-        $fkats .= '<li><label class="searchKat" style="text-align:center">'.re($get['name']).'</label></li>';
+        $fkats .= '<li><label class="searchKat" style="text-align:center">'.string::decode($get['name']).'</label></li>';
 
         $showt = "";
         $qrys = db("SELECT * FROM ".dba::get('f_skats')."
@@ -89,7 +89,7 @@ else
                 if(preg_match("#k_".$gets['id']."\|#",$strkat)) $kcheck = "checked=\"checked\"";
                 else  $kcheck = '';
 
-                $fkats .= '<li><label class="search" for="k_'.$gets['id'].'"><input type="checkbox" class="chksearch" name="k_'.$gets['id'].'" id="k_'.$gets['id'].'" '.$kcheck.' onclick="DZCP.hideForumFirst()" value="true" />&nbsp;&nbsp;'.re($gets['kattopic']).'</label></li>';
+                $fkats .= '<li><label class="search" for="k_'.$gets['id'].'"><input type="checkbox" class="chksearch" name="k_'.$gets['id'].'" id="k_'.$gets['id'].'" '.$kcheck.' onclick="DZCP.hideForumFirst()" value="true" />&nbsp;&nbsp;'.string::decode($gets['kattopic']).'</label></li>';
             }
         }
     }
@@ -250,7 +250,7 @@ else
                     $lpdate = "";
                     }
 
-                    $threadlink = show(_forum_thread_search_link, array("topic" => cut(re($get['topic']),config('l_forumtopic')),
+                    $threadlink = show(_forum_thread_search_link, array("topic" => cut(string::decode($get['topic']),config('l_forumtopic')),
                             "id" => $get['id'],
                             "sticky" => $sticky,
                             "hl" => $_GET['search'],
@@ -262,7 +262,7 @@ else
 
             $results .= show($dir."/forum_search_results", array("new" => check_new_old($get['lp']),
                         "topic" => $threadlink,
-                        "subtopic" => cut(re($get['subtopic']),config('l_forumsubtopic')),
+                        "subtopic" => cut(string::decode($get['subtopic']),config('l_forumsubtopic')),
                         "hits" => $get['hits'],
                         "replys" => cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'"),
                                 "class" => $class,
@@ -297,7 +297,7 @@ else
                 OR (lower(text) LIKE lower('%".trim($suche[$x])."%') AND `text` != '')";
                                     }
                                     } else {
-                                    $dosearch .= "WHERE ((lower(titel) LIKE lower('%".up($_GET['search'])."%') AND titel != '') OR (lower(text) LIKE lower('%".up($_GET['search'])."%') AND `text` != '')";
+                                    $dosearch .= "WHERE ((lower(titel) LIKE lower('%".string::encode($_GET['search'])."%') AND titel != '') OR (lower(text) LIKE lower('%".string::encode($_GET['search'])."%') AND `text` != '')";
                                     }
                                     $dosearch .= ')';
                                         //NEWS
@@ -321,7 +321,7 @@ else
         $shownews .= show($dir."/search_show", array("class" => $class,
     "type" => 'news',
     "href" => '../news/index.php?action=show&amp;id='.$get['id'],
-            "titel" => re($get['titel'])
+            "titel" => string::decode($get['titel'])
                     ));
     }
 
@@ -337,7 +337,7 @@ else
                             "href" => '../artikel/index.php?action=show&amp;id='.$get['id'],
                             "class" => $class,
                             "type" => 'artikel',
-                            "titel" => re($get['titel'])
+                            "titel" => string::decode($get['titel'])
                  ));
     }
 
@@ -353,7 +353,7 @@ else
             "href" => '../sites/?show='.$get['id'],
             "class" => $class,
             "type" => 'site',
-            "titel" => re($get['titel'])
+            "titel" => string::decode($get['titel'])
     ));
     }
 
@@ -372,9 +372,9 @@ else
                                     OR (lower(s1.gegner) LIKE lower('%".trim($suche[$x])."%')))";
     }
     } else {
-        $dosearch .= "WHERE (lower(s1.bericht) LIKE lower('%".up($_GET['search'])."%'))
-                    OR (lower(s1.clantag) LIKE lower('%".up($_GET['search'])."%'))
-                            OR (lower(s1.gegner) LIKE lower('%".up($_GET['search'])."%')";
+        $dosearch .= "WHERE (lower(s1.bericht) LIKE lower('%".string::encode($_GET['search'])."%'))
+                    OR (lower(s1.clantag) LIKE lower('%".string::encode($_GET['search'])."%'))
+                            OR (lower(s1.gegner) LIKE lower('%".string::encode($_GET['search'])."%')";
     }
                                     $dosearch .= ')';
                                     $qry = db("SELECT s1.id, s1.gegner, s1.clantag, s2.name FROM ".dba::get('cw')." AS s1 JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
@@ -387,7 +387,7 @@ else
                     "href" => '../clanwars/?action=details&id='.$get['id'],
                     "class" => $class,
                             "type" => 'clanwar',
-        "titel" => re($get['gegner'])." (".re($get['clantag']).") vs. ".re($get['name'])
+        "titel" => string::decode($get['gegner'])." (".string::decode($get['clantag']).") vs. ".string::decode($get['name'])
                 ));
     }
     unset($class,$dosearch);
@@ -404,8 +404,8 @@ else
             OR (lower(event) LIKE lower('%".trim($suche[$x])."%'))";
         }
         } else {
-        $dosearch .= "WHERE (lower (title) LIKE lower('%".up($_GET['search'])."%'))
-            OR (lower(event) LIKE lower('%".up($_GET['search'])."%')";
+        $dosearch .= "WHERE (lower (title) LIKE lower('%".string::encode($_GET['search'])."%'))
+            OR (lower(event) LIKE lower('%".string::encode($_GET['search'])."%')";
     }
     $dosearch .= ')';
                     $qry = db("SELECT datum, title FROM ".dba::get('events')."
@@ -418,7 +418,7 @@ else
                             "href" => '../kalender/?action=show&time='.$get['datum'],
                                     "class" => $class,
                                     "type" => 'kalender',
-                                    "titel" => re($get['title'])." (".date('d.m.Y', $get['datum']).")"
+                                    "titel" => string::decode($get['title'])." (".date('d.m.Y', $get['datum']).")"
                                             ));
         }
 
@@ -456,11 +456,6 @@ else
                 $si_board = "checked=\"checked\"";
 
 }
-                if($_GET['con'] == 'or') $chk_con = "selected=\"selected\"";
-                if($_GET['con'] == 'andb') $chk_con2 = "selected=\"selected\"";
-
-                if($_GET['allkat'] == true) { $all_board = "checked=\"checked\"";
-    } else { $all_board = ""; }
 
                 if($_GET['where'] == 'site') {
                 $where1 = "checked=\"checked\"";
@@ -478,11 +473,11 @@ else
                             "con_and" => _search_con_and,
                             "con_or" => _search_con_or,
                                     "con_andb" => _search_con_andb,
-                                            "chkcon" => $chk_con,
-                                            "chkcon2" => $chk_con2,
+                                            "chkcon" => ($_GET['con'] == 'or' ? 'selected="selected"' : ''),
+                                            "chkcon2" => ($_GET['con'] == 'andb' ? 'selected="selected"' : ''),
                                             "style" => $style,
                                                     "si_board" => $si_board,
-                                            "all_board" => $all_board,
+                                            "all_board" => ($_GET['allkat'] ? 'checked="checked"' : ''),
                                             "acheck1" => $acheck1,
                                             "acheck2" => $acheck2,
                                             "tcheck1" => $tcheck1,

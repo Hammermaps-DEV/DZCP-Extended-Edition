@@ -57,8 +57,8 @@ else
 
                     $delete = show(_delete, array("id" => $get['id']));
                     $index = show($dir."/msg_show", array("answermsg" => $answermsg,
-                                                          "titel" => re($get['titel']),
-                                                          "nachricht" => bbcode($get['nachricht']),
+                                                          "titel" => string::decode($get['titel']),
+                                                          "nachricht" => bbcode::parse_html($get['nachricht']),
                                                           "answer" => $answer,
                                                           "sendnews" => $sendnews,
                                                           "delete" => $delete));
@@ -89,8 +89,8 @@ else
                 $answermsg = show(_msg_sended_msg, array("nick" => autor($get['an'])));
                 $answer = _back;
                 $index = show($dir."/msg_show", array("answermsg" => $answermsg,
-                                                      "titel" => re($get['titel']),
-                                                      "nachricht" => bbcode($get['nachricht']),
+                                                      "titel" => string::decode($get['titel']),
+                                                      "nachricht" => bbcode::parse_html($get['nachricht']),
                                                       "answer" => $answer,
                                                       "sendnews" => "",
                                                       "delete" => ""));
@@ -106,7 +106,7 @@ else
                 $get = _fetch($qry);
                 if($get['von'] == convert::ToInt($userid) || $get['an'] == convert::ToInt($userid) || $chkMe == 4)
                 {
-                    $titel = (preg_match("#RE:#is",re($get['titel'])) ? re($get['titel']) : "RE: ".re($get['titel']));
+                    $titel = (preg_match("#RE:#is",string::decode($get['titel'])) ? string::decode($get['titel']) : "RE: ".string::decode($get['titel']));
                     $index = show($dir."/answer", array("von" => convert::ToInt($userid),
                                                         "an" => $get['von'],
                                                         "titel" => $titel,
@@ -116,7 +116,7 @@ else
                                                         "value" => _button_value_msg,
                                                         "eintraghead" => _answer,
                                                         "nick" => autor($get['von']),
-                                                        "zitat" => zitat(autor($get['von']),$get['nachricht'])));
+                                                        "zitat" => bbcode::zitat(autor($get['von']),$get['nachricht'])));
                 }
             }
         break;
@@ -151,8 +151,8 @@ else
                         `datum` = '".time()."',
                         `von` = '".convert::ToInt($_POST['von'])."',
                         `an`  = '".convert::ToInt($_POST['an'])."',
-                        `titel` = '".up($_POST['titel'])."',
-                        `nachricht` = '".up($_POST['eintrag'], 1)."',
+                        `titel` = '".string::encode($_POST['titel'])."',
+                        `nachricht` = '".string::encode($_POST['eintrag'])."',
                         `see` = '1'");
 
                 db("UPDATE ".dba::get('userstats')." SET `writtenmsg` = writtenmsg+1 WHERE user = ".convert::ToInt($userid));
@@ -277,14 +277,14 @@ else
                                                  "buddys" => $buddys,
                                                  "users" => $users,
                                                  "value" => _button_value_msg,
-                                                 "posttitel" => re($_POST['titel']),
-                                                 "posteintrag" => re_bbcode($_POST['eintrag']),
+                                                 "posttitel" => string::decode($_POST['titel']),
+                                                 "posteintrag" => string::decode($_POST['eintrag']),
                                                  "error" => $error));
               }
               else
               {
                   $to = ($_POST['buddys'] == "-" ? $_POST['users'] : $_POST['buddys']);
-                  db("INSERT INTO ".dba::get('msg')." SET `datum` = '".time()."', `von` = '".convert::ToInt($userid)."', `an` = '".convert::ToInt($to)."', `titel` = '".up($_POST['titel'])."', `nachricht` = '".up($_POST['eintrag'], 1)."', `see` = '1'");
+                  db("INSERT INTO ".dba::get('msg')." SET `datum` = '".time()."', `von` = '".convert::ToInt($userid)."', `an` = '".convert::ToInt($to)."', `titel` = '".string::encode($_POST['titel'])."', `nachricht` = '".string::encode($_POST['eintrag'])."', `see` = '1'");
                   db("UPDATE ".dba::get('userstats')." SET `writtenmsg` = writtenmsg+1 WHERE user = ".convert::ToInt($userid));
                   $index = info(_msg_answer_done, "?action=msg");
               }
@@ -298,7 +298,7 @@ else
                 while($get = _fetch($qry))
                 {
                     $absender = (!$get['von'] ? _msg_bot : autor($get['von']));
-                    $titel = show(_msg_in_title, array("titel" => re($get['titel'])));
+                    $titel = show(_msg_in_title, array("titel" => string::decode($get['titel'])));
                     $delete = _delete;
                     $date = date("d.m.Y H:i", $get['datum'])._uhr;
                     $new = (!$get['readed'] && !$get['see_u'] ? _newicon : '');
@@ -325,7 +325,7 @@ else
                 $color = 1;
                 while($get = _fetch($qry))
                 {
-                    $titel = show(_msg_out_title, array("titel" => re($get['titel'])));
+                    $titel = show(_msg_out_title, array("titel" => string::decode($get['titel'])));
                     $delete = _msg_delete_sended;
                     $date = date("d.m.Y H:i", $get['datum'])._uhr;
                     $readed = (!$get['readed'] ? _noicon : _yesicon);

@@ -114,7 +114,7 @@ else
                       WHERE s1.id = '".convert::ToInt($_GET['id'])."'");
                     $getm = _fetch($qrym);
 
-                    $i_move = show(_forum_admin_do_move, array("kat" => re($getm['kattopic'])));
+                    $i_move = show(_forum_admin_do_move, array("kat" => string::decode($getm['kattopic'])));
                     $index = info($i_move, "?action=showthread&amp;id=".$_GET['id']."");
                 }
             }

@@ -1,5 +1,15 @@
 <?php
-// random gallery * 4 Pics
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function gallery()
 {
     global $picformat;
@@ -16,10 +26,10 @@ function gallery()
             {
                 if(!empty($file))
                 {
-                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(re($get['kat'])).'\', \''._gal_pics.'\', \''.$cnt.'\')" onmouseout="DZCP.hideInfo()"';
-                    $gallery .= show("menu/gallery", array("info" => '<p><b>'.jsconvert(re($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
+                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['kat'])).'\', \''._gal_pics.'\', \''.$cnt.'\')" onmouseout="DZCP.hideInfo()"';
+                    $gallery .= show("menu/gallery", array("info" => '<p><b>'.jsconvert(string::decode($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
                                                            "image" => $file,
-                                                           "kat" => re($get['kat']),
+                                                           "kat" => string::decode($get['kat']),
                                                            "info" => $info,
                                                            "id" => $get['id']));
                 }

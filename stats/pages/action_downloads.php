@@ -25,7 +25,7 @@ else
         if(strpos($get['url'],"http://") != 0)
             $rawfile = @basename($file);
         else
-            $rawfile = re($get['download']);
+            $rawfile = string::decode($get['download']);
 
         $size = @filesize($file);
         $hits = $get['hits'];

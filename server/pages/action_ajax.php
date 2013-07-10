@@ -29,7 +29,8 @@ else
             $get['ip'] = str_replace(' ', '', $get['ip']);
             GameQ::addServers(array(array('id' => 'gs' ,'type' => $get['game'], 'host' => $get['ip'].':'.$get['port'], 'query_port' => empty($get['qport']) ? false : $get['qport'])));
             GameQ::setOption('timeout', 6);
-            $server = GameQ::requestData()['gs'];
+            $server = GameQ::requestData();
+            $server = $server['gs'];
 
             if(!empty($server) && $server && $server['game_online'])
                 Cache::set('server_'.$cache_hash,$server,config('cache_server'));
@@ -179,7 +180,7 @@ else
             if($server['game_stats_options']['stats_stats'] )   { $colspan++; $show_stats_td = '<td width="60" class="contentHead"><span class="fontBold">Stats</span></td>'; }
             if($server['game_stats_options']['stats_team'] )    { $colspan++; $show_team_td = '<td width="60" class="contentHead"><span class="fontBold">Team</span></td>'; }
             if($server['game_stats_options']['stats_squad'] )   { $colspan++; $show_squad_td = '<td width="60" class="contentHead"><span class="fontBold">Squad</span></td>'; }
-            if($server['game_stats_options']['stats_time'] )    { $colspan++; $show_time_td = '<td width="90" class="contentHead"><span class="fontBold">'._server_time.'</span></td>'; }
+            if($server['game_stats_options']['stats_time'] )    { $colspan++; $show_time_td = '<td width="220" class="contentHead"><span class="fontBold">'._server_time.'</span></td>'; }
 
             $playerstats = _server_noplayers;
             if(!empty($server['game_players']) && count($server['game_players']) >= 1)
@@ -211,7 +212,7 @@ else
             }
 
             if(!empty($server['game_hostname']))
-                db("UPDATE `".dba::get('server')."` SET `name` = '".up($server['game_hostname'])."' WHERE `id` = ".$get['id'].";"); //Update Hostname to DB
+                db("UPDATE `".dba::get('server')."` SET `name` = '".string::encode($server['game_hostname'])."' WHERE `id` = ".$get['id'].";"); //Update Hostname to DB
         }
         else //Offlne
         {
@@ -268,9 +269,9 @@ else
         $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server
         $os = ($server['game_os'] ? '<img src="../inc/images/'.$server['game_os'].'_os.png" alt="" title="'.($server['game_os'] == 'windows' ? 'Windows' : 'Linux').' Server" class="icon" />' : ''); //Server OS
         $mod = (!empty($server['game_mod_name_long']) ? '<span class="fontBold">Mod:</span> '.$server['game_mod_name_long'].' <img src="'.$icon_mod.'" alt="" class="icon" /><br />' : '');
-        $pwds = (!empty($get['pwd']) && permission("gs_showpw") && $server['game_password'] ? show(_server_pwd, array("pwd" => re($get['pwd']))) : '');
-        $gtype = (!empty($server['game_type']) ? show(_server_gtype, array("type" => re($server['game_type']))) : '');
-        $bots = (!empty($server['game_num_bot']) ? show(_server_bots, array("bots" => re($server['game_num_bot']))) : '');
+        $pwds = (!empty($get['pwd']) && permission("gs_showpw") && $server['game_password'] ? show(_server_pwd, array("pwd" => string::decode($get['pwd']))) : '');
+        $gtype = (!empty($server['game_type']) ? show(_server_gtype, array("type" => string::decode($server['game_type']))) : '');
+        $bots = (!empty($server['game_num_bot']) ? show(_server_bots, array("bots" => string::decode($server['game_num_bot']))) : '');
         $klapp = show(_klapptext_server_link, array("link" => _server_splayerstats, "id" => $get['id'], "moreicon" => $moreicon));
 
         die(show($dir."/server_show", array(
@@ -306,7 +307,7 @@ else
                 "klapp" => $klapp,
                 "ip" => $get['ip'],
                 "playerstats" => $playerstats,
-                "name" => cut(re($server['game_hostname']),70,true),
+                "name" => cut(string::decode($server['game_hostname']),70,true),
                 "av_icons" => $image_secure.$dedicated.$os,
                 "image_map" => $image_map,
                 "klapp_show_start" => (!$klapp_show ? '<!--' : ''),

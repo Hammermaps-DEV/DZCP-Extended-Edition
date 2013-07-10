@@ -47,11 +47,11 @@ switch ($do)
         while($get = _fetch($qry))
         {
             $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_ipban)));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;sfs_side=".($site)."&amp;sys_side=".(isset($_GET['sys_side']) ? $_GET['sys_side'] : 1)."&amp;ub_side=".(isset($_GET['ub_side']) ? $_GET['ub_side'] : 1);
-            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_disable_ipban,array('ip'=>$get['ip']))))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_enable_ipban,array('ip'=>$get['ip']))))));
+            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_enable_ipban,array('ip'=>$get['ip'])))));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show_sfs .= show($dir."/ipban_show_sfs", array("ip" => re($get['ip']), "bez" => re($data_array['banned_msg']), "rep" => convert::ToString($data_array['frequency']), "zv" => convert::ToString($data_array['confidence']).'%', "class" => $class, "delete" => $delete, "unban" => $unban));
+            $show_sfs .= show($dir."/ipban_show_sfs", array("ip" => string::decode($get['ip']), "bez" => string::decode($data_array['banned_msg']), "rep" => convert::ToString($data_array['frequency']), "zv" => convert::ToString($data_array['confidence']).'%', "class" => $class, "delete" => $delete, "unban" => $unban));
         }
     }
 
@@ -87,11 +87,11 @@ switch ($do)
         while($get = _fetch($qry))
         {
             $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_ipban)));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;sys_side=".($site)."&amp;sfs_side=".(isset($_GET['sfs_side']) ? $_GET['sfs_side'] : 1)."&amp;ub_side=".(isset($_GET['ub_side']) ? $_GET['ub_side'] : 1);
-            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_disable_ipban,array('ip'=>$get['ip']))))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_enable_ipban,array('ip'=>$get['ip']))))));
+            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_enable_ipban,array('ip'=>$get['ip'])))));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show_sys .= show($dir."/ipban_show_sys", array("ip" => re($get['ip']), "bez" => re($data_array['banned_msg']), "rep" => convert::ToString($data_array['frequency']), "zv" => convert::ToString($data_array['confidence']).'%', "class" => $class, "delete" => $delete, "unban" => $unban));
+            $show_sys .= show($dir."/ipban_show_sys", array("ip" => string::decode($get['ip']), "bez" => string::decode($data_array['banned_msg']), "rep" => convert::ToString($data_array['frequency']), "zv" => convert::ToString($data_array['confidence']).'%', "class" => $class, "delete" => $delete, "unban" => $unban));
         }
     }
 
@@ -130,11 +130,11 @@ switch ($do)
         {
             $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
             $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=edit", "title" => _button_title_edit));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_ipban)));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;ub_side=".($site)."&amp;sys_side=".(isset($_GET['sys_side']) ? $_GET['sys_side'] : 1)."&amp;sfs_side=".(isset($_GET['sfs_side']) ? $_GET['sfs_side'] : 1);
-            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_disable_ipban,array('ip'=>$get['ip']))))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_enable_ipban,array('ip'=>$get['ip']))))));
+            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_enable_ipban,array('ip'=>$get['ip'])))));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show_user .= show($dir."/ipban_show_user", array("ip" => re($get['ip']), "bez" => re($data_array['banned_msg']), "class" => $class, "delete" => $delete, "edit" => $edit, "unban" => $unban));
+            $show_user .= show($dir."/ipban_show_user", array("ip" => string::decode($get['ip']), "bez" => string::decode($data_array['banned_msg']), "class" => $class, "delete" => $delete, "edit" => $edit, "unban" => $unban));
         }
     }
 
@@ -175,7 +175,7 @@ switch ($do)
             if(empty($_POST['info']))
                 $info = '*Keine Info*';
             else
-                $info = up($_POST['info']);
+                $info = string::encode($_POST['info']);
 
             $data_array = array();
             $data_array['confidence'] = ''; $data_array['frequency'] = ''; $data_array['lastseen'] = '';
@@ -191,7 +191,7 @@ switch ($do)
     case 'edit':
         $get = db("SELECT * FROM ".dba::get('ipban')." WHERE id = '".intval($_GET['id'])."'",false,true);
         $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
-        $show = show($dir."/ipban_form", array("newhead" => _ipban_edit_head,"do" => "edit_save&amp;id=".$_GET['id']."","ip_set" => $get['ip'],"info" => re($data_array['banned_msg']),"what" => _button_value_edit));
+        $show = show($dir."/ipban_form", array("newhead" => _ipban_edit_head,"do" => "edit_save&amp;id=".$_GET['id']."","ip_set" => $get['ip'],"info" => string::decode($data_array['banned_msg']),"what" => _button_value_edit));
     break;
     case 'edit_save':
         if(empty($_POST['ip']))
@@ -200,7 +200,7 @@ switch ($do)
         {
             $get = db("SELECT id,data FROM ".dba::get('ipban')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
             $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
-            $data_array['banned_msg'] = up($_POST['info']);
+            $data_array['banned_msg'] = string::encode($_POST['info']);
             db("UPDATE ".dba::get('ipban')." SET `ip` = '".$_POST['ip']."', `time` = '".time()."', `data` = '".base64_encode(convert::UTF8(array_to_string($data_array)))."' WHERE id = '".$get['id']."'");
             $show = info(_ipban_admin_edited, "?admin=ipban");
         }
@@ -213,10 +213,10 @@ switch ($do)
             $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
             $edit =$get['typ'] == '3' ? show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=edit", "title" => _button_title_edit)) : '';
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;ub_side=".(isset($_GET['ub_side']) ? $_GET['ub_side'] : 1)."&amp;sys_side=".(isset($_GET['sys_side']) ? $_GET['sys_side'] : 1)."&amp;sfs_side=".(isset($_GET['sfs_side']) ? $_GET['sfs_side'] : 1);
-            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_disable_ipban,array('ip'=>$get['ip']))))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_enable_ipban,array('ip'=>$get['ip']))))));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_ipban)));
+            $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_enable_ipban,array('ip'=>$get['ip']))))));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-            $show_search .= show($dir."/ipban_show_user", array("ip" => re($get['ip']), "bez" => re($data_array['banned_msg']), "rep" => convert::ToString($data_array['frequency']), "zv" => convert::ToString($data_array['confidence']).'%', "class" => $class, "delete" => $delete, "edit" => $edit, "unban" => $unban));
+            $show_search .= show($dir."/ipban_show_user", array("ip" => string::decode($get['ip']), "bez" => string::decode($data_array['banned_msg']), "rep" => convert::ToString($data_array['frequency']), "zv" => convert::ToString($data_array['confidence']).'%', "class" => $class, "delete" => $delete, "edit" => $edit, "unban" => $unban));
         }
 
         if(empty($show_search))

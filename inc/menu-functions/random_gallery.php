@@ -1,4 +1,15 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
+#####################
+##### Menu-File #####
+#####################
+
 function random_gallery()
 {
     global $picformat;
@@ -21,7 +32,7 @@ function random_gallery()
             shuffle($imgArr);
             if(!empty($imgArr[0]))
             {
-                $gallery = show("menu/random_gallery", array("image" => $imgArr[0], "id" => $get['id'], "kat" => re($get['kat'])));
+                $gallery = show("menu/random_gallery", array("image" => $imgArr[0], "id" => $get['id'], "kat" => string::decode($get['kat'])));
 
                 if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache
                     Cache::set('nav_random_gallery',$gallery,$menu_xml['config']['update']);

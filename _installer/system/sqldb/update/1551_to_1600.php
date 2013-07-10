@@ -75,6 +75,8 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pn` `eml_pn` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
     db("ALTER TABLE `".dba::get('userstats')."` ADD `akl` INT( 5 ) NOT NULL DEFAULT '1' AFTER `cws`;",false,false,true);
     db("ALTER TABLE `".dba::get('config')."` ADD `use_akl` INT( 1 ) NOT NULL DEFAULT '1' AFTER `news_feed`;",false,false,true);
+    db("ALTER TABLE `".dba::get('artikel')."` ADD `custom_image` INT( 1 ) NOT NULL DEFAULT '0' AFTER `comments`;",false,false,true);
+    db("ALTER TABLE `".dba::get('navi')."` ADD `title` VARCHAR( 249 ) NOT NULL DEFAULT '' AFTER `name`;",false,false,true);
 
     //Update E-Mail Templates
     db("UPDATE `".dba::get('settings')."` SET `eml_akl_register_subj` = '".emlv('eml_akl_register_subj')."' WHERE `id` = 1;",false,false,true);
@@ -193,7 +195,6 @@ function install_155x_1600_update()
             `shoutbox` = ".$get['shoutbox'].",
             `serverliste` = ".$get['serverliste'].",
             `editusers` = ".$get['editusers'].",
-            `edittactics` = ".$get['edittactics'].",
             `editsquads` = ".$get['editsquads'].",
             `editserver` = ".$get['editserver'].",
             `editkalender` = ".$get['editkalender'].",
@@ -242,7 +243,6 @@ function install_155x_1600_update()
       `editkalender` int(1) NOT NULL DEFAULT '0',
       `editserver` int(1) NOT NULL DEFAULT '0',
       `editteamspeak` int(1) NOT NULL DEFAULT '0',
-      `edittactics` int(1) NOT NULL DEFAULT '0',
       `editsquads` int(1) NOT NULL DEFAULT '0',
       `editusers` int(1) NOT NULL DEFAULT '0',
       `editor` int(1) NOT NULL DEFAULT '0',
@@ -324,13 +324,6 @@ function install_155x_1600_update()
     unset($cache_array_sql);
 
     // Navigation aktualisieren
-    $qry = db("SELECT id FROM `".dba::get('navi')."` WHERE `name` = '_taktiken_'");
-    if(_rows($qry))
-    {
-        while($get = _fetch($qry))
-        { db("UPDATE `".dba::get('navi')."` SET `extended_perm` = 'edittactics' WHERE `id` = ".$get['id'].";"); }
-    }
-
     $qry = db("SELECT id FROM `".dba::get('navi')."` WHERE `name` = '_clankasse_'");
     if(_rows($qry))
     {

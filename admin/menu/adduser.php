@@ -51,15 +51,15 @@ if(!empty($do))
 
         $bday = ($_POST['t'] && $_POST['m'] && $_POST['j'] ? cal($_POST['t']).".".cal($_POST['m']).".".$_POST['j'] : '');
         db("INSERT INTO ".dba::get('users')." SET
-                `user`     = '".convert::ToString($username)."',
-                `nick`     = '".convert::ToString($nickname)."',
+                `user`     = '".string::encode($username)."',
+                `nick`     = '".string::encode($nickname)."',
                 `email`    = '".convert::ToString($email)."',
-                `pwd`      = '".convert::ToString($mkpwd)."',
-                `rlname`   = '".(up($rlname))."',
+                `pwd`      = '".string::encode($mkpwd)."',
+                `rlname`   = '".string::encode($rlname)."',
                 `sex`      = '".convert::ToInt($sex)."',
                 `bday`     = '".convert::ToString($bday)."',
-                `gmaps_koord`  = '".up($_POST['gmaps_koord'])."',
-                `city`     = '".up($city)."',
+                `gmaps_koord`  = '".string::encode($_POST['gmaps_koord'])."',
+                `city`     = '".string::encode($city)."',
                 `country`  = '".convert::ToString($land)."',
                 `regdatum` = '".time()."',
                 `level`    = '".convert::ToInt($level)."',
@@ -134,8 +134,8 @@ if(!empty($do))
         db("INSERT INTO ".dba::get('userstats')." SET `user` = '".convert::ToInt($insert_id)."', `lastvisit`	= '".time()."'");
 
         ## E-Mail senden ##
-        $message = show(re(settings('eml_reg')), array("user" => up($username), "pwd" => $mkpwd));
-        $subject = re(settings('eml_reg_subj'));
+        $message = show(string::decode(settings('eml_reg')), array("user" => string::decode($username), "pwd" => $mkpwd));
+        $subject = string::decode(settings('eml_reg_subj'));
         sendMail($email,$subject,$message);
 
         $show = info(_uderadd_info, "../admin/");
@@ -153,15 +153,11 @@ if(empty($show))
         $qrypos = db("SELECT id,position FROM ".dba::get('pos')." ORDER BY pid"); $posi = '';
         while($getpos = _fetch($qrypos))
         {
-            if(db("SELECT * FROM ".dba::get('userpos')." WHERE posi = '".convert::ToInt($getpos['id'])."' AND squad = '".convert::ToInt($getsq['id'])."' AND user = '".(isset($_GET['edit']) ? convert::ToInt($_GET['edit']) : '')."'",true))
-                   $sel = "selected=\"selected\"";
-               else
-                   $sel = "";
-
-               $posi .= show(_select_field_posis, array("value" => convert::ToInt($getpos['id']), "sel" => $sel, "what" => re($getpos['position'])));
+            $sel = (db("SELECT * FROM ".dba::get('userpos')." WHERE posi = '".convert::ToInt($getpos['id'])."' AND squad = '".convert::ToInt($getsq['id'])."' AND user = '".(isset($_GET['edit']) ? convert::ToInt($_GET['edit']) : '')."'",true) ? 'selected="selected"' : '');
+            $posi .= show(_select_field_posis, array("value" => convert::ToInt($getpos['id']), "sel" => $sel, "what" => string::decode($getpos['position'])));
         }
 
-        $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => '', "eposi" => $posi, "squad" => re($getsq['name'])));
+        $esquads .= show(_checkfield_squads, array("id" => $getsq['id'], "check" => '', "eposi" => $posi, "squad" => string::decode($getsq['name'])));
     }
 
     ## Sex ##

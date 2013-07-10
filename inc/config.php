@@ -13,7 +13,7 @@ date_default_timezone_set('Europe/Berlin');
 
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug, Seiten gecached werden können
-define('show_debug_console', false); //Zeigt die Debug Console
+define('show_debug_console', true); //Zeigt die Debug Console
 define('save_debug_console', false); //Speichert alle in der Debug Console ausgegebenen Texte in eine Log Datei
 
 define('buffer_gzip_compress', true); // Seite mit Hilfe der GZIP-Komprimierung übertragen
@@ -59,6 +59,7 @@ define('rss_cache_private_news', (10*60)); // Wann soll der Interne RSS Feed akt
  * Sollte nur auf false gestellt werden wenn es umbedingt nötig ist.
  */
 define('runtime_buffer', true);
+define('runtime_sql_persistconns', false); //Verwendet MySQLi Persistent Connections.
 
 ## Colors Antispam ##
 $backgroundColor  = '#444444';
@@ -67,7 +68,7 @@ $noiseColor       = '#AAAAAA';
 $lineColor        = '#555555';
 
 ## Copyrightlinks ##
-$cp_color = '#FFFFFF'; //Hex Farbcode der Hintergrundfarbe Copyrightlinks am Ende der Homepage
+$cp_color = '#d3d3d3'; //Hex Farbcode der Hintergrundfarbe Copyrightlinks am Ende der Homepage
 
 // DSL Geschwindigkeiten für errechnen der Download Zeiten * Es kann hier einfach erweitert werden, es wird automatisch auf der Seite eingefügt *
 $dsl_formats = array("DSL 1000"=>1024, "DSL 2000"=>2048, "DSL 6000"=>6144, "DSL2+ 16000"=>16384, "VDSL 25.000"=>25600, "VDSL 50.000"=>51200);
@@ -174,7 +175,6 @@ $db_array['sites']            = 'sites';               # dzcp_sites
 $db_array['squads']           = 'squads';              # dzcp_squads
 $db_array['squaduser']        = 'squaduser';           # dzcp_squaduser
 $db_array['sponsoren']        = 'sponsoren';           # dzcp_sponsoren
-$db_array['taktik']           = 'taktiken';            # dzcp_taktiken
 $db_array['ts']               = 'teamspeak';           # dzcp_teamspeak
 $db_array['users']            = 'users';               # dzcp_users
 $db_array['usergallery']      = 'usergallery';         # dzcp_usergallery

@@ -74,7 +74,7 @@ else
                                 $can_erase = true;
                                 $forumposts_show .= '&nbsp;&nbsp;'.$date.show(_user_new_forum, array("cnt" => ($count == 0 ? $count +1 : $count),
                                                                                                      "tid" => $gettopic['id'],
-                                                                                                     "thread" => re($gettopic['topic']),
+                                                                                                     "thread" => string::decode($gettopic['topic']),
                                                                                                      "intern" => $intern,
                                                                                                      "wichtig" => $wichtig,
                                                                                                      "post" => $post,
@@ -104,7 +104,7 @@ else
                 if(check_is_new($getcw['datum']))
                 {
                     $can_erase = true;
-                    $cws .= show(_user_new_cw, array("datum" => date("d.m. H:i", $getcw['datum'])._uhr, "id" => $getcw['id'], "icon" => $getcw['icon'], "gegner" => re($getcw['clantag']))); //Output
+                    $cws .= show(_user_new_cw, array("datum" => date("d.m. H:i", $getcw['datum'])._uhr, "id" => $getcw['id'], "icon" => $getcw['icon'], "gegner" => string::decode($getcw['clantag']))); //Output
                 }
             } //while end
         }
@@ -214,7 +214,7 @@ else
                   {
                     $can_erase = true;
                     $eintrag = (($check = cnt(dba::get('newscomments'), " WHERE datum > ".$lastvisit." AND news = '".$getnewsc['news']."'")) == 1 ? _lobby_new_newsc_1 : _lobby_new_newsc_2);
-                    $newsc .= show(_user_new_newsc, array("cnt" => $check, "id" => $getnewsc['news'], "news" => re($getcheckn['titel']), "eintrag" => $eintrag)); //Output
+                    $newsc .= show(_user_new_newsc, array("cnt" => $check, "id" => $getnewsc['news'], "news" => string::decode($getcheckn['titel']), "eintrag" => $eintrag)); //Output
                 }
             } //while end
         }
@@ -234,7 +234,7 @@ else
                 {
                     $can_erase = true;
                     $eintrag = (($check = cnt(dba::get('dl_comments'), " WHERE datum > ".$lastvisit." AND download = '".$getdownloadc['download']."'")) == 1 ? _lobby_dl_comments_1 : _lobby_dl_comments_2);
-                    $downloadc .= show(_user_new_dlc, array("cnt" => $check, "id" => $getcheckn['id'], "download" => re($getcheckn['download']), "eintrag" => $eintrag)); //Output
+                    $downloadc .= show(_user_new_dlc, array("cnt" => $check, "id" => $getcheckn['id'], "download" => string::decode($getcheckn['download']), "eintrag" => $eintrag)); //Output
                 }
             } //while end
         }
@@ -455,9 +455,9 @@ else
                                                                     "p" => $lp +1,
                                                                     "intern" => $intern,
                                                                     "wichtig" => $wichtig,
-                                                                    "lpost" => cut(re($text), 100),
-                                                                    "kat" => re($getft['kattopic']),
-                                                                    "titel" => re($getft['topic']),
+                                                                    "lpost" => cut(string::decode($text), 100),
+                                                                    "kat" => string::decode($getft['kattopic']),
+                                                                    "titel" => string::decode($getft['topic']),
                                                                     "kid" => $getft['kid'])); //Output
                 }
             } //while end

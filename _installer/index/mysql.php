@@ -37,75 +37,80 @@ else
             $dbe_selected3 = ($_SESSION['mysql_dbengine'] == 3 ? 'selected="selected"' : '');
             $dbe_selected4 = ($_SESSION['mysql_dbengine'] == 4 ? 'selected="selected"' : '');
 
-            if($mysql_prefix != NULL)
+            if(function_exists('mysqli_connect'))
             {
-                $posi = (strpos($_SESSION['mysql_host'], ':') !== false ? true : false);
-                $exp = ($posi ? explode(':',$_SESSION['mysql_host']) : $_SESSION['mysql_host']);
-                if(@ping_port(($posi ? $exp[0] : $exp), ($posi ? $exp[1] : 3306)))
+                if($mysql_prefix != NULL)
                 {
-                    if(($con = @mysql_connect($_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password']))) //Zur Datenbank Verbinden
+                    $posi = (strpos($_SESSION['mysql_host'], ':') !== false ? true : false);
+                    $exp = ($posi ? explode(':',$_SESSION['mysql_host']) : $_SESSION['mysql_host']);
+                    if(@ping_port(($posi ? $exp[0] : $exp), ($posi ? $exp[1] : 3306)))
                     {
-                        if(@mysql_select_db($_SESSION['mysql_database'],$con)) //Gehe in Datenbank
+                        if(($con = @mysqli_connect($_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password']))) //Zur Datenbank Verbinden
                         {
-                            //Updater
-                            if($_SESSION['type'] == 1)
+                            if(@mysqli_select_db($con,$_SESSION['mysql_database'])) //Gehe in Datenbank
                             {
-                                $_SESSION['mysql_dbengine'] = get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], dba::get('settings')),true);
-                                $dbe_selected0 = ($_SESSION['mysql_dbengine'] == 0 ? 'selected="selected"' : '');
-                                $dbe_selected1 = ($_SESSION['mysql_dbengine'] == 1 ? 'selected="selected"' : '');
-                                $dbe_selected2 = ($_SESSION['mysql_dbengine'] == 2 ? 'selected="selected"' : '');
-                                $dbe_selected3 = ($_SESSION['mysql_dbengine'] == 3 ? 'selected="selected"' : '');
-                                $dbe_selected4 = ($_SESSION['mysql_dbengine'] == 4 ? 'selected="selected"' : '');
-                            }
-                            //End
+                                //Updater
+                                if($_SESSION['type'] == 1)
+                                {
+                                    $_SESSION['mysql_dbengine'] = get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], dba::get('settings')),true);
+                                    $dbe_selected0 = ($_SESSION['mysql_dbengine'] == 0 ? 'selected="selected"' : '');
+                                    $dbe_selected1 = ($_SESSION['mysql_dbengine'] == 1 ? 'selected="selected"' : '');
+                                    $dbe_selected2 = ($_SESSION['mysql_dbengine'] == 2 ? 'selected="selected"' : '');
+                                    $dbe_selected3 = ($_SESSION['mysql_dbengine'] == 3 ? 'selected="selected"' : '');
+                                    $dbe_selected4 = ($_SESSION['mysql_dbengine'] == 4 ? 'selected="selected"' : '');
+                                }
+                                //End
 
-                            switch ($_SESSION['mysql_dbengine'])
-                            {
-                                case 3:
-                                    //NDB
-                                    if(!check_db_ndb($con))
-                                        $msg = writemsg(mysql_no_ndb,true);
-                                    else
-                                    {
+                                switch ($_SESSION['mysql_dbengine'])
+                                {
+                                    case 3:
+                                        //NDB
+                                        if(!check_db_ndb($con))
+                                            $msg = writemsg(mysql_no_ndb,true);
+                                        else
+                                        {
+                                            $msg = writemsg(mysql_ok,false);
+                                            $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
+                                            $disabled = 'disabled="disabled"';
+                                        }
+                                    break;
+                                    case 4:
+                                        //Aria
+                                        if(!check_db_aria($con))
+                                            $msg = writemsg(mysql_no_aria,true);
+                                        else
+                                        {
+                                            $msg = writemsg(mysql_ok,false);
+                                            $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
+                                            $disabled = 'disabled="disabled"';
+                                        }
+                                    break;
+                                    default:
                                         $msg = writemsg(mysql_ok,false);
                                         $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
                                         $disabled = 'disabled="disabled"';
-                                    }
-                                break;
-                                case 4:
-                                    //Aria
-                                    if(!check_db_aria($con))
-                                        $msg = writemsg(mysql_no_aria,true);
-                                    else
-                                    {
-                                        $msg = writemsg(mysql_ok,false);
-                                        $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
-                                        $disabled = 'disabled="disabled"';
-                                    }
-                                break;
-                                default:
-                                    $msg = writemsg(mysql_ok,false);
-                                    $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup'));
-                                    $disabled = 'disabled="disabled"';
-                                break;
-                            }
+                                    break;
+                                }
 
-                            @mysql_close($con);
+                                @mysqli_close($con);
+                            }
+                            else
+                            {
+                                $msg = writemsg(mysql_no_db,true);
+                                @mysqli_close($con);
+                            }
                         }
                         else
-                        {
-                            $msg = writemsg(mysql_no_db,true);
-                            @mysql_close($con);
-                        }
+                            $msg = writemsg(mysql_no_login,true);
                     }
                     else
-                        $msg = writemsg(mysql_no_login,true);
+                        $msg = writemsg(mysql_no_con_server,true);
                 }
                 else
-                    $msg = writemsg(mysql_no_con_server,true);
+                    $msg = writemsg(mysql_no_prefix,true);
             }
             else
-                $msg = writemsg(mysql_no_prefix,true);
+                $msg = writemsg(mysql_no_ext,true);
         }
     }
 

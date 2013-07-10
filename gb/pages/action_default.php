@@ -59,11 +59,11 @@ else
                      `datum`      = '".time()."',
                      `editby`     = '',
                      `public`     = 0,
-                     `nick`       = '".(isset($_POST['nick']) ? up($_POST['nick']) : '')."',
-                     `email`      = '".(isset($_POST['email']) ? up($_POST['email']) : '')."',
-                     `hp`         = '".(isset($_POST['hp']) ? up($_POST['hp']) : '')."',
+                     `nick`       = '".(isset($_POST['nick']) ? string::encode($_POST['nick']) : '')."',
+                     `email`      = '".(isset($_POST['email']) ? string::encode($_POST['email']) : '')."',
+                     `hp`         = '".(isset($_POST['hp']) ? string::encode($_POST['hp']) : '')."',
                      `reg`        = '".convert::ToInt($userid)."',
-                     `nachricht`  = '".up($_POST['eintrag'], 1)."',
+                     `nachricht`  = '".string::encode($_POST['eintrag'])."',
                      `ip`         = '".visitorIp()."'");
 
             wire_ipcheck('gb');
@@ -84,14 +84,14 @@ else
             $show = '';
             while($get = _fetch($qry))
             {
-                $gbhp = ($get['hp'] ? show(_hpicon, array("hp" => links(re($get['hp'])))) : '');
+                $gbhp = ($get['hp'] ? show(_hpicon, array("hp" => links(string::decode($get['hp'])))) : '');
                 $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
 
                 $delete = ""; $edit = ""; $comment = "";
                 if($get['reg'] == convert::ToInt($userid) || permission("gb"))
                 {
                     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=admin&amp;do=edit&amp;postid=".$i, "title" => _button_title_edit));
-                    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=admin&amp;do=delete", "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
+                    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=admin&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_entry));
                     $comment = show(_gb_commenticon, array("id" => $get['id'], "title" => _button_title_comment));
                 }
 
@@ -106,7 +106,7 @@ else
                 if(!$get['reg'])
                 {
                     $gbtitel = show(_gb_titel_noreg, array("postid" => $i,
-                                                           "nick" => re($get['nick']),
+                                                           "nick" => string::decode($get['nick']),
                                                            "edit" => $edit,
                                                            "delete" => $delete,
                                                            "comment" => $comment,
@@ -140,16 +140,16 @@ else
                         if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("gb"))
                         {
                             $edit = show("page/button_edit_single", array("id" => $getc['id'], "action" => "action=admin&amp;do=cedit&amp;postid=".$i, "title" => _button_title_edit));
-                            $delete = show("page/button_delete_single", array("id" => $getc['id'], "action" => "action=admin&amp;do=cdelete", "title" => _button_title_del, "del" => convSpace(_confirm_del_entry)));
+                            $delete = show("page/button_delete_single", array("id" => $getc['id'], "action" => "action=admin&amp;do=cdelete", "title" => _button_title_del, "del" => _confirm_del_entry));
                         }
 
-                        $nick = (!$getc['reg'] ? show(_link_mailto, array("nick" => re($getc['nick']), "email" => eMailAddr($getc['email']))) : autor($getc['reg']));
-                        $comments .= show($dir."/commentlayout", array("nick" => $nick, "editby" => $getc['editby'], "datum" => date("d.m.Y H:i", $getc['datum'])._uhr, "comment" => up($getc['comment'], 1), "edit" => $edit, "delete" => $delete));
+                        $nick = (!$getc['reg'] ? show(_link_mailto, array("nick" => string::decode($getc['nick']), "email" => eMailAddr($getc['email']))) : autor($getc['reg']));
+                        $comments .= show($dir."/commentlayout", array("nick" => $nick, "editby" => $getc['editby'], "datum" => date("d.m.Y H:i", $getc['datum'])._uhr, "comment" => string::encode($getc['comment']), "edit" => $edit, "delete" => $delete));
                     } //while end
                 }
 
                 $posted_ip = ($chkMe == "4" ? $get['ip'] : _logged);
-                $show .= show($dir."/gb_show", array("gbtitel" => $gbtitel, "nachricht" => bbcode($get['nachricht']), "comments" => $comments, "editby" => bbcode($get['editby']), "ip" => $posted_ip));
+                $show .= show($dir."/gb_show", array("gbtitel" => $gbtitel, "nachricht" => bbcode::parse_html($get['nachricht']), "comments" => $comments, "editby" => bbcode::parse_html($get['editby']), "ip" => $posted_ip));
                 $i--;
             } //while end
         }
@@ -164,7 +164,7 @@ else
             else
                 $form = show("page/editor_notregged", array("postemail" => (isset($_POST['email']) ? $_POST['email'] : ''), "posthp" => (isset($_POST['hp']) ? $_POST['hp'] : ''), "postnick" => (isset($_POST['nick']) ? $_POST['nick'] : '')));
 
-            $entry = show($dir."/add", array("eintraghead" => _gb_add_head, "what" => _button_value_add, "ed" => "", "reg" => "", "whaturl" => "do=addgb", "form" => $form, "posteintrag" => (isset($_POST["eintrag"]) ? re_bbcode($_POST["eintrag"]) : ''), "error" => $error));
+            $entry = show($dir."/add", array("eintraghead" => _gb_add_head, "what" => _button_value_add, "ed" => "", "reg" => "", "whaturl" => "do=addgb", "form" => $form, "posteintrag" => (isset($_POST["eintrag"]) ? string::decode($_POST["eintrag"]) : ''), "error" => $error));
         }
 
         $index = show($dir."/gb",array("show" => $show, "add" => show(_gb_eintragen), "entry" => $entry, "seiten" => $seiten));

@@ -20,14 +20,14 @@ else
     while($get = _fetch($qry))
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-        $squad = show(_gameicon, array("icon" => $get['icon'])).' '.re($get['name']); $style = '';
+        $squad = show(_gameicon, array("icon" => $get['icon'])).' '.string::decode($get['name']); $style = '';
 
         foreach($picformat AS $end)
         {
             if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end))
             {
                 $style = 'text-align:center;padding:0';
-                $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.re($get['name']).'" />';
+                $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.string::decode($get['name']).'" />';
                 break;
             }
         }
@@ -36,8 +36,8 @@ else
                 "squad" => $squad,
                 "style" => $style,
                 "class" => $class,
-                "beschreibung" => bbcode($get['beschreibung']),
-                "squadname" => re($get['name'])
+                "beschreibung" => bbcode::parse_html($get['beschreibung']),
+                "squadname" => string::decode($get['name'])
         ));
     }
 

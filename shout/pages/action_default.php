@@ -37,9 +37,9 @@ else
             $reg = ($userid == 0 ? $_POST['email'] : convert::ToInt($userid));
             db("INSERT INTO ".dba::get('shout')." SET
                 `datum`  = '".time()."',
-                `nick`   = '".up($_POST['name'],'')."',
-                `email`  = '".up($reg,'')."',
-                `text`   = '".up(substr(str_replace("\n", ' ', $_POST['eintrag']),0,config('shout_max_zeichen')),'')."',
+                `nick`   = '".string::encode($_POST['name'],'')."',
+                `email`  = '".string::encode($reg,'')."',
+                `text`   = '".string::encode(substr(str_replace("\n", ' ', $_POST['eintrag']),0,config('shout_max_zeichen')),'')."',
                 `ip`     = '".visitorIp()."'");
 
             wire_ipcheck('shout');

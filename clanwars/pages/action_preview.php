@@ -21,25 +21,25 @@ else
              WHERE id = '".convert::ToInt($_POST['squad'])."'");
     $get = _fetch($qry);
 
-    $serverpwd = show(_cw_serverpwd, array("cw_serverpwd" => re($_POST['serverpwd'])));
+    $serverpwd = show(_cw_serverpwd, array("cw_serverpwd" => string::decode($_POST['serverpwd'])));
 
     $img = squad($get['icon']);
-    $show = show(_cw_details_squad, array("game" => re($get['game']),
-            "name" => re($get['name']),
+    $show = show(_cw_details_squad, array("game" => string::decode($get['game']),
+            "name" => string::decode($get['name']),
             "id" => $_POST['squad'],
             "img" => $img));
     $flagge = flag($get['gcountry']);
-    $gegner = show(_cw_details_gegner_blank, array("gegner" => re($_POST['clantag']." - ".$_POST['gegner']),
+    $gegner = show(_cw_details_gegner_blank, array("gegner" => string::decode($_POST['clantag']." - ".$_POST['gegner']),
             "url" => links($_POST['url'])));
-    $server = show(_cw_details_server, array("servername" => re($_POST['servername']),
-            "serverip" => re($_POST['serverip'])));
+    $server = show(_cw_details_server, array("servername" => string::decode($_POST['servername']),
+            "serverip" => string::decode($_POST['serverip'])));
 
     if($_POST['punkte'] == "0" && $_POST['gpunkte'] == "0") $result = _cw_no_results;
     else $result = cw_result_details($_POST['punkte'], $_POST['gpunkte']);
 
     $editcw = "";
 
-    if($_POST['bericht']) $bericht = bbcode($_POST['bericht'],1);
+    if($_POST['bericht']) $bericht = bbcode::parse_html($_POST['bericht']);
     else $bericht = "&nbsp;";
 
     if(!empty($_POST['s1']))     $screen1 = '<img src="../inc/images/admin/cwscreen.jpg" alt="" />';
@@ -83,11 +83,11 @@ else
             "logo_squad" => '_defaultlogo.jpg',
             "logo_gegner" => '_defaultlogo.jpg',
             "squad" => $show,
-            "squad_name" => re($get['name']),
-            "gametype" => re($_POST['gametype']),
-            "lineup" => preg_replace("#\,#","<br />", re($_POST['lineup'])),
-            "glineup" => preg_replace("#\,#","<br />", re($_POST['glineup'])),
-            "match_admins" => re($_POST['match_admins']),
+            "squad_name" => string::decode($get['name']),
+            "gametype" => string::decode($_POST['gametype']),
+            "lineup" => preg_replace("#\,#","<br />", string::decode($_POST['lineup'])),
+            "glineup" => preg_replace("#\,#","<br />", string::decode($_POST['glineup'])),
+            "match_admins" => string::decode($_POST['match_admins']),
             "datum" => _datum,
             "gegner" => _cw_head_gegner,
             "xonx" => _cw_head_xonx,
@@ -102,9 +102,9 @@ else
             "serverpwd" => $serverpwd,
             "cw_datum" => date("d.m.Y H:i",$datum)._uhr,
             "cw_gegner" => $gegner,
-            "cw_xonx" => re($xonx),
-            "cw_liga" => re($_POST['liga']),
-            "cw_maps" => re($_POST['maps']),
+            "cw_xonx" => string::decode($xonx),
+            "cw_liga" => string::decode($_POST['liga']),
+            "cw_maps" => string::decode($_POST['maps']),
             "cw_server" => $server,
             "cw_result" => $result,
             "cw_bericht" => $bericht,

@@ -23,5 +23,5 @@ else
             "disclaimer_head" => _impressum_disclaimer,
             "disclaimer" => _impressum_txt,
             "show_domain" => $info['i_domain'],
-            "show_autor" => bbcode($info['i_autor'])));
+            "show_autor" => bbcode::parse_html($info['i_autor'])));
 }

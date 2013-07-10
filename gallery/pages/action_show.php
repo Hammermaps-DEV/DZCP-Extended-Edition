@@ -26,7 +26,7 @@ else
         $tr2 = ($t == $galleryconfig['gallery'] ? '</tr>' : '');
         $t = ($t == $galleryconfig['gallery'] ? 0 : $t);
 
-        $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => convSpace(_confirm_del_galpic))) : '');
+        $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => _confirm_del_galpic)) : '');
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $show .= show($dir."/show_gallery", array("img" => $file,
                                                   "cnt" => $cnt,
@@ -49,5 +49,5 @@ else
 
     $seiten = nav(count($files),$galleryconfig['m_gallery'],"?action=show&amp;id=".convert::ToString($_GET['id']).""); unset($files_foreach,$files);
     $get = db("SELECT kat,beschreibung FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
-    $index = show($dir."/show", array("gallery" => re($get['kat']), "show" => $show, "beschreibung" => bbcode($get['beschreibung']), "end" => $end, "seiten" => $seiten));
+    $index = show($dir."/show", array("gallery" => string::decode($get['kat']), "show" => $show, "beschreibung" => bbcode::parse_html($get['beschreibung']), "end" => $end, "seiten" => $seiten));
 }

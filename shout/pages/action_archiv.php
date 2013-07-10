@@ -38,12 +38,12 @@ else
 
         $show .= show($dir."/shout_part", array("nick" => $nick,
                 "datum" => date("j.m.Y H:i", $get['datum'])._uhr,
-                "text" => bbcode($get['text']),
+                "text" => bbcode::parse_html($get['text']),
                 "class" => $class,
                 "del" => $del,
                 "ip" => $posted_ip,
                 "id" => $i,
-                "email" => re($get['email'])));
+                "email" => string::decode($get['email'])));
         $i--;
     }
 

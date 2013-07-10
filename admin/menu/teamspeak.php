@@ -32,7 +32,7 @@ switch($do)
                 }
 
                 db("INSERT INTO ".dba::get('ts')." SET
-                        `host_ip_dns` = '".up($_POST['ip'])."',
+                        `host_ip_dns` = '".string::encode($_POST['ip'])."',
                         `server_port` = '".convert::ToInt($_POST['port'])."',
                         `query_port` = '".convert::ToInt($_POST['sport'])."',
                         `customicon` = '".convert::ToInt($_POST['customicon'])."',
@@ -78,7 +78,7 @@ switch($do)
                 }
 
                 db("UPDATE ".dba::get('ts')." SET
-                        `host_ip_dns` = '".up($_POST['ip'])."',
+                        `host_ip_dns` = '".string::encode($_POST['ip'])."',
                         `server_port` = '".convert::ToInt($_POST['port'])."',
                         `query_port` = '".convert::ToInt($_POST['sport'])."',
                         `customicon` = '".convert::ToInt($_POST['customicon'])."',
@@ -86,8 +86,8 @@ switch($do)
                         `default_server` = ".(isset($_POST['defaults']) ? '1' : '0')."
                         WHERE `id` = ".convert::ToInt($_GET['id']).";");
 
-                $ip_port = TS3Renderer::tsdns(up($_POST['ip']));
-                $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : up($_POST['ip']));
+                $ip_port = TS3Renderer::tsdns(string::encode($_POST['ip']));
+                $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : string::encode($_POST['ip']));
                 $port = ($ip_port != false && is_array($ip_port) ? $ip_port['port'] : convert::ToInt($_POST['port']));
                 Cache::delete('teamspeak_'.md5($host.':'.$port));
                 $show = info(_config_ts_updated,"?admin=teamspeak");
@@ -148,12 +148,12 @@ switch($do)
         while($get = _fetch($qry))
         {
             $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=teamspeak&amp;do=edit","title" => _button_title_edit));
-            $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=teamspeak&amp;do=delete","title" => _button_title_del,"del" => convSpace(_confirm_del_server)));
+            $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=teamspeak&amp;do=delete","title" => _button_title_del,"del" => _confirm_del_server));
 
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $menu = (!$get['show_navi'] ? show(_teamspeak_menu_icon_yes, array("id" => $get['id'])) : show(_teamspeak_menu_icon_no, array("id" => $get['id'])));
             $default = ($get['default_server'] ? show(_teamspeak_default_icon_yes, array("id" => $get['id'])) : show(_teamspeak_default_icon_no, array("id" => $get['id'])));
-            $show .= show($dir."/teamspeak_show", array("serverip" => cut(re($get['host_ip_dns']),26,true),
+            $show .= show($dir."/teamspeak_show", array("serverip" => cut(string::decode($get['host_ip_dns']),26,true),
                     "serverport" => $get['server_port'],
                     "serverqport" => $get['query_port'],
                     "menu" => $menu,

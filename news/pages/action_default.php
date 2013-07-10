@@ -48,13 +48,13 @@ else
             $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
             $c = cnt(dba::get('newscomments'), " WHERE news = '".$get['id']."'");
             $comments = ($c == 1 ? show(_news_comment, array("comments" => "1", "id" => $get['id'])) : show(_news_comments, array("comments" => $c, "id" => $get['id'])));
-            $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
-            $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => re($get['link1']), "url" => $get['url1'])) : '');
-            $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
-            $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
+            $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => string::decode($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
+            $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => string::decode($get['link1']), "url" => string::decode($get['url1']))) : '');
+            $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => string::decode($get['link2']), "url" => string::decode($get['url2']))) : '');
+            $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => string::decode($get['link3']), "url" => string::decode($get['url3']))) : '');
             $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-            $newsimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+            $newsimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
             if($get['custom_image'])
             {
                 foreach($picformat AS $end)
@@ -67,7 +67,7 @@ else
                     $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
             }
 
-            $sticky_news = show($dir."/news_show", array("titel" => re($get['titel']),
+            $sticky_news = show($dir."/news_show", array("titel" => string::decode($get['titel']),
                                                           "newsimage" => $newsimage,
                                                           "id" => $get['id'],
                                                           "comments" => $comments,
@@ -75,8 +75,8 @@ else
                                                           "sticky" => _news_sticky,
                                                           "intern" => ($get['intern'] == 1 ? _votes_intern : ''),
                                                           "klapp" => $klapp,
-                                                          "more" => bbcode($get['klapptext']),
-                                                          "text" => bbcode($get['text']),
+                                                          "more" => bbcode::parse_html($get['klapptext']),
+                                                          "text" => bbcode::parse_html($get['text']),
                                                           "datum" => date("d.m.y H:i", $get['datum'])._uhr,
                                                           "links" => $links,
                                                           "autor" => autor($get['autor'])));
@@ -102,14 +102,14 @@ else
                 $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
                 $c = cnt(dba::get('newscomments'), " WHERE news = '".$get['id']."'");
                 $comments = ($c == 1 ? show(_news_comment, array("comments" => "1", "id" => $get['id'])) : show(_news_comments, array("comments" => $c, "id" => $get['id'])));
-                $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => re($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
+                $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => string::decode($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
                 $viewed = show(_news_viewed, array("viewed" => $get['viewed']));
-                $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => re($get['link1']), "url" => $get['url1'])) : '');
-                $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => re($get['link2']), "url" => $get['url2'])) : '');
-                $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => re($get['link3']), "url" => $get['url3'])) : '');
+                $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => string::decode($get['link1']), "url" => string::decode($get['url1']))) : '');
+                $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => string::decode($get['link2']), "url" => string::decode($get['url2']))) : '');
+                $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => string::decode($get['link3']), "url" => string::decode($get['url3']))) : '');
                 $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-                $newsimage = '../inc/images/uploads/newskat/'.re($getkat['katimg']);
+                $newsimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
                 if($get['custom_image'])
                 {
                     foreach($picformat AS $end)
@@ -122,7 +122,7 @@ else
                         $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
                 }
 
-                $show .= show($dir."/news_show", array("titel" => re($get['titel']),
+                $show .= show($dir."/news_show", array("titel" => string::decode($get['titel']),
                                                               "newsimage" => $newsimage,
                                                               "id" => $get['id'],
                                                               "comments" => $comments,
@@ -130,8 +130,8 @@ else
                                                               "sticky" => '',
                                                               "intern" => ($get['intern'] == 1 ? _votes_intern : ''),
                                                               "klapp" => $klapp,
-                                                              "more" => bbcode($get['klapptext']),
-                                                              "text" => bbcode($get['text']),
+                                                              "more" => bbcode::parse_html($get['klapptext'],false),
+                                                              "text" => bbcode::parse_html($get['text'],false),
                                                               "datum" => date("d.m.y H:i", $get['datum'])._uhr,
                                                               "links" => $links,
                                                               "autor" => autor($get['autor'])));
