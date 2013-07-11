@@ -41,7 +41,8 @@ function server($serverID = 0)
                 $get['ip'] = str_replace(' ', '', $get['ip']);
                 GameQ::addServers(array(array('id' => 'gs' ,'type' => $get['game'], 'host' => $get['ip'].':'.$get['port'], 'query_port' => empty($get['qport']) ? false : $get['qport'])));
                 GameQ::setOption('timeout', 6);
-                $server = GameQ::requestData()['gs'];
+                $server = GameQ::requestData();
+                $server = $server['gs'];
 
                 if(!empty($server) && $server && $server['game_online'])
                     Cache::set('server_'.$cache_hash,$server,config('cache_server'));

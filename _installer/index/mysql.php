@@ -43,7 +43,7 @@ else
                 {
                     $posi = (strpos($_SESSION['mysql_host'], ':') !== false ? true : false);
                     $exp = ($posi ? explode(':',$_SESSION['mysql_host']) : $_SESSION['mysql_host']);
-                    if(@ping_port(($posi ? $exp[0] : $exp), ($posi ? $exp[1] : 3306)))
+                    if(!fsockopen_support() || @ping_port(($posi ? $exp[0] : $exp), ($posi ? $exp[1] : 3306)))
                     {
                         if(($con = @mysqli_connect($_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password']))) //Zur Datenbank Verbinden
                         {

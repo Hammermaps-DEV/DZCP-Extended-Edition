@@ -1049,7 +1049,7 @@ class convert
     { return utf8_decode($input); }
 
     public static final function ToHTML($input)
-    { return htmlentities($input, ENT_COMPAT | ENT_HTML5, _charset); }
+    { return htmlentities($input, ENT_COMPAT, _charset); }
 }
 
 #############################################
@@ -1074,7 +1074,7 @@ class string
      */
     public static function decode($txt='')
     {
-        return trim(stripslashes(spChars(html_entity_decode($txt, ENT_COMPAT | ENT_HTML5, 'iso-8859-1'),true)));
+        return trim(stripslashes(spChars(html_entity_decode($txt, ENT_COMPAT, 'iso-8859-1'),true)));
     }
 }
 
