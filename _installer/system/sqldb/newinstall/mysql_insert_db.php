@@ -244,7 +244,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Squads =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('squads')."` SET `name` = 'Testsquad', `game` = 'Counter-Strike', `icon` = 'cs16.gif', `pos` = 1, `shown` = 1, `navi` = 1, `status` = 1, `beschreibung` = 'Unser Counter-Strike 1.6 Team', `team_show` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('squads')."` SET `name` = 'Testsquad', `game` = 'Counter-Strike', `icon` = 'cs.gif', `pos` = 1, `shown` = 1, `navi` = 1, `status` = 1, `beschreibung` = 'Unser Counter-Strike 1.6 Team', `team_show` = 1;",false,false,true);
 
     //===============================================================
     //-> Squadusers =================================================
