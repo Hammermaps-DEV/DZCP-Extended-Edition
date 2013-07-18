@@ -210,7 +210,8 @@ class GameQ_Protocols_Mohwf extends GameQ_Protocols_Bf3
         $custom_settings = array();
         foreach($this->server_data_stream as $key => $data)
         {
-            if(in_array($key, $this->settings_filter) || in_array(str_split($key, 6)[0], $this->settings_filter))
+            $split00 = str_split($key, 6);
+            if(in_array($key, $this->settings_filter) || in_array($split00[0], $this->settings_filter))
                 $custom_settings[$key] = $data;
         }
         $result->add('game_custom',$custom_settings);

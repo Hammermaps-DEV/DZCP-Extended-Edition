@@ -244,7 +244,10 @@ class GameQ_Buffer
      * Read a 32-bit unsigned integer
      */
     public function readInt32()
-    { return unpack('Vint', $this->read(4))['int']; }
+    {
+        $int = unpack('Vint', $this->read(4));
+        return $int['int'];
+    }
 
     //Alias
     public function getUnsignedLong()
@@ -254,7 +257,10 @@ class GameQ_Buffer
      * Read a 32-bit signed integer
      */
     public function readInt32Signed()
-    { return unpack('lint', $this->read(4))['int']; }
+    {
+        $int = unpack('lint', $this->read(4));
+        return $int['int'];
+    }
 
     //Alias
     public function getSignedLong()
@@ -268,7 +274,10 @@ class GameQ_Buffer
      * Read a 16-bit unsigned integer
      */
     public function readInt16()
-    { return unpack('vint', $this->read(2))['int']; }
+    {
+        $int = unpack('vint', $this->read(2));
+        return $int['int'];
+    }
 
     //Alias
     public function GetShort( )
@@ -278,7 +287,10 @@ class GameQ_Buffer
      * Read a 16-big signed integer
      */
     public function readInt16Signed()
-    { return unpack('sint', $this->read(2))['int']; }
+    {
+        $int = unpack('sint', $this->read(2));
+        return $int['int'];
+    }
 
     /**
      * Read an int8 from the buffer
@@ -294,7 +306,10 @@ class GameQ_Buffer
      * @return  int * The data read
      */
     public function readFloat32()
-    { return unpack('ffloat', $this->read(4))['float']; }
+    {
+        $float = unpack('ffloat', $this->read(4));
+        return $float['float'];
+    }
 
     //Alias
     public function getFloat()
@@ -311,7 +326,8 @@ class GameQ_Buffer
     {
         // Check length
         if (strlen($string) !== 4) return false;
-        return unpack('ffloat', $string)['float']; // Convert
+        $float = unpack('ffloat', $string); // Convert
+        return $float['float'];
     }
 
     /**
@@ -331,8 +347,8 @@ class GameQ_Buffer
         switch($bits)
         {
             case 8: $int = ord($string); break; // 8 bit unsigned
-            case 16: $int = unpack('Sint', $string)['int']; break; // 16 bit unsigned
-            case 32: $int = unpack('Lint', $string)['int']; break; // 32 bit unsigned
+            case 16: $int = unpack('Sint', $string); $int = $int['int']; break; // 16 bit unsigned
+            case 32: $int = unpack('Lint', $string); $int = $int['int']; break; // 32 bit unsigned
             default: $int = false; break;
         }
 

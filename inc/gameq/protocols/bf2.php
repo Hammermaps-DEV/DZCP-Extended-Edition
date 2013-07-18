@@ -124,6 +124,7 @@ class GameQ_Protocols_Bf2 extends GameQ_Protocols_Gamespy3
             $result->add('game_use_mod', false);
 
         $secure = array('enable' => $this->server_data_stream['bf2_anticheat'] == '1' ? true : false, 'pic' => 'punkbuster', 'name' => 'PunkBuster');
+        $os_split = str_split($this->server_data_stream['bf2_os'], 3);
 
         // Set the result to a new result instance
         $result->add('game_name_long', $this->is_mod ? $this->basic_game_long : $this->name_long);
@@ -138,7 +139,7 @@ class GameQ_Protocols_Bf2 extends GameQ_Protocols_Gamespy3
         $result->add('game_mod', $this->is_mod || $is_mod_ml ? $this->server_data_stream['gamevariant'] : '');
         $result->add('game_country','');
         $result->add('game_region','');
-        $result->add('game_os', str_split($this->server_data_stream['bf2_os'], 3)[0] == 'win' ? 'windows' : 'linux'); //Server OS
+        $result->add('game_os', $os_split[0] == 'win' ? 'windows' : 'linux'); //Server OS
         $result->add('game_dedicated', $this->server_data_stream['bf2_dedicated'] == '1' ? true : false);
         $result->add('game_hltv', false);
         $result->add('game_num_players', $this->server_data_stream['numplayers']);
@@ -163,7 +164,8 @@ class GameQ_Protocols_Bf2 extends GameQ_Protocols_Gamespy3
         $custom_settings = array();
         foreach($this->server_data_stream as $key => $data)
         {
-            if(in_array($key, $this->settings_filter) || in_array(str_split($key, 3)[0], $this->settings_filter))
+            $split00 = str_split($key, 3);
+            if(in_array($key, $this->settings_filter) || in_array($split00[0], $this->settings_filter))
                 $custom_settings[$key] = $data;
         }
         $result->add('game_custom',$custom_settings);

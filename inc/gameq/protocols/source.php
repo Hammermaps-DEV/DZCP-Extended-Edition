@@ -557,7 +557,8 @@ class GameQ_Protocols_Source extends GameQ_Protocols
         foreach($this->server_data_stream as $key => $data)
         {
             // Settings for Source & Goldsource * Half-Life 1/2 & Mods
-            if(in_array(str_split($key, 3)[0], $this->settings_filter) || in_array(str_split($key, 4)[0], $this->settings_filter))
+            $split00 = str_split($key, 3); $split01 = str_split($key, 4);
+            if(in_array($split00[0], $this->settings_filter) || in_array($split01[0], $this->settings_filter))
                 $custom_settings[$key] = $data;
 
             if($key == 'metamod_version' || $key == 'sourcemod_version') // Metamod & Sourcemod

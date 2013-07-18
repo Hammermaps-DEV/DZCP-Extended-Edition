@@ -334,7 +334,8 @@ class GameQ_Protocols_Quake3 extends GameQ_Protocols
         $custom_settings = array(); $keys = array();
         foreach($this->server_data_stream as $key => $data)
         {
-            if(in_array(str_split($key, 3)[0], $this->settings_filter) || in_array(str_split($key, 4)[0], $this->settings_filter))
+            $split00 = str_split($key, 3); $split01 = str_split($key, 4);
+            if(in_array($split00[0], $this->settings_filter) || in_array($split01[0], $this->settings_filter))
                 $custom_settings[$key] = $data;
 
             if(array_key_exists($key, $keys))

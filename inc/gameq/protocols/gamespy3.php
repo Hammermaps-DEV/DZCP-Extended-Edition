@@ -422,7 +422,6 @@ class GameQ_Protocols_Gamespy3 extends GameQ_Protocols
          */
         $items = explode("\x00\x00", $data);
 
-        print_r($items);
 
         // Loop through all of the items
         for($x = 0; $x < count($items); $x += 2)
