@@ -19,9 +19,9 @@ else
     $vote_permission = permission('votes');
     $fvote = (!settings('forum_vote') ? ' AND forum = 0 ' : '');
     $whereIntern = (!$vote_permission ? ' WHERE intern = 0 ' : '');
-    $orderIntern = (!$vote_permission ? '' : ' intern DESC,');
+    $orderIntern = (!$vote_permission ? 'datum DESC' : ' intern DESC');
 
-    $qry = db('SELECT * FROM ' . dba::get('votes') . $whereIntern . $fvote . ' ORDER BY ' . $orderIntern . ' datum DESC'); $show = ''; $color2 = 1;
+    $qry = db('SELECT * FROM ' . dba::get('votes') . $whereIntern . $fvote . ' ORDER BY ' . $orderIntern); $show = ''; $color2 = 1;
     while($get = _fetch($qry))
     {
         $qryv = db('SELECT * FROM ' . dba::get('vote_results') . ' WHERE vid = ' . $get['id'] . ' ORDER BY id');
