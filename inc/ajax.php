@@ -63,7 +63,7 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
                 die('<table class="hperc" cellspacing="0">'.teamspeak().'</table>');
             break;
             case 'xfire';
-                die(xfistring::decode($_GET['username']));
+                die(xfire(string::decode($_GET['username'])));
             break;
             case 'menu';
                 if(array_key_exists($_GET['hash'], $menu_index))

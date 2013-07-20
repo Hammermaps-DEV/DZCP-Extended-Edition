@@ -46,10 +46,7 @@ if(!$ajaxThumbgen)
 require_once(basePath."/inc/cache.php");
 
 if(!$ajaxThumbgen)
-{
-    require_once(basePath.'/inc/sendmail.php');
     require_once(basePath.'/inc/gameq.php');
-}
 
 // IP Prüfung
 check_ip();
@@ -177,10 +174,10 @@ if(!$ajaxThumbgen)
     else
         language::run_language();
 
-    $userid = userid();
-    $chkMe = checkme();
+    $userid = userid(); //Used only for Mods/Addons
+    $chkMe = checkme(); //Used only for Mods/Addons
 
-    if($chkMe == "unlogged")
+    if(checkme() == "unlogged")
     {
         $_SESSION['id']        = '';
         $_SESSION['pwd']       = '';
@@ -270,10 +267,8 @@ function update_user_status_preview()
 //-> User Abmeldung
 function logout()
 {
-    global $userid;
-
-    if($userid)
-        db("UPDATE ".dba::get('users')." SET online = '0', sessid = '', pkey = '' WHERE id = '".convert::ToInt($userid)."'");
+    if(userid() != 0)
+        db("UPDATE ".dba::get('users')." SET online = '0', sessid = '', pkey = '' WHERE id = '".userid()."'");
 
     cookie::clear();
     cookie::save();
@@ -305,10 +300,10 @@ function userid()
 
             $get = _fetch($sql);
             Cache::set($hash,$get['id'],2);
-            return $get['id'];
+            return convert::ToInt($get['id']);
         }
         else
-            return Cache::get($hash);
+            return convert::ToInt(Cache::get($hash));
     }
     else
     {
@@ -320,10 +315,10 @@ function userid()
 
             $get = _fetch($sql);
             RTBuffer::set($hash,$get['id']);
-            return $get['id'];
+            return convert::ToInt($get['id']);
         }
         else
-            return RTBuffer::get($hash);
+            return convert::ToInt(RTBuffer::get($hash));
     }
 }
 
@@ -430,8 +425,8 @@ function get_level_dropdown_menu($selected_level=0,$userid=0)
 }
 
 //-> Userspezifiesche Dinge
-if(!empty($userid) && $userid != 0 && $ajaxJob != true && $userid != false && !$ajaxThumbgen)
-{ db("UPDATE ".dba::get('userstats')." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".convert::ToInt($userid)); }
+if(userid() != 0 && $ajaxJob != true && !$ajaxThumbgen)
+{ db("UPDATE ".dba::get('userstats')." SET `hits` = hits+1, `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."'  WHERE user = ".userid()); }
 
 function regexChars($txt)
 {
@@ -466,10 +461,7 @@ function eMailAddr($email)
 {
     $output = '';
     for($i=0;$i<strlen($email);$i++)
-    {
-        $output .= str_replace(substr($email,$i,1),"&#".ord(substr($email,$i,1)).";",substr($email,$i,1));
-    }
-
+    { $output .= str_replace(substr($email,$i,1),"&#".ord(substr($email,$i,1)).";",substr($email,$i,1)); }
     return $output;
 }
 
@@ -561,12 +553,10 @@ function update_maxonline()
 //-> Prueft, wieviele Besucher gerade online sind
 function online_guests($where='')
 {
-    global $chkMe;
-
     if(!isSpider())
     {
         db("DELETE FROM ".dba::get('c_who')." WHERE online < ".time());
-        db("REPLACE INTO ".dba::get('c_who')." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".string::encode($where)."', `login` = '".($chkMe == 'unlogged' ? '0' : '1')."'");
+        db("REPLACE INTO ".dba::get('c_who')." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".string::encode($where)."', `login` = '".(checkme() == 'unlogged' ? '0' : '1')."'");
         return cnt(dba::get('c_who'));
     }
 }
@@ -588,24 +578,22 @@ function limited_array($array=array(),$begin,$max)
 //-> Prueft, ob ein User diverse Rechte besitzt
 function permission($check)
 {
-    global $userid;
-
     if(checkme() == 4) return true;
-    $hash = md5($userid.'_'.$check);
+    $hash = md5(userid().'_'.$check);
 
     if(Cache::is_mem())
     {
         //MEM
         if(Cache::check($hash))
         {
-            if($userid && !empty($check))
+            if(userid() && !empty($check))
             {
                 // check rank permission
                 $team = db("SELECT s1.".$check." FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi
-                WHERE s2.user = '".convert::ToInt($userid)."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
+                WHERE s2.user = '".userid()."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
 
                 // check user permission
-                $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
+                $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".userid()."' AND ".$check." = '1'",true);
 
                 if($user || $team)
                 {
@@ -622,14 +610,14 @@ function permission($check)
         //RTBuffer
         if(RTBuffer::check($hash))
         {
-            if($userid && !empty($check))
+            if(userid() && !empty($check))
             {
                 // check rank permission
                 $team = db("SELECT s1.".$check." FROM ".dba::get('permissions')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi
-                WHERE s2.user = '".convert::ToInt($userid)."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
+                WHERE s2.user = '".userid()."' AND s1.".$check." = '1' AND s2.posi != '0'",true);
 
                 // check user permission
-                $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."' AND ".$check." = '1'",true);
+                $user = db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".userid()."' AND ".$check." = '1'",true);
 
                 if($user || $team)
                 {
@@ -941,20 +929,23 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
 }
 
 //-> Nickausgabe mit Profillink oder Emaillink (reg/nicht reg)
-function autor($uid, $class="", $nick="", $email="", $cut="",$add="")
+function autor($uid="", $class="", $nick="", $email="", $cut="",$add="")
 {
-    $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
-    if(_rows($qry))
+    if(empty($uid)) $uid = userid();
+
+    if($uid != 0)
     {
-        $get = _fetch($qry);
-        $nickname = (!empty($cut)) ? cut(string::decode($get['nick']), $cut) : string::decode($get['nick']);
-        return show(_user_link, array("id" => $uid, "country" => flag($get['country']), "class" => $class, "get" => $add, "nick" => $nickname));
+        $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
+        if(_rows($qry))
+        {
+            $get = _fetch($qry);
+            $nickname = (!empty($cut)) ? cut(string::decode($get['nick']), $cut) : string::decode($get['nick']);
+            return show(_user_link, array("id" => $uid, "country" => flag($get['country']), "class" => $class, "get" => $add, "nick" => $nickname));
+        }
     }
-    else
-    {
-        $nickname = (!empty($cut)) ? cut(string::decode($nick), $cut) : string::decode($nick);
-        return show(_user_link_noreg, array("nick" => $nickname, "class" => $class, "email" => eMailAddr($email)));
-    }
+
+    $nickname = (!empty($cut)) ? cut(string::decode($nick), $cut) : string::decode($nick);
+    return show(_user_link_noreg, array("nick" => $nickname, "class" => $class, "email" => eMailAddr($email)));
 }
 
 function cleanautor($uid, $class="", $nick="", $email="", $cut="")
@@ -1019,17 +1010,16 @@ function jsconvert($txt)
 //-> interner Forencheck
 function fintern($id)
 {
-    global $userid,$chkMe;
     $fget = db("SELECT s1.intern,s2.id FROM ".dba::get('f_kats')." AS s1 LEFT JOIN ".dba::get('f_skats')." AS s2 ON s2.sid = s1.id WHERE s2.id = '".convert::ToInt($id)."'",false,true);
 
-    if($chkMe == "unlogged")
+    if(checkme() == "unlogged")
         return empty($fget['intern']) ? true : false;
     else
     {
-        $team = db("SELECT * FROM ".dba::get('f_access')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".convert::ToInt($userid)."' AND s2.posi != '0' AND s1.forum = '".convert::ToInt($id)."'",true);
-        $user = db("SELECT * FROM ".dba::get('f_access')." WHERE `user` = '".convert::ToInt($userid)."' AND `forum` = '".convert::ToInt($id)."'",true);
+        $team = db("SELECT * FROM ".dba::get('f_access')." AS s1 LEFT JOIN ".dba::get('userpos')." AS s2 ON s1.pos = s2.posi WHERE s2.user = '".userid()."' AND s2.posi != '0' AND s1.forum = '".convert::ToInt($id)."'",true);
+        $user = db("SELECT * FROM ".dba::get('f_access')." WHERE `user` = '".userid()."' AND `forum` = '".convert::ToInt($id)."'",true);
 
-        if($user || $team || $chkMe == 4 || !$fget['intern'])
+        if($user || $team || checkme() == 4 || !$fget['intern'])
             return true;
     }
 
@@ -1303,12 +1293,11 @@ function getrank($tid, $squad=false, $profil=false)
 //-> Session fuer den letzten Besuch setzen
 function set_lastvisit()
 {
-    global $userid;
-    if($userid)
+    if(userid() != 0)
     {
-        if(!db("SELECT id FROM ".dba::get('users')." WHERE id = ".convert::ToInt($userid)." AND time+'".users_online."'>'".time()."'",true))
+        if(!db("SELECT id FROM ".dba::get('users')." WHERE id = ".userid()." AND time+'".users_online."'>'".time()."'",true))
         {
-            $time = data(convert::ToInt($userid), "time");
+            $time = data(userid(), "time");
             $_SESSION['lastvisit'] = $time;
         }
     }
@@ -1389,12 +1378,12 @@ function hoveruserpic($userid, $width=170,$height=210)
 // Adminberechtigungen ueberpruefen
 function admin_perms($userid)
 {
-    global $chkMe,$rootAdmin;
+    global $rootAdmin;
 
     if(empty($userid) || !$userid)
         return false;
 
-    if($chkMe == "unlogged" || $chkMe == "banned")
+    if(checkme() == "unlogged" || checkme() == "banned")
         return false;
 
     // no need for these admin areas
@@ -1425,7 +1414,7 @@ function admin_perms($userid)
                         return true;
                     else if($admin_config['Only_Root'] && convert::ToInt($userid) == convert::ToInt($rootAdmin))
                         return true;
-                    else if($admin_config['Only_Admin'] && $chkMe == 4)
+                    else if($admin_config['Only_Admin'] && checkme() == 4)
                         return true;
                 }
             }
@@ -1449,7 +1438,7 @@ function admin_perms($userid)
         }
     }
 
-    return ($chkMe == 4) ? true : false;
+    return (checkme() == 4) ? true : false;
 }
 
 //-> Rechte abfragen
@@ -1594,27 +1583,25 @@ function include_action($page_dir='',$default='default')
 //Preuft ob alle clicks nur einmal gezahlt werden *gast/user
 function count_clicks($side_tag='',$clickedID=0,$update=true)
 {
-    global $userid;
-
     $qry = db("SELECT id,side FROM ".dba::get('clicks_ips')." WHERE uid = 0 AND time <= ".time());
     if(_rows($qry)) while($get = _fetch($qry)) { if($get['side'] != 'vote') db("DELETE FROM ".dba::get('clicks_ips')." WHERE `id` = ".$get['id']); }
 
     if(checkme() != 'unlogged')
     {
-        if(db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `uid` = '".convert::ToInt($userid)."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
+        if(db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `uid` = '".userid()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
             return false;
 
         if(db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
         {
             if($update)
-                db("UPDATE `".dba::get('clicks_ips')."` SET `uid` = '".convert::ToInt($userid)."', `time` = '0' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
+                db("UPDATE `".dba::get('clicks_ips')."` SET `uid` = '".userid()."', `time` = '0' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
 
             return false;
         }
         else
         {
             if($update)
-                db("INSERT INTO ".dba::get('clicks_ips')." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '".convert::ToInt($userid)."', '".$clickedID."', '".$side_tag."', '0')");
+                db("INSERT INTO ".dba::get('clicks_ips')." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '".userid()."', '".$clickedID."', '".$side_tag."', '0')");
 
             return true;
         }
@@ -1745,15 +1732,15 @@ class javascript
 //-> Ausgabe des Indextemplates
 function page($index,$title,$where,$time,$index_templ=false)
 {
-    global $userid,$userip,$tmpdir,$chkMe,$AjaxLoad_blacklist;
+    global $userip,$tmpdir,$AjaxLoad_blacklist;
     global $designpath,$cp_color,$rootAdmin,$clanname;
 
     // installer vorhanden?
-    if(file_exists(basePath."/_installer") && $chkMe == 4 && !is_debug)
+    if(file_exists(basePath."/_installer") && checkme() == 4 && !is_debug)
         $index = _installdir;
 
     // user gebannt? Logge aus!
-    if($chkMe == 'banned')
+    if(checkme() == 'banned')
     {
         logout();
         header("Location: ../user/?action=login");
@@ -1771,7 +1758,7 @@ function page($index,$title,$where,$time,$index_templ=false)
     if(!API::is_mobile())
         $java_vars .= '<script language="javascript" type="text/javascript" src="'.$designpath.'/_js/wysiwyg.js"></script>';
 
-    if(settings("wmodus") && $chkMe != 4)
+    if(settings("wmodus") && checkme() != 4)
     {
         $secure = (config('securelogin') ? show("menu/secure", array("help" => _login_secure_help, "security" => _register_confirm)) : '');
         $login = show("errors/wmodus_login", array("what" => _login_login, "secure" => $secure, "signup" => _login_signup, "permanent" => _login_permanent, "lostpwd" => _login_lostpwd));
@@ -1787,14 +1774,14 @@ function page($index,$title,$where,$time,$index_templ=false)
         load_menu_xml();
 
         //check permissions
-        if($chkMe == "unlogged")
+        if(checkme() == "unlogged")
             $login = show("menu/login", array("secure" => (config('securelogin') ? show("menu/secure", array("help" => _login_secure_help)) : '')));
         else
         {
             $check_msg = check_msg();
             set_lastvisit();
-            db("UPDATE ".dba::get('users')." SET `time` = '".time()."', `whereami` = '".string::encode($where)."' WHERE id = '".convert::ToInt($userid)."'");
-            $get_rss_key = db("SELECT rss_key FROM `".dba::get('users')."` WHERE id = '".convert::ToInt($userid)."' LIMIT 1",false,true);
+            db("UPDATE ".dba::get('users')." SET `time` = '".time()."', `whereami` = '".string::encode($where)."' WHERE id = '".userid()."'");
+            $get_rss_key = db("SELECT rss_key FROM `".dba::get('users')."` WHERE id = '".userid()."' LIMIT 1",false,true);
             $ukrss = $get_rss_key['rss_key'];
         }
 
@@ -1861,9 +1848,9 @@ function page($index,$title,$where,$time,$index_templ=false)
                         if(!$MenuConfig['AjaxLoad'] || array_key_exists($phold, $AjaxLoad_blacklist) || !AjaxLoad)
                         {
                             if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
-                            (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  $chkMe != "unlogged" && $chkMe != "banned") ||
-                            (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
-                            ($MenuConfig['Only_Root'] && $chkMe == 4 && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
+                            (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  checkme() != "unlogged" && checkme() != "banned") ||
+                            (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  checkme() == 4) ||
+                            ($MenuConfig['Only_Root'] && checkme() == 4 && userid() == convert::ToInt($rootAdmin)))
                             {
                                 include_once(basePath.'/inc/menu-functions/'.$phold.'.php');
                                 $arr[$phold] = call_user_func($phold);
@@ -1872,9 +1859,9 @@ function page($index,$title,$where,$time,$index_templ=false)
                         else
                         {
                             if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
-                            (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  $chkMe != "unlogged" && $chkMe != "banned") ||
-                            (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  $chkMe == 4) ||
-                            ($MenuConfig['Only_Root'] && $chkMe == 4 && convert::ToInt($userid) == convert::ToInt($rootAdmin)))
+                            (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  checkme() != "unlogged" && checkme() != "banned") ||
+                            (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  checkme() == 4) ||
+                            ($MenuConfig['Only_Root'] && checkme() == 4 && userid() == convert::ToInt($rootAdmin)))
                             {
                                 $icon_html = '<img src="../inc/images/'.$MenuConfig['AjaxLoad_Img'].'" alt="" />';
                                 $menu_index_hash = md5_file(basePath.'/inc/menu-functions/'.$phold.'.php');

@@ -25,9 +25,12 @@ class cache_zend_shm extends Cache
             self::control_set($key,$ttl,array('is_array' => true));
         }
         else
+        {
+            $data = convert::UTF8($data);
             self::control_set($key,$ttl,array('is_array' => false));
+        }
 
-        $data = gzcompress(utf8_encode($data));
+        $data = gzcompress(bin2hex($data));
         return (zend_shm_cache_store(md5($key), $data, $ttl) === true ? true : false);
     }
 
@@ -48,17 +51,17 @@ class cache_zend_shm extends Cache
     private static function control_set($key,$ttl,$settings_array=array())
     {
         $control = array_to_string($settings_array);
-        $control = gzcompress(convert::UTF8($control));
-        zend_shm_cache_store('control_'.md5($key), $control, $ttl+1);
+        zend_shm_cache_store('control_'.md5($key), gzcompress($control), $ttl+1);
     }
 
     private static function control_get($key)
     {
         $data = zend_shm_cache_fetch('control_'.md5($key));
+
         if(!empty($data))
-            return string_to_array(convert::UTF8_Reverse(gzuncompress($data)));
-        else
-            return false;
+            return string_to_array(gzuncompress($data));
+
+        return false;
     }
 
     /**
@@ -106,17 +109,13 @@ class cache_zend_shm extends Cache
     public static function shm_get($key)
     {
         $data = zend_shm_cache_fetch(md5($key));
-        if(!$data || empty($data))
-            return '';
+        if(!$data || empty($data)) return '';
 
-        $data = convert::UTF8_Reverse(gzuncompress($data));
+        $data = hex2bin(gzuncompress($data));
         $control = self::control_get($key);
 
         //Array Erkennung
-        if($control['is_array'])
-            $data = string_to_array($data);
-
-        return $data;
+        return $control['is_array'] ? string_to_array($data) : convert::UTF8_Reverse($data);
     }
 
     /**

@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($chkMe == 4)
+    if(checkme() == 4)
     {
         if(!permission("partners"))
         {

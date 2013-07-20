@@ -237,7 +237,7 @@ class GameQ_Protocols_Doom3 extends GameQ_Protocols
         $result->add('game_os', ''); //Server OS
         $result->add('game_dedicated', $this->server_data_stream['net_serverDedicated'] == '1' ? true : false);
         $result->add('game_hltv', false);
-        $result->add('game_num_players', convert::ToString(isset($this->server_data_stream['players']) ? count($this->server_data_stream['players']) : '0'));
+        $result->add('game_num_players', array_key_exists('players', $this->server_data_stream) ? count($this->server_data_stream['players']) : '0');
         $result->add('game_max_players', $this->server_data_stream['si_maxPlayers']);
         $result->add('game_num_bot', '');
         $result->add('game_password', $this->server_data_stream['si_usepass'] == '1' ? true : false);
@@ -271,7 +271,7 @@ class GameQ_Protocols_Doom3 extends GameQ_Protocols
         $result->add('game_teams',array());
 
         $player_list = array(); $player_index = array();
-        if(isset($this->server_data_stream['players']) && count($this->server_data_stream['players']) >= 1)
+        if(array_key_exists('players', $this->server_data_stream) && count($this->server_data_stream['players']) >= 1)
         {
             foreach($this->server_data_stream['players'] as $player)
             {

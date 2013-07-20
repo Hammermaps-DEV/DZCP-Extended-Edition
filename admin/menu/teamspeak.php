@@ -163,6 +163,9 @@ switch($do)
                     "delete" => $delete));
         }
 
+        if(empty($show))
+            $show = show(_no_entrys_yet, array("colspan" => "4"));
+
         $show = show($dir."/teamspeak", array("show" => $show));
     break;
 }

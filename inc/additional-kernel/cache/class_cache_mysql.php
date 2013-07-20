@@ -21,14 +21,18 @@ class cache_mysql extends Cache
     public static function mysqlc_set($key, $data, $ttl = 3600)
     {
         //Array Erkennung
-        $is_array = '0';
         if(is_array($data))
         {
             $data = array_to_string($data);
             $is_array = '1';
         }
+        else
+        {
+            $data = convert::UTF8($data);
+            $is_array = '0';
+        }
 
-        $data = base64_encode(convert::UTF8($data));
+        $data = bin2hex($data);
         if(db("SELECT qry FROM `".dba::get('cache')."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
         {
             if(db("UPDATE `".dba::get('cache')."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '".$is_array."' WHERE `qry` = '".md5($key)."'"))
@@ -81,15 +85,11 @@ class cache_mysql extends Cache
 
         if ($GetCache['data']!='' && !empty($GetCache['data']))
         {
-            $data = convert::UTF8_Reverse(base64_decode($GetCache['data']));
-
-            if($GetCache['array'])
-                $data = string_to_array($data);
-
-            return $data;
+            $data = hextobin($GetCache['data']);
+            return $GetCache['array'] ? string_to_array($data) : convert::UTF8_Reverse($data);
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**

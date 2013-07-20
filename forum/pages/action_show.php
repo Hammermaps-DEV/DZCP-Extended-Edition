@@ -16,11 +16,9 @@ if (!defined('IS_DZCP'))
 # DEPRECATED #
 function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
 {
-    global $userid;
-
-    if($userid != 0 && !empty($userid))
+    if(userid() != 0)
     {
-        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".userid()."'",false,true);
         if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
         { if(empty($new)) return _newicon; }
     }
@@ -32,10 +30,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $check = db("SELECT s2.id,s1.intern FROM ".dba::get('f_kats')." AS s1
-               LEFT JOIN ".dba::get('f_skats')." AS s2
-               ON s2.sid = s1.id
-               WHERE s2.id = '".convert::ToInt($_GET['id'])."'");
+    $check = db("SELECT s2.id,s1.intern FROM ".dba::get('f_kats')." AS s1 LEFT JOIN ".dba::get('f_skats')." AS s2 ON s2.sid = s1.id WHERE s2.id = '".convert::ToInt($_GET['id'])."'");
     $checks = _fetch($check);
 
     if($checks['intern'] == 1 && (!permission("intforum") && !fintern($checks['id'])))

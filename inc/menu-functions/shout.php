@@ -12,7 +12,6 @@
 
 function shout($ajax = 0)
 {
-    global $userid,$chkMe;
     $shoutconfig = config(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));
     $qry = db("SELECT * FROM ".dba::get('shout')." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
 
@@ -42,7 +41,7 @@ function shout($ajax = 0)
     }
 
     $sec = ''; $only4reg = ''; $dis = ''; $dis1 = ''; $form = '';
-    if(settings('reg_shout') == 1 && $chkMe == 'unlogged')
+    if(settings('reg_shout') == 1 && checkme() == 'unlogged')
     {
         $dis = ' style="text-align:center" disabled="disabled"';
         $dis1 = ' style="color:#888" disabled="disabled"';
@@ -50,13 +49,13 @@ function shout($ajax = 0)
     }
     else
     {
-        if($chkMe == "unlogged")
+        if(checkme() == "unlogged")
         {
             $form = show("menu/shout_form", array("dis" => $dis));
             $sec = show("menu/shout_antispam", array("help" => _login_secure_help, "dis" => $dis));
         }
         else
-            $form = autor(convert::ToInt($userid), "navShout",'','',$shoutconfig['l_shoutnick']);
+            $form = autor(userid(), "navShout",'','',$shoutconfig['l_shoutnick']);
     }
 
     // 0 Zeichen, disable

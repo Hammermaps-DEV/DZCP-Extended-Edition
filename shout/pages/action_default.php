@@ -18,23 +18,23 @@ else
 {
     if(!ipcheck("shout", ($flood_shout=config('f_shout'))))
     {
-        if(($_POST['protect'] != 'nospam' || empty($_SESSION['sec_shout']) || $_POST['spam'] != $_SESSION['sec_shout'] || empty($_POST['spam'])) && !isset($userid))
+        if(($_POST['protect'] != 'nospam' || empty($_SESSION['sec_shout']) || $_POST['spam'] != $_SESSION['sec_shout'] || empty($_POST['spam'])) && !userid())
             $index = error(_error_invalid_regcode);
-        else if($userid == 0 && (empty($_POST['name']) || trim($_POST['name']) == '') || $_POST['name'] == "Nick")
+        else if(!userid() && (empty($_POST['name']) || trim($_POST['name']) == '') || $_POST['name'] == "Nick")
             $index = error(_empty_nick);
-        else if($userid == 0 && empty($_POST['email']) || $_POST['email'] == "E-Mail")
+        else if(!userid() && empty($_POST['email']) || $_POST['email'] == "E-Mail")
             $index = error(_empty_email);
-        else if($userid == 0 && !check_email($_POST['email']))
+        else if(!userid() && !check_email($_POST['email']))
             $index = error(_error_invalid_email);
         else if(check_email_trash_mail($_POST['email']))
             $index = error(_error_trash_mail);
         else if(empty($_POST['eintrag']))
             $index = error(_error_empty_shout);
-        else if(settings('reg_shout') == 1 && $chkMe == 'unlogged')
+        else if(settings('reg_shout') == 1 && checkme() == 'unlogged')
             $index = error(_error_unregistered);
         else
         {
-            $reg = ($userid == 0 ? $_POST['email'] : convert::ToInt($userid));
+            $reg = (!userid() ? $_POST['email'] : userid());
             db("INSERT INTO ".dba::get('shout')." SET
                 `datum`  = '".time()."',
                 `nick`   = '".string::encode($_POST['name'],'')."',

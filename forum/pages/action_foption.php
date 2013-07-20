@@ -21,12 +21,12 @@ else
         if(isset($_POST['f_abo']))
         {
             $f_abo = db("INSERT INTO ".dba::get('f_abo')."
-                    SET `user` = '".convert::ToInt($userid)."',
+                    SET `user` = '".userid()."',
                         `fid`  = '".convert::ToInt($_GET['id'])."',
                         `datum`  = '".time()."'");
         } else {
             $f_abo = db("DELETE FROM ".dba::get('f_abo')."
-                   WHERE user = '".convert::ToInt($userid)."'
+                   WHERE user = '".userid()."'
                    AND fid = '".convert::ToInt($_GET['id'])."'");
         }
         $index = info(_forum_fabo_do, "?action=showthread&amp;id=".$_GET['id']."");

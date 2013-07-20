@@ -46,7 +46,7 @@ switch ($do)
         $qry = db("SELECT * FROM ".dba::get('ipban')." WHERE typ = '1' ORDER BY id DESC LIMIT ".$start.",10"); $color = 1;
         while($get = _fetch($qry))
         {
-            $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+            $data_array = string_to_array(hextobin($get['data']));
             $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;sfs_side=".($site)."&amp;sys_side=".(isset($_GET['sys_side']) ? $_GET['sys_side'] : 1)."&amp;ub_side=".(isset($_GET['ub_side']) ? $_GET['ub_side'] : 1);
             $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_enable_ipban,array('ip'=>$get['ip'])))));
@@ -86,7 +86,7 @@ switch ($do)
         $qry = db("SELECT * FROM ".dba::get('ipban')." WHERE typ = '2' ORDER BY id DESC LIMIT ".$start.", 10"); $color = 1;
         while($get = _fetch($qry))
         {
-            $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+            $data_array = string_to_array(hextobin($get['data']));
             $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;sys_side=".($site)."&amp;sfs_side=".(isset($_GET['sfs_side']) ? $_GET['sfs_side'] : 1)."&amp;ub_side=".(isset($_GET['ub_side']) ? $_GET['ub_side'] : 1);
             $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_enable_ipban,array('ip'=>$get['ip'])))));
@@ -128,7 +128,7 @@ switch ($do)
         $qry = db("SELECT * FROM ".dba::get('ipban')." WHERE typ = '3' ORDER BY id DESC LIMIT ".$start.", 10"); $color = 1;
         while($get = _fetch($qry))
         {
-            $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+            $data_array = string_to_array(hextobin($get['data']));
             $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=edit", "title" => _button_title_edit));
             $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_ipban));
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;ub_side=".($site)."&amp;sys_side=".(isset($_GET['sys_side']) ? $_GET['sys_side'] : 1)."&amp;sfs_side=".(isset($_GET['sfs_side']) ? $_GET['sfs_side'] : 1);
@@ -180,7 +180,7 @@ switch ($do)
             $data_array = array();
             $data_array['confidence'] = ''; $data_array['frequency'] = ''; $data_array['lastseen'] = '';
             $data_array['banned_msg'] = $info;
-            db("INSERT INTO ".dba::get('ipban')." SET `time` = '".time()."', `ip` = '".$_POST['ip']."', `data` = '".base64_encode(convert::UTF8(array_to_string($data_array)))."', `typ` = 3;");
+            db("INSERT INTO ".dba::get('ipban')." SET `time` = '".time()."', `ip` = '".$_POST['ip']."', `data` = '".bin2hex(array_to_string($data_array))."', `typ` = 3;");
             $show = info(_ipban_admin_added, "?admin=ipban");
         }
     break;
@@ -190,7 +190,7 @@ switch ($do)
     break;
     case 'edit':
         $get = db("SELECT * FROM ".dba::get('ipban')." WHERE id = '".intval($_GET['id'])."'",false,true);
-        $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+        $data_array = string_to_array(hextobin($get['data']));
         $show = show($dir."/ipban_form", array("newhead" => _ipban_edit_head,"do" => "edit_save&amp;id=".$_GET['id']."","ip_set" => $get['ip'],"info" => string::decode($data_array['banned_msg']),"what" => _button_value_edit));
     break;
     case 'edit_save':
@@ -199,9 +199,9 @@ switch ($do)
         else
         {
             $get = db("SELECT id,data FROM ".dba::get('ipban')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
-            $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+            $data_array = string_to_array(hextobin($get['data']));
             $data_array['banned_msg'] = string::encode($_POST['info']);
-            db("UPDATE ".dba::get('ipban')." SET `ip` = '".$_POST['ip']."', `time` = '".time()."', `data` = '".base64_encode(convert::UTF8(array_to_string($data_array)))."' WHERE id = '".$get['id']."'");
+            db("UPDATE ".dba::get('ipban')." SET `ip` = '".$_POST['ip']."', `time` = '".time()."', `data` = '".bin2hex(array_to_string($data_array))."' WHERE id = '".$get['id']."'");
             $show = info(_ipban_admin_edited, "?admin=ipban");
         }
     break;
@@ -210,7 +210,7 @@ switch ($do)
         $color = 1; $show_search = '';
         while($get = _fetch($qry_search))
         {
-            $data_array = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+            $data_array = string_to_array(hextobin($get['data']));
             $edit =$get['typ'] == '3' ? show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=ipban&amp;do=edit", "title" => _button_title_edit)) : '';
             $action = "?admin=ipban&amp;do=enable&amp;id=".$get['id']."&amp;ub_side=".(isset($_GET['ub_side']) ? $_GET['ub_side'] : 1)."&amp;sys_side=".(isset($_GET['sys_side']) ? $_GET['sys_side'] : 1)."&amp;sfs_side=".(isset($_GET['sfs_side']) ? $_GET['sfs_side'] : 1);
             $unban = ($get['enable'] ? show(_ipban_menu_icon_enable, array("id" => $get['id'], "action" => $action, "info" => show(_confirm_disable_ipban,array('ip'=>$get['ip'])))) : show(_ipban_menu_icon_disable, array("id" => $get['id'], "action" => $action, "info" => convSpace(show(_confirm_enable_ipban,array('ip'=>$get['ip']))))));

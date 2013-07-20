@@ -126,7 +126,7 @@ class GameQ_Protocols_Minecraft extends GameQ_Protocols_Gamespy3
         $result->add('game_teams',array());
 
         $player_list = array(); $player_index = array();
-        if(isset($this->server_data_stream['players']) && count($this->server_data_stream['players']) >= 1)
+        if(array_key_exists('players', $this->server_data_stream) && count($this->server_data_stream['players']) >= 1)
         {
             foreach($this->server_data_stream['players'] as $player)
             {

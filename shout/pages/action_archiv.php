@@ -34,7 +34,7 @@ else
 
         $class = ($color % 2) ? "contentMainTop" : "contentMainFirst"; $color++;
         $del = (permission("shoutbox") ? "<a href='../shout/?action=admin&amp;do=delete&amp;id=".$get['id']."'><img src='../inc/images/delete_small.gif' border='0' alt=''></a>" : "");
-        $posted_ip = ($chkMe == 4 ? $get['ip'] : _logged);
+        $posted_ip = (checkme() == 4 ? $get['ip'] : _logged);
 
         $show .= show($dir."/shout_part", array("nick" => $nick,
                 "datum" => date("j.m.Y H:i", $get['datum'])._uhr,

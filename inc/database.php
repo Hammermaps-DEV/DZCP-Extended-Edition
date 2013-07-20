@@ -72,11 +72,14 @@ function _fetch($mysqli_result=null)
  **/
 function cnt($count, $where = "", $what = "id")
 {
+    $hash = md5('sql_cnt_'.$what.'_'.$where.'_'.$count);
+    if(!RTBuffer::check($hash)) return convert::ToInt(RTBuffer::get($hash));
     $cnt_sql = db("SELECT COUNT(".$what.") AS num FROM ".$count." ".$where.";");
     if(_rows($cnt_sql))
     {
         $cnt = _fetch($cnt_sql);
-        return $cnt['num'];
+        RTBuffer::set($hash,$cnt['num']);
+        return convert::ToInt($cnt['num']);
     }
 
     return 0;
@@ -89,11 +92,14 @@ function cnt($count, $where = "", $what = "id")
  **/
 function sum($db, $where = "", $what)
 {
+    $hash = md5('sql_sum_'.$db.'_'.$where.'_'.$what);
+    if(!RTBuffer::check($hash)) return convert::ToInt(RTBuffer::get($hash));
     $cnt_sql = db("SELECT SUM(".$what.") AS num FROM ".$db.$where.";");
     if(_rows($cnt_sql))
     {
         $cnt = _fetch($cnt_sql);
-        return $cnt['num'];
+        RTBuffer::set($hash,$cnt['num']);
+        return convert::ToInt($cnt['num']);
     }
 
     return 0;

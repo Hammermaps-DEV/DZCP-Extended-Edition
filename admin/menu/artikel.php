@@ -31,7 +31,7 @@ switch($do)
             else
             {
                 db("INSERT INTO ".dba::get('artikel')."
-                    SET `autor`  = '".convert::ToInt($userid)."',
+                    SET `autor`  = '".userid()."',
                         `kat`    = '".convert::ToInt($_POST['kat'])."',
                         `titel`  = '".string::encode($_POST['titel'])."',
                         `text`   = '".string::encode($_POST['artikel'])."',
@@ -58,7 +58,7 @@ switch($do)
 
             $selr_ac = ($_POST['comments'] ? 'selected="selected"' : '');
             $show = show($dir."/artikel_form", array("head" => _artikel_add,
-                                                     "autor" => autor(convert::ToInt($userid)),
+                                                     "autor" => autor(),
                                                      "kat" => $kat,
                                                      "do" => "add",
                                                      "selr_ac" => $selr_ac,
@@ -117,7 +117,7 @@ switch($do)
             $do = show(_artikel_edit_link, array("id" => $_GET['id']));
             $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
             $show = show($dir."/artikel_form", array("head" => _artikel_edit,
-                                                     "autor" => autor(convert::ToInt($userid)),
+                                                     "autor" => autor(),
                                                      "kat" => $kat,
                                                      "do" => $do,
                                                      "artikeltext" => (isset($_POST['artikel']) ? string::decode($_POST['artikel']) : string::decode($get['text'])),

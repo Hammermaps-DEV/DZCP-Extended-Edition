@@ -22,7 +22,7 @@ else
                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == convert::ToInt($userid) || permission("forum"))
+        if($get['reg'] == userid() || permission("forum"))
         {
             if($get['reg'] != 0)
                 $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
@@ -56,7 +56,7 @@ else
         $qry = db("SELECT reg FROM ".dba::get('f_posts')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
-        if($get['reg'] == convert::ToInt($userid) || permission("forum"))
+        if($get['reg'] == userid() || permission("forum"))
         {
             if($get['reg'] != 0 || permission('forum'))
             {
@@ -70,9 +70,9 @@ else
                 if($get['reg'] != 0)
                 {
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                    $form = show("page/editor_regged", array("nick" => autor()));
                 } else {
-                    if(($_POST['secure'] != $_SESSION['sec_'.$dir]) && $userid == 0) $error = _error_invalid_regcode;
+                    if(($_POST['secure'] != $_SESSION['sec_'.$dir]) && !userid()) $error = _error_invalid_regcode;
                     elseif(empty($_POST['nick'])) $error = _empty_nick;
                     elseif(empty($_POST['email'])) $error = _empty_email;
                     elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
@@ -107,7 +107,7 @@ else
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $getp = _fetch($qryp);
 
-                $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
+                $editedby = show(_edited_by, array("autor" => autor(),
                         "time" => date("d.m.Y H:i", time())._uhr));
 
                 $qry = db("UPDATE ".dba::get('f_posts')."
@@ -123,7 +123,7 @@ else
                       WHERE s1.fid = '".$getp['sid']."'");
                 while($getabo = _fetch($checkabo))
                 {
-                    if(convert::ToInt($userid) != $getabo['user'])
+                    if(userid() != $getabo['user'])
                     {
                         $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".$getp['sid']."'");
                         $gettopic = _fetch($topic);
@@ -136,7 +136,7 @@ else
                         $subj = show(string::decode(settings('eml_fabo_pedit_subj')), array("titel" => $title));
 
                         $message = show(string::decode(settings('eml_fabo_pedit')), array("nick" => string::decode($getabo['nick']),
-                                "postuser" => fabo_autor(convert::ToInt($userid)),
+                                "postuser" => fabo_autor(),
                                 "topic" => $gettopic['topic'],
                                 "titel" => $title,
                                 "domain" => $httphost,
@@ -164,7 +164,7 @@ else
             $index = error(_error_wrong_permissions);
         }
     } elseif($_GET['do'] == "add") {
-        if(settings("reg_forum") == "1" && $chkMe == "unlogged")
+        if(settings("reg_forum") == "1" && checkme() == "unlogged")
         {
             $index = error(_error_unregistered);
         } else {
@@ -181,10 +181,10 @@ else
                 } elseif($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id'])) {
                     $index = error(_error_no_access);
                 } else {
-                    if(!empty($userid) && $userid != 0)
+                    if(userid() != 0)
                     {
-                        $postnick = data(convert::ToInt($userid), "nick");
-                        $postemail = data(convert::ToInt($userid), "email");
+                        $postnick = data(userid(), "nick");
+                        $postemail = data(userid(), "email");
                     } else {
                         $postnick = "";
                         $postemail = "";
@@ -234,7 +234,7 @@ else
 
                         $text = bbcode::parse_html($getl['text']);
 
-                        if($chkMe == "4") $posted_ip = $getl['ip'];
+                        if(checkme() == "4") $posted_ip = $getl['ip'];
                         else              $posted_ip = _logged;
 
                         $titel = show(_eintrag_titel_forum, array("postid" => (cnt(dba::get('f_posts'), " WHERE sid =".convert::ToInt($_GET['id']))+1),
@@ -308,7 +308,7 @@ else
                         if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
                         else $text = bbcode::parse_html($gett['t_text']);
 
-                        if($chkMe == "4") $posted_ip = $gett['ip'];
+                        if(checkme() == "4") $posted_ip = $gett['ip'];
                         else                 $posted_ip = _logged;
 
                         $titel = show(_eintrag_titel_forum, array("postid" => "1",
@@ -365,8 +365,8 @@ else
                                 "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1));
                     }
 
-                    if(!empty($userid) && $userid != 0)
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                    if(userid() != 0)
+                        $form = show("page/editor_regged", array("nick" => autor()));
                     else
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
@@ -406,7 +406,7 @@ else
         {
             $index = error(_id_dont_exist);
         } else {
-            if(settings("reg_forum") == "1" && $chkMe == "unlogged")
+            if(settings("reg_forum") == "1" && checkme() == "unlogged")
             {
                 $index = error(_error_unregistered);
             } else {
@@ -420,15 +420,15 @@ else
                 if($checks['intern'] == 1 && !permission("intforum") && !fintern($checks['id']))
                     exit;
 
-                if(!empty($userid) && $userid != 0) $toCheck = empty($_POST['eintrag']);
+                if(userid() != 0) $toCheck = empty($_POST['eintrag']);
                 else $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                 if($toCheck)
                 {
-                    if(!empty($userid) && $userid != 0)
+                    if(userid() != 0)
                     {
                         if(empty($_POST['eintrag'])) $error = _empty_eintrag;
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                        $form = show("page/editor_regged", array("nick" => autor()));
                     } else {
                         if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
                         elseif(empty($_POST['nick'])) $error = _empty_nick;
@@ -463,7 +463,7 @@ else
                         if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
                         else $text = bbcode::parse_html($getl['text']);
 
-                        if($chkMe == "4") $posted_ip = $getl['ip'];
+                        if(checkme() == "4") $posted_ip = $getl['ip'];
                         else $posted_ip = _logged;
 
                         $titel = show(_eintrag_titel_forum, array("postid" => (cnt(dba::get('f_posts'), " WHERE sid = ".convert::ToInt($_GET['id']))+1),
@@ -543,7 +543,7 @@ else
                         if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
                         else $text = bbcode::parse_html($gett['t_text']);
 
-                        if($chkMe == "4") $posted_ip = $gett['ip'];
+                        if(checkme() == "4") $posted_ip = $gett['ip'];
                         else $posted_ip = _logged;
 
                         if($gett['t_reg'] != 0)
@@ -634,9 +634,9 @@ else
                     {
                         $getdp = _fetch($qrydp);
 
-                        if(!empty($userid) && $userid != 0)
+                        if(userid() != 0)
                         {
-                            if(convert::ToInt($userid) == $getdp['reg'] && settings('double_post')) $spam = 1;
+                            if(userid() == $getdp['reg'] && settings('double_post')) $spam = 1;
                             else $spam = 0;
                         } else {
                             if($_POST['nick'] == $getdp['nick'] && settings('double_post')) $spam = 1;
@@ -649,9 +649,9 @@ else
                                     AND id = '".convert::ToInt($_GET['id'])."'");
                         $gettdp = _fetch($qrytdp);
 
-                        if(!empty($userid) && $userid != 0)
+                        if(userid() != 0)
                         {
-                            if(convert::ToInt($userid) == $gettdp['t_reg'] && settings('double_post')) $spam = 2;
+                            if(userid() == $gettdp['t_reg'] && settings('double_post')) $spam = 2;
                             else $spam = 0;
                         } else {
                             if($_POST['nick'] == $gettdp['t_nick'] && settings('double_post')) $spam = 2;
@@ -661,7 +661,7 @@ else
 
                     if($spam == 1)
                     {
-                        if(!empty($userid) && $userid != 0) $fautor = autor(convert::ToInt($userid));
+                        if(userid() != 0) $fautor = autor();
                         else $fautor = autor('', '', $_POST['nick'], $_POST['email']);
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
@@ -678,7 +678,7 @@ else
                                                          `text`   = '".$text."'
                                                  WHERE id = '".$getdp['id']."'");
                     } elseif($spam == 2) {
-                        if(!empty($userid) && $userid != 0) $fautor = autor(convert::ToInt($userid));
+                        if(userid() != 0) $fautor = autor();
                         else $fautor = autor('', '', $_POST['nick'], $_POST['email']);
 
                         $text = show(_forum_spam_text, array("autor" => $fautor,
@@ -697,7 +697,7 @@ else
                                                  `nick`  = '".string::encode($_POST['nick'])."',
                                                  `email` = '".string::encode($_POST['email'])."',
                                                  `hp`    = '".links($_POST['hp'])."',
-                                                 `reg`   = '".string::encode(convert::ToInt($userid))."',
+                                                 `reg`   = '".userid()."',
                                                  `text`  = '".string::encode($_POST['eintrag'])."',
                                                  `ip`    = '".visitorIp()."'");
 
@@ -708,14 +708,14 @@ else
 
                     $update = db("UPDATE ".dba::get('userstats')."
                                                 SET `forumposts` = forumposts+1
-                                                WHERE `user`       = '".convert::ToInt($userid)."'");
+                                                WHERE `user`       = '".userid()."'");
 
                     $checkabo = db("SELECT s1.user,s1.fid,s2.nick,s2.id,s2.email FROM ".dba::get('f_abo')." AS s1
                                     LEFT JOIN ".dba::get('users')." AS s2 ON s2.id = s1.user
                                                     WHERE s1.fid = '".convert::ToInt($_GET['id'])."'");
                     while($getabo = _fetch($checkabo))
                     {
-                        if(convert::ToInt($userid) != $getabo['user'])
+                        if(userid() != $getabo['user'])
                         {
                             $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
                             $gettopic = _fetch($topic);
@@ -728,7 +728,7 @@ else
                             $subj = show(string::decode(settings('eml_fabo_npost_subj')), array("titel" => $title));
 
                             $message = show(string::decode(settings('eml_fabo_npost')), array("nick" => string::decode($getabo['nick']),
-                                    "postuser" => fabo_autor(convert::ToInt($userid)),
+                                    "postuser" => fabo_autor(),
                                     "topic" => $gettopic['topic'],
                                     "titel" => $title,
                                     "domain" => $httphost,
@@ -760,7 +760,7 @@ else
                WHERE id = '".convert::ToInt($_GET['id'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == convert::ToInt($userid) OR permission("forum"))
+        if($get['reg'] == userid() || permission("forum"))
         {
             $del = db("DELETE FROM ".dba::get('f_posts')."
                  WHERE id = '".convert::ToInt($_GET['id'])."'");

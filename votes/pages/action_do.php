@@ -32,7 +32,7 @@ else
                         $index = error(_error_vote_closed);
                     else
                     {
-                        db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".convert::ToInt($userid)."'");
+                        db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".userid()."'");
                         db("UPDATE ".dba::get('vote_results')." SET `stimmen` = stimmen+1 WHERE id = '".convert::ToInt($_POST['vote'])."'");
                         wire_ipcheck($vid);
                     }
@@ -48,8 +48,8 @@ else
                         $index = error(_error_vote_closed);
                     else
                     {
-                        if(!empty($userid) && $userid != 0)
-                            db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".convert::ToInt($userid)."'");
+                        if(userid() != 0)
+                            db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".userid()."'");
 
                         db("UPDATE ".dba::get('vote_results')." SET `stimmen` = stimmen+1 WHERE id = '".convert::ToInt($_POST['vote'])."'");
 
@@ -60,14 +60,14 @@ else
                             $index = info(_vote_successful, "?id=".$id."");
                     }
 
-                    $cookie = (!empty($userid) && $userid != 0 ? convert::ToInt($userid) : "voted");
+                    $cookie = (userid() != 0 ? userid() : "voted");
                     cookie::put('vid_'.$id, $cookie);
                 }
             }
 
             if(isset($_GET['ajax']))
             {
-                header("Content-type: text/html; charset=utf-8");
+                header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
                 include(basePath.'/inc/menu-functions/vote.php');
                 exit('<table class="navContent" cellspacing="0">'.vote(true).'</table>');
             }
@@ -86,8 +86,8 @@ else
                     $index = error(_error_vote_closed);
                 else
                 {
-                    if(!empty($userid) && $userid != 0)
-                        db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".convert::ToInt($userid)."'");
+                    if(userid() != 0)
+                        db("UPDATE ".dba::get('userstats')." SET `votes` = votes+1 WHERE user = '".userid()."'");
 
                     db("UPDATE ".dba::get('vote_results')." SET `stimmen` = stimmen+1 WHERE id = '".convert::ToInt($_POST['vote'])."'");
 
@@ -98,14 +98,14 @@ else
                         $index = info(_vote_successful, "forum/?action=showthread&amp;kid=".$_POST['kid']."&amp;id=".$_POST['fid']."");
                 }
 
-                $cookie = (!empty($userid) && $userid != 0 ? convert::ToInt($userid) : 'voted');
+                $cookie = (userid() != 0 ? userid() : 'voted');
                 cookie::put('vid_'.convert::ToInt($_GET['id']), $cookie);
             }
 
             if(isset($_GET['fajax']) && isset($_GET['id']) && !empty($_GET['id']))
             {
                 include_once(basePath.'/inc/menu-functions/fvote.php');
-                header("Content-type: text/html; charset=utf-8");
+                header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
                 echo fvote(convert::ToInt($_GET['id']), true);
                 exit();
             }

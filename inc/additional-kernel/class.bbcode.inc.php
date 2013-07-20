@@ -321,6 +321,7 @@ class bbcode
         self::$string = (string)string::decode($string);
         if(empty(self::$string)) return self::$string;
         self::$string = $htmlentities ? htmlentities(self::$string) : self::$string;
+        self::$string = spChars_uml(self::$string);
 
         self::$string = preg_replace_callback("/\[(.*?)\](.*?)\[\/(.*?)\]/","self::bbcodetolow",self::$string);
 
@@ -408,7 +409,7 @@ class bbcode
     }
 
     public static function nletter($txt)
-    { return '<style type="text/css">p { margin: 0px; padding: 0px; }</style>'.nl2br(trim(stripslashes($txt))); }
+    { return '<style type="text/css">p { margin: 0px; padding: 0px; }</style>'.$txt; }
 
     public static function use_glossar($var=true)
     { self::$use_glossar = $var; }

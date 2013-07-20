@@ -1297,6 +1297,10 @@ define('_server_noplayers' , '
 <tr>
   <td class="contentMainFirst" align="center" colspan="99"><span class="fontBold">No players on the server</span></td>
 </tr>');
+define('_server_nousers', '
+<tr>
+  <td class="contentMainFirst" align="center" colspan="99"><span class="fontBold">No Users on the server</span></td>
+</tr>');
 define('_server_no_connection' , '
 <tr>
   <td class="contentMainFirst" align="center" colspan="2">Could not connect to the server</td>
@@ -1658,7 +1662,7 @@ define('_error_no_teamspeak' , 'The teamspeak 3 server is not reachable at the m
 define('_user_cant_delete_admin' , 'You can`t delete members or admins!');
 define('_no_entrys_yet' , '
 <tr>
-  <td class="contentMainFirst" colspan="[colspan]" align="center">No entry yetn!</td>
+  <td class="contentMainSecond" colspan="[colspan]" align="center">No entry yetn!</td>
 </tr>');
 define('_nav_no_nextwars' , 'No next wars yet!');
 define('_nav_no_lastwars' , 'No last wars yet!');

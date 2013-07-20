@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if(settings("reg_dl") == "1" && $chkMe == "unlogged")
+    if(settings("reg_dl") == "1" && checkme() == "unlogged")
         $index = error(_error_unregistered);
     else
     {

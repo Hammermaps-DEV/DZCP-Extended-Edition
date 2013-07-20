@@ -537,6 +537,7 @@ final class GameQ
             stream_set_timeout($socket, self::$timeout); // Set the read timeout on the streams
             stream_set_blocking($socket, $blocking); // Set blocking mode
             DebugConsole::insert_successful('GameQ::socket_open()', 'Server Transport available');
+            DebugConsole::insert_successful('GameQ::socket_open()', $socket.' is available');
         }
         else // Throw an error
         {
@@ -621,6 +622,7 @@ final class GameQ
         // Loop all the existing sockets, valid or not
         foreach(self::$sockets AS $socket_id => $data)
         {
+            DebugConsole::insert_info('GameQ::sockets_close()', 'Close Resource id #'.$socket_id);
             fclose($data['socket']);
             unset(self::$sockets[$socket_id]);
         }

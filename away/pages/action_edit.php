@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($chkMe == "unlogged" || $chkMe < "2")
+    if(checkme() == "unlogged" || checkme() < "2")
     {
         $index = error(_error_wrong_permissions);
     } else {
@@ -78,7 +78,7 @@ else
 
             } else {
                 $time = mktime(23,59,59,$_POST['monat'],$_POST['tag'],$_POST['jahr']);
-                $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
+                $editedby = show(_edited_by, array("autor" => autor(),
                         "time" => date("d.m.Y H:i", time())._uhr));
 
                 $qry = db("UPDATE ".dba::get('away')."

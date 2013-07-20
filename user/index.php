@@ -33,7 +33,7 @@ $index = "";
 #########################
 ## Action Loader START ##
 #########################
-$IncludeAction=include_action($dir,($chkMe == "unlogged" ? 'login' : 'userlobby'));
+$IncludeAction=include_action($dir,(checkme() == "unlogged" ? 'login' : 'userlobby'));
 $page=$IncludeAction['page']; $do=$IncludeAction['do'];
 $IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $IncludeAction['msg'];
 #######################

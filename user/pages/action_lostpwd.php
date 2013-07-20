@@ -20,7 +20,7 @@ else
     ## Passwort vergessen ##
     ########################
     $where = _site_user_lostpwd;
-    if($chkMe == "unlogged")
+    if(checkme() == "unlogged")
     {
         ## Lost-PW Seite anzeigen ##
         $index = show($dir."/lostpwd", array("value" => _button_value_send));

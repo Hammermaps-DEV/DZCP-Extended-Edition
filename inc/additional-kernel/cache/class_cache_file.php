@@ -55,6 +55,8 @@ class cache_file extends Cache
         }
         else
         {
+            $data = convert::UTF8($data);
+
             if(xml::getXMLvalue('cache_index', '/cache_index/file[@hash="'.$hash.'"]/array'))
                 xml::changeXMLvalue('cache_index', '/cache_index/file[@hash="'.$hash.'"]', 'array', 'no');
             else
@@ -63,11 +65,7 @@ class cache_file extends Cache
 
         xml::saveXMLfile('cache_index');
         self::$_file = basePath . self::$_dir.'/'.$hash.'.cache';
-
-        if(file_put_contents(self::$_file, gzcompress(base64_encode(convert::UTF8($data)))))
-            return true;
-        else
-            return false;
+        return (file_put_contents(self::$_file, gzcompress(bin2hex($data))));
     }
 
     /**
@@ -181,10 +179,10 @@ class cache_file extends Cache
             if(!$stream = @gzuncompress($stream))
                 return false;
 
-            if(!$stream = @base64_decode($stream))
+            if(!$stream = @hextobin($stream))
                 return false;
 
-            return xml::getXMLvalue('cache_index','/cache_index/file[@hash="' . $hash . '"]/array') == 'yes' ? string_to_array(convert::UTF8_Reverse($stream)) : convert::UTF8_Reverse($stream);
+            return xml::getXMLvalue('cache_index','/cache_index/file[@hash="' . $hash . '"]/array') == 'yes' ? string_to_array($stream) : convert::UTF8_Reverse($stream);
         }
         else
             return false;

@@ -67,9 +67,9 @@ else
 
         $get = db("SELECT * FROM ".dba::get('users')." WHERE id = '".convert::ToInt($view_userID)."'",false,true); // Get User
 
-        if($get['profile_access'] && $chkMe == 'unlogged')
+        if($get['profile_access'] && checkme() == 'unlogged')
             $index = error(_profile_access_error,1);
-        else if(!$get['level'] && $chkMe == 'unlogged')
+        else if(!$get['level'] && checkme() == 'unlogged')
             $index = error(_error_wrong_permissions);
         else
         {
@@ -79,7 +79,7 @@ else
             switch($do)
             {
                 case 'delete':
-                    if($chkMe == 4 || $view_userID == convert::ToInt($userid))
+                    if(checkme() == 4 || $view_userID == userid())
                     {
                         db("DELETE FROM ".dba::get('usergb')." WHERE user = '".convert::ToInt($view_userID)."' AND id = '".convert::ToInt($_GET['gbid'])."'");
                         $index = info(_gb_delete_successful, "?action=user&amp;id=".$view_userID."&show=gb");
@@ -89,7 +89,7 @@ else
                 break;
                 case 'edit':
                     $get = db("SELECT * FROM ".dba::get('usergb')." WHERE id = '".convert::ToInt($_GET['gbid'])."'",false,true);
-                    if($get['reg'] == convert::ToInt($userid) || permission('editusers'))
+                    if($get['reg'] == userid() || permission('editusers'))
                     {
                         if($get['reg'] != 0)
                             $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
@@ -153,10 +153,10 @@ else
                             {
                                 $gbhp = (!empty($getgb['hp']) ? show(_hpicon, array("hp" => $getgb['hp'])) : '');
                                 $gbemail = (!empty($getgb['email']) ? show(_emailicon, array("email" => eMailAddr($getgb['email']))) : '');
-                                $posted_ip = ($chkMe == 4 ? $getgb['ip'] : _logged);
+                                $posted_ip = (checkme() == 4 ? $getgb['ip'] : _logged);
 
                                 $edit = ''; $delete = '';
-                                if(permission('editusers') || $view_userID == convert::ToInt($userid))
+                                if(permission('editusers') || $view_userID == userid())
                                 {
                                     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=user&amp;show=gb&amp;do=edit&amp;gbid=".$getgb['id'], "title" => _button_title_edit));
                                     $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "action=user&amp;show=gb&amp;do=delete&amp;gbid=".$getgb['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
@@ -203,8 +203,8 @@ else
                         $add = '';
                         if(!ipcheck("mgbid(".$_GET['id'].")", config('f_membergb')))
                         {
-                            if(!empty($userid) && $userid != 0)
-                                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                            if(userid() != 0)
+                                $form = show("page/editor_regged", array("nick" => autor()));
                             else
                                 $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 

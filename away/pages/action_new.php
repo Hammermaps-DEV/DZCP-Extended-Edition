@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
 $where = $where.' - '._away_new;
-  if($chkMe == "unlogged" || $chkMe < "2")
+  if(checkme() == "unlogged" || checkme() < "2")
   {
     $index = error(_error_wrong_permissions);
   } else {
@@ -81,7 +81,7 @@ $where = $where.' - '._away_new;
       $time = mktime(23,59,59,$_POST['monat'],$_POST['tag'],$_POST['jahr']);
 
              $qry = db("INSERT INTO ".dba::get('away')."
-                        SET `userid`= '".convert::ToInt($userid)."',
+                        SET `userid`= '".userid()."',
                                  `start`= '".convert::ToInt($abdata)."',
                                  `end`= '".convert::ToInt($time)."',
                             `titel`= '".string::encode($_POST['titel'])."',

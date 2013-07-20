@@ -16,11 +16,9 @@ if (!defined('IS_DZCP'))
 # DEPRECATED #
 function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
 {
-    global $userid;
-
-    if($userid != 0 && !empty($userid))
+    if(userid() != 0)
     {
-        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".userid()."'",false,true);
         if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
         { if(empty($new)) return _newicon; }
     }
@@ -120,11 +118,11 @@ else
     $qryo = db("SELECT id FROM ".dba::get('users')."
               WHERE whereami = 'Forum'
               AND time+'".users_online."'>'".time()."'
-              AND id != '".convert::ToInt($userid)."'");
+              AND id != '".userid()."'");
     if(_rows($qryo))
     {
         $check = 1; $nick = ''; $i=0;
-        $cnto = cnt(dba::get('users'), " WHERE time+'".users_online."'>'".time()."' AND whereami = 'Forum' AND id != '".convert::ToInt($userid)."'");
+        $cnto = cnt(dba::get('users'), " WHERE time+'".users_online."'>'".time()."' AND whereami = 'Forum' AND id != '".userid()."'");
         while($geto = _fetch($qryo))
         {
             if($i == 5)
@@ -141,7 +139,7 @@ else
             $check++;
         }
     } else {
-        if($chkMe == "unlogged") $nick = "<center>"._forum_nobody_is_online."</center>";
+        if(checkme() == "unlogged") $nick = "<center>"._forum_nobody_is_online."</center>";
         else                        $nick = "<center>"._forum_nobody_is_online2."</center>";
     }
 

@@ -21,7 +21,7 @@ else
     $qry = db("SELECT * FROM ".dba::get('f_threads')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
-    if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
+    if($get['t_reg'] == userid() || permission("forum"))
     {
       if(permission("forum"))
       {
@@ -150,7 +150,7 @@ else
                WHERE id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
-    if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
+    if($get['t_reg'] == userid() || permission("forum"))
     {
       if($get['t_reg'] != 0 || permission('forum'))
       {
@@ -319,7 +319,7 @@ else
                          `titel`  = '".string::encode($_POST['question'])."',
                          `intern` = '".convert::ToInt($_POST['intern'])."',
                                      `forum`  = 1,
-                         `von`    = '".convert::ToInt($userid)."'");
+                         `von`    = '".userid()."'");
 
           $vid = database::get_insert_id();
 
@@ -404,7 +404,7 @@ else
         $vid = "";
         }
 
-        $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
+        $editedby = show(_edited_by, array("autor" => autor(),
                                            "time" => date("d.m.Y H:i", time())._uhr));
 
           $qry = db("UPDATE ".dba::get('f_threads')."
@@ -425,7 +425,7 @@ else
                       WHERE s1.fid = '".convert::ToInt($_GET['id'])."'");
         while($getabo = _fetch($checkabo))
         {
-        if(convert::ToInt($userid) != $getabo['user'])
+        if(userid() != $getabo['user'])
         {
           $topic = db("SELECT topic FROM ".dba::get('f_threads')." WHERE id = '".convert::ToInt($_GET['id'])."'");
           $gettopic = _fetch($topic);
@@ -433,7 +433,7 @@ else
           $subj = show(string::decode(settings('eml_fabo_tedit_subj')), array("titel" => $title));
 
            $message = show(string::decode(settings('eml_fabo_tedit')), array("nick" => string::decode($getabo['nick']),
-                                                                "postuser" => fabo_autor(convert::ToInt($userid)),
+                                                                "postuser" => fabo_autor(),
                                                             "topic" => $gettopic['topic'],
                                                             "titel" => $title,
                                                             "domain" => $httphost,
@@ -452,7 +452,7 @@ else
       }
     } else $index = error(_error_wrong_permissions);
   } elseif($_GET['do'] == "add") {
-    if(settings("reg_forum") == "1" && $chkMe == "unlogged")
+    if(settings("reg_forum") == "1" && checkme() == "unlogged")
     {
       $index = error(_error_unregistered);
     } else {
@@ -475,8 +475,8 @@ else
                 $intern = ''; $intern_kat = '';
                 if($fget['intern'] == "1") { $intern = 'checked="checked"'; $internVisible = 'style="display:none"'; };
 
-        if(!empty($userid) && $userid != 0)
-            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+        if(userid() != 0)
+            $form = show("page/editor_regged", array("nick" => autor()));
         else
             $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
@@ -540,17 +540,17 @@ else
       if(_rows(db("SELECT id FROM ".dba::get('f_skats')." WHERE id = '".convert::ToInt($_GET['kid'])."'")) == 0) {
           $index = error(_id_dont_exist);
       } else {
-        if(settings("reg_forum") == "1" && $chkMe == "unlogged")
+        if(settings("reg_forum") == "1" && checkme() == "unlogged")
         {
             $index = error(_error_have_to_be_logged);
         } else {
-            if(!empty($userid) && $userid != 0)
+            if(userid() != 0)
                 $toCheck = empty($_POST['eintrag']) || empty($_POST['topic']);
             else
                 $toCheck = empty($_POST['topic']) || empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
             if($toCheck)
             {
-                if(!empty($userid) && $userid != 0)
+                if(userid() != 0)
                 {
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
                     elseif(empty($_POST['topic'])) $error = _empty_topic;
@@ -580,8 +580,8 @@ else
                     $admin = "";
                 }
 
-                if(!empty($userid) && $userid != 0)
-                    $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                if(userid() != 0)
+                    $form = show("page/editor_regged", array("nick" => autor()));
                 else
                     $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
@@ -663,7 +663,7 @@ else
                                                      `titel`  = '".string::encode($_POST['question'])."',
                                                      ".$ivote."
                                                      `forum`  = 1,
-                                                     `von`    = '".convert::ToInt($userid)."'");
+                                                     `von`    = '".userid()."'");
 
                         $vid = database::get_insert_id();
 
@@ -743,7 +743,7 @@ else
                                                 `t_nick`   = '".string::encode($_POST['nick'])."',
                                                 `t_email`  = '".string::encode($_POST['email'])."',
                                                 `t_hp`     = '".links($_POST['hp'])."',
-                                                `t_reg`    = '".convert::ToInt($userid)."',
+                                                `t_reg`    = '".userid()."',
                                                 `t_text`   = '".string::encode($_POST['eintrag'])."',
                                                 `sticky`   = '".convert::ToInt($_POST['sticky'])."',
                                                 `global`   = '".convert::ToInt($_POST['global'])."',
@@ -756,7 +756,7 @@ else
 
                 $update = db("UPDATE ".dba::get('userstats')."
                                             SET `forumposts` = forumposts+1
-                                            WHERE `user`       = '".convert::ToInt($userid)."'");
+                                            WHERE `user`       = '".userid()."'");
 
                 $index = info(_forum_newthread_successful, "?action=showthread&amp;id=".$thisFID."#p1");
             }

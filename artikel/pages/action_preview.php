@@ -21,7 +21,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".(isset($_POST['kat']) ? convert::ToInt($_POST['kat']) : 0)."'",false,true);
     $artikelimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
     if($get['custom_image'])
@@ -52,5 +52,5 @@ else
                                            "autor" => autor($_SESSION['id'])));
 
     update_user_status_preview();
-    exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
+    exit(convert::UTF8('<table class="mainContent" cellspacing="1">'.$index.'</table>'));
 }

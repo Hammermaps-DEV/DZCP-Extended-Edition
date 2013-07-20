@@ -49,6 +49,7 @@ if(_adminMenu != 'true')
     $support .= "MySQL-Server Version: ".database::version()."\r\n";
     $support .= "MySQL-Erweiterung: MySQLi\r\n";
     $support .= "MySQL-Client Version: ".$PhpInfo['mysql']['Client API version']."\r\n";
+    $support .= "MySQL-Persistente Datenbankverbindung: ".(runtime_sql_persistconns ? 'Aktiviert' : 'Deaktiviert')."\r\n";
 
     if(function_exists("zend_version"))
         $support .= "Zend-Engine: ".zend_version()."\r\n";

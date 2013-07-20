@@ -48,13 +48,13 @@ else
                             ## Schreibe Adminlog ##
                             wire_ipcheck("trylogin(".$get['id'].")");
 
-                            if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = ".$get['id']." AND `actkey` IS NOT NULL",true))
+                            if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = ".$get['id']." AND `actkey` != ''",true))
                             {
                                 $_SESSION['akl_id'] = $get['id'];
                                 $index = error(_profil_locked);
                             }
 
-                            if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = ".$get['id']." AND `actkey` IS NULL AND level = 0",true))
+                            if(db("SELECT id FROM ".dba::get('users')." WHERE `id` = ".$get['id']." AND `actkey` = '' AND level = 0",true))
                             {
                                 $index = error(_profil_closed);
                                 logout(); ## User Abmelden ##
@@ -73,10 +73,13 @@ else
             }
         break;
         default:
-            if($chkMe == "unlogged")
+            if(checkme() == "unlogged")
                 $index = show($dir."/login", array("secure" => (config('securelogin') ? show($dir.'/secure', array('help' => _login_secure_help, 'security' => _register_confirm)) : '')));
             else
             {
+                ## Schreibe Adminlog ##
+                wire_ipcheck("doublelog(".userid()."_".visitorIp().")");
+
                 ## User Abmelden ##
                 logout();
 

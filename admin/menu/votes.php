@@ -68,7 +68,7 @@ if(_adminMenu != 'true')
                      SET `datum`  = '".time()."',
                          `titel`  = '".string::encode($_POST['question'])."',
                          `intern` = '".convert::ToInt($_POST['intern'])."',
-                         `von`    = '".convert::ToInt($userid)."'");
+                         `von`    = '".userid()."'");
 
           $vid = database::get_insert_id();
 

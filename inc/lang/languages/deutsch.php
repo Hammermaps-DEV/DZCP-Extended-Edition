@@ -1321,6 +1321,10 @@ define('_server_noplayers', '
 <tr>
   <td class="contentMainFirst" align="center" colspan="99"><span class="fontBold">Keine Spieler auf dem Server</span></td>
 </tr>');
+define('_server_nousers', '
+<tr>
+  <td class="contentMainFirst" align="center" colspan="99"><span class="fontBold">Keine User auf dem Server</span></td>
+</tr>');
 define('_server_no_connection', '
 <tr>
   <td class="contentMainFirst" align="center" colspan="2">Konnte keine Verbindung zum Server herstellen</td>
@@ -1685,7 +1689,7 @@ define('_config_maxwidth_info', 'Hier kannst du einstellen, ab wann ein zu breit
 define('_forum_top_posts', 'Top 5 Poster');
 define('_error_no_teamspeak', 'Der Teamspeak 3 Server ist zur Zeit nicht erreichbar!');
 define('_user_cant_delete_admin', 'Du darfst keine Member oder Admins l&ouml;schen!');
-define('_no_entrys_yet', '<tr><td class="contentMainFirst" colspan="[colspan]" align="center">Noch kein Eintrag vorhanden</td></tr>');
+define('_no_entrys_yet', '<tr><td class="contentMainSecond" colspan="[colspan]" align="center">Noch kein Eintrag vorhanden</td></tr>');
 define('_nav_no_nextwars', 'Es stehen keine Wars an!');
 define('_nav_no_lastwars', 'Bisher noch keine Wars!');
 define('_nav_no_ftopics', 'Noch kein Eintrag!');

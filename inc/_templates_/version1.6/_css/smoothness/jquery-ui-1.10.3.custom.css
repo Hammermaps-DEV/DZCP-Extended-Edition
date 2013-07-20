@@ -465,13 +465,14 @@ button.ui-button::-moz-focus-inner {
     border-right-width: 0;
     border-left-width: 1px;
 }
+
 .ui-dialog {
-    position: absolute;
-    top: 0;
+    position:fixed;
     left: 0;
     padding: .2em;
     outline: 0;
 }
+
 .ui-dialog .ui-dialog-titlebar {
     padding: .4em 1em;
     position: relative;
@@ -1134,7 +1135,3 @@ body .ui-tooltip {
     border-radius: 8px;
 }
 
-.ui-dialog
-{
-    position:fixed;
-}

@@ -25,19 +25,19 @@ else
         switch($do)
         {
             case 'add':
-                if(!empty($userid) && $userid != 0 && convert::ToInt($userid) != 0)
+                if(userid() != 0)
                     $toCheck = empty($_POST['eintrag']);
                 else
                     $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                 if($toCheck)
                 {
-                    if(!empty($userid) && $userid != 0)
+                    if(userid() != 0)
                     {
                         if(empty($_POST['eintrag']))
                             $error = _empty_eintrag;
 
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                        $form = show("page/editor_regged", array("nick" => autor()));
                     }
                     else
                     {
@@ -69,16 +69,16 @@ else
                 else
                 {
 
-                    if(!empty($userid) && $userid != 0 && convert::ToInt($userid) != 0)
+                    if(userid() != 0)
                     {
-                        $userdata = data(convert::ToInt($userid), array('email','nick','hp'));
+                        $userdata = data(userid(), array('email','nick','hp'));
                         db("INSERT INTO ".dba::get('usergb')." SET
                                `user`       = '".convert::ToInt($_GET['id'])."',
                                `datum`      = '".time()."',
                                `nick`       = '".convert::ToString(string::encode($userdata['nick']))."',
                                `email`      = '".convert::ToString(string::encode($userdata['email']))."',
                                `hp`         = '".convert::ToString(links($userdata['hp']))."',
-                               `reg`        = '".convert::ToInt($userid)."',
+                               `reg`        = '".userid()."',
                                `nachricht`  = '".convert::ToString(string::encode($_POST['eintrag']))."',
                                `ip`         = '".convert::ToString(visitorIp())."'");
                         unset($userdata);
@@ -91,7 +91,7 @@ else
                                `nick`       = '".convert::ToString(string::encode($_POST['nick']))."',
                                `email`      = '".convert::ToString(string::encode($_POST['email']))."',
                                `hp`         = '".convert::ToString(links($_POST['hp']))."',
-                               `reg`        = '".convert::ToInt($userid)."',
+                               `reg`        = '".userid()."',
                                `nachricht`  = '".convert::ToString(string::encode($_POST['eintrag']))."',
                                `ip`         = '".convert::ToString(visitorIp())."'");
                     }
@@ -101,10 +101,10 @@ else
                 }
             break;
             default:
-                if($_POST['reg'] == convert::ToInt($userid) || permission('editusers'))
+                if($_POST['reg'] == userid() || permission('editusers'))
                 {
                     $addme = (!$_POST['reg'] ? "`nick` = '".string::encode($_POST['nick'])."', `email` = '".string::encode($_POST['email'])."', `hp` = '".links($_POST['hp'])."'," : '');
-                    $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
+                    $editedby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
                     db("UPDATE ".dba::get('usergb')." SET ".$addme." `nachricht` = '".convert::ToString(string::encode($_POST['eintrag']))."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".convert::ToString(addslashes($editedby))."' WHERE id = '".convert::ToInt($_GET['gbid'])."'");
                     $index = info(_gb_edited, "?action=user&show=gb&id=".$_GET['id']);
                 }

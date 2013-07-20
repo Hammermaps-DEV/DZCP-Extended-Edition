@@ -31,7 +31,7 @@ wysiwyg::set('advanced');
                                                                                                                 "uhr" => _uhr));
                 $show = show($dir."/news_form", array("head" => _admin_news_head,
                                               "nautor" => _autor,
-                                              "autor" => autor(convert::ToInt($userid)),
+                                              "autor" => autor(),
                                               "nkat" => _news_admin_kat,
                                               "n_newspic" => "",
                                               "delnewspic" => "",
@@ -107,7 +107,7 @@ wysiwyg::set('advanced');
                     $selr_nc = ($_POST['comments'] ? 'selected="selected"' : '');
                     $show = show($dir."/news_form", array("head" => _admin_news_head,
                                                 "nautor" => _autor,
-                                                "autor" => autor(convert::ToInt($userid)),
+                                                "autor" => autor(),
                                                 "nkat" => _news_admin_kat,
                             "n_newspic" => "",
                             "delnewspic" => "",
@@ -161,7 +161,7 @@ wysiwyg::set('advanced');
 
 
                 $qry = db("INSERT INTO ".dba::get('news')."
-                     SET `autor`      = '".convert::ToInt($userid)."',
+                     SET `autor`      = '".userid()."',
                          `kat`        = '".convert::ToInt($_POST['kat'])."',
                          `titel`      = '".string::encode($_POST['titel'])."',
                          `text`       = '".string::encode($_POST['newstext'])."',

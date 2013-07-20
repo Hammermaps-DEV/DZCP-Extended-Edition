@@ -23,7 +23,7 @@ else
            WHERE s1.id = '".convert::ToInt($_GET['id'])."'");
     $get = _fetch($qry);
 
-    if($chkMe != "1" && $chkMe != "unlogged" && $get['punkte'] == "0" && $get['gpunkte'] == "0")
+    if(checkme() != "1" && checkme() != "unlogged" && $get['punkte'] == "0" && $get['gpunkte'] == "0")
     {
         if($get['datum'] > time())
         {
@@ -36,7 +36,7 @@ else
                 elseif($getp['status'] == "1") $status = _cw_player_dont_want;
                 else $status = _cw_player_dont_know;
 
-                if($getp['member'] == convert::ToInt($userid))
+                if($getp['member'] == userid())
                 {
                     if($getp['status'] == "0") $sely = "checked=\"checked\"";
                     elseif($getp['status'] == "1") $seln = "checked=\"checked\"";
@@ -53,7 +53,7 @@ else
                         "status" => $status));
             }
 
-            $cntPlayers = cnt(dba::get('cw_player'), " WHERE cwid = '".convert::ToInt($_GET['id'])."' AND member = '".convert::ToInt($userid)."'", "cwid");
+            $cntPlayers = cnt(dba::get('cw_player'), " WHERE cwid = '".convert::ToInt($_GET['id'])."' AND member = '".userid()."'", "cwid");
 
             if($cntPlayers) $value = _button_value_edit;
             else            $value = _button_value_add;
@@ -104,7 +104,7 @@ else
         $editcw = "";
     }
 
-    if($get['bericht']) $bericht = bbcode($get['bericht']);
+    if($get['bericht']) $bericht = bbcode::parse_html($get['bericht']);
     else $bericht = "&nbsp;";
 
     $libPath = "inc/images/uploads/clanwars/".convert::ToInt($_GET['id']);
@@ -147,7 +147,7 @@ else
         if($getc['hp']) $hp = show(_hpicon, array("hp" => $getc['hp']));
         else $hp = "";
 
-        if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("clanwars"))
+        if((checkme() != 'unlogged' && $getc['reg'] == userid()) || permission("clanwars"))
         {
             $edit = show("page/button_edit_single", array("id" => $get['id'],
                     "action" => "action=details&amp;do=edit&amp;cid=".$getc['id'],
@@ -185,7 +185,7 @@ else
                 "edit" => $edit,
                 "delete" => $delete));
 
-        if($chkMe == "4") $posted_ip = $getc['ip'];
+        if(checkme() == "4") $posted_ip = $getc['ip'];
         else $posted_ip = _logged;
 
         $comments .= show("page/comments_show", array("titel" => $titel,
@@ -201,14 +201,14 @@ else
         $i--;
     }
 
-    if(settings("reg_cwcomments") == "1" && $chkMe == "unlogged")
+    if(settings("reg_cwcomments") == "1" && checkme() == "unlogged")
     {
         $add = _error_unregistered_nc;
     } else {
         if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
         {
-            if(!empty($userid) && $userid != 0)
-                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+            if(userid() != 0)
+                $form = show("page/editor_regged", array("nick" => autor()));
             else
                 $form = show("page/editor_notregged", array("postemail" => $postemail, "posthp" => $posthp, "postnick" => $postnick,));
 
@@ -219,7 +219,6 @@ else
                     "security" => _register_confirm,
                     "sec" => $dir,
                     "security" => _register_confirm,
-                    "sec" => $dir,
                     "show" => "none",
                     "ip" => _iplog_info,
                     "preview" => _preview,
@@ -296,23 +295,23 @@ else
     {
         if(_rows(db("SELECT `id` FROM ".dba::get('cw')." WHERE `id` = '".convert::ToInt($_GET['id'])."'")) != 0)
         {
-            if(settings("reg_cwcomments") == "1" && $chkMe == "unlogged")
+            if(settings("reg_cwcomments") == "1" && checkme() == "unlogged")
             {
                 $index = error(_error_have_to_be_logged);
             } else {
                 if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
                 {
-                    if(!empty($userid) && $userid != 0)
+                    if(userid() != 0)
                         $toCheck = empty($_POST['comment']);
                     else
                         $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                     if($toCheck)
                     {
-                        if(!empty($userid) && $userid != 0)
+                        if(userid() != 0)
                         {
                             if(empty($_POST['comment'])) $error = _empty_eintrag;
-                            $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                            $form = show("page/editor_regged", array("nick" => autor()));
                         } else {
                             if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
                             elseif(empty($_POST['nick'])) $error = _empty_nick;
@@ -351,7 +350,7 @@ else
                                                      `nick`     = '".string::encode($_POST['nick'])."',
                                                      `email`    = '".string::encode($_POST['email'])."',
                                                      `hp`       = '".links($_POST['hp'])."',
-                                                     `reg`      = '".convert::ToInt($userid)."',
+                                                     `reg`      = '".userid()."',
                                                      `comment`  = '".string::encode($_POST['comment'])."',
                                                      `ip`       = '".visitorIp()."'");
 
@@ -375,7 +374,7 @@ else
                WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
+        if($get['reg'] == userid() || permission('clanwars'))
         {
             $qry = db("DELETE FROM ".dba::get('cw_comments')."
                  WHERE id = '".convert::ToInt($_GET['cid'])."'");
@@ -389,9 +388,9 @@ else
                WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
+        if($get['reg'] == userid() || permission('clanwars'))
         {
-            $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)),
+            $editedby = show(_edited_by, array("autor" => autor(),
                     "time" => date("d.m.Y H:i", time())._uhr));
             $qry = db("UPDATE ".dba::get('cw_comments')."
                    SET `nick`     = '".string::encode($_POST['nick'])."',
@@ -410,7 +409,7 @@ else
                  WHERE id = '".convert::ToInt($_GET['cid'])."'");
         $get = _fetch($qry);
 
-        if($get['reg'] == convert::ToInt($userid) || permission('clanwars'))
+        if($get['reg'] == userid() || permission('clanwars'))
         {
             if($get['reg'] != 0)
                 $form = show("page/editor_regged", array("nick" => autor($get['reg'])));

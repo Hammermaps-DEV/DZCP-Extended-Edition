@@ -74,6 +74,7 @@ else
                 case 'mod_upd': $action = '<b style="color:red">ADMIN</b> '.'Update Mod: <b>'.$wid.'</b>'; break;
                 case 'mod_add': $action = '<b style="color:red">ADMIN</b> '.'Install Mod: <b>'.$wid.'</b>'; break;
                 case 'mod_del': $action = '<b style="color:red">ADMIN</b> '.'Delete Mod: <b>'.$wid.'</b>'; break;
+                case 'doublelog': $ids = explode("_", $wid); $action = '<b style="color:red">ADMIN</b> '.'Double Login "'.autor($ids[0]).'" detected from IP:<b>'.$ids[1].'</b>'; break;
                 default: $action = '<b style="color:red">undefined:</b> <b>'.$a.'</b>'; break;
             }
         }

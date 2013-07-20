@@ -22,7 +22,7 @@ else
     $where = _site_user_logout;
 
     ## Ereignis in den Adminlog schreiben ##
-    wire_ipcheck("logout(".convert::ToInt($userid).")");
+    wire_ipcheck("logout(".userid().")");
 
     ## User Abmelden ##
     logout(); //Find in BBCode

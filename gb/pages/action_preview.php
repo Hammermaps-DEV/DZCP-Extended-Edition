@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $regCheck = false;
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     if(isset($_GET['view']) ? ($_GET['view'] == 'comment' ? true : false) : false)
     {
         if(isset($_GET['edit']) && !empty($_GET['edit']))
@@ -29,15 +29,15 @@ else
             if(!$get['reg'])
                 $regCheck = true;
 
-            $editby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
+            $editby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
         }
         else
         {
             $get_id = cnt(dba::get('gb'))+1;
-            $get_userid = convert::ToInt($userid);
+            $get_userid = userid();
             $get_date = time();
 
-            if($chkMe == 'unlogged')
+            if(checkme() == 'unlogged')
                 $regCheck = true;
         }
 
@@ -48,7 +48,7 @@ else
             $get_nick = show(_link_mailto, array("nick" => string::decode($_POST['nick']), "email" => eMailAddr($get_email)));
         }
         else
-            $get_nick = autor(convert::ToInt($userid));
+            $get_nick = autor();
     }
     else
     {
@@ -61,15 +61,15 @@ else
             if(!$get['reg'])
                 $regCheck = true;
 
-            $editby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
+            $editby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
         }
         else
         {
             $get_id = cnt(dba::get('gb'))+1;
-            $get_userid = convert::ToInt($userid);
+            $get_userid = userid();
             $get_date = time();
 
-            if($chkMe == 'unlogged')
+            if(checkme() == 'unlogged')
                 $regCheck = true;
         }
 
@@ -81,14 +81,14 @@ else
         }
         else
         {
-            $get_hp = data(convert::ToInt($userid),'hp');
-            $get_email = data(convert::ToInt($userid),'email');
-            $get_nick = autor(convert::ToInt($userid));
+            $get_hp = data(userid(),'hp');
+            $get_email = data(userid(),'email');
+            $get_nick = autor();
         }
 
         $gbhp = (!empty($get_hp) ? show(_hpicon, array("hp" => links($get_hp))) : '');
         $gbemail = (!empty($get_email) ? show(_emailicon, array("email" => eMailAddr($get_email))) : '');
-        $posted_ip = ($chkMe == 4 ? visitorIp() : _logged);
+        $posted_ip = (checkme() == 4 ? visitorIp() : _logged);
 
         if($regCheck)
         {
@@ -121,10 +121,10 @@ else
 
 
     if(isset($_GET['view']) ? ($_GET['view'] == 'comment' ? true : false) : false)
-        $index = str_replace("<br /><br />", "", show($dir."/commentlayout", array("nick" => $get_nick, "datum" => date("d.m.Y H:i", $get_date), "comment" => bbcode::parse_html($_POST['eintrag']), "editby" => bbcode($editby,1), "edit" => '', "delete" => '')));
+        $index = str_replace("<br /><br />", "", show($dir."/commentlayout", array("nick" => $get_nick, "datum" => date("d.m.Y H:i", $get_date), "comment" => bbcode::parse_html($_POST['eintrag']), "editby" => bbcode::parse_html($editby), "edit" => '', "delete" => '')));
     else
         $index = show($dir."/gb_show", array("gbtitel" => $gbtitel, "nachricht" => bbcode::parse_html($_POST['eintrag']), "editby" => bbcode::parse_html($editby), "ip" => $posted_ip, "comments" => ''));
 
     update_user_status_preview();
-    exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
+    exit(convert::UTF8('<table class="mainContent" cellspacing="1">'.$index.'</table>'));
 }

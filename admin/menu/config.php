@@ -145,20 +145,18 @@ if(empty($show))
     $files = get_files(basePath.'/inc/lang/languages/',false,true,array('php')); $lang = '';
     foreach($files as $file)
     {
-        $sel = (string::decode($get_settings['language']) == $file ? 'selected="selected"' : '');
         $lng = preg_replace("#.php#", "",$file);
+        $sel = (string::decode($get_settings['language']) == $lng ? 'selected="selected"' : '');
         $lang .= show(_select_field, array("value" => $lng, "what" => $lng, "sel" => $sel));
     }
-
     unset($files,$file,$lng,$sel);
 
-    $tmps = get_files(basePath.'/inc/_templates_/',true); $tmpldir = '';
+    $tmps = get_files(basePath.'/inc/_templates_/',true); $tmplsel = '';
     foreach($tmps as $tmp)
     {
         $selt = (string::decode($get_settings['tmpdir']) == $tmp ? 'selected="selected"' : '');
-        $tmpldir .= show(_select_field, array("value" => $tmp, "what" => $tmp, "sel" => $selt));
+        $tmplsel .= show(_select_field, array("value" => $tmp, "what" => $tmp, "sel" => $selt));
     }
-
     unset($tmps,$tmp,$selt);
 
     $pwde_options = show('<option '.(!$get_settings['default_pwd_encoder'] ? 'selected="selected"' : '').' value="0">MD5 [lang_pwd_encoder_algorithm]</option>
@@ -196,7 +194,7 @@ if(empty($show))
                                              "c_eml_akl_regist"      => string::decode($get_settings['eml_akl_register']),
                                              "memcache_host"         => string::decode($get_settings['memcache_host']),
                                              "memcache_port"         => convert::ToInt($get_settings['memcache_port']),
-                                             "tmpdir"                => $tmpldir,
+                                             "tmplsel"               => $tmplsel,
                                              "maxwidth"              => convert::ToInt($get_config['maxwidth']),
                                              "l_servernavi"          => convert::ToInt($get_config['l_servernavi']),
                                              "mailfrom"              => string::decode($get_settings['mailfrom']),

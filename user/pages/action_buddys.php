@@ -20,7 +20,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $where = _site_user_buddys;
-    if($chkMe == "unlogged")
+    if(checkme() == "unlogged")
         $index = error(_error_have_to_be_logged);
     else
     {
@@ -29,14 +29,14 @@ else
             case 'add':
                 if($_POST['users'] == "-")
                     $index = error(_error_select_buddy);
-                else if($_POST['users'] == convert::ToInt($userid))
+                else if($_POST['users'] == userid())
                     $index = error(_error_buddy_self);
                 else if(!check_buddy($_POST['users']))
                     $index = error(_error_buddy_already_in);
                 else
                 {
-                    db("INSERT INTO ".dba::get('buddys')." SET `user` = '".convert::ToInt($userid)."', `buddy` = '".convert::ToInt($_POST['users'])."'");
-                    $msg = show(_buddy_added_msg, array("user" => autor(convert::ToInt($userid))));
+                    db("INSERT INTO ".dba::get('buddys')." SET `user` = '".userid()."', `buddy` = '".convert::ToInt($_POST['users'])."'");
+                    $msg = show(_buddy_added_msg, array("user" => autor()));
                     db("INSERT INTO ".dba::get('msg')."
                         SET `datum`     = '".time()."',
                             `von`       = '0',
@@ -52,14 +52,14 @@ else
 
                 if($user == "-")
                     $index = error(_error_select_buddy);
-                elseif($user == convert::ToInt($userid))
+                elseif($user == userid())
                     $index = error(_error_buddy_self);
                  elseif(!check_buddy($user))
                     $index = error(_error_buddy_already_in);
                 else
                 {
-                    db("INSERT INTO ".dba::get('buddys')." SET `user`   = '".convert::ToInt($userid)."', `buddy`  = '".convert::ToInt($user)."'");
-                    $msg = show(_buddy_added_msg, array("user" => addslashes(autor(convert::ToInt($userid)))));
+                    db("INSERT INTO ".dba::get('buddys')." SET `user`   = '".userid()."', `buddy`  = '".convert::ToInt($user)."'");
+                    $msg = show(_buddy_added_msg, array("user" => addslashes(autor())));
                     db("INSERT INTO ".dba::get('msg')."
                         SET `datum`     = '".time()."',
                             `von`       = '0',
@@ -71,8 +71,8 @@ else
                 }
             break;
             case 'delete':
-                db("DELETE FROM ".dba::get('buddys')." WHERE buddy = ".convert::ToInt($_GET['id'])." AND user = '".convert::ToInt($userid)."'");
-                $msg = show(_buddy_del_msg, array("user" => addslashes(autor(convert::ToInt($userid)))));
+                db("DELETE FROM ".dba::get('buddys')." WHERE buddy = ".convert::ToInt($_GET['id'])." AND user = '".userid()."'");
+                $msg = show(_buddy_del_msg, array("user" => addslashes(autor())));
                 db("INSERT INTO ".dba::get('msg')."
                       SET `datum`     = '".time()."',
                           `von`       = '0',
@@ -83,7 +83,7 @@ else
                 $index = info(_buddys_delete_successful, "../user/?action=buddys");
             break;
             default: //default page
-                $qry = db("SELECT * FROM ".dba::get('buddys')." WHERE user = ".convert::ToInt($userid));
+                $qry = db("SELECT * FROM ".dba::get('buddys')." WHERE user = ".userid());
                 $too = ''; $color = 1; $buddys = '';
 
                 if(_rows($qry) >= 1)
@@ -92,7 +92,7 @@ else
                     {
                         $pn = show(_pn_write, array("id" => $get['buddy'], "nick" => data($get['buddy'], "nick")));
                         $delete = show(_buddys_delete, array("id" => $get['buddy']));
-                        $yesnocheck = db("SELECT * FROM ".dba::get('buddys')." where user = '".$get['buddy']."' AND buddy = '".convert::ToInt($userid)."'");
+                        $yesnocheck = db("SELECT * FROM ".dba::get('buddys')." where user = '".$get['buddy']."' AND buddy = '".userid()."'");
                         $too = (_rows($yesnocheck) ? _buddys_yesicon : _buddys_noicon);
                         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
                         $buddys .= show($dir."/buddys_show", array("nick" => autor($get['buddy']),

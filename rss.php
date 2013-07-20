@@ -73,11 +73,11 @@ if(isset($_GET['key']) || !empty($_GET['key']))
 
         rss_feed::gen_rss();
         $rss = rss_feed::get_rss();
-        Cache::set('private_news_rss_userid_'.$userid['id'],$rss, rss_cache_private_news);
+        Cache::set('private_news_rss_userid_'.$user['id'],$rss, rss_cache_private_news);
         exit($rss);
     }
     else
-        exit(Cache::get('private_news_rss_userid_'.$userid['id']));
+        exit(Cache::get('private_news_rss_userid_'.$user['id']));
 }
 else
 {

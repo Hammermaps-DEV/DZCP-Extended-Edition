@@ -16,11 +16,9 @@ if (!defined('IS_DZCP'))
 # DEPRECATED #
 function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
 {
-    global $userid;
-
-    if($userid != 0 && !empty($userid))
+    if(userid() != 0)
     {
-        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".convert::ToInt($userid)."'",false,true);
+        $get = db("SELECT lastvisit FROM ".dba::get('userstats')." WHERE user = '".userid()."'",false,true);
         if($datum >= $get['lastvisit'] || $datum2 >= $get['lastvisit'])
         { if(empty($new)) return _newicon; }
     }
@@ -84,7 +82,7 @@ else
             $intF = db("SELECT * FROM ".dba::get('f_access')."
                   WHERE user = '".$_SESSION['id']."'
                   AND forum = '".$gets['id']."'");
-            if($get['intern'] == 0 || (($get['intern'] == 1 && _rows($intF)) || $chkMe == 4))
+            if($get['intern'] == 0 || (($get['intern'] == 1 && _rows($intF)) || checkme() == 4))
             {
                 if(preg_match("#k_".$gets['id']."\|#",$strkat)) $kcheck = "checked=\"checked\"";
                 else  $kcheck = '';
@@ -225,8 +223,8 @@ else
                     $intF = db("SELECT * FROM ".dba::get('f_access')."
                     WHERE user = '".$_SESSION['id']."'
                     AND forum = '".$get['subid']."'");
-                    if(($get['intern'] == 1 && !_rows($intF) && $chkMe != 4)) $entrys--;
-                    if($get['intern'] == 0 || (($get['intern'] == 1 && _rows($intF)) || $chkMe == 4))
+                    if(($get['intern'] == 1 && !_rows($intF) && checkme() != 4)) $entrys--;
+                    if($get['intern'] == 0 || (($get['intern'] == 1 && _rows($intF)) || checkme() == 4))
                     {
                     if($get['sticky'] == 1) $sticky = _forum_sticky;
                     else $sticky = "";

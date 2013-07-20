@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($chkMe != 'unlogged')
+    if(checkme() != 'unlogged')
     {
         $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
 
@@ -41,16 +41,16 @@ else
                 $index = error(_upload_no_data);
             } elseif($size > config('upicsize')."000") {
                 $index = error(_upload_wrong_size);
-            } elseif(cnt(dba::get('usergallery'), " WHERE user = ".convert::ToInt($userid)) == config('m_gallerypics')) {
+            } elseif(cnt(dba::get('usergallery'), " WHERE user = ".userid()) == config('m_gallerypics')) {
                 $index = error(_upload_over_limit, '2');
-            } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name'])) {
+            } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".userid()."_".$_FILES['file']['name'])) {
                 $index = error(_upload_file_exists);
             } else {
-                copy($tmpname, basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name']);
+                copy($tmpname, basePath."/inc/images/uploads/usergallery/".userid()."_".$_FILES['file']['name']);
                 @unlink($_FILES['file']['tmp_name']);
 
                 $qry = db("INSERT INTO ".dba::get('usergallery')."
-                   SET `user`         = '".convert::ToInt($userid)."',
+                   SET `user`         = '".userid()."',
                        `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                        `pic`          = '".string::encode($_FILES['file']['name'])."'");
 
@@ -61,7 +61,7 @@ else
                  WHERE id = '".convert::ToInt($_GET['gid'])."'");
             $get = _fetch($qry);
 
-            if($get['user'] == convert::ToInt($userid))
+            if($get['user'] == userid())
             {
                 $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
 
@@ -94,10 +94,10 @@ else
             if(!empty($_FILES['file']['size']))
             {
                 $unlinkgallery = show(_gallery_edit_unlink, array("img" => $get['pic'],
-                        "user" => convert::ToInt($userid)));
+                        "user" => userid()));
                 @unlink($unlinkgallery);
 
-                copy($tmpname, basePath."/inc/images/uploads/usergallery/".convert::ToInt($userid)."_".$_FILES['file']['name']);
+                copy($tmpname, basePath."/inc/images/uploads/usergallery/".userid()."_".$_FILES['file']['name']);
                 @unlink($_FILES['file']['tmp_name']);
 
                 $pic = "`pic` = '".$_FILES['file']['name']."',";
@@ -107,7 +107,7 @@ else
                  SET ".$pic."
                      `beschreibung` = '".string::encode($_POST['beschreibung'])."'
                  WHERE id = '".convert::ToInt($_POST['id'])."'
-                 AND `user` = '".convert::ToInt($userid)."'");
+                 AND `user` = '".userid()."'");
 
             $index = info(_edit_gallery_done, "../user/?action=editprofile&show=gallery");
         }

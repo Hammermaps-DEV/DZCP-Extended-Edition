@@ -19,19 +19,19 @@ else
     $error = '';
     if($do == 'addgb')
     {
-        if(!empty($userid) && $userid != 0)
+        if(userid() != 0)
             $toCheck = empty($_POST['eintrag']);
         else
             $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || $_SESSION['sec_'.$dir] == NULL;
 
         if($toCheck)
         {
-            if(!empty($userid) && $userid != 0)
+            if(userid() != 0)
             {
                 if(empty($_POST['eintrag']))
                     $error = _empty_eintrag;
 
-                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                $form = show("page/editor_regged", array("nick" => autor()));
             }
             else
             {
@@ -62,7 +62,7 @@ else
                      `nick`       = '".(isset($_POST['nick']) ? string::encode($_POST['nick']) : '')."',
                      `email`      = '".(isset($_POST['email']) ? string::encode($_POST['email']) : '')."',
                      `hp`         = '".(isset($_POST['hp']) ? string::encode($_POST['hp']) : '')."',
-                     `reg`        = '".convert::ToInt($userid)."',
+                     `reg`        = '".userid()."',
                      `nachricht`  = '".string::encode($_POST['eintrag'])."',
                      `ip`         = '".visitorIp()."'");
 
@@ -88,7 +88,7 @@ else
                 $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
 
                 $delete = ""; $edit = ""; $comment = "";
-                if($get['reg'] == convert::ToInt($userid) || permission("gb"))
+                if($get['reg'] == userid() || permission("gb"))
                 {
                     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=admin&amp;do=edit&amp;postid=".$i, "title" => _button_title_edit));
                     $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=admin&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_entry));
@@ -137,18 +137,18 @@ else
                     while($getc = _fetch($qryc))
                     {
                         $edit = ""; $delete = "";
-                        if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("gb"))
+                        if((checkme() != 'unlogged' && $getc['reg'] == userid()) || permission("gb"))
                         {
                             $edit = show("page/button_edit_single", array("id" => $getc['id'], "action" => "action=admin&amp;do=cedit&amp;postid=".$i, "title" => _button_title_edit));
                             $delete = show("page/button_delete_single", array("id" => $getc['id'], "action" => "action=admin&amp;do=cdelete", "title" => _button_title_del, "del" => _confirm_del_entry));
                         }
 
                         $nick = (!$getc['reg'] ? show(_link_mailto, array("nick" => string::decode($getc['nick']), "email" => eMailAddr($getc['email']))) : autor($getc['reg']));
-                        $comments .= show($dir."/commentlayout", array("nick" => $nick, "editby" => $getc['editby'], "datum" => date("d.m.Y H:i", $getc['datum'])._uhr, "comment" => string::encode($getc['comment']), "edit" => $edit, "delete" => $delete));
+                        $comments .= show($dir."/commentlayout", array("nick" => string::decode($nick), "editby" => string::decode($getc['editby']), "datum" => date("d.m.Y H:i", $getc['datum'])._uhr, "comment" => bbcode::parse_html(string::decode($getc['comment'])), "edit" => $edit, "delete" => $delete));
                     } //while end
                 }
 
-                $posted_ip = ($chkMe == "4" ? $get['ip'] : _logged);
+                $posted_ip = (checkme() == "4" ? $get['ip'] : _logged);
                 $show .= show($dir."/gb_show", array("gbtitel" => $gbtitel, "nachricht" => bbcode::parse_html($get['nachricht']), "comments" => $comments, "editby" => bbcode::parse_html($get['editby']), "ip" => $posted_ip));
                 $i--;
             } //while end
@@ -159,8 +159,8 @@ else
         $entry = "";
         if(!ipcheck("gb", $gb_config['f_gb']))
         {
-            if(!empty($userid) && $userid != 0)
-                $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+            if(userid() != 0)
+                $form = show("page/editor_regged", array("nick" => autor()));
             else
                 $form = show("page/editor_notregged", array("postemail" => (isset($_POST['email']) ? $_POST['email'] : ''), "posthp" => (isset($_POST['hp']) ? $_POST['hp'] : ''), "postnick" => (isset($_POST['nick']) ? $_POST['nick'] : '')));
 

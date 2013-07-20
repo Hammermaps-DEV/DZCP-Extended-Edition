@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     $id = isset($_GET['id']) ? convert::ToInt($_GET['id']) : 0;
     $cid = isset($_GET['cid']) ? convert::ToInt($_GET['cid']) : 0;
     $get_hp = isset($_POST['hp']) ? $_POST['hp'] : '';
@@ -41,20 +41,20 @@ else
                 $pUId = $get['reg'];
             }
 
-            $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
+            $editedby = show(_edited_by, array("autor" => cleanautor(), "time" => date("d.m.Y H:i", time())._uhr));
         break;
         default:
             $editedby = '';
             $get_id = cnt(dba::get('dl_comments'), " WHERE download = ".$id."")+1;
-            $get_userid = convert::ToInt($userid);
+            $get_userid = userid();
             $get_date = time();
 
-            if($chkMe == 'unlogged')
+            if(checkme() == 'unlogged')
                 $regCheck = false;
             else
             {
                 $regCheck = true;
-                $pUId = convert::ToInt($userid);
+                $pUId = userid();
             }
         break;
     }

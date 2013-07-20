@@ -14,7 +14,7 @@ if (!defined('IS_DZCP'))
 
 if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
-else if($chkMe == "unlogged")
+else if(checkme() == "unlogged")
     $index = error(_error_have_to_be_logged);
 else
 {
@@ -49,11 +49,11 @@ else
     {
         case 'edit':
             $check_user = 0; $check_nick = 0; $check_email = 0;
-            if(db("SELECT user,nick,email FROM ".dba::get('users')." AS u1 WHERE (u1.user = '".$_POST['user']."' OR u1.nick = '".$_POST['nick']."' OR u1.email = '".$_POST['email']."') AND id != ".convert::ToInt($userid),true))
+            if(db("SELECT user,nick,email FROM ".dba::get('users')." AS u1 WHERE (u1.user = '".$_POST['user']."' OR u1.nick = '".$_POST['nick']."' OR u1.email = '".$_POST['email']."') AND id != ".userid(),true))
             {
-                $check_user = db("SELECT id FROM ".dba::get('users')." WHERE user = '".$_POST['user']."' AND id != '".convert::ToInt($userid)."'",true);
-                $check_nick = db("SELECT id FROM ".dba::get('users')." WHERE nick = '".$_POST['nick']."' AND id != '".convert::ToInt($userid)."'",true);
-                $check_email = db("SELECT id  FROM ".dba::get('users')." WHERE email = '".$_POST['email']."' AND id != '".convert::ToInt($userid)."'",true);
+                $check_user = db("SELECT id FROM ".dba::get('users')." WHERE user = '".$_POST['user']."' AND id != '".userid()."'",true);
+                $check_nick = db("SELECT id FROM ".dba::get('users')." WHERE nick = '".$_POST['nick']."' AND id != '".userid()."'",true);
+                $check_email = db("SELECT id  FROM ".dba::get('users')." WHERE email = '".$_POST['email']."' AND id != '".userid()."'",true);
             }
 
             if(empty($_POST['user']))
@@ -80,12 +80,12 @@ else
                 {
                     $newpwd = "`pwd` = '".($passwd=pass_hash($_POST['pwd'],($default_pwd_encoder = settings('default_pwd_encoder'))))."', `pwd_encoder` = ".$default_pwd_encoder.",";
                     $_SESSION['pwd'] = $passwd; unset($passwd);
-                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".convert::ToInt($userid)."");
+                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".userid()."");
                 }
                 else
                 {
                     $newpwd = "";
-                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".convert::ToInt($userid)."");
+                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".userid()."");
                 }
 
                 $icq = preg_replace("=-=Uis","",$_POST['icq']);
@@ -103,7 +103,7 @@ else
                     } //while end
                 }
 
-                $get = db("SELECT user,xfire FROM ".dba::get('users')." WHERE id = '".convert::ToInt($userid)."'",false,true);
+                $get = db("SELECT user,xfire FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
 
                 if($get['xfire'] != convert::ToString(string::encode($_POST['xfire'])))
                 { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
@@ -128,10 +128,10 @@ else
                                                  `signatur`         = '".string::encode($_POST['sig'])."',
                                                  `profile_access`   = '".convert::ToInt(isset($_POST['paccess']) ? $_POST['paccess'] : 0)."',
                                                  `beschreibung`     = '".string::encode($_POST['ich'])."'
-                                                  WHERE id = ".convert::ToInt($userid));
+                                                  WHERE id = ".userid());
 
                 //-> Change Language
-                if(($language=string::decode(data($userid,'language'))) != 'default')
+                if(($language=string::decode(data(userid(),'language'))) != 'default')
                     language::set_language($language);
             }
         break;
@@ -144,13 +144,13 @@ else
                                           `show_intern_news_max` = '".convert::ToInt(empty($_POST['rss_int_news_max']) ? 0 : $_POST['rss_int_news_max'])."',
                                           `show_artikel_max`     = '".convert::ToInt(empty($_POST['rss_artikel_max']) ? 0 : $_POST['rss_artikel_max'])."',
                                           `show_downloads_max`   = '".convert::ToInt(empty($_POST['rss_downloads_max']) ? 0 : $_POST['rss_downloads_max'])."'
-                                          WHERE id = ".convert::ToInt($userid));
+                                          WHERE id = ".userid());
 
             Cache::delete('private_news_rss_userid_'.$get['user']); //Delete RSS Cache
             $index = info(_info_edit_rss_done, '../user/?action=editprofile&show=rss');
         break;
         case 'delete':
-            $getdel = db("SELECT id,nick,email,hp,user FROM ".dba::get('users')." WHERE id = '".convert::ToInt($userid)."'",false,true);
+            $getdel = db("SELECT id,nick,email,hp,user FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
             Cache::delete('xfire_'.$getdel['user']);
 
             db("UPDATE ".dba::get('f_threads')." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
@@ -199,7 +199,7 @@ else
         default: ## Profil editieren ##
             if($gallery_do == "delete")
             {
-                $qrygl = db("SELECT gid FROM ".dba::get('usergallery')." WHERE user = '".convert::ToInt($userid)."' AND id = '".convert::ToInt($_GET['gid'])."'");
+                $qrygl = db("SELECT gid FROM ".dba::get('usergallery')." WHERE user = '".userid()."' AND id = '".convert::ToInt($_GET['gid'])."'");
                 if(_rows($qrygl))
                 {
                     while($getgl = _fetch($qrygl))
@@ -212,7 +212,7 @@ else
             }
             else
             {
-                $qry = db("SELECT * FROM ".dba::get('users')." WHERE id = '".convert::ToInt($userid)."'");
+                $qry = db("SELECT * FROM ".dba::get('users')." WHERE id = '".userid()."'");
                 if(!_rows($qry))
                     $index = error(_user_dont_exist);
                 else
@@ -221,17 +221,17 @@ else
                     switch(isset($_GET['show']) ? $_GET['show'] : '')
                     {
                         case 'gallery':
-                            $qrygl = db("SELECT * FROM ".dba::get('usergallery')." WHERE user = '".convert::ToInt($userid)."' ORDER BY id DESC");
+                            $qrygl = db("SELECT * FROM ".dba::get('usergallery')." WHERE user = '".userid()."' ORDER BY id DESC");
                                 $color = 1; $gal = '';
                                 if(_rows($qrygl) >= 1)
                                 {
                                     while($getgl = _fetch($qrygl))
                                     {
-                                        $pic = show(_gallery_pic_link, array("img" => $getgl['pic'], "user" => convert::ToInt($userid)));
+                                        $pic = show(_gallery_pic_link, array("img" => $getgl['pic'], "user" => userid()));
                                         $delete = show(_gallery_deleteicon, array("id" => $getgl['id']));
                                         $edit = show(_gallery_editicon, array("id" => $getgl['id']));
                                         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                                        $gal .= show($dir."/edit_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".convert::ToInt($userid)."_".$getgl['pic']),
+                                        $gal .= show($dir."/edit_gallery_show", array("picture" => img_size("inc/images/uploads/usergallery"."/".userid()."_".$getgl['pic']),
                                                                                       "beschreibung" => bbcode::parse_html($getgl['beschreibung']),
                                                                                       "class" => $class,
                                                                                       "delete" => $delete,
@@ -243,7 +243,7 @@ else
                                 $show = show($dir."/edit_gallery", array("showgallery" => $gal));
                         break;
                         case 'rss':
-                            $rss_uconf = db("SELECT * FROM `".dba::get('rss')."` WHERE `userid` = '".convert::ToInt($userid)."' LIMIT 1",false,true);
+                            $rss_uconf = db("SELECT * FROM `".dba::get('rss')."` WHERE `userid` = '".userid()."' LIMIT 1",false,true);
                             $rsspn = ($rss_uconf['show_public_news'] ? 'checked="checked"' : '');
                             $rssin = ($rss_uconf['show_intern_news'] ? 'checked="checked"' : '');
                             $rssa = ($rss_uconf['show_artikel'] ? 'checked="checked"' : '');
@@ -261,7 +261,7 @@ else
                                 $clan = '<input type="hidden" name="status" value="1" />';
                             else
                             {
-                                $custom_clan = custom_fields(convert::ToInt($userid),2);
+                                $custom_clan = custom_fields(userid(),2);
                                 $clan = show($dir."/edit_clan", array("status" => $status, "custom_clan" => $custom_clan));
                             }
 
@@ -280,7 +280,7 @@ else
                                 $deletepic = (!preg_match("#nopic#",$pic) ? "| "._profil_delete_pic : '');
                                 $deleteava = (!preg_match("#noavatar#",$avatar) ? "| "._profil_delete_ava : '');
 
-                                $delete = (convert::ToInt($userid) == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => _confirm_del_account)));
+                                $delete = (userid() == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => _confirm_del_account)));
                                 $show = show($dir."/edit_profil", array("country" => show_countrys($get['country']),
                                         "city" => string::decode($get['city']),
                                         "pnl" => $pnl,
@@ -310,10 +310,10 @@ else
                                         "position" => getrank($get['id']),
                                         "language" => language::get_menu(string::decode($get['language'])),
                                         "status" => $status,
-                                        "custom_about" => custom_fields(convert::ToInt($userid),1),
-                                        "custom_contact" => custom_fields(convert::ToInt($userid),3),
-                                        "custom_favos" => custom_fields(convert::ToInt($userid),4),
-                                        "custom_hardware" => custom_fields(convert::ToInt($userid),5),
+                                        "custom_about" => custom_fields(userid(),1),
+                                        "custom_contact" => custom_fields(userid(),3),
+                                        "custom_favos" => custom_fields(userid(),4),
+                                        "custom_hardware" => custom_fields(userid(),5),
                                         "ich" => string::decode($get['beschreibung']),
                                         "delete" => $delete));
                         break;

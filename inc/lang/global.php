@@ -83,6 +83,7 @@ define('_icqstatus', '<img src="http://web.icq.com/whitepages/online?icq=[uin]&a
 define('_hpicon', '<a href="[hp]" target="_blank"><img src="../inc/images/hp.gif" alt="" title="[hp]" class="icon" /></a>');
 define('_email_mailto', '<a href="mailto:[email]">[email]</a>');
 define('_emailicon', '<a href="mailto:[email]"><img src="../inc/images/email.gif" alt="" title="[email]" class="icon" /></a>');
+define('_emailicon_non_mailto', '<a href="[email]"><img src="../inc/images/email.gif" alt="" title="" class="icon" /></a>');
 define('_xfireicon_blank', '<img height="20" width="20" src="../inc/images/xfire.png" alt="" class="icon" />');
 define('_hpicon_blank', '<img src="../inc/images/hp.gif" alt="" class="icon" />');
 define('_topicon', '<img src="../inc/images/top.gif" alt="" class="icon" />');

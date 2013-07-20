@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     $inhalt = bbcode::parse_html($_POST['inhalt']);
     $index = show($dir."/sites", array("titel" => string::decode($_POST['titel']),
             "inhalt" => $inhalt));

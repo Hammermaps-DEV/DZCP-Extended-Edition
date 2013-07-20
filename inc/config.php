@@ -42,7 +42,7 @@ define('salt', true); // Salt für die Passwort Codierung, *Der Salt darf nach de
 /*
 * Wenn Imagick 'nicht' verwendet wird, muss bei großen Bildern auf die PHP Einstellung "memory_limit" geachtet werden.
 * Sollte diese zu klein sein, werden mache Vorschaubilder nicht generiert.
-* Imagick ist bei großen Bildern deutlich schneller als die PHP Bildbearbeitung und GD Erweiterung.
+* Imagick ist bei großen Bildern deutlich schneller als die PHP GD Erweiterung.
 */
 define('use_imagick', true); // Verwendet die Imagick PHP Erweiterung um Vorschaubilder zu erstellen, wenn vorhanden.
 
@@ -51,15 +51,20 @@ define('cookie_expires', (60*60*24*30*12)); // Wie Lange die Cookies des CMS ihr
 define('users_online', (15*60)); // Wie Lange ein User untätig sein muss, um als Offline zu gelten.
 define('counter_reload', (24*3600)); // Ab wann der Besucherzähler eine aktualisierung durchführt * User basierend *
 define('rss_cache_public_news', (15*60)); // Wann soll der Public RSS Feed aktualisiert werden.
-define('rss_cache_private_news', (10*60)); // Wann soll der Interne RSS Feed aktualisiert werden.
+define('rss_cache_private_news', (5*60)); // Wann soll der Interne RSS Feed aktualisiert werden.
 
 /*
- * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit zwischen.
+ * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit.
  * Reduziert Abfragen an die MySQL Datenbank und Festplattenzugriffe zbs. dürch Datenlisten etc.
  * Sollte nur auf false gestellt werden wenn es umbedingt nötig ist.
  */
 define('runtime_buffer', true);
-define('runtime_sql_persistconns', false); //Verwendet MySQLi Persistent Connections.
+
+/*
+ * Bitte vor der aktivierung der Persistent Connections lesen:
+ * http://php.net/manual/de/features.persistent-connections.php
+ */
+define('runtime_sql_persistconns', false);
 
 ## Colors Antispam ##
 $backgroundColor  = '#444444';

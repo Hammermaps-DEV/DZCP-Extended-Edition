@@ -24,7 +24,7 @@ else
     if(_rows($qry))
     {
         $get = _fetch($qry);
-        if($get['internal'] == 1 && ($chkMe == 1 || $chkMe == "unlogged"))
+        if($get['internal'] == 1 && (checkme() == 1 || checkme() == "unlogged"))
             $index = error(_error_wrong_permissions);
         else
         {

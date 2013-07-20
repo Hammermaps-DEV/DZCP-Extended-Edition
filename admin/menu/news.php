@@ -6,6 +6,17 @@ if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_newskats_edit_head;
+
+switch ($$GLOBALS) {
+    case value:
+    ;
+    break;
+    
+    default:
+        ;
+    break;
+}
+
 $qry = db("SELECT * FROM ".dba::get('newskat')." ORDER BY `kategorie`");
 $kats = ''; $color = 1;
 while($get = _fetch($qry))

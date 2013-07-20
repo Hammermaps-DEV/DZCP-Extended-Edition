@@ -18,7 +18,7 @@ else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::
     $index = error(show(_id_dont_exist_dl,array('id' => $dl_id)));
 else
 {
-    if(settings("reg_dl") == 1 && $chkMe == "unlogged")
+    if(settings("reg_dl") == 1 && checkme() == "unlogged")
         $index = error(_error_unregistered);
     else
     {
@@ -33,20 +33,20 @@ else
                 case 'add':
                     if(db("SELECT `id` FROM ".dba::get('downloads')." WHERE `id` = '".$dl_id."'",true) != 0)
                     {
-                        if(settings("reg_dlcomments") && $chkMe == "unlogged")
+                        if(settings("reg_dlcomments") && checkme() == "unlogged")
                             $index = error(_error_have_to_be_logged);
                         else
                         {
                             if(!ipcheck("dlid(".$dl_id.")", $downloadcomconfig['f_downloadcom']))
                             {
-                                if(!empty($userid) && $userid != 0)
+                                if(userid() != 0)
                                     $toCheck = empty($_POST['comment']);
                                 else
                                     $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
 
                                 if($toCheck)
                                 {
-                                    if(!empty($userid) && $userid != 0)
+                                    if(userid() != 0)
                                     {
                                         if(empty($_POST['eintrag']))
                                             $error = show("errors/errortable", array("error" => _empty_eintrag));
@@ -76,7 +76,7 @@ else
                                            ".(isset($_POST['nick']) ? "`nick` = '".string::encode($_POST['nick'])."'," : '')."
                                            ".(isset($_POST['hp']) ? "`hp` = '".links($_POST['hp'])."'," : '')."
                                            `editby`   = '',
-                                           `reg`      = '".convert::ToInt($userid)."',
+                                           `reg`      = '".userid()."',
                                            `comment`  = '".string::encode($_POST['comment'])."',
                                            `ip`       = '".visitorIp()."'");
 
@@ -93,7 +93,7 @@ else
                     break;
                 case 'edit':
                     $get = db("SELECT * FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
-                    if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
+                    if($get['reg'] == userid() || permission('downloads'))
                     {
                         if($get['reg'] != 0)
                             $form = show("page/editor_regged", array("nick" => autor($get['reg'])));
@@ -123,9 +123,9 @@ else
                     break;
                 case 'editcom':
                     $get = db("SELECT reg FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
-                    if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
+                    if($get['reg'] == userid() || permission('downloads'))
                     {
-                        $editedby = show(_edited_by, array("autor" => autor(convert::ToInt($userid)), "time" => date("d.m.Y H:i", time())._uhr));
+                        $editedby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
                         db("UPDATE ".dba::get('dl_comments')." SET
                                 ".(isset($_POST['nick']) ? " `nick`     = '".string::encode($_POST['nick'])."'," : "")."
                                 ".(isset($_POST['email']) ? " `email`   = '".string::encode($_POST['email'])."'," : "")."
@@ -141,7 +141,7 @@ else
                     break;
                 case 'delete':
                     $get = db("SELECT reg FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
-                    if($get['reg'] == convert::ToInt($userid) || permission('downloads'))
+                    if($get['reg'] == userid() || permission('downloads'))
                     {
                         db("DELETE FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'");
                         $index = info(_comment_deleted, "?action=download&amp;id=".$dl_id."");
@@ -185,7 +185,7 @@ else
                 while($getc = _fetch($qryc))
                 {
                     $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";
-                    if(($chkMe != 'unlogged' && $getc['reg'] == convert::ToInt($userid)) || permission("downloads"))
+                    if((checkme() != 'unlogged' && $getc['reg'] == userid()) || permission("downloads"))
                     {
                         $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=download&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
                         $delete = show("page/button_delete_single", array("id" => $dl_id, "action" => "action=download&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
@@ -204,7 +204,7 @@ else
                     }
 
                     $titel = show(_eintrag_titel, array("postid" => $i, "datum" => date("d.m.Y", $getc['datum']), "zeit" => date("H:i", $getc['datum'])._uhr, "edit" => $edit, "delete" => $delete));
-                    $posted_ip = ($chkMe == 4 ? $getc['ip'] : _logged);
+                    $posted_ip = (checkme() == 4 ? $getc['ip'] : _logged);
                     $comments .= show("page/comments_show", array("titel" => $titel,
                                                                   "comment" => bbcode::parse_html($getc['comment']),
                                                                   "editby" => bbcode::parse_html($getc['editby']),
@@ -221,12 +221,12 @@ else
                 if(empty($comments))
                     $comments = show("page/comments_no_entry");
 
-                if(settings("reg_dlcomments") && $chkMe == "unlogged")
+                if(settings("reg_dlcomments") && checkme() == "unlogged")
                     $add = _error_unregistered_nc;
                 else
                 {
-                    if(!empty($userid) && $userid != 0)
-                        $form = show("page/editor_regged", array("nick" => autor(convert::ToInt($userid))));
+                    if(userid() != 0)
+                        $form = show("page/editor_regged", array("nick" => autor()));
                     else
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 

@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
 $where = $where.' - '._info;
-  if($chkMe == "unlogged" || $chkMe < "2")
+  if(checkme() == "unlogged" || checkme() < "2")
   {
     $index = error(_error_wrong_permissions);
   } else {

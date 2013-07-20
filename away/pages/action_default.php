@@ -17,7 +17,7 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $where = $where.' - '._away_list;
-    if($chkMe == "unlogged" || $chkMe < 2)
+    if(checkme() == "unlogged" || checkme() < 2)
     {
         $index = error(_error_wrong_permissions);
     } else {
@@ -38,7 +38,7 @@ else
 
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-            if(convert::ToInt($userid) == $get['userid'] || $chkMe == "4")
+            if(userid() == $get['userid'] || checkme() == "4")
             {
                 $value = show("page/button_edit_single", array("id" => $get['id'],
                         "action" => "action=edit",
@@ -49,7 +49,7 @@ else
 
             if($get['end'] < time()) $value = "&nbsp;";
 
-            $chkMe == 4 ? $delete = show("page/button_delete_single", array("id" => $get['id'],
+            checkme() == 4 ? $delete = show("page/button_delete_single", array("id" => $get['id'],
                     "action" => "action=del",
                     "title" => _button_title_del,
                     "del" => _confirm_del_entry)) : $delete = "&nbsp;";

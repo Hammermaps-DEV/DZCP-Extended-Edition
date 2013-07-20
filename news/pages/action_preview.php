@@ -21,7 +21,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".(isset($_POST['kat']) ? convert::ToInt($_POST['kat']) : 0)."'",false,true);
     $klapp = (isset($_POST['klapptitel']) && !empty($_POST['klapptitel']) ? show(_news_klapplink, array("klapplink" => string::decode($_POST['klapptitel']), "which" => "collapse", "id" => 0)) : '');
     $links1 = (isset($_POST['url1']) && !empty($_POST['url1']) ? show(_news_link, array("link" => string::decode($_POST['link1']), "url" => links($_POST['url1']))) : '');

@@ -25,10 +25,12 @@ class cache_zend_disk extends Cache
             self::control_set($key,$ttl,array('is_array' => true));
         }
         else
+        {
+            $data = convert::UTF8($data);
             self::control_set($key,$ttl,array('is_array' => false));
+        }
 
-        $data = gzcompress(utf8_encode($data));
-        return (zend_disk_cache_store(md5($key), $data, $ttl) === true ? true : false);
+        return (zend_disk_cache_store(md5($key), gzcompress(bin2hex($data)), $ttl) === true ? true : false);
     }
 
     /**
@@ -48,17 +50,13 @@ class cache_zend_disk extends Cache
     private static function control_set($key,$ttl,$settings_array=array())
     {
         $control = array_to_string($settings_array);
-        $control = gzcompress(convert::UTF8($control));
-        zend_disk_cache_store('control_'.md5($key), $control, $ttl+1);
+        zend_disk_cache_store('control_'.md5($key), gzcompress($control), $ttl+1);
     }
 
     private static function control_get($key)
     {
         $data = zend_disk_cache_fetch('control_'.md5($key));
-        if(!empty($data))
-            return string_to_array(convert::UTF8_Reverse(gzuncompress($data)));
-        else
-            return false;
+        return !empty($data) ? string_to_array(gzuncompress($data)) : false;
     }
 
     /**
@@ -109,14 +107,11 @@ class cache_zend_disk extends Cache
         if(!$data || empty($data))
             return '';
 
-        $data = convert::UTF8_Reverse(gzuncompress($data));
+        $data = hextobin(gzuncompress($data));
         $control = self::control_get($key);
 
         //Array Erkennung
-        if($control['is_array'])
-            $data = string_to_array($data);
-
-        return $data;
+        return $control['is_array'] ? string_to_array($data) : convert::UTF8_Reverse($data);
     }
 
     /**
@@ -145,7 +140,7 @@ class cache_zend_disk extends Cache
      *
      * @return boolean
      */
-    public static function shm_delete($key)
+    public static function disk_delete($key)
     { zend_disk_cache_delete('control_'.md5($key)); return zend_disk_cache_delete(md5($key)); }
 
     /**

@@ -21,7 +21,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    $error = ''; $fromUser = ($chkMe != 'unlogged');
+    $error = ''; $fromUser = (checkme() != 'unlogged');
     if(isset($_GET['do']) && $_GET['do'] ==  'send')
     {
         $sec_sendnews = isset($_SESSION['sec_sendnews']) ? $_SESSION['sec_sendnews'] : '';
@@ -50,12 +50,12 @@ else
         else
         {
             $hp = show(_contact_hp, array("hp" => links($hp)));
-            $nick = !$fromUser ? $nick : blank_autor(convert::ToInt($userid));
-            $von_nick = !$fromUser ? '0' : convert::ToInt($userid);
-            $titel = !$fromUser ? show(_news_send_titel, array("nick" => $nick)) : show(_news_send_titel, array("nick" => blank_autor(convert::ToInt($userid))));
+            $nick = !$fromUser ? $nick : blank_autor();
+            $von_nick = !$fromUser ? '0' : userid();
+            $titel = !$fromUser ? show(_news_send_titel, array("nick" => $nick)) : show(_news_send_titel, array("nick" => blank_autor()));
             $email = !$fromUser ? show(_email_mailto, array("email" => $email)) : '--';
             $sendnews = !$fromUser ? '1' : '2';
-            $user = !$fromUser ? $nick : convert::ToInt($userid);
+            $user = !$fromUser ? $nick : userid();
 
             $text = show(_contact_text_sendnews, array("hp" => $hp, "email" => $email, "titel" => $titel, "text" => $text, "info" => $info, "nick" => $nick));
             $qry = db("SELECT id,level FROM ".dba::get('users')."");
@@ -72,7 +72,7 @@ else
     if(empty($index))
     {
         $form = show($dir."/send_form".($fromUser ? '2' : '1'), array(
-                "user" => ($fromUser ? autor(convert::ToInt($userid)) : ''),
+                "user" => ($fromUser ? autor() : ''),
                 "value" => _button_value_send,
                 "s_nick" => (isset($nick) && !empty($nick) ? $nick : ''),
                 "s_email" => (isset($email) && !empty($email) ? $email : ''),

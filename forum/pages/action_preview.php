@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-  header("Content-type: text/html; charset=utf-8");
+  header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
   if($_GET['what'] == 'thread')
   {
     if($_GET['do'] == 'editthread')
@@ -32,16 +32,16 @@ else
         $guestCheck = true;
         $pUId = $get['t_reg'];
       }
-      $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
+      $editedby = show(_edited_by, array("autor" => cleanautor(),
                                          "time" => date("d.m.Y H:i", time())._uhr));
       $tID = $get['id'];
     } else {
       $get_datum = time();
 
-      if($chkMe == 'unlogged') $guestCheck = false;
+      if(checkme() == 'unlogged') $guestCheck = false;
       else {
         $guestCheck = true;
-        $pUId = convert::ToInt($userid);
+        $pUId = userid();
       }
       $tID = $_GET['kid'];
     }
@@ -70,7 +70,7 @@ else
       else $hp = show(_hpicon_forum, array("hp" => $getu['hp']));
       if(data($pUId, "signatur")) $sig = _sig.bbcode::parse_html(data($pUId, "signatur"),1);
       else $sig = "";
-      $onoff = onlinecheck(convert::ToInt($userid));
+      $onoff = onlinecheck(userid());
       $userposts = show(_forum_user_posts, array("posts" => userstats($pUId, "forumposts")+1));
     } else {
         $pn = "";
@@ -151,17 +151,17 @@ else
         $guestCheck = true;
         $pUId = $get['reg'];
       }
-      $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
+      $editedby = show(_edited_by, array("autor" => cleanautor(),
                                          "time" => date("d.m.Y H:i", time())._uhr));
       $tID = $get['sid'];
       $cnt = "?";
     } else {
       $get_datum = time();
 
-      if($chkMe == 'unlogged') $guestCheck = false;
+      if(checkme() == 'unlogged') $guestCheck = false;
       else {
         $guestCheck = true;
-        $pUId = convert::ToInt($userid);
+        $pUId = userid();
       }
       $tID = $_GET['id'];
       $cnt = cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+2;

@@ -55,7 +55,7 @@ else
         }
 
         $showVoted = '';
-        if($get['intern'] && $stimmen_summe && ($get['von'] == convert::ToInt($userid) || permission('votes')))
+        if($get['intern'] && $stimmen_summe && ($get['von'] == userid() || permission('votes')))
         {
             $showVoted = ' <a href="?action=show&amp;id=' . convert::ToInt($get['id']) .
             '"><img src="../inc/images/lupe.gif" alt="" title="' . _show_who_voted . '" class="icon" /></a>';

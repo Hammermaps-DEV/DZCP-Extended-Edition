@@ -16,23 +16,23 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($chkMe == "unlogged")
+    if(checkme() == "unlogged")
     {
         $index = error(_error_have_to_be_logged);
     } else {
         $qry = db("SELECT * FROM ".dba::get('cw_player')."
                WHERE cwid = '".convert::ToInt($_GET['id'])."'
-               AND member = '".convert::ToInt($userid)."'");
+               AND member = '".userid()."'");
         if(_rows($qry))
         {
             $upd = db("UPDATE ".dba::get('cw_player')."
                  SET `status` = '".convert::ToInt($_POST['status'])."'
                  WHERE cwid = '".convert::ToInt($_GET['id'])."'
-                 AND member = '".convert::ToInt($userid)."'");
+                 AND member = '".userid()."'");
         } else {
             $ins = db("INSERT INTO ".dba::get('cw_player')."
                  SET `cwid`   = '".convert::ToInt($_GET['id'])."',
-                     `member` = '".convert::ToInt($userid)."',
+                     `member` = '".userid()."',
                      `status` = '".convert::ToInt($_POST['status'])."'");
         }
 

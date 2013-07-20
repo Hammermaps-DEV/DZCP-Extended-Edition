@@ -8,8 +8,7 @@ if(_adminMenu != 'true')
     $where = $where.': '._nletter;
         if($_GET['do'] == 'preview')
     {
-      $show = show($dir."/nletter_prev", array("head" => _nletter_prev_head,
-                                               "text" => bbcode::nletter($_POST['eintrag'])));
+      $show = show($dir."/nletter_prev", array("head" => _nletter_prev_head, "text" => bbcode::nletter($_POST['eintrag'])));
       echo '<table class="mainContent" cellspacing="1">'.$show.'</table>';
       exit;
     } elseif($_GET['do'] == "send") {
@@ -26,7 +25,7 @@ if(_adminMenu != 'true')
                 $squads .= show(_to_squads, array("id" => $get['id'], "sel" => ($_POST['to'] == $get['id'] ? 'selected="selected"' : ''), "name" => string::decode($get['name'])));
             }
 
-            $show = show($dir."/nletter", array("von" => convert::ToInt($userid),
+            $show = show($dir."/nletter", array("von" => userid(),
                                                 "an" => _to,
                                                 "who" => _msg_global_who,
                                                 "reg" => _msg_global_reg,
@@ -60,7 +59,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".dba::get('userstats')."
                          SET `writtenmsg` = writtenmsg+1
-                         WHERE user = ".convert::ToInt($userid));
+                         WHERE user = ".userid());
 
               $show = info(_msg_reg_answer_done, "?admin=nletter");
 
@@ -77,7 +76,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".dba::get('userstats')."
                         SET `writtenmsg` = writtenmsg+1
-                        WHERE user = ".convert::ToInt($userid));
+                        WHERE user = ".userid());
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } elseif($_POST['to'] == "leader") {
@@ -97,7 +96,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".dba::get('userstats')."
                           SET `writtenmsg` = writtenmsg+1
-                          WHERE user = ".convert::ToInt($userid));
+                          WHERE user = ".userid());
 
               $show = info(_msg_member_answer_done, "?admin=nletter");
         } else {
@@ -115,7 +114,7 @@ if(_adminMenu != 'true')
 
               $qry = db("UPDATE ".dba::get('userstats')."
                           SET `writtenmsg` = writtenmsg+1
-                          WHERE user = ".convert::ToInt($userid));
+                          WHERE user = ".userid());
 
               $show = info(_msg_squad_answer_done, "?admin=nletter");
         }
@@ -130,7 +129,7 @@ if(_adminMenu != 'true')
                                                    "name" => string::decode($get['name'])));
           }
 
-      $show = show($dir."/nletter", array("von" => convert::ToInt($userid),
+      $show = show($dir."/nletter", array("von" => userid(),
                                              "an" => _to,
                                             "selr" => "",
                                           "selm" => "",

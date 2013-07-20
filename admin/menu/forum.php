@@ -6,7 +6,7 @@ if(_adminMenu != 'true')
     exit();
 
       $where = $where.': '._config_forum_head;
-      if($chkMe == 4)
+      if(checkme() == 4)
       {
         if($_GET['show'] == "subkats")
         {

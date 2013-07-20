@@ -72,7 +72,7 @@ else
                         "action" => "action=post&amp;do=add&amp;kid=".$getp['kid']."&amp;zitat=".$getp['id'],
                         "title" => _button_title_zitat));
 
-                if($getp['reg'] == convert::ToInt($userid) || permission("forum"))
+                if($getp['reg'] == userid() || permission("forum"))
                 {
                     $edit = show("page/button_edit_single", array("id" => $getp['id'],
                             "action" => "action=post&amp;do=edit",
@@ -91,7 +91,7 @@ else
                 if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
                 else $text = bbcode::parse_html($getp['text']);
 
-                if($chkMe == 4) $posted_ip = $getp['ip'];
+                if(checkme() == 4) $posted_ip = $getp['ip'];
                 else $posted_ip = _logged;
 
                 $titel = show(_eintrag_titel_forum, array("postid" => $i+($page-1)*$maxfposts,
@@ -201,7 +201,7 @@ else
             if(data($get['t_reg'], "signatur")) $sig = _sig.bbcode::parse_html(data($get['t_reg'], "signatur"));
             else $sig = "";
 
-            if($get['t_reg'] == convert::ToInt($userid) || permission("forum"))
+            if($get['t_reg'] == userid() || permission("forum"))
                 $editt = show("page/button_edit_single", array("id" => $get['id'],
                         "action" => "action=thread&amp;do=edit",
                         "title" => _button_title_edit));
@@ -258,7 +258,7 @@ else
             if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
             else $text = bbcode::parse_html($get['t_text']);
 
-            if($chkMe == "4") $posted_ip = $get['ip'];
+            if(checkme() == "4") $posted_ip = $get['ip'];
             else $posted_ip = _logged;
 
             $titel = show(_eintrag_titel_forum, array("postid" => "1",
@@ -301,12 +301,12 @@ else
             }
 
             $qryabo = db("SELECT user,fid FROM ".dba::get('f_abo')."
-                    WHERE user = '".convert::ToInt($userid)."'
+                    WHERE user = '".userid()."'
                     AND fid = '".convert::ToInt($_GET['id'])."'");
             $getabo = _fetch($qryabo);
             if(_rows($qryabo)) $abo = 'checked="checked"';
 
-            if($chkMe == "unlogged")
+            if(checkme() == "unlogged")
             {
                 $f_abo = '';
             } else {

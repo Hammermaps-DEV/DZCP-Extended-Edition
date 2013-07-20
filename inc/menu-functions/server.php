@@ -14,6 +14,9 @@ function server($serverID = 0)
 {
     global $picformat;
 
+    if(!fsockopen_support())
+        return '<center style="margin:2px 0">'.error(_fopen,'0',false).'</center>';
+
     $servernavi=''; $st = 0;
     if(empty($serverID))
     {
@@ -44,7 +47,7 @@ function server($serverID = 0)
                 $server = GameQ::requestData();
                 $server = $server['gs'];
 
-                if(!empty($server) && $server && $server['game_online'])
+                if(!empty($server) && $server && $server['game_online'] && !(show_gameserver_debug && show_debug_console))
                     Cache::set('server_'.$cache_hash,$server,config('cache_server'));
             }
             else

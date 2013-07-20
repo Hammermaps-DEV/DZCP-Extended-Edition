@@ -12,17 +12,17 @@
 
 function navi($kat)
 {
-    global $chkMe,$userid,$designpath;
+    global $designpath;
     $navi=''; $kats_qry = db("SELECT `level` FROM ".dba::get('navi_kats')." WHERE `placeholder` = '".$kat."'");
     if(_rows($kats_qry))
     {
         $k = _fetch($kats_qry);
-        $intern = ($chkMe >= 2) ? '' : " AND s1.`internal` = '0'";
-        $permissions = ($kat == 'nav_admin' && admin_perms(convert::ToInt($userid))) ? "" : $intern." AND ".convert::ToInt($chkMe)." >= '".convert::ToInt($k['level'])."'";
+        $intern = (checkme() >= 2) ? '' : " AND s1.`internal` = '0'";
+        $permissions = ($kat == 'nav_admin' && admin_perms(userid())) ? "" : $intern." AND ".convert::ToInt(checkme())." >= '".convert::ToInt($k['level'])."'";
 
         // Extended permissions
         $extended_perms = '';
-        if($chkMe <= 3 && $chkMe != 5)
+        if(checkme() <= 3 && checkme() != 5)
         {
             $qry = db("SELECT extended_perm FROM `".dba::get('navi')."` WHERE `extended_perm` IS NOT NULL AND `kat` = '".$kat."'");
             if(_rows($qry) >= 1)

@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($chkMe == "unlogged" || $chkMe < 2 && !permission('clankasse'))
+    if(checkme() == "unlogged" || checkme() < 2 && !permission('clankasse'))
         $index = error(_error_wrong_permissions);
     else
     {

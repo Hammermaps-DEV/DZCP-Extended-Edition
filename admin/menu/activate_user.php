@@ -88,7 +88,7 @@ switch ($do)
         $qry = db("SELECT * FROM ".dba::get('users')." WHERE level = 0 AND actkey IS NOT NULL ORDER BY nick LIMIT 25"); $activate = ''; $color = 1;
         while($get = _fetch($qry))
         {
-            $resend = show(_emailicon, array("email" => '?admin=activate_user&do=resend&id='.$get['id']));
+            $resend = show(_emailicon_non_mailto, array("email" => '?admin=activate_user&do=resend&id='.$get['id']));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $edit = $edit = str_replace("&amp;id=","",show("page/button_edit_akl", array("id" => $get['id'], "action" => "../user/?action=admin&amp;edit=", "title" => _button_title_edit)));
             $akl = show("page/button_akl", array("id" => $get['id'], "action" => "admin=activate_user&amp;do=activate&amp;id=", "title" => _button_title_akl));

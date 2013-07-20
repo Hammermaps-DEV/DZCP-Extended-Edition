@@ -374,7 +374,7 @@ function pholderreplace($pholder)
 */
 function show($tpl="", $array=array(), $array_lang_constant=array(), $array_block=array())
 {
-    global $tmpdir,$chkMe;
+    global $tmpdir;
 
     if(!empty($tpl) && $tpl != null)
     {
@@ -413,7 +413,7 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
         unset($pholder);
 
         ## DZCP-Extended Edition START ##
-        $tpl = ($chkMe == 'unlogged' ? preg_replace("|<logged_in>.*?</logged_in>|is", "", $tpl) : preg_replace("|<logged_out>.*?</logged_out>|is", "", $tpl));
+        $tpl = ((function_exists('checkme') ? checkme() : 'unlogged') == 'unlogged' ? preg_replace("|<logged_in>.*?</logged_in>|is", "", $tpl) : preg_replace("|<logged_out>.*?</logged_out>|is", "", $tpl));
         $tpl = str_ireplace(array("<logged_in>","</logged_in>","<logged_out>","</logged_out>"), '', $tpl);
         ## DZCP-Extended Edition END ##
 
@@ -546,61 +546,20 @@ function String_to_boolConverter($bool_coded)
 }
 
 /**
- * Wandelt einen Array-String zu einem Array um.
+ * Wandelt einen Json-String in ein Array um.
  *
  * @return array
  */
-function string_to_array($str,$counter=1)
-{
-    $arr=array(); $temparr=array();
-    $temparr=explode("|$counter|",$str);
-    foreach( $temparr as $key => $value )
-    {
-        $t1=explode("=$counter>",$value);
-        $kk=$t1[0];
-
-        if(count($t1) >= 2)
-        {
-            if($t1[1] == "+#bool#+" or $t1[1] == "-#bool#-")
-                $vv=String_to_boolConverter($t1[1]);
-            else
-                $vv=convert::UTF8_Reverse($t1[1]);
-
-            if(isset($t1[2]) && $t1[2]=="~Y~")
-                $arr[$kk]=string_to_array($vv,($counter+1));
-            else
-                $arr[$kk]=$vv;
-        }
-        else
-            $arr[$kk] = 0;
-    }
-
-    return $arr;
-}
+function string_to_array($str='')
+{ return json_decode($str, true); }
 
 /**
- * Wandelt einen Array zu einem Array-String um.
+ * Wandelt einen Array in einen Json-String um.
  *
  * @return String
  */
-function array_to_string($arr,$counter=1)
-{
-    $str="";
-    foreach( $arr as $key => $value)
-    {
-        if(is_array($value))
-            $str.= $key."=$counter>".array_to_string($value,($counter+1))."=".$counter.">~Y~|".$counter."|";
-        else
-        {
-            if(is_bool($value))
-                $value = Bool_to_StringConverter($value);
-
-            $str.=$key."=$counter>".convert::UTF8($value)."|$counter|";
-        }
-    }
-
-    return rtrim($str,"|$counter|");
-}
+function array_to_string($arr=array())
+{ return json_encode($arr,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); }
 
 /**
  * Wird verwendet um die Ladezeit der Seite zu errechnen.
@@ -620,8 +579,20 @@ function generatetime()
  */
 function spChars($txt,$reverse=false)
 {
-    $var0 = array("Ä", "Ö", "Ü", "ä", "ö", "ü", "ß", "€", "'", "\"");
-    $var1 = array("&Auml;", "&Ouml;", "&Uuml;", "&auml;", "&ouml;", "&uuml;", "&szlig;", "&euro;","&apostroph ;","&quot;");
+    $var0 = array("€", "'", "\"");
+    $var1 = array("&euro;","&apostroph;","&quot;");
+    return spChars_uml($reverse ? str_replace($var1, $var0, $txt) : str_replace($var0, $var1, $txt),$reverse);
+}
+
+/**
+ * Funktion um Umlaute in html Code umzuwandeln
+ *
+ * @return string
+ */
+function spChars_uml($txt,$reverse=false)
+{
+    $var0 = array("Ä", "Ö", "Ü", "ä", "ö", "ü", "ß");
+    $var1 = array("&Auml;", "&Ouml;", "&Uuml;", "&auml;", "&ouml;", "&uuml;", "&szlig;");
     return $reverse ? str_replace($var1, $var0, $txt) : str_replace($var0, $var1, $txt);
 }
 
@@ -842,8 +813,8 @@ function hextobin($hexstr)
 final class RTBuffer
 {
     protected static $buffer = array();
-    public static final function set($tag='',$data='')
-    { self::$buffer[$tag]['ttl'] = (time()+1); self::$buffer[$tag]['data'] = json_encode($data,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); }
+    public static final function set($tag='',$data='',$time=1)
+    { self::$buffer[$tag]['ttl'] = (time()+$time); self::$buffer[$tag]['data'] = json_encode($data,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); }
 
     public static final function get($tag)
     { return (array_key_exists($tag, self::$buffer) ? json_decode(self::$buffer[$tag]['data']):false); }

@@ -23,7 +23,7 @@ else
     $maxuserlist = config('m_userlist');
     $search = (isset($_GET['search']) && !empty($_GET['search']) ? $_GET['search'] : _nick);
 
-    if($chkMe == 4 || permission('editusers') || permission('activateusers'))
+    if(checkme() == 4 || permission('editusers') || permission('activateusers'))
         $sql_filter = "level != '0' OR ( level = '0' AND actkey IS NOT NULL )";
     else
         $sql_filter = "level != '0'";

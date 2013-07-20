@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    if($chkMe != 'unlogged')
+    if(checkme() != 'unlogged')
     {
         $infos = show(_upload_userpic_info, array("userpicsize" => config('upicsize')));
 
@@ -46,12 +46,12 @@ else
             } else {
                 foreach($picformat as $tmpendung)
                 {
-                    if(file_exists(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$tmpendung))
+                    if(file_exists(basePath."/inc/images/uploads/userpics/".userid().".".$tmpendung))
                     {
-                        @unlink(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$tmpendung);
+                        @unlink(basePath."/inc/images/uploads/userpics/".userid().".".$tmpendung);
                     }
                 }
-                copy($tmpname, basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".strtolower($endung)."");
+                copy($tmpname, basePath."/inc/images/uploads/userpics/".userid().".".strtolower($endung)."");
                 @unlink($_FILES['file']['tmp_name']);
 
                 $index = info(_info_upload_success, "../user/?action=editprofile");
@@ -59,9 +59,9 @@ else
         } elseif($_GET['do'] == "deletepic") {
             foreach($picformat as $tmpendung)
             {
-                if(file_exists(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$tmpendung))
+                if(file_exists(basePath."/inc/images/uploads/userpics/".userid().".".$tmpendung))
                 {
-                    @unlink(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$tmpendung);
+                    @unlink(basePath."/inc/images/uploads/userpics/".userid().".".$tmpendung);
                     $index = info(_delete_pic_successful, "../user/?action=editprofile");
                 }
             }

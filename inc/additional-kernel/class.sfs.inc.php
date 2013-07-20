@@ -18,7 +18,6 @@ class sfs
 
     public static function check()
     {
-        global $userid;
         $userIP = visitorIp();
 
         ## http://de.wikipedia.org/wiki/Private_IP-Adresse ##
@@ -35,21 +34,20 @@ class sfs
                     if($stopforumspam['success'])
                     {
                         $stopforumspam = $stopforumspam['ip']; // Array ( [lastseen] => 2013-04-26 19:57:51 [frequency] => 1327 [appears] => 1 [confidence] => 99.89 )
-                        $stopforumspam_data_db = string_to_array(convert::UTF8_Reverse(base64_decode($get['data'])));
+                        $stopforumspam_data_db = string_to_array(hextobin($get['data']));
                         if($stopforumspam['appears'] == '1' && $stopforumspam['confidence'] >= self::$confidence && $stopforumspam['frequency'] >= self::$frequency && self::$autoblock)
                         {
-                            print_r($stopforumspam);
                             $stopforumspam_data_db['confidence'] = $stopforumspam['confidence'];
                             $stopforumspam_data_db['frequency'] = $stopforumspam['frequency'];
                             $stopforumspam_data_db['lastseen'] = $stopforumspam['lastseen'];
                             $stopforumspam_data_db['banned_msg'] = 'Autoblock by stopforumspam.com';
-                            db("UPDATE `".dba::get('ipban')."` SET `time` = '".time()."', `typ` = '1', `data` = '".base64_encode(convert::UTF8(array_to_string($stopforumspam_data_db)))."' WHERE `id` = '".$get['id']."';");
+                            db("UPDATE `".dba::get('ipban')."` SET `time` = '".time()."', `typ` = '1', `data` = '".bin2hex(array_to_string($stopforumspam_data_db))."' WHERE `id` = '".$get['id']."';");
                             self::$blockuser = true;
                         }
                         else
                         {
                             $stopforumspam_data_db['appears'] = $stopforumspam['appears'];
-                            db("UPDATE `".dba::get('ipban')."` SET `time` = '".time()."', `typ` = '0', `data` = '".base64_encode(convert::UTF8(array_to_string($stopforumspam_data_db)))."' WHERE `id` = '".$get['id']."';");
+                            db("UPDATE `".dba::get('ipban')."` SET `time` = '".time()."', `typ` = '0', `data` = '".bin2hex(array_to_string($stopforumspam_data_db))."' WHERE `id` = '".$get['id']."';");
                             self::$blockuser = false;
                         }
                     }
@@ -70,13 +68,13 @@ class sfs
                     if($stopforumspam['appears'] == '1' && $stopforumspam['confidence'] >= self::$confidence && $stopforumspam['frequency'] >= self::$frequency && self::$autoblock)
                     {
                         $stopforumspam['banned_msg'] = 'Autoblock by stopforumspam.com';
-                        db("INSERT INTO `".dba::get('ipban')."` SET `ip` = '".$userIP."', `time` = '".time()."', `typ` = '1', `data` = '".base64_encode(convert::UTF8(array_to_string($stopforumspam)))."';"); //Banned
+                        db("INSERT INTO `".dba::get('ipban')."` SET `ip` = '".$userIP."', `time` = '".time()."', `typ` = '1', `data` = '".bin2hex(array_to_string($stopforumspam))."';"); //Banned
                         self::$blockuser = true;
                     }
                     else
                     {
                         $stopforumspam['banned_msg'] = '';
-                        db("INSERT INTO `".dba::get('ipban')."` SET `ip` = '".$userIP."', `time` = '".time()."',`typ` = '0', `data` = '".base64_encode(convert::UTF8(array_to_string($stopforumspam)))."';"); //Add to DB
+                        db("INSERT INTO `".dba::get('ipban')."` SET `ip` = '".$userIP."', `time` = '".time()."',`typ` = '0', `data` = '".bin2hex(array_to_string($stopforumspam))."';"); //Add to DB
                         self::$blockuser = false;
                     }
                 }

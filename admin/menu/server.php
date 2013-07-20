@@ -81,12 +81,12 @@ switch($do)
     break;
 
     case 'delete':
-        $get = db("SELECT ip,port,game FROM ".dba::get('server')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+        $get = db("SELECT ip,port,game,name FROM ".dba::get('server')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
         $cache_hash = md5($get['ip'].':'.$get['port'].'_'.$get['game']);
         Cache::delete('server_'.$cache_hash);
 
         db("DELETE FROM ".dba::get('server')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_server_admin_deleted, "?admin=server");
+        $show = info(show(_server_admin_deleted,array('host' => $get['name'])), "?admin=server");
     break;
 
     case 'new':
@@ -154,14 +154,17 @@ switch($do)
             $menu = ($get['navi'] ? show(_server_menu_icon_no, array("id" => $get['id'])) : show(_server_menu_icon_yes, array("id" => $get['id'])));
 
             $show_servers .= show($dir."/server_show", array("gameicon" => $gameicon,
-                    "serverip" => string::decode($get['ip']).":".$get['port'],
-                    "serverpwd" => string::decode($get['pwd']),
-                    "menu" => $menu,
-                    "edit" => $edit,
-                    "name" => string::decode($get['name']),
-                    "class" => $class,
-                    "delete" => $delete));
+                                                             "serverip" => string::decode($get['ip']).":".$get['port'],
+                                                             "serverpwd" => string::decode($get['pwd']),
+                                                             "menu" => $menu,
+                                                             "edit" => $edit,
+                                                             "name" => string::decode($get['name']),
+                                                             "class" => $class,
+                                                             "delete" => $delete));
         }
+
+        if(empty($show_servers))
+            $show_servers = show(_no_entrys_yet, array("colspan" => "4"));
 
         $show = show($dir."/server", array("show" => $show_servers));
     break;

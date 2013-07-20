@@ -22,7 +22,7 @@ else
     $where = _site_reg;
 
     ## User ist nicht angemeldet ##
-    if($chkMe == "unlogged")
+    if(checkme() == "unlogged")
     {
         ## Registrations Code anzeigen ##
         $regcode = (settings("regcode") ? show($dir."/register_regcode", array("confirm" => _register_confirm,  "confirm_add" => _register_confirm_add)) : "");

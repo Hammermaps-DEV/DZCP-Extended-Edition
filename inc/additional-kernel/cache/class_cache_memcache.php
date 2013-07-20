@@ -72,23 +72,16 @@ class cache_memcache extends Cache
             self::control_set($key,$ttl,array('is_array' => true));
         }
         else
+        {
+            $data = convert::UTF8($data);
             self::control_set($key,$ttl,array('is_array' => false));
+        }
 
-        $data = gzcompress(utf8_encode($data));
+        $data = bin2hex($data);
         if(@memcache_get(self::$_memcached,$key))
-        {
-            if(@memcache_replace(self::$_memcached, md5($key), $data, false, $ttl))
-                return true;
-            else
-                return false;
-        }
+            return (@memcache_replace(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl));
         else
-        {
-            if(@memcache_set(self::$_memcached, md5($key), $data, false, $ttl))
-                return true;
-            else
-                return false;
-        }
+            return (@memcache_set(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl));
     }
 
     /**
@@ -104,36 +97,26 @@ class cache_memcache extends Cache
         self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));
 
         if(@memcache_get(self::$_memcached,$key))
-        {
-            if(@memcache_replace(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl))
-                return true;
-            else
-                return false;
-        }
+            return (@memcache_replace(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl));
         else
-        {
-            if(@memcache_set(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl))
-                return true;
-            else
-                return false;
-        }
+            return (@memcache_set(self::$_memcached, md5($key), $data, MEMCACHE_COMPRESSED, $ttl));
     }
 
     private static function control_set($key,$ttl,$settings_array=array())
     {
         $control = array_to_string($settings_array);
-        $control = gzcompress(convert::UTF8($control));
+        $control = convert::UTF8($control);
 
         if(@memcache_get(self::$_memcached,'control_'.md5($key)))
-            @memcache_replace(self::$_memcached, 'control_'.md5($key), $control, false, $ttl+1);
+            @memcache_replace(self::$_memcached, 'control_'.md5($key), $control, MEMCACHE_COMPRESSED, $ttl+1);
         else
-            @memcache_set(self::$_memcached, 'control_'.md5($key), $control, false, $ttl+1);
+            @memcache_set(self::$_memcached, 'control_'.md5($key), $control, MEMCACHE_COMPRESSED, $ttl+1);
     }
 
     private static function control_get($key)
     {
         $data = @memcache_get(self::$_memcached,'control_'.md5($key));
-        return string_to_array(convert::UTF8_Reverse(gzuncompress($data)));
+        return string_to_array($data);
     }
 
     /**
@@ -184,14 +167,11 @@ class cache_memcache extends Cache
         if(!$data || empty($data))
             return '';
 
-        $data = convert::UTF8_Reverse(gzuncompress($data));
+        $data = hextobin($data);
         $control = self::control_get($key);
 
         //Array Erkennung
-        if($control['is_array'])
-            $data = string_to_array($data);
-
-        return $data;
+        return $control['is_array'] ? string_to_array($data) : convert::UTF8_Reverse($data);
     }
 
     /**

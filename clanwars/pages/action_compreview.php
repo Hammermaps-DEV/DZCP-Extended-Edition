@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     if($_GET['do'] == 'edit')
     {
         $qry = db("SELECT * FROM ".dba::get('cw_comments')."
@@ -33,18 +33,18 @@ else
             $pUId = $get['reg'];
         }
 
-        $editedby = show(_edited_by, array("autor" => cleanautor(convert::ToInt($userid)),
+        $editedby = show(_edited_by, array("autor" => cleanautor(),
                 "time" => date("d.m.Y H:i", time())._uhr));
     } else {
 
         $get_id = cnt(dba::get('cw_comments'), " WHERE cw = ".convert::ToInt($_GET['id'])."")+1;
-        $get_userid = convert::ToInt($userid);
+        $get_userid = userid();
         $get_date = time();
 
-        if($chkMe == 'unlogged') $regCheck = false;
+        if(checkme() == 'unlogged') $regCheck = false;
         else {
             $regCheck = true;
-            $pUId = convert::ToInt($userid);
+            $pUId = userid();
         }
     }
 

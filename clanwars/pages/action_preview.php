@@ -16,7 +16,7 @@ if (_version < '1.0') //Mindest Version pruefen
     $index = _version_for_page_outofdate;
 else
 {
-    header("Content-type: text/html; charset=utf-8");
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     $qry = db("SELECT * FROM ".dba::get('squads')."
              WHERE id = '".convert::ToInt($_POST['squad'])."'");
     $get = _fetch($qry);

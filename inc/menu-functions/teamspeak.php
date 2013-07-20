@@ -14,6 +14,10 @@ function teamspeak()
 {
     global $ajaxJob;
     header('Content-Type: text/html; charset=iso-8859-1');
+
+    if(!fsockopen_support())
+        return '<center style="margin:2px 0">'.error(_fopen,'0',false).'</center>';
+
     if(!$ajaxJob)
     {
         return "<div id=\"navTeamspeakServer\">
@@ -28,8 +32,6 @@ function teamspeak()
 
         if(!empty($get['host_ip_dns']) && !empty($get['server_port']) && !empty($get['query_port']))
         {
-            if(!fsockopen_support()) return error(_fopen,'0',false);
-
             $ip_port = TS3Renderer::tsdns($get['host_ip_dns']);
             $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : $get['host_ip_dns']);
             $port = ($ip_port != false && is_array($ip_port) ? $ip_port['port'] : $get['server_port']);
@@ -44,13 +46,15 @@ function teamspeak()
                 GameQ::setOption('timeout', 6);
                 $results = GameQ::requestData();
 
-                if(!empty($results))
+                if(!empty($results) && !(show_teamspeak_debug && show_debug_console))
                     Cache::set('teamspeak_'.$cache_hash,$results,config('cache_teamspeak'));
             }
             else
                 $results = Cache::get('teamspeak_'.$cache_hash);
 
             TS3Renderer::set_data($results,$get);
+            TS3Renderer::setConfig('OnlyChannelsWithUsers',convert::IntToBool($get['showchannel']));
+
             unset($results,$get);
             return show("menu/teamspeak", array("hostname" => '',"channels" => TS3Renderer::render()));
         }

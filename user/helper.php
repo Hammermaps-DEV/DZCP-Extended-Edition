@@ -13,11 +13,9 @@
  */
 function check_is_new($datum = 0)
 {
-    global $userid;
-
-    if($userid != 0 && !empty($userid) && !empty($datum))
+    if(userid() != 0 && !empty($datum))
     {
-        if(convert::ToInt($datum) >= userstats($userid, 'lastvisit'))
+        if(convert::ToInt($datum) >= userstats(userid(), 'lastvisit'))
             return true;
     }
 
@@ -43,8 +41,7 @@ function pfields_name($name)
 //-> Prueft ob ein User schon in der Buddyliste vorhanden ist
 function check_buddy($buddy)
 {
-    global $userid;
-    return (db("SELECT buddy FROM ".dba::get('buddys')." WHERE user = '".convert::ToInt($userid)."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true);
+    return (db("SELECT buddy FROM ".dba::get('buddys')." WHERE user = '".userid()."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true);
 }
 
 //-> Prueft, ob eine Userid existiert

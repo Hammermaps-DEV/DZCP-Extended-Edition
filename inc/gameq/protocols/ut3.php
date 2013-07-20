@@ -187,7 +187,7 @@ class GameQ_Protocols_Ut3 extends GameQ_Protocols_Gamespy3
         unset($teams);
 
         $player_list = array();
-        if(isset($this->server_data_stream['players']) && count($this->server_data_stream['players']) >= 1)
+        if(array_key_exists('players', $this->server_data_stream) && count($this->server_data_stream['players']) >= 1)
         {
             foreach($this->server_data_stream['players'] as $player)
             {

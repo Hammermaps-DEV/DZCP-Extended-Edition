@@ -426,7 +426,7 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
         $result->add('game_os', ''); //Server OS
         $result->add('game_dedicated', '');
         $result->add('game_hltv', false);
-        $result->add('game_num_players', count($this->server_data_stream['players']));
+        $result->add('game_num_players', array_key_exists('players', $this->server_data_stream) ? count($this->server_data_stream['players']) : '0');
         $result->add('game_max_players', $this->server_data_stream['maxplayers']);
         $result->add('game_num_bot', '');
         $result->add('game_password', $this->server_data_stream['password'] == '1' ? true : false);
@@ -473,7 +473,7 @@ class GameQ_Protocols_Bf3 extends GameQ_Protocols
 
             $player_list = array(); $player_index = array();
             $players_team1 = array(); $players_team2 = array(); $players_team3 = array(); //Sort to 2 Teams & Filter Players
-            if(isset($this->server_data_stream['players']) && count($this->server_data_stream['players']) >= 1)
+            if(array_key_exists('players', $this->server_data_stream) && count($this->server_data_stream['players']) >= 1)
             {
                 foreach($this->server_data_stream['players'] as $player)
                 {

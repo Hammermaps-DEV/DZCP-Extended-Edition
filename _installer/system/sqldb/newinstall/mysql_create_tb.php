@@ -769,6 +769,7 @@ function install_mysql_create()
       `rankings` int(1) NOT NULL DEFAULT '0',
       `receivecws` int(1) NOT NULL DEFAULT '0',
       `serverliste` int(1) NOT NULL DEFAULT '0',
+      `slideshow` int(1) NOT NULL DEFAULT '0',
       `smileys` int(1) NOT NULL DEFAULT '0',
       `sponsors` int(1) NOT NULL DEFAULT '0',
       `shoutbox` int(1) NOT NULL DEFAULT '0',

@@ -264,6 +264,7 @@ function install_155x_1600_update()
       `rankings` int(1) NOT NULL DEFAULT '0',
       `receivecws` int(1) NOT NULL DEFAULT '0',
       `serverliste` int(1) NOT NULL DEFAULT '0',
+      `slideshow` int(1) NOT NULL DEFAULT '0',
       `smileys` int(1) NOT NULL DEFAULT '0',
       `sponsors` int(1) NOT NULL DEFAULT '0',
       `shoutbox` int(1) NOT NULL DEFAULT '0',

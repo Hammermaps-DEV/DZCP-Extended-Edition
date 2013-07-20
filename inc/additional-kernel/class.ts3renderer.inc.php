@@ -52,6 +52,9 @@ class TS3Renderer
      */
     public static function render($template=false)
     {
+        if(!array_key_exists('channels', self::$data))
+            return false;
+
         $channels = self::$data['channels'];
         if(!count($channels))
             return false;
@@ -199,10 +202,13 @@ class TS3Renderer
     private static function renderPlayers($parentId,$i=0,$template=false)
     {
         $out = "";
-        foreach(self::$data['players'] as $player)
+        if(count(self::$data['players']) >= 1)
         {
-            if($player['cid'] == $parentId) //User befindet sich in Channel x
-                $out .= self::renderUserFlags($player,$i,$template);
+            foreach(self::$data['players'] as $player)
+            {
+                if($player['cid'] == $parentId) //User befindet sich in Channel x
+                    $out .= self::renderUserFlags($player,$i,$template);
+            }
         }
 
         return $out;
@@ -250,7 +256,7 @@ class TS3Renderer
 
         foreach($channel as $cgroup) // Channel Gruppen
         {
-            if(array_key_exists($cgroup, self::$data['channel_grouplist']))
+            if(array_key_exists('channel_grouplist', self::$data) && array_key_exists($cgroup, self::$data['channel_grouplist']))
             {
                 $channel_group_info = self::$data['channel_grouplist'][$cgroup];
                 $out .= self::icon($channel_group_info['iconid'],$channel_group_info['name']);
@@ -259,7 +265,7 @@ class TS3Renderer
 
         foreach($server as $sgroup) // Server Gruppen
         {
-            if(array_key_exists($sgroup, self::$data['server_grouplist']))
+            if(array_key_exists('server_grouplist', self::$data) && array_key_exists($sgroup, self::$data['server_grouplist']))
             {
                 $server_group_info = self::$data['server_grouplist'][$sgroup];
                 $out .= self::icon($server_group_info['iconid'],$server_group_info['name']);
@@ -304,12 +310,21 @@ class TS3Renderer
             if(Cache::check_binary('ts_icon_'.$id) && !in_array($id, self::$nf_pic_ids))
             {
                 // Sende Download-Anforderung zum TS3 Server
+                if(show_teamspeak_debug && show_debug_console)
+                    DebugConsole::insert_initialize('TS3Renderer::icon()', 'Download Icon: "icon_'.$id.'"');
+
                 $ftInitDownload = self::ftInitDownload(convert::ToString('/icon_'.$id),$cid);
                 if(array_key_exists('ftkey', $ftInitDownload) && $ftInitDownload['size'])
                 {
+                    if(show_teamspeak_debug && show_debug_console)
+                        DebugConsole::insert_info('TS3Renderer::icon()', 'Download Icon: "icon_'.$id.'" with FTKey: "'.$ftInitDownload['ftkey'].'"');
+
                     $file_stream=self::ftDownloadFile($ftInitDownload);
                     if(!empty($file_stream) && $file_stream != false)
                     {
+                        if(show_teamspeak_debug && show_debug_console)
+                            DebugConsole::insert_successful('TS3Renderer::icon()', 'Icon: "icon_'.$id.'" Downloaded');
+
                         Cache::set_binary('ts_icon_'.$id,$file_stream,'', (24*60*60) ); //24h
                         $image = 'data:image/png;base64,'.base64_encode($file_stream);
                     }
@@ -333,20 +348,23 @@ class TS3Renderer
      */
     public static function welcome()
     {
-        $out = "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Server Name:</span></td></tr>\n";
+        $out = "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Server Name:</span></td></tr>\n";
         $out .= "<tr><td class=\"contentMainFirst\">".(!empty(self::$data['virtualserver_name']) ? self::$data['virtualserver_name'] : '-')."<br /><br /></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Server IP/DNS:</span></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Server IP/DNS:</span></td></tr>\n";
         $out .= "<tr><td class=\"contentMainFirst\">".(self::tsdns(self::$data['sql']['host_ip_dns']) ? self::$data['sql']['host_ip_dns'] : self::$data['sql']['host_ip_dns'].":".self::$data['sql']['server_port'])."<br /><br /></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Server Version:</span></td></tr>\n";
-        $os = '<img src="../inc/images/'.(self::$data['virtualserver_platform'] == 'Linux' ? 'linux' : 'windows').'_os.png" alt="" title="Server OS" class="icon" />'; //Server OS
-        $out .= "<tr><td class=\"contentMainFirst\">".$os." ".self::$data['virtualserver_version']."<br /><br /></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Server Uptime:</span></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\">".self::time_convert(self::$data['virtualserver_uptime'])."<br /><br /></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Channels:</span></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\">".(!empty(self::$data['virtualserver_channelsonline']) ? self::$data['virtualserver_channelsonline'] : '0')."<br /><br /></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Users:</span></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\">".count(self::$data['players'])."<br /><br /></td></tr>\n";
-        $out .= "<tr><td class=\"contentMainFirst\"><span class=\"fontBold\">Welcome Message:</span></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Server Version:</span></td></tr>\n";
+
+        if(array_key_exists('virtualserver_platform', self::$data))
+            $os = '<img src="../inc/images/'.(self::$data['virtualserver_platform'] == 'Linux' ? 'linux' : 'windows').'_os.png" alt="" title="Server OS" class="icon" />'; //Server OS
+
+        $out .= array_key_exists('virtualserver_version', self::$data) && array_key_exists('virtualserver_platform', self::$data) ? "<tr><td class=\"contentMainFirst\">".$os." ".self::$data['virtualserver_version']."<br /><br /></td></tr>\n" : '<tr><td class="contentMainFirst">-</td></tr>';
+        $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Server Uptime:</span></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainFirst\">".(array_key_exists('virtualserver_uptime', self::$data) ? self::time_convert(self::$data['virtualserver_uptime']) : '-')."<br /><br /></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Channels:</span></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainFirst\">".(!empty(self::$data['virtualserver_channelsonline']) ? self::$data['virtualserver_channelsonline'] : '-')."<br /><br /></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Users:</span></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainFirst\">".(array_key_exists('players', self::$data) ? count(self::$data['players']) : '-')."<br /><br /></td></tr>\n";
+        $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Welcome Message:</span></td></tr>\n";
         $out .= "<tr><td class=\"contentMainFirst\">".(!empty(self::$data['virtualserver_welcomemessage']) ? self::rep(self::$data['virtualserver_welcomemessage']) : '-')."<br /><br /></td></tr>";
         return $out;
     }
@@ -363,18 +381,33 @@ class TS3Renderer
     private static function ftInitDownload($name, $cid=0, $cpw='', $seekpos=0)
     {
         $server = self::gethost();
-        if(!fsockopen_support() || !ping_port($server['host'],self::$data['sql']['query_port'],1) || empty($name))
+        if(!fsockopen_support() || !ping_port($server['host'],self::$data['sql']['query_port'],4) || empty($name))
             return false;
 
-        if($fp = @fsockopen($server['host'], self::$data['sql']['query_port'], $errnum = null, $errstr = null, 4))
+        DebugConsole::insert_initialize('TS3Renderer::ftInitDownload()', 'Connect to TS3 Server on "'.$server['host'].':'.self::$data['sql']['query_port'].'" for Download');
+        if($fp = @fsockopen($server['host'], self::$data['sql']['query_port'], $errnum, $errstr, 10))
         {
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_info('TS3Renderer::ftInitDownload()', 'Connected to TS3 Server on "'.$server['host'].':'.self::$data['sql']['query_port'].'"');
+
             $find = array('\\\\',"\/","\s","\p","\a","\b","\f","\n","\r","\t","\v");
             $rplc = array(chr(92),chr(47),chr(32),chr(124),chr(7),chr(8),chr(12),chr(10),chr(3),chr(9),chr(11));
             $packet = "use port=%d\x0Aftinitdownload clientftfid=%d name=\%s cid=%d cpw=%s seekpos=%d\x0A";
-            @fputs($fp, $test=sprintf($packet, $server['port'], rand(1,99), $name, $cid, $cpw, $seekpos)); $content = '';
+            $packet = sprintf($packet, $server['port'], rand(1,99), $name, $cid, $cpw, $seekpos);
+
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_info('TS3Renderer::ftInitDownload()', 'Send Query Command: '.$packet);
+
+            @fputs($fp, $packet); $content = '';
 
             while(strpos($content, 'msg=') === false)
             { $content .= @fread($fp, 8096); }
+
+            if(show_teamspeak_debug && show_debug_console)
+            {
+                $ext = explode('specific command.', $content);
+                DebugConsole::insert_info('TS3Renderer::ftInitDownload()', 'Reserved: '.$ext[1]);
+            }
 
             if(!empty($content) && !strstr($content, 'error id=0'))
                 return false;
@@ -419,11 +452,24 @@ class TS3Renderer
         if(!fsockopen_support() || !$ftInitDownload || !ping_port($server['host'],$ftInitDownload['port'],1) || empty($ftInitDownload['ftkey']))
             return false;
 
-        if($fp=@fsockopen($server['host'], $ftInitDownload['port'], $errnum = null, $errstr = null, 4))
+        if(show_teamspeak_debug && show_debug_console)
+            DebugConsole::insert_initialize('TS3Renderer::ftDownloadFile()', 'Connect TS3 - Download Server on "'.$server['host'].':'.$ftInitDownload['port'].'"');
+
+        if($fp=@fsockopen($server['host'], $ftInitDownload['port'], $errnum, $errstr, 4))
         {
+            if(show_teamspeak_debug && show_debug_console)
+            {
+                DebugConsole::insert_info('TS3Renderer::ftDownloadFile()', 'Connected TS3 - Download Server on "'.$server['host'].':'.$ftInitDownload['port'].'"');
+                DebugConsole::insert_info('TS3Renderer::ftDownloadFile()', 'Send FTKey: "'.$ftInitDownload['ftkey'].'"');
+            }
+
             fputs($fp, $ftInitDownload['ftkey']); $content = '';
             while(strlen($content) < $ftInitDownload['size'])
             { $content .= fgets($fp, 4096); } @fclose($fp);
+
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_successful('TS3Renderer::ftDownloadFile()', 'Downloaded: "'.strlen($content).'" Bytes from "'.$ftInitDownload['size'].'" Bytes');
+
             return $content;
         }
 
@@ -463,19 +509,67 @@ class TS3Renderer
      */
     public static function tsdns($dns)
     {
+        $hash = md5('ts3dns_'.$dns);
+        if(Cache::is_mem())
+        {
+            //MEM
+            if(Cache::check($hash))
+            {
+                $tsdns = self::get_tsdns($dns);
+                if(is_array($tsdns))
+                    Cache::set($hash,array_to_string($tsdns),5);
+
+                return $tsdns;
+            }
+            else
+                return string_to_array(Cache::get($hash));
+        }
+        else
+        {
+            //RTBuffer
+            if(RTBuffer::check($hash))
+            {
+                $tsdns = self::get_tsdns($dns);
+                if(is_array($tsdns))
+                    RTBuffer::set($hash,$tsdns,5);
+
+                return $tsdns;
+            }
+            else
+                return RTBuffer::get($hash);
+        }
+    }
+
+    private static function get_tsdns($dns)
+    {
         if(!ping_port($dns,41144,1))
             return false;
 
-        if($fp = @fsockopen($dns, 41144, $errnum = null, $errstr = null, 2))
+        if(show_teamspeak_debug && show_debug_console)
+            DebugConsole::insert_initialize('TS3Renderer::tsdns()', 'Connect to TS3 - DNS Server on "'.$dns.':41144"');
+
+        if($fp = @fsockopen($dns, 41144, $errnum, $errstr, 2))
         {
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_info('TS3Renderer::tsdns()', 'Connected TS3 - DNS Server "'.$dns.':41144"');
+
             fputs($fp, $dns); $content = '';
             while (!feof($fp)) { $content .= fgets($fp, 1024); }
             @fclose($fp);
         }
-        else return false;
+        else
+        {
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_error('TS3Renderer::tsdns()', 'Connected to TS3 - DNS Server "'.$dns.':41144" failed');
+
+            return false;
+        }
 
         if(!empty($content) && $content != false)
         {
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_successful('TS3Renderer::tsdns()', 'Name resolution from DNS:"'.$dns.'" to IP:"'.$content.'"');
+
             $epl = explode(':', $content);
             return array('ip' => $epl[0], 'port' => $epl[1]);
         }

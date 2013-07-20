@@ -165,7 +165,7 @@ else
                     "map" => $_POST['maps'],
                     "nick" => $_POST['nick']));
 
-            if($chkMe != 4) $add = " AND s2.squad = '".convert::ToInt($_POST['squad'])."'";
+            if(checkme() != 4) $add = " AND s2.squad = '".convert::ToInt($_POST['squad'])."'";
             $who = db("SELECT s1.user FROM ".dba::get('permissions')." AS s1
                  LEFT JOIN ".dba::get('squaduser')." AS s2
                  ON s1.user = s2.user
