@@ -17,10 +17,9 @@ if (_version < '1.0') //Mindest Version pruefen
 else
 {
     $vote_permission = permission('votes');
-    $fvote = (!settings('forum_vote') ? ' AND forum = 0 ' : '');
     $whereIntern = (!$vote_permission ? ' WHERE intern = 0 ' : '');
+    $fvote = (!settings('forum_vote') ? !empty($whereIntern) ? ' AND forum = 0 ' : ' WHERE forum = 0 ' : '');
     $orderIntern = (!$vote_permission ? 'datum DESC' : ' intern DESC');
-
     $qry = db('SELECT * FROM ' . dba::get('votes') . $whereIntern . $fvote . ' ORDER BY ' . $orderIntern); $show = ''; $color2 = 1;
     while($get = _fetch($qry))
     {
