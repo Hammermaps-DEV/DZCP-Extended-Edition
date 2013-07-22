@@ -53,8 +53,8 @@ else
         case 'activate':
             if((isset($_GET['key']) && !empty($_GET['key'])) || (isset($_POST['key']) && !empty($_POST['key'])))
             {
-                $qry = db_stmt("SELECT id FROM `".dba::get('users')."` WHERE `actkey` = ?",array('s', (isset($_POST['key']) ? $_POST['key'] : $_GET['key'])));
-                if(_rows($qry) == 1)
+                $qry = db_stmt("SELECT id FROM `".dba::get('users')."` WHERE `actkey` = ?",array('s', strtoupper(trim(isset($_POST['key']) ? $_POST['key'] : $_GET['key']))));
+                if(_rows($qry) >= 1)
                 {
                     $get = _fetch($qry);
                     db("UPDATE `".dba::get('users')."` SET `level` = 1, `status` = 1, `actkey` = '' WHERE `id` = ".$get['id']);

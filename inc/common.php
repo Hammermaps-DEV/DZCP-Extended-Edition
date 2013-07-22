@@ -913,7 +913,7 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
     for($i = $page;$i<=($page+5) && $i<=($pages-1);$i++)
     {
         if($i == $page)
-            $result .= '<span class="fontSites">'.$i.'</span><span class="fontSitesMisc">&#xA0;</span>';
+            $result .= '<span class="fontWichtig">'.$i.'</span><span class="fontSitesMisc">&#xA0;</span>';
         else
             $result .= '<a class="sites" href="'.$urlpart.'&amp;page='.$i.'">'.$i.'</a><span class="fontSitesMisc">&#xA0;</span>';
     }
@@ -1078,11 +1078,16 @@ function userstats($tid, $what)
 //- Funktion zum versenden von Emails
 function sendMail($mailto,$subject,$content)
 {
-    $mail = new Mailer();
-    $mail->IsHTML(true);
+    $mail = new PHPMailer;
+
+    $mail->IsMail();
+
     $mail->From = ($mailfrom = string::decode(settings('mailfrom')));
     $mail->FromName = $mailfrom;
+
     $mail->AddAddress(preg_replace('/(\\n+|\\r+|%0A|%0D)/i', '',$mailto));
+    $mail->IsHTML(true);
+
     $mail->Subject = $subject;
     $mail->Body = bbcode::nletter($content);
     return $mail->Send();
@@ -1594,14 +1599,14 @@ function count_clicks($side_tag='',$clickedID=0,$update=true)
         if(db("SELECT id FROM ".dba::get('clicks_ips')." WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'",true))
         {
             if($update)
-                db("UPDATE `".dba::get('clicks_ips')."` SET `uid` = '".userid()."', `time` = '0' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
+                db("UPDATE `".dba::get('clicks_ips')."` SET `uid` = '".userid()."', `time` = '".(time()+count_clicks_expires)."' WHERE `ip` = '".visitorIp()."' AND `ids` = '".$clickedID."' AND `side` = '".$side_tag."'");
 
             return false;
         }
         else
         {
             if($update)
-                db("INSERT INTO ".dba::get('clicks_ips')." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '".userid()."', '".$clickedID."', '".$side_tag."', '0')");
+                db("INSERT INTO ".dba::get('clicks_ips')." (`id` ,`ip` ,`uid` ,`ids`, `side`, `time`) VALUES (NULL , '".visitorIp()."', '".userid()."', '".$clickedID."', '".$side_tag."', '".(time()+count_clicks_expires)."')");
 
             return true;
         }
