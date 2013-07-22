@@ -7,7 +7,7 @@
  */
 
 ## Install ##
-Cache::installType('memcache',array('TypeName' => 'Memcache','CallTag' => 'mem_','Class' => 'cache_memcache','InitCache' => true,'SetServer' => true,'Required' => 'memcache', 'CacheType' => 'mem'));
+Cache::installType('memcache',array('TypeName' => 'Memcache','CallTag' => 'mem_','Class' => 'cache_memcache','InitCache' => true,'SetServer' => true,'Required' => 'memcached', 'CacheType' => 'mem'));
 
 class cache_memcache extends Cache
 {
