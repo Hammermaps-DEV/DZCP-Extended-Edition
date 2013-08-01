@@ -34,8 +34,9 @@ require_once(basePath.'/inc/database.php');
 
 if(!$ajaxThumbgen)
 {
-    require_once(basePath."/inc/apic.php");
-    require_once(basePath."/inc/api.php");
+    require_once(basePath."/inc/apic.php"); // Core
+    require_once(basePath."/inc/apie.php"); // Events
+    require_once(basePath."/inc/api.php"); // API
 }
 
 require_once(basePath.'/inc/kernel.php');
@@ -402,10 +403,13 @@ if(!$ajaxThumbgen)
 
     //-> BBOCDE
     bbcode::init();
+
+    //-> Mail
+    mailmgr::init();
 }
 
 //-> User bearbeiten, Level Menu
-function get_level_dropdown_menu($selected_level=0,$userid=0)
+function get_level_dropdown_menu($selected_level=0,$userid=0,$list=false,$unset=false)
 {
     $levels = array(
             'banned' => array('value' => '0', 'lang' => _admin_level_banned, 'only_admin' => false),
@@ -414,10 +418,14 @@ function get_level_dropdown_menu($selected_level=0,$userid=0)
             'member' => array('value' => '3', 'lang' => _status_member, 'only_admin' => false),
             'admin' => array('value' => '4', 'lang' => _status_admin, 'only_admin' => true));
 
+    if($unset != false && !is_array($unset)) unset($levels[$unset]);
+    else if($unset != false && is_array($unset))
+    { foreach ($unset as $unset_d) { unset($levels[$unset_d]); } }
+
     $option = '';
     foreach($levels as $level => $array)
     {
-        if(!$array['only_admin'] || checkme(convert::ToInt($userid)) == 4)
+        if($list || !$array['only_admin'] || checkme(convert::ToInt($userid)) == 4)
             $option .= '<option value="'.$array['value'].'" '.($selected_level == $array['value'] ? 'selected="selected"' : '').'>'.$array['lang'].'</option>';
     }
 
@@ -972,28 +980,15 @@ function rawautor($uid)
         return rawflag('')." ".jsconvert(string::decode($uid));
 }
 
-//-> Nickausgabe ohne Profillink oder Emaillink fr das ForenAbo
-function fabo_autor($uid)
+//-> Nickausgabe ohne Profillink oder Emaillink für das ForenAbo
+function fabo_autor($uid,$show=_user_link_fabo)
 {
     $return = '';
     $qry = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$uid."'");
     if(_rows($qry))
     {
         $get = _fetch($qry);
-        $return = show(_user_link_fabo, array("id" => $uid, "nick" => string::decode($get['nick'])));
-    }
-
-    return $return;
-}
-
-function blank_autor($uid)
-{
-    $return = '';
-    $qry = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$uid."'");
-    if(_rows($qry))
-    {
-        $get = _fetch($qry);
-        $result = show(_user_link_blank, array("id" => $uid, "nick" => string::decode($get['nick'])));
+        $return = show($show, array("nick" => string::decode($get['nick'])));
     }
 
     return $return;
@@ -1075,24 +1070,6 @@ function userstats($tid, $what)
     }
 }
 
-//- Funktion zum versenden von Emails
-function sendMail($mailto,$subject,$content)
-{
-    $mail = new PHPMailer;
-
-    $mail->IsMail();
-
-    $mail->From = ($mailfrom = string::decode(settings('mailfrom')));
-    $mail->FromName = $mailfrom;
-
-    $mail->AddAddress(preg_replace('/(\\n+|\\r+|%0A|%0D)/i', '',$mailto));
-    $mail->IsHTML(true);
-
-    $mail->Subject = $subject;
-    $mail->Body = bbcode::nletter($content);
-    return $mail->Send();
-}
-
 function check_msg_email()
 {
     global $clanname,$httphost;
@@ -1110,9 +1087,12 @@ function check_msg_email()
                 db("UPDATE ".dba::get('msg')." SET `sendmail` = '1' WHERE id = '".$get['mid']."'");
                 $subj = show(string::decode(settings('eml_pn_subj')), array("domain" => $httphost));
                 $message = show(string::decode(settings('eml_pn')), array("nick" => string::decode($get['nick']), "domain" => $httphost, "titel" => $get['titel'], "clan" => $clanname));
-                sendMail(string::decode($get['email']), $subj, $message);
+                mailmgr::AddContent($subj,$message);
+                mailmgr::AddAddress(string::decode($get['email']));
             }
         }
+
+        if(Cache::is_mem()) Cache::set($hash,'',check_msg_email);
     }
 }
 
@@ -1508,6 +1488,21 @@ function getBoardPermissions($checkID = 0, $pos = 0)
     return $i_forum;
 }
 
+//-> Startseite für User abrufen
+function startpage()
+{
+    if(cookie::get('id') != false && cookie::get('pkey') != false && !($startpageID = data(userid(), 'startpage')))
+        return 'user/?action=userlobby';
+
+    $sql = db("SELECT url,level FROM `".dba::get('startpage')."` WHERE `id` = ".$startpageID." LIMIT 1");
+
+    if(!_rows($sql))
+        return checkme() >= 1 ? 'user/?action=userlobby' : 'news/';
+
+    $get = _fetch($sql);
+    return $get['level'] <= checkme() ? string::decode($get['url']) : 'user/?action=userlobby';
+}
+
 //-> Show Xfire Status
 function xfire($username='')
 {
@@ -1750,6 +1745,9 @@ function page($index,$title,$where,$time,$index_templ=false)
         logout();
         header("Location: ../user/?action=login");
     }
+
+    //Send E-Mail
+    mailmgr::Send();
 
     // JS-Dateine einbinden
     javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no)); //basic confirm box

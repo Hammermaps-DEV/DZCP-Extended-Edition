@@ -146,7 +146,8 @@ else
                                 "text" => bbcode::parse_html($_POST['eintrag']),
                                 "clan" => $clanname));
 
-                        sendMail(string::decode($getabo['email']),$subj,$message);
+                        mailmgr::AddContent($subj,$message);
+                        mailmgr::AddAddress(string::decode($getabo['email']));
                     }
                 }
                 $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$getp['sid']);
@@ -738,7 +739,8 @@ else
                                     "text" => bbcode::parse_html($_POST['eintrag']),
                                     "clan" => $clanname));
 
-                            sendMail(string::decode($getabo['email']),$subj,$message);
+                            mailmgr::AddContent($subj,$message);
+                            mailmgr::AddAddress(string::decode($getabo['email']));
                         }
                     }
 

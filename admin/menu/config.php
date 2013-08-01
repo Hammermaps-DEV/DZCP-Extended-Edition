@@ -127,6 +127,13 @@ switch ($do)
                 `tmpdir`                = '".string::encode($_POST['tmpdir'])."',
                 `persinfo`              = '".convert::ToInt($_POST['persinfo'])."',
                 `wmodus`                = '".convert::ToInt($_POST['wmodus'])."',
+                `mail_extension`        = '".string::encode($_POST['mail_extension'])."',
+                `smtp_password`         = '".encryptData($_POST['smtp_pass'])."',
+                `smtp_port`             = '".convert::ToInt($_POST['smtp_port'])."',
+                `smtp_hostname`         = '".string::encode($_POST['smtp_host'])."',
+                `smtp_username`         = '".string::encode($_POST['smtp_username'])."',
+                `smtp_tls_ssl`          = '".convert::ToInt($_POST['smtp_tls_ssl'])."',
+                `sendmail_path`         = '".string::encode($_POST['sendmail_path'])."',
                 `memcache_host`         = '".string::encode($_POST['memcache_host'])."',
                 `memcache_port`         = '".convert::ToInt($_POST['memcache_port'])."',
                 `urls_linked`   	    = '".string::encode($_POST['urls_linked'])."'
@@ -163,6 +170,10 @@ if(empty($show))
     <option '.($get_settings['default_pwd_encoder'] == 1 ? 'selected="selected"' : '').' value="1">SHA1 [lang_pwd_encoder_algorithm]</option>
     <option '.($get_settings['default_pwd_encoder'] == 2 ? 'selected="selected"' : '').' value="2">SHA256 [lang_pwd_encoder_algorithm]</option>
     <option '.($get_settings['default_pwd_encoder'] == 3 ? 'selected="selected"' : '').' value="3">SHA512 [lang_pwd_encoder_algorithm]</option>');
+
+    $smtp_secure_options = show('<option '.(!$get_settings['smtp_tls_ssl'] ? 'selected="selected"' : '').' value="0">[lang_default]</option>
+    <option '.($get_settings['smtp_tls_ssl'] == 1 ? 'selected="selected"' : '').' value="1">TLS</option>
+    <option '.($get_settings['smtp_tls_ssl'] == 2 ? 'selected="selected"' : '').' value="2">SSL</option>');
 
     $show = show($dir."/form_config", array( "cache_select"          => Cache::GetConfigMenu(),
                                              "main_info"             => _main_info,
@@ -257,7 +268,14 @@ if(empty($show))
                                              "f_artikelcom"          => convert::ToInt($get_config['f_artikelcom']),
                                              "clanname"              => string::decode($get_settings['clanname']),
                                              "pagetitel"             => string::decode($get_settings['pagetitel']),
+                                             "smtp_host"             => string::decode($get_settings['smtp_hostname']),
+                                             "smtp_username"         => string::decode($get_settings['smtp_username']),
+                                             "smtp_pass"             => decryptData($get_settings['smtp_password']),
+                                             "smtp_port"             => convert::ToInt($get_settings['smtp_port']),
+                                             "sendmail_path"         => string::decode($get_settings['sendmail_path']),
+                                             "smtp_tls_ssl"          => $smtp_secure_options,
                                              "lang"                  => $lang,
+                                             "mail_ext_select"        => mailmgr::get_menu($get_settings['mail_extension']),
                                              "selyes"                => ($get_settings['regcode'] ? 'selected="selected"' : ''),
                                              "selno"                 => (!$get_settings['regcode'] ? 'selected="selected"' : ''),
                                              "selwm"                 => ($get_settings['wmodus'] ? 'selected="selected"' : ''),

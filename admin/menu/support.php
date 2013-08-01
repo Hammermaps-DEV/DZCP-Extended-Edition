@@ -25,6 +25,8 @@ if(_adminMenu != 'true')
     $support .= "DZCP Release: "._release."\r\n";
     $support .= "DZCP Build: "._build."\r\n";
     $support .= "DZCP Edition: "._edition."\r\n";
+    $support .= "DZCP Datenbank: Rev. V".settings('db_version')."\r\n";
+    $support .= "DZCP API: V".API::$version."\r\n";
     $support .= "\r\n";
 
     $support .= "#####################\r\n";

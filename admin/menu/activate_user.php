@@ -37,7 +37,8 @@ switch ($do)
             db("UPDATE `".dba::get('users')."` SET `actkey` = '".($guid=GenGuid())."' WHERE `id` = ".$get['id']);
             $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
             $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
-            sendMail($get['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+            mailmgr::AddContent(string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+            mailmgr::AddAddress($get['email']);
             $show = info(show(_admin_akl_resend,array('email' => $get['email'])), "?admin=activate_user", 4);
         }
     break;
@@ -52,7 +53,8 @@ switch ($do)
                 db("UPDATE `".dba::get('users')."` SET `actkey` = '".($guid=GenGuid())."' WHERE `id` = ".$get['id']);
                 $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
                 $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
-                sendMail($get['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+                mailmgr::AddContent(string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+                mailmgr::AddAddress($get['email']);
                 $emails .= (!$i ? $get['email'] : ', '.$get['email']); $i++;
             }
 

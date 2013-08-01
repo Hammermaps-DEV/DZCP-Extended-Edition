@@ -40,13 +40,8 @@ function pfields_name($name)
 
 //-> Prueft ob ein User schon in der Buddyliste vorhanden ist
 function check_buddy($buddy)
-{
-    return (db("SELECT buddy FROM ".dba::get('buddys')." WHERE user = '".userid()."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true);
-}
+{ return (db("SELECT buddy FROM ".dba::get('buddys')." WHERE user = '".userid()."' AND buddy = '".convert::ToInt($buddy)."'",true) ? false : true); }
 
 //-> Prueft, ob eine Userid existiert
 function exist($tid)
-{
-    echo 'run<p>';
-    return db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false;
-}
+{ return db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."'",true) ? true : false; }

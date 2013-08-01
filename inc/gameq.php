@@ -35,7 +35,7 @@
  */
 final class GameQ
 {
-    const VERSION = '2.0.1';
+    const VERSION = '2.0.1.1';
     protected static $options = array('debug' => FALSE, 'timeout' => 3, 'filters' => array(), 'stream_timeout' => 400000, 'write_wait' => 500);
     protected static $debug = false;
     protected static $timeout = 3;
@@ -138,7 +138,19 @@ final class GameQ
     public static function setFilter($name, $params = array())
     {
         $filter_class = 'GameQ_Filters_'.$name; // Create the proper filter class name
-        self::$options['filters'][$name] = new $filter_class($params); // Pass any parameters and make the class
+
+        try
+        {
+            // Pass any parameters and make the class
+            self::$options['filters'][$name] = new $filter_class($params);
+        }
+        catch (GameQ_FiltersException $e)
+        {
+            // We catch the exception here, thus the filter is not applied
+            // but we issue a warning
+            error_log($e->getMessage(), E_USER_WARNING);
+        }
+
         return true;
     }
 

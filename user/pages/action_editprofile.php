@@ -126,6 +126,7 @@ else
                                                  `icq`              = '".convert::ToInt($icq)."',
                                                  `xfire`            = '".string::encode($_POST['xfire'])."',
                                                  `signatur`         = '".string::encode($_POST['sig'])."',
+                                                 `startpage`        = '".convert::ToInt($_POST['startpage'])."',
                                                  `profile_access`   = '".convert::ToInt(isset($_POST['paccess']) ? $_POST['paccess'] : 0)."',
                                                  `beschreibung`     = '".string::encode($_POST['ich'])."'
                                                   WHERE id = ".userid());
@@ -280,42 +281,52 @@ else
                                 $deletepic = (!preg_match("#nopic#",$pic) ? "| "._profil_delete_pic : '');
                                 $deleteava = (!preg_match("#noavatar#",$avatar) ? "| "._profil_delete_ava : '');
 
+                                // Startpage
+                                $sql_startpage = db("SELECT name,id FROM `".dba::get('startpage')."`");
+                                $startpage = '<option value="0">'._default.'</option>';
+                                if(_rows($sql_startpage) >= 1)
+                                {
+                                    while($get_startpage = _fetch($sql_startpage))
+                                    { $startpage .= show(_select_field,array('value' => $get_startpage['id'], 'sel' => ($get_startpage['id'] == $get['startpage'] ? 'selected="selected"' : ''), 'what' => $get_startpage['name'])); }
+                                }
+
                                 $delete = (userid() == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => _confirm_del_account)));
                                 $show = show($dir."/edit_profil", array("country" => show_countrys($get['country']),
-                                        "city" => string::decode($get['city']),
-                                        "pnl" => $pnl,
-                                        "pnm" => $pnm,
-                                        "paccess" => $paccess,
-                                        "pwd" => "",
-                                        "dropdown_age" => $dropdown_age,
-                                        "ava" => $avatar,
-                                        "hp" => string::decode($get['hp']),
-                                        "gmaps" => $gmaps,
-                                        "nick" => string::decode($get['nick']),
-                                        "name" => string::decode($get['user']),
-                                        "gmaps_koord" => string::decode($get['gmaps_koord']),
-                                        "rlname" => string::decode($get['rlname']),
-                                        "bdayday" => $bdayday,
-                                        "bdaymonth" => $bdaymonth,
-                                        "bdayyear" =>$bdayyear,
-                                        "sex" => $sex,
-                                        "email" => string::decode($get['email']),
-                                        "icqnr" => $icq,
-                                        "sig" => string::decode($get['signatur']),
-                                        "xfire" => $get['xfire'],
-                                        "clan" => $clan,
-                                        "pic" => $pic,
-                                        "deleteava" => $deleteava,
-                                        "deletepic" => $deletepic,
-                                        "position" => getrank($get['id']),
-                                        "language" => language::get_menu(string::decode($get['language'])),
-                                        "status" => $status,
-                                        "custom_about" => custom_fields(userid(),1),
-                                        "custom_contact" => custom_fields(userid(),3),
-                                        "custom_favos" => custom_fields(userid(),4),
-                                        "custom_hardware" => custom_fields(userid(),5),
-                                        "ich" => string::decode($get['beschreibung']),
-                                        "delete" => $delete));
+                                                                        "city" => string::decode($get['city']),
+                                                                        "pnl" => $pnl,
+                                                                        "pnm" => $pnm,
+                                                                        "paccess" => $paccess,
+                                                                        "pwd" => "",
+                                                                        "dropdown_age" => $dropdown_age,
+                                                                        "ava" => $avatar,
+                                                                        "hp" => string::decode($get['hp']),
+                                                                        "gmaps" => $gmaps,
+                                                                        "nick" => string::decode($get['nick']),
+                                                                        "name" => string::decode($get['user']),
+                                                                        "gmaps_koord" => string::decode($get['gmaps_koord']),
+                                                                        "rlname" => string::decode($get['rlname']),
+                                                                        "bdayday" => $bdayday,
+                                                                        "bdaymonth" => $bdaymonth,
+                                                                        "bdayyear" =>$bdayyear,
+                                                                        "sex" => $sex,
+                                                                        "email" => string::decode($get['email']),
+                                                                        "icqnr" => $icq,
+                                                                        "sig" => string::decode($get['signatur']),
+                                                                        "xfire" => $get['xfire'],
+                                                                        "clan" => $clan,
+                                                                        "pic" => $pic,
+                                                                        "deleteava" => $deleteava,
+                                                                        "deletepic" => $deletepic,
+                                                                        "startpage" => $startpage,
+                                                                        "position" => getrank($get['id']),
+                                                                        "language" => language::get_menu(string::decode($get['language'])),
+                                                                        "status" => $status,
+                                                                        "custom_about" => custom_fields(userid(),1),
+                                                                        "custom_contact" => custom_fields(userid(),3),
+                                                                        "custom_favos" => custom_fields(userid(),4),
+                                                                        "custom_hardware" => custom_fields(userid(),5),
+                                                                        "ich" => string::decode($get['beschreibung']),
+                                                                        "delete" => $delete));
                         break;
                     }
 

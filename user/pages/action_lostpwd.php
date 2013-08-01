@@ -48,7 +48,8 @@ else
                     wire_ipcheck("pwd(".$get['id'].")");
 
                     ## User E-Mail zusammenstellen und senden ##
-                    sendMail($_POST['email'],string::decode(settings('eml_pwd_subj')),show(string::decode(settings('eml_pwd')), array("user" => $_POST['user'], "pwd" => $pwd)));
+                    mailmgr::AddContent(string::decode(settings('eml_pwd_subj')),show(string::decode(settings('eml_pwd')), array("user" => $_POST['user'], "pwd" => $pwd)));
+                    mailmgr::AddAddress($_POST['email']);
 
                     ## Infobox anzeigen ##
                     $index = info(_lostpwd_valid, "../user/?action=login");

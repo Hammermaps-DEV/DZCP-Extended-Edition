@@ -750,7 +750,7 @@ td.color_gray {
   color:#ccc;
 }
 
-td.contentMainTop,tr.contentMainTop {
+td.contentMainTop,tr.contentMainTop, td.error {
   background-color: #ededed;
   vertical-align: top;
 }
@@ -759,7 +759,7 @@ td.contentMainFirst,
 div#infoInnerLayer,
 td.commentsRight,
 td.navShoutContentFirst,
-td.error,td.calDay,td.calToday,
+td.calDay,td.calToday,
 .adminBarInner,.adminBarInnerOver,.adminMenuOuter,.adminMenuOuterOver,
 .adminBarOuter,.adminBarOuterOver,.adminMenuInner,.adminMenuInnerOver {
   background-color: #fff;

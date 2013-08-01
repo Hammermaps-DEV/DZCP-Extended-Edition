@@ -50,12 +50,11 @@ if(_adminMenu != 'true')
                   $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
                   $subject = string::decode(settings('eml_nletter_subj'));
 
-          $qry = db("SELECT email FROM ".dba::get('users')."
-                     WHERE nletter = 1");
+
+          mailmgr::AddContent($subject,$message);
+          $qry = db("SELECT email FROM ".dba::get('users')." WHERE nletter = 1");
           while($get = _fetch($qry))
-          {
-            sendMail($get['email'],$subject,$message);
-          }
+          { mailmgr::AddAddress($get['email']); }
 
               $qry = db("UPDATE ".dba::get('userstats')."
                          SET `writtenmsg` = writtenmsg+1
@@ -67,12 +66,10 @@ if(_adminMenu != 'true')
           $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
                   $subject = string::decode(settings('eml_nletter_subj'));
 
-          $qry = db("SELECT email FROM ".dba::get('users')."
-                     WHERE level >= 2");
+          mailmgr::AddContent($subject,$message);
+          $qry = db("SELECT email FROM ".dba::get('users')." WHERE level >= 2");
           while($get = _fetch($qry))
-          {
-            sendMail($get['email'],$subject,$message);
-          }
+          { mailmgr::AddAddress($get['email']); }
 
               $qry = db("UPDATE ".dba::get('userstats')."
                         SET `writtenmsg` = writtenmsg+1
@@ -83,16 +80,15 @@ if(_adminMenu != 'true')
           $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
                   $subject = string::decode(settings('eml_nletter_subj'));
 
-          $qry = db("SELECT s2.email	FROM ".dba::get('squaduser')." AS s1
+          mailmgr::AddContent($subject,$message);
+          $qry = db("SELECT s2.email FROM ".dba::get('squaduser')." AS s1
                      LEFT JOIN ".dba::get('users')." AS s2 ON s2.id=s1.user
                      LEFT JOIN ".dba::get('userpos')." AS s3 ON s3.squad=s1.squad AND s3.user=s1.user
                      LEFT JOIN ".dba::get('pos')." AS s4 ON s4.id=s3.posi
                      WHERE s4.nletter = '1'");
 
           while($get = _fetch($qry))
-          {
-            sendMail($get['email'],$subject,$message);
-          }
+          { mailmgr::AddAddress($get['email']); }
 
               $qry = db("UPDATE ".dba::get('userstats')."
                           SET `writtenmsg` = writtenmsg+1
@@ -103,14 +99,13 @@ if(_adminMenu != 'true')
           $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
                   $subject = string::decode(settings('eml_nletter_subj'));
 
+          mailmgr::AddContent($subject,$message);
           $qry = db("SELECT s2.email FROM ".dba::get('squaduser')." AS s1
                      LEFT JOIN ".dba::get('users')." AS s2
                      ON s1.user = s2.id
                      WHERE s1.squad = '".$_POST['to']."'");
           while($get = _fetch($qry))
-          {
-            sendMail($get['email'],$subject,$message);
-          }
+          { mailmgr::AddAddress($get['email']); }
 
               $qry = db("UPDATE ".dba::get('userstats')."
                           SET `writtenmsg` = writtenmsg+1

@@ -23,7 +23,7 @@ Es wurde eine richtige Cache Klasse eingefügt, die standardmäßig auf 'File'  
 Der Cache speichert Seiten und Serverantworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen muss.
 Dabei wird auch zbs. die News Seite in den Cache geladen und alle paar Sekunden aktualisiert, dieses Verfahren ermöglicht eine Entlastung der Datenbank und des Servers bei vielen gleichzeitigen Besuchern.
 Der Cache kann als Files, Memcache, ZEND - Shared Memory, ZEND - Disk oder MySQL Erweiterung betrieben werden.
-Die ZEND Shared Memory und ZEND Disk Cache setzt einen Zend Technologies Server vorraus -> http://www.zend.com/de/products/server/
+Die ZEND Shared Memory und ZEND Disk Cache setzt einen Zend Technologies Server voraus -> http://www.zend.com/de/products/server/
 
 Der Installer / Updater wurde komplett überarbeitet und wird nachfolgende Updates selbständig erkennen und die nötigen Aktualisierungen vornehmen. *Sie müssen nur noch auf 'Weiter' drücken.
 
@@ -62,7 +62,7 @@ Unterstützung mehrere Bildformate zbs. für Server Pics, Adminmenü Icons, usw.
 Infos wie der XFire Status wird per Ajax nachgeladen um lange Ladezeiten der gesamten DZCP Seite zu verhindern.
 Eine Auswahl des Skins der bei XFire verwendet wird ist über die config.php möglich.
 
-Es wird ein zufälliger MD5 Code verwendet um ein Login zu Speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
+Es wird ein zufälliger MD5 Code verwendet um ein Login zu speichern, das MD5 Verschlüsselte Passwort des Users wird nicht mehr im Cookie gespeichert.
 Es wurden einzelne neue Smileys eingefügt.
 
 Die Administrationsseiten können über eine XML Datei zusätzlich konfiguriert werden.
@@ -87,20 +87,21 @@ Neue HTML Tags zum ein HTML Code ausblenden basierend auf dem Loginstatus des Us
 	HTML Code der nur angezeigt wird wenn der aktuelle User abgemeldet ist...
 </logged_out>
 
-Optional* Zusätzliche XML-Config für die DZCP Menufunktionen kann angelegt werden.
-* Es kann eingestellt werden ob die Menufunktion über Ajax Loader nachgeladen werden sollen.
-* Welches Bild für jede Menufunktion die per Ajax Loader nachgeladen wird, verwendet werden soll.
+Optional* Zusätzliche XML-Config für die DZCP Menu-Funktionen kann angelegt werden.
+* Es kann eingestellt werden ob die Menu-Funktionen über Ajax Loader nachgeladen werden sollen.
+* Welches Bild für jede Menu-Funktionen die per Ajax Loader nachgeladen wird, verwendet werden soll.
 * Welches Level der Benutzer haben muss um das Menu zu sehen. Sehen ab: Gast,User,Admin,Root
 * Der zusätzliche Ajax Loader kann generell in der "inc/config.php" abgeschaltet werden.
 
 Eine Auswahl des Passwort-Hash Algorithmus ist nun möglich. *Extended Security*
 * MD5,SHA1,SHA256,SHA512 stehen zur Verfügung.
+* Zusätzliche Sicherheit durch einen SALT in allen Passwörtern.
 * Standartmassig ist SHA256 in der Extended Edition aktiviert.
 * Die User die alte MD5 Hashs verwenden, werden automatisch beim nächsten ändern ihres Passwortes in SHA1, SHA256 oder SHA512 gespeichert.
 
 Neue Addons Schnittstelle für einfaches einfügen und löschen von Addons/Mods.
 * Es müssen fast keine Original CMS Daten überschrieben werden.
-* Änderungen am Template *HTML Files* oder neue HTML Daten befinden sich mit im Addon Ordner und nicht mehr umbedingt im 'inc\_templates_\*.*' Ordner.
+* Änderungen am Template *HTML Files* oder neue HTML Daten befinden sich mit im Addon Ordner und nicht mehr unbedingt im 'inc\_templates_\*.*' Ordner.
 * Anpassungen für einzelne Templates über Ordnernamen im Addon Ordner möglich.
 * Include und automatisches laden von Funktionen oder Classen möglich.
 * Frei zu bearbeitende Addon-XML Dateien für Statische Einstellungen aller Art.
@@ -126,7 +127,7 @@ Das Gästebuch wurde überarbeitet, nun können die User Kommentare gelöscht od
 In der Gallery ist nun Seitenblättern möglich, die Gallery kann in mehrere Seiten eingeteilt werden.
 
 Die Anzeige für TS3 und die Gameserver von DZCP wurde gegen GameQ ausgetauscht und grundliegend überarbeitet.
-Es können damit nun um die 60 Spiele Live angezeit werden:
+Es können damit nun um die 60 Spiele Live angezeigt werden:
 
 Alien Swarm
 Half Life 2: Deathmatch
@@ -186,19 +187,26 @@ Quake 4
 Red Orchestra: Ostfront 41-45
 Red Orchestra 2
 
-Der Teamspeak 3 Viewer wurde auch gegen GameQ ersetzt und ins DZCP intigriert.
+Der Teamspeak 3 Viewer wurde auch gegen GameQ ersetzt und ins DZCP integriert.
 * Automatischer Download von Custom Icons für User,Channels und Server.
 * Anzeige mehrere TS3 Server ist auf der Teamspeak Server Seite möglich.
 * TS2 Viewer wurde entfernt ,sry
 * Die Teamspeak Server Seite wird per Ajax geladen.
-* Auf und zuklappen der einzelden TS3 Channel geht nun perfect.
-* Auf und Zuklappen der einzelden TS3 Server ist auf der Teamspeak Server Seite möglich.
-* Unterstüzung und Erkennung von TS3-DNS Servern.
+* Auf und zuklappen der einzelnen TS3 Channel geht nun perfekt.
+* Auf und Zuklappen der einzelnen TS3 Server ist auf der Teamspeak Server Seite möglich.
+* Unterstützung und Erkennung von TS3-DNS Servern.
 
 Erkennung und Blockierung von Trashmail Servern, Trashmail Server können in der config.php zugelassen werden.
 Verwendung von einer Globalen IP Banlist für Spamming Bots, verwendet www.stopforumspam.com
 IP-Bans können vom Administrator selber eingetragen werden. *Localban*
-Das MySQL Backend wurde gegen ein MySQLi Backend ausgetauscht und es wird standardmäßig 'mysqli_real_connect' verwendet.
+Das MySQL Backend wurde gegen ein MySQLi Backend ausgetauscht.
 
 User können ihren Account über eine Aktivierungs- E-Mail aktivieren.
 * Kann vom Administrator erzwungen werden, ggf. auch an oder ausgeschaltet werden.
+
+Es können Startseiten eingerichtet werden, wo User nach dem Autologin hin umgeleitet werden.
+
+Neue Einstellungen für das Senden von E-Mails von der Webseite aus, wurde hinzugefügt.
+* SMTP + Account Login zbs. bei Verwendung von GMX,Web.de Servern etc. 
+* Sendmail + Pfadangabe für die Sendmail Anwendung oder vergleichbares.
+* PHP Mail Funktion *Standard* verwendet die PHP eigene Mail Funktion.

@@ -1,5 +1,5 @@
 <?php
-/*~ class.smtp.inc.php
+/*~ class.smtp.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |
 |   Version: 5.2.6                                                          |
@@ -184,9 +184,7 @@ class SMTP {
 
     // Verify we connected properly
     if(empty($this->smtp_conn)) {
-      $this->error = array('error' => 'Failed to connect to server',
-                           'errno' => $errno,
-                           'errstr' => $errstr);
+      $this->error = array('error' => 'Failed to connect to server', 'errno' => $errno, 'errstr' => $errstr);
       if($this->do_debug >= 1) {
         $this->edebug('SMTP -> ERROR: ' . $this->error['error'] . ": $errstr ($errno)");
       }
@@ -284,9 +282,7 @@ class SMTP {
 
         if($code != 334) {
           $this->error =
-            array('error' => 'AUTH not accepted from server',
-                  'smtp_code' => $code,
-                  'smtp_msg' => substr($rply, 4));
+            array('error' => 'AUTH not accepted from server', 'smtp_code' => $code, 'smtp_msg' => substr($rply, 4));
           if($this->do_debug >= 1) {
             $this->edebug('SMTP -> ERROR: ' . $this->error['error'] . ': ' . $rply);
           }
@@ -300,9 +296,7 @@ class SMTP {
 
         if($code != 235) {
           $this->error =
-            array('error' => 'Authentication not accepted from server',
-                  'smtp_code' => $code,
-                  'smtp_msg' => substr($rply, 4));
+            array('error' => 'Authentication not accepted from server', 'smtp_code' => $code, 'smtp_msg' => substr($rply, 4));
           if($this->do_debug >= 1) {
             $this->edebug('SMTP -> ERROR: ' . $this->error['error'] . ': ' . $rply);
           }
@@ -318,9 +312,7 @@ class SMTP {
 
         if($code != 334) {
           $this->error =
-            array('error' => 'AUTH not accepted from server',
-                  'smtp_code' => $code,
-                  'smtp_msg' => substr($rply, 4));
+            array('error' => 'AUTH not accepted from server', 'smtp_code' => $code, 'smtp_msg' => substr($rply, 4));
           if($this->do_debug >= 1) {
             $this->edebug('SMTP -> ERROR: ' . $this->error['error'] . ': ' . $rply);
           }
@@ -369,7 +361,6 @@ class SMTP {
          ** How to telnet in windows: http://technet.microsoft.com/en-us/library/aa995718%28EXCHG.65%29.aspx
          ** PROTOCOL Documentation http://curl.haxx.se/rfc/ntlm.html#ntlmSmtpAuthentication
          */
-        require_once 'extras/ntlm_sasl_client.php';
         $temp = new stdClass();
         $ntlm_client = new ntlm_sasl_client_class;
         if(! $ntlm_client->Initialize($temp)){//let's test if every function its available

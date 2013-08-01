@@ -211,11 +211,12 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('partners')."` SET `link` = 'http://spenden.dzcp.de', `banner` = 'spenden.gif', `textlink` = 0;",false,false,true);
     db("INSERT INTO `".dba::get('partners')."` SET `link` = 'http://www.modsbar.de', `banner` = 'mb_88x32.png', `textlink` = 0;",false,false,true);
     db("INSERT INTO `".dba::get('partners')."` SET `link` = 'http://www.templatebar.de', `banner` = 'tb_88x32.png', `textlink` = 0;",false,false,true);
+    db("INSERT INTO `".dba::get('partners')."` SET `link` = 'http://www.hammermaps.de', `banner` = 'hm_team.gif', `textlink` = 0;",false,false,true);
 
     //===============================================================
     //-> Rechte =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1, `slideshow` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `startpage` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1, `slideshow` = 1;",false,false,true);
 
     //===============================================================
     //-> Positionen =================================================
@@ -236,6 +237,12 @@ function install_mysql_insert($db_infos)
     //===============================================================
     db("INSERT INTO `".dba::get('serverliste')."` SET `datum` = 1298817167, `clanname` = '[-tHu-] teamHanau', `clanurl` = 'http://www.thu-clan.de', `ip` = '82.98.216.10', `port` = '27015', `pwd` = 0, `checked` = 1, `slots` = 17;",false,false,true);
 
+    //===============================================================
+    //-> Startseite =================================================
+    //===============================================================
+	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
+	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
+	
     //===============================================================
     //-> Shoutbox ===================================================
     //===============================================================
@@ -260,7 +267,7 @@ function install_mysql_insert($db_infos)
     //-> Users ======================================================
     //===============================================================
     db("INSERT INTO `".dba::get('users')."` SET `user` = '".$db_infos['login']."', `nick` = '".string::encode($db_infos['nick'])."', `pwd` = '".($pwd_hash=pass_hash($db_infos['pwd'],2))."', `country` = 'de',
-    `language` = 'default', `regdatum`  = '".time()."', `email` = '".$db_infos['email']."', `level` = 4, `sex` = 0, `position` = 1, `status` = 1, `time` = '".time()."', `pnmail` = 1, `profile_access` = 0, `rss_key` = '".mkpwd(8,false)."';",false,false,true);
+    `language` = 'default', `regdatum`  = '".time()."', `email` = '".$db_infos['email']."', `startpage` = 0, `level` = 4, `sex` = 0, `position` = 1, `status` = 1, `time` = '".time()."', `pnmail` = 1, `profile_access` = 0, `rss_key` = '".mkpwd(8,false)."';",false,false,true);
     $userid=database::get_insert_id();
 
     //Login NOW
@@ -326,11 +333,12 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Sponsoren ==================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L'z Clanportal, das CMS for Online-Clans!</p>")."', `box` = 1, `pos` = 1;",false,false,true);
-    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP Rotationsbanner', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal</p>")."', `banner` = 1, `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `pos` = 2;",false,false,true);
+    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L'z Clanportal, das CMS for Online-Clans!</p>")."', `box` = 1, `pos` = 2;",false,false,true);
+    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP Rotationsbanner', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal</p>")."', `banner` = 1, `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `pos` = 3;",false,false,true);
+    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP - Extended Edition', `link` = 'http://www.hammermaps.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal - Extended Edition</p>")."', `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `box` = 1, `pos` = 1;",false,false,true);
 
     //===============================================================
     //-> Glossar ====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('glossar')."` SET `word` = 'DZCP', `glossar` = '&lt;p&gt;deV!L&apostroph ;z Clanportal - kurz DZCP - ist ein CMS-System speziell f&uuml;r Onlinegaming Clans.&lt;/p&gt;&lt;p&gt;Viele schon in der Grundinstallation vorhandene Module erleichtern die Verwaltung einer Clan-Homepage ungemein.&lt;/p&gt;';",false,false,true);
+    db("INSERT INTO `".dba::get('glossar')."` SET `word` = 'DZCP', `glossar` = '&lt;p&gt;deV!L&apostroph;z Clanportal - kurz DZCP - ist ein CMS-System speziell f&uuml;r Onlinegaming Clans.&lt;/p&gt;&lt;p&gt;Viele schon in der Grundinstallation vorhandene Module erleichtern die Verwaltung einer Clan-Homepage ungemein.&lt;/p&gt;';",false,false,true);
 }

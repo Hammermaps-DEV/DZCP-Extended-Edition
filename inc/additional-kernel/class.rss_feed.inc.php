@@ -23,9 +23,9 @@ class rss_feed
     {
         global $clanname,$pagetitle;
         self::$basic_config_array['charset'] = _charset;
-        self::$basic_config_array['pagetitle'] = $clanname;
+        self::$basic_config_array['pagetitle'] = convert::ToHTML($clanname);
         self::$basic_config_array['pagelink'] = 'http://'.$_SERVER['HTTP_HOST'].'/';
-        self::$basic_config_array['pagedesc'] = $pagetitle;
+        self::$basic_config_array['pagedesc'] = convert::ToHTML($pagetitle);
         self::$basic_config_array['pagemailmaster'] = '';
         self::$basic_config_array['ttl'] = 120;
     }
@@ -104,19 +104,19 @@ class rss_feed
                 if(empty($item['title']) || empty($item['link']) || empty($item['desc']))
                     continue;
 
-                foreach(array('desc','title','author','comments_url','link',) as $key) // Convert to HTML
-                { $item[$key] = htmlentities($item[$key], ENT_QUOTES, self::$basic_config_array['charset']); }
+                foreach(array('desc','author','comments_url','link',) as $key) // Convert to HTML
+                { $item[$key] = substr(strip_tags(substr(string::decode($item[$key]), 0, 400)), 0, 300); }
 
                 self::$xml_item .= '<item>'."\r\n";
                 self::$xml_item .= '<title>'.$item['title'].'</title>'."\r\n";
-                self::$xml_item .= '<link>'.$item['link'].'</link>'."\r\n";
+                self::$xml_item .= '<link>'.convert::ToHTML($item['link']).'</link>'."\r\n";
                 self::$xml_item .= '<description>'.$item['desc'].'</description>'."\r\n";
 
                 if(array_key_exists('author', $item) && !empty($item['author']))
                     self::$xml_item .= '<author>'.$item['author'].'</author>'."\r\n";
 
                 if(array_key_exists('comments_url', $item) && !empty($item['comments_url']))
-                    self::$xml_item .= '<comments>'.$item['comments_url'].'</comments>'."\r\n";
+                    self::$xml_item .= '<comments>'.convert::ToHTML($item['comments_url']).'</comments>'."\r\n";
 
                 if(array_key_exists('pubdate', $item) && !empty($item['pubdate']))
                     self::$xml_item .= '<pubDate>'.$item['pubdate'].'</pubDate>'."\r\n";
@@ -128,7 +128,7 @@ class rss_feed
 
     private static function rss_xml_syntax()
     {
-        self::$xml_rss = '<?xml version="1.0" encoding="'.self::$basic_config_array['charset'].'" ?>'."\r\n".
+        self::$xml_rss = '<?xml version="1.0" encoding="ISO-8859-1" ?>'."\r\n".
         '<rss version="2.0">'."\r\n".
             '<channel>'."\r\n".
             self::$xml_channel."\r\n".

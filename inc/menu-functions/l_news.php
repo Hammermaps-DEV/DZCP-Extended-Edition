@@ -13,6 +13,7 @@
 function l_news()
 {
     global $allowHover;
+    header('Content-Type: text/html; charset=iso-8859-1');
     $menu_xml = get_menu_xml('l_news');
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_l_news'))
     {

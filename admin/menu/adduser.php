@@ -136,7 +136,9 @@ if(!empty($do))
         ## E-Mail senden ##
         $message = show(string::decode(settings('eml_reg')), array("user" => string::decode($username), "pwd" => $mkpwd));
         $subject = string::decode(settings('eml_reg_subj'));
-        sendMail($email,$subject,$message);
+
+        mailmgr::AddContent(string::decode(settings('eml_reg_subj')),show(string::decode(settings('eml_reg')), array("user" => string::decode($username), "pwd" => $mkpwd)));
+        mailmgr::AddAddress($email);
 
         $show = info(_uderadd_info, "../admin/");
     }

@@ -115,6 +115,9 @@ else
                 }
             }
 
+            //API Events
+            API_EVENTS::server_image_map($server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])));
+
             //Detect Flash * Maps
             if(file_exists(basePath.'/inc/images/maps/'.$server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])).'.swf'))
             {
@@ -193,8 +196,6 @@ else
                 if($server['game_stats_options']['stats_team'] )    { $colspan++; $show_team_td = '<td width="60" class="contentHead"><span class="fontBold">Team</span></td>'; }
                 if($server['game_stats_options']['stats_squad'] )   { $colspan++; $show_squad_td = '<td width="60" class="contentHead"><span class="fontBold">Squad</span></td>'; }
                 if($server['game_stats_options']['stats_time'] )    { $colspan++; $show_time_td = '<td width="220" class="contentHead"><span class="fontBold">'._server_time.'</span></td>'; }
-
-                print_r($server);
 
                 $playerstats = _server_noplayers;
                 if(!empty($server['game_players']) && count($server['game_players']) >= 1)
@@ -279,7 +280,7 @@ else
                 $image_map .= '<div id="'.$clsid.'"><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></div>';
             }
             else
-                $image_map = '<img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120" class="ServerPic" alt="" />';
+                $image_map = '<a href="../inc/images/maps/'.$image_map.'" rel="lightbox[maps_'.$get['id'].']"><img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120" class="ServerPic" alt="" /></a>';
 
             $image_pwd = ($server['game_password'] ? '<img src="../inc/images/closed.png" alt="" alt="" title="Server Password" class="icon" />' : ''); //Server Password
             $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server

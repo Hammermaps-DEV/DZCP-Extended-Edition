@@ -77,6 +77,16 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('config')."` ADD `use_akl` INT( 1 ) NOT NULL DEFAULT '1' AFTER `news_feed`;",false,false,true);
     db("ALTER TABLE `".dba::get('artikel')."` ADD `custom_image` INT( 1 ) NOT NULL DEFAULT '0' AFTER `comments`;",false,false,true);
     db("ALTER TABLE `".dba::get('navi')."` ADD `title` VARCHAR( 249 ) NOT NULL DEFAULT '' AFTER `name`;",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` ADD `startpage` INT( 5 ) NOT NULL DEFAULT '0' AFTER `rss_key`;",false,false,true);
+    db("ALTER TABLE `".dba::get('settings')."` ADD `smtp_hostname` VARCHAR( 200 ) NOT NULL DEFAULT 'localhost' AFTER `eml_pn`,
+                                               ADD `smtp_port` INT( 11 ) NOT NULL DEFAULT '25' AFTER `smtp_hostname`,
+                                               ADD `smtp_username` VARCHAR( 200 ) NOT NULL DEFAULT '' AFTER `smtp_port`,
+                                               ADD `smtp_password` TEXT NULL DEFAULT NULL AFTER `smtp_username` ,
+                                               ADD `smtp_tls_ssl` INT( 1 ) NOT NULL DEFAULT '0' AFTER `smtp_password` ,
+                                               ADD `sendmail_path` VARCHAR( 200 ) NOT NULL DEFAULT '/usr/sbin/sendmail' AFTER `smtp_tls_ssl` ,
+                                               ADD `mail_extension` VARCHAR( 200 ) NOT NULL DEFAULT 'mail' AFTER `sendmail_path`;",false,false,true);
+
+
 
     //Update E-Mail Templates
     db("UPDATE `".dba::get('settings')."` SET `eml_akl_register_subj` = '".emlv('eml_akl_register_subj')."' WHERE `id` = 1;",false,false,true);
@@ -268,6 +278,7 @@ function install_155x_1600_update()
       `smileys` int(1) NOT NULL DEFAULT '0',
       `sponsors` int(1) NOT NULL DEFAULT '0',
       `shoutbox` int(1) NOT NULL DEFAULT '0',
+      `startpage` int(1) NOT NULL DEFAULT '0',
       `support` int(1) NOT NULL DEFAULT '0',
       `votes` int(1) NOT NULL DEFAULT '0',
       `votesadmin` int(1) NOT NULL DEFAULT '0',
@@ -493,5 +504,20 @@ function install_155x_1600_update()
     PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
+    //===============================================================
+    //-> Startseite =================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('startpage')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('startpage')."` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `name` varchar(200) NOT NULL,
+        `url` varchar(200) NOT NULL,
+        `level` int(1) NOT NULL DEFAULT '1',
+        PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
+	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
+	
     return true;
 }

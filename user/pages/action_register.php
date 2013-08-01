@@ -104,10 +104,13 @@ else
             {
                 $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
                 $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
-                sendMail($_POST['email'],string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $_POST['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+
+                mailmgr::AddContent(string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $_POST['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
+                mailmgr::AddAddress($_POST['email']);
             }
 
-            sendMail($_POST['email'],string::decode(settings('eml_reg_subj')),show(string::decode(settings('eml_reg')), array("user" => $_POST['user'], "pwd" => $mkpwd)));
+            mailmgr::AddContent(string::decode(settings('eml_reg_subj')),show(string::decode(settings('eml_reg')), array("user" => $_POST['user'], "pwd" => $mkpwd)));
+            mailmgr::AddAddress($_POST['email']);
 
             ## Nachricht anzeigen und zum  Userlogin weiterleiten ##
             $index = info(show($use_akl ? _info_reg_valid_akl : _info_reg_valid, array("email" => $_POST['email'])), "../user/?action=login",8);

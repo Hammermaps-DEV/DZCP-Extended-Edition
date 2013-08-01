@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * <DZCP-Extended Edition>
  * @package: DZCP-Extended Edition
@@ -7,7 +7,7 @@
  */
 
 ####################################
-## Wird in einer Index ausgeführt ##
+## Wird in einer Index ausgef�hrt ##
 ####################################
 if (!defined('IS_DZCP'))
     exit();

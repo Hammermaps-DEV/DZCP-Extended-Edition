@@ -6,6 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+## PHPMailer ##
+define('_phpmailer_lang', 'en');
+
 ## Charset ##
 define('_charset', 'iso-8859-1');
 
@@ -78,6 +81,31 @@ define('_minutes', 'Minutes');
 define('_minute', 'Minute');
 define('_seconds', 'Seconds');
 define('_second', 'Second');
+define('_smtp_host', 'SMTP Host');
+define('_smtp_port', 'SMTP Port');
+define('_smtp_username', 'SMTP Username');
+define('_smtp_passwort', 'SMTP Passwort');
+define('_smtp_tls_ssl', 'Verschl&uuml;sselung');
+define('_smtp_sendmail_path', 'Sendmail Path');
+define('_admin_eml_config_head', 'E-Mail Settings');
+define('_admin_eml_config_ext', 'Mail-Erweiterung');
+define('_admin_bezeichnung' , 'Description');
+
+//Startpage
+define('_profil_startpage', 'Startseite');
+define('_config_startpage', 'Startseiten');
+define('_perm_startpage', 'Startseiten verwalten');
+define('_admin_startpage_url', 'Ziel URL');
+define('_admin_startpage_level', 'Sichtbar ab Level');
+define('_admin_startpage_name', 'Name');
+define('_admin_startpage_add_head', 'Neue Startseite anlegen');
+define('_admin_startpage_edit', 'Startseite bearbeiten');
+define('_admin_startpage_added', 'Startseite wurde erfogreich eingetragen');
+define('_admin_startpage_deleted', 'Startseite wurde erfogreich gel&ouml;scht');
+define('_admin_startpage_editd', 'Startseite wurde erfogreich editiert');
+define('_admin_startpage_no_name', 'Du hast keinen Namen eingegeben');
+define('_admin_startpage_no_url', 'Du hast keine URL eingegeben');
+define('_admin_startpage_add', 'Neue Startseite hinzufügen');
 
 //Activate User
 define('_config_activate_user', 'User aktivieren');
@@ -92,7 +120,7 @@ define('_reg_akl_sended', 'Dein Aktivierungslink wurde an "[email]" versandt, sc
 define('_reg_akl_email_nf', 'Es existiert kein Account mit dieser E-Mail Addresse!');
 define('_reg_akl_locked', 'Der Account ist gesperrt und kann nicht mehr aktiviert werden!');
 define('_reg_akl_activated', 'Dein Account ist bereits aktiviert');
-define('_info_reg_valid_akl', 'Du hast dich erfolgreich registriert!<br /><br />Bitte aktiviere deinen Account über die Aktivierungs-eMail, die wir dir an deine E-Mail Adresse gesendet haben.<br /><br />Deine Zugangsdaten wurden dir an deine E-Mail Adresse "[email]" versandt.');
+define('_info_reg_valid_akl', 'Du hast dich erfolgreich registriert!<br /><br />Bitte aktiviere deinen Account &uuml;ber die Aktivierungs-eMail, die wir dir an deine E-Mail Adresse gesendet haben.<br /><br />Deine Zugangsdaten wurden dir an deine E-Mail Adresse "[email]" versandt.');
 define('_button_value_activate', 'Aktivieren');
 define('_activate_code', 'Aktivierungscode');
 define('_activate_head', 'Account aktivieren');
@@ -138,8 +166,8 @@ define('_config_ts_added', 'Der Teamspeak Server wurde erfogreich eingetragen!')
 define('_no_ts_page', 'Es ist kein Teamspeak 3 Server eingetragen');
 
 //RSS
-define('_profil_rss', 'Persönliche RSS-Feed Einstellungen');
-define('_info_edit_rss_done', 'Du hast deinen Persönlichen RSS-Feed erfolgreich editiert!');
+define('_profil_rss', 'Pers&ouml;nliche RSS-Feed Einstellungen');
+define('_info_edit_rss_done', 'Du hast deinen Pers&ouml;nlichen RSS-Feed erfolgreich editiert!');
 define('_rss_public_news', 'Public News im RSS-Feed anzeigen');
 define('_rss_public_news_max', 'Anzahl der Public News');
 define('_rss_intern_news', 'Interne News im RSS-Feed anzeigen');
@@ -478,7 +506,7 @@ define('_config_config' , 'Global Settings');
 define('_config_dladmin' , 'Downloads');
 define('_config_editor' , 'Sites');
 define('_config_konto' , 'Clancash');
-define('_config_dl' , 'Download Categories');
+define('_config_dlkat' , 'Download Categories');
 define('_config_nletter' , 'Newsletter');
 define('_config_protocol' , 'Adminprotocoll');
 define('_config_serverlist' , 'Serverlist');

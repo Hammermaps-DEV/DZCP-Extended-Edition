@@ -11,7 +11,7 @@ require_once(basePath."/inc/debugger.php");
 require_once(basePath."/inc/config.php");
 require_once(basePath."/inc/common.php");
 
-header("Content-Type: text/xml; charset=ISO-8859-1");
+header("Content-Type: text/xml");
 if(isset($_GET['key']) || !empty($_GET['key']))
 {
     $qry = db("SELECT id,user FROM `".dba::get('users')."` WHERE `rss_key` = '".htmlentities($_GET['key'])."' LIMIT 1");

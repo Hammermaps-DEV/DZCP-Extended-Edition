@@ -52,6 +52,7 @@ define('users_online', (15*60)); // Wie Lange ein User untätig sein muss, um als
 define('counter_reload', (24*3600)); // Ab wann der Besucherzähler eine aktualisierung durchführt * User basierend *
 define('rss_cache_public_news', (15*60)); // Wann soll der Public RSS Feed aktualisiert werden.
 define('rss_cache_private_news', (5*60)); // Wann soll der Interne RSS Feed aktualisiert werden.
+define('check_msg_email', (5*60)); // Wann soll überprüft werden, ob ein User eine neue Nachricht hat * E-Mail Senden *
 
 /*
  * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit.
@@ -180,6 +181,7 @@ $db_array['sites']            = 'sites';               # dzcp_sites
 $db_array['squads']           = 'squads';              # dzcp_squads
 $db_array['squaduser']        = 'squaduser';           # dzcp_squaduser
 $db_array['sponsoren']        = 'sponsoren';           # dzcp_sponsoren
+$db_array['startpage']        = 'startpage';           # dzcp_startpage
 $db_array['ts']               = 'teamspeak';           # dzcp_teamspeak
 $db_array['users']            = 'users';               # dzcp_users
 $db_array['usergallery']      = 'usergallery';         # dzcp_usergallery

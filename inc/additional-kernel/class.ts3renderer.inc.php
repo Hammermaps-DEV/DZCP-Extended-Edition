@@ -314,7 +314,7 @@ class TS3Renderer
                     DebugConsole::insert_initialize('TS3Renderer::icon()', 'Download Icon: "icon_'.$id.'"');
 
                 $ftInitDownload = self::ftInitDownload(convert::ToString('/icon_'.$id),$cid);
-                if(array_key_exists('ftkey', $ftInitDownload) && $ftInitDownload['size'])
+                if(is_array($ftInitDownload) && array_key_exists('ftkey', $ftInitDownload) && $ftInitDownload['size'])
                 {
                     if(show_teamspeak_debug && show_debug_console)
                         DebugConsole::insert_info('TS3Renderer::icon()', 'Download Icon: "icon_'.$id.'" with FTKey: "'.$ftInitDownload['ftkey'].'"');

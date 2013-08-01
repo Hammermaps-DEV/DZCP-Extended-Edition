@@ -6,6 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
+## PHPMailer ##
+define('_phpmailer_lang', 'de');
+
 ## Charset ##
 define('_charset', 'iso-8859-1');
 
@@ -35,7 +38,7 @@ define('_user_dont_exist', 'Der von dir angegebene User existiert nicht!');
 define('_pwd_encoder_algorithm', 'Algorithmus');
 define('_pwd_encoder', 'Passwort-Hash Algorithmus');
 define('_pwd_encoder_info', 'Welcher Passwort-Hash Algorithmus soll verwendet werden, Standard ist *SHA256');
-define('_user_cant_delete_radmin', 'Root Admins können nicht gel&ouml;scht werden!');
+define('_user_cant_delete_radmin', 'Root Admins k&ouml;nnen nicht gel&ouml;scht werden!');
 define('_no_connect_to_ts', 'Teamspeak 3 Server ist nicht erreichbar!');
 define('_sec_format_day', 'Tag|e');
 define('_sec_format_hour', 'Stunde|n');
@@ -51,7 +54,7 @@ define('_lobby_dl_comments_1', 'neuer Downloadkommentar');
 define('_lobby_dl_comments_2', 'neue Downloadkommentare');
 define('_cache_none', 'Keinen Cache');
 define('_profile_access', 'Userprofil nur Mitgliedern anzeigen');
-define('_profile_access_error', 'Dieses Profil ist nur Mitgliedern zugänglich!');
+define('_profile_access_error', 'Dieses Profil ist nur Mitgliedern zug&auml;nglich!');
 define('_gb_addcomment_from', 'Kommentar von');
 define('_gb_addcomment_edit', 'G&auml;stebuch-Kommentar bearbeiten');
 define('_gb_comment_edited', 'Der G&auml;stebuch-Kommentar wurde erfolgreich editiert!');
@@ -79,6 +82,31 @@ define('_minutes', 'Minuten');
 define('_minute', 'Minute');
 define('_seconds', 'Sekunden');
 define('_second', 'Sekunde');
+define('_smtp_host', 'SMTP Host');
+define('_smtp_port', 'SMTP Port');
+define('_smtp_username', 'SMTP Username');
+define('_smtp_passwort', 'SMTP Passwort');
+define('_smtp_tls_ssl', 'Verschl&uuml;sselung');
+define('_smtp_sendmail_path', 'Sendmail Path');
+define('_admin_eml_config_head', 'E-Mail Einstellungen');
+define('_admin_eml_config_ext', 'Mail-Erweiterung');
+define('_admin_bezeichnung', 'Bezeichnung');
+
+//Startpage
+define('_profil_startpage', 'Startseite');
+define('_config_startpage', 'Startseiten');
+define('_perm_startpage', 'Startseiten verwalten');
+define('_admin_startpage_url', 'Ziel URL');
+define('_admin_startpage_level', 'Sichtbar ab Level');
+define('_admin_startpage_name', 'Name');
+define('_admin_startpage_add_head', 'Neue Startseite anlegen');
+define('_admin_startpage_edit', 'Startseite bearbeiten');
+define('_admin_startpage_added', 'Startseite wurde erfogreich eingetragen');
+define('_admin_startpage_deleted', 'Startseite wurde erfogreich gel&ouml;scht');
+define('_admin_startpage_editd', 'Startseite wurde erfogreich editiert');
+define('_admin_startpage_no_name', 'Du hast keinen Namen eingegeben');
+define('_admin_startpage_no_url', 'Du hast keine URL eingegeben');
+define('_admin_startpage_add', 'Neue Startseite hinzufügen');
 
 //Activate User
 define('_config_activate_user', 'User aktivieren');
@@ -87,20 +115,20 @@ define('_profil_locked', 'Der Account ist noch nicht aktiviert, <a href="../user
 define('_profil_closed', 'Der Account ist gesperrt');
 define('_admin_akl_regist_subj', 'Betreff: Registrierungs Aktivierungs-eMail');
 define('_admin_akl_regist', 'Registrierungs Aktivierungs-eMail Template');
-define('_reg_akl_invalid', 'Dieser Aktivierungslink ist nicht mehr g&uuml;ltig!');
-define('_reg_akl_valid', 'Dein Account wurde aktiviert!');
+define('_reg_akl_invalid', 'Dieser Aktivierungslink ist nicht mehr g&uuml;ltig');
+define('_reg_akl_valid', 'Dein Account wurde aktiviert');
 define('_reg_akl_sended', 'Dein Aktivierungslink wurde an "[email]" versandt, schau bitte in dein E-Mail Postfach');
-define('_reg_akl_email_nf', 'Es existiert kein Account mit dieser E-Mail Addresse!');
-define('_reg_akl_locked', 'Der Account ist gesperrt und kann nicht mehr aktiviert werden!');
+define('_reg_akl_email_nf', 'Es existiert kein Account mit dieser E-Mail Addresse');
+define('_reg_akl_locked', 'Der Account ist gesperrt und kann nicht mehr aktiviert werden');
 define('_reg_akl_activated', 'Dein Account ist bereits aktiviert');
-define('_info_reg_valid_akl', 'Du hast dich erfolgreich registriert!<br /><br />Bitte aktiviere deinen Account über die Aktivierungs-eMail, die wir dir an deine E-Mail Adresse gesendet haben.<br /><br />Deine Zugangsdaten wurden dir an deine E-Mail Adresse "[email]" versandt.');
+define('_info_reg_valid_akl', 'Du hast dich erfolgreich registriert!<br /><br />Bitte aktiviere deinen Account &uuml;ber die Aktivierungs-eMail, die wir dir an deine E-Mail Adresse gesendet haben.<br /><br />Deine Zugangsdaten wurden dir an deine E-Mail Adresse "[email]" versandt.');
 define('_button_value_activate', 'Aktivieren');
 define('_activate_code', 'Aktivierungscode');
 define('_activate_head', 'Account aktivieren');
 define('_perm_activateusers', 'Account Aktivierungen verwalten');
 define('_admin_akl_sended', 'gesendet');
 define('_admin_akl_activated', 'Aktivierungen');
-define('_actived', 'User Account wurde aktiviert!');
+define('_actived', 'User Account wurde aktiviert');
 define('_button_title_akl', 'Account aktivieren');
 define('_admin_akl_resend', 'Aktivierungslink wurde an "[email]" versandt.');
 define('_akl', 'Aktivierungsmails');
@@ -109,7 +137,7 @@ define('_akl_send', 'Aktivierungsmail senden');
 define('_button_activate_user', 'User aktivieren');
 define('_button_del_user', 'User l&ouml;schen');
 define('_users_deleted', 'User gel&ouml;scht');
-define('_actived_all', 'User Accounts wurden aktiviert!');
+define('_actived_all', 'User Accounts wurden aktiviert');
 
 //Nav Empty
 define('_navi_nnwars_entrys', '<center>Keine Wars geplant</center>');
@@ -126,21 +154,21 @@ define('_perm_editteamspeak', 'Teamspeak Server verwalten');
 define('_teamspekadmin_head', 'Teamspeak Server');
 define('_ts_head_extra', 'Teamspeak 3 Zusatzeinstellungen');
 define('_teamspeak_admin_head', 'Admin: Teamspeak Server');
-define('_ts_empty_fport', 'Du hast keinen Server File Port angegeben!');
-define('_ts_empty_port', 'Du hast keinen Server Voice Port angegeben!');
-define('_ts_empty_qport', 'Du hast keinen Server Query Port angegeben!');
-define('_ts_empty_ip_dns', 'IP oder DNS fehlt!');
+define('_ts_empty_fport', 'Du hast keinen Server File Port angegeben');
+define('_ts_empty_port', 'Du hast keinen Server Voice Port angegeben');
+define('_ts_empty_qport', 'Du hast keinen Server Query Port angegeben');
+define('_ts_empty_ip_dns', 'IP oder DNS fehlt');
 define('_ts_settings_default_server', 'Standard Server');
 define('_ts_settings_default_server_desc', 'Diesen Server als Standard eintragen, der aktuelle Standard Server wird mit dem neuen &uuml;berschrieben.');
 define('_teamspeak_legendemenu', 'Server ist im Menu eingetragen? (auf das Icon klicken um den Status zu &auml;ndern)');
 define('_teamspeak_default_legendemenu', 'Server als Standard eingetragen? (auf das Icon klicken um den Status zu &auml;ndern)');
-define('_config_ts_updated', 'Der Teamspeak Server wurde erfogreich editiert!');
-define('_config_ts_added', 'Der Teamspeak Server wurde erfogreich eingetragen!');
+define('_config_ts_updated', 'Der Teamspeak Server wurde erfogreich editiert');
+define('_config_ts_added', 'Der Teamspeak Server wurde erfogreich eingetragen');
 define('_no_ts_page', 'Es ist kein Teamspeak 3 Server eingetragen');
 
 //RSS
-define('_profil_rss', 'Persönliche RSS-Feed Einstellungen');
-define('_info_edit_rss_done', 'Du hast deinen Persönlichen RSS-Feed erfolgreich editiert!');
+define('_profil_rss', 'Pers&ouml;nliche RSS-Feed Einstellungen');
+define('_info_edit_rss_done', 'Du hast deinen Pers&ouml;nlichen RSS-Feed erfolgreich editiert!');
 define('_rss_public_news', 'Public News im RSS-Feed anzeigen');
 define('_rss_public_news_max', 'Anzahl der Public News');
 define('_rss_intern_news', 'Interne News im RSS-Feed anzeigen');
@@ -478,7 +506,7 @@ define('_config_config', 'Allgemeine Einstellungen');
 define('_config_dladmin', 'Downloads');
 define('_config_editor', 'Seitenverwaltung');
 define('_config_konto', 'Clankasse');
-define('_config_dl', 'Downloadkategorien');
+define('_config_dlkat', 'Downloadkategorien');
 define('_config_nletter', 'Newsletter');
 define('_config_protocol', 'Adminprotokoll');
 define('_config_serverlist', 'Serverliste');

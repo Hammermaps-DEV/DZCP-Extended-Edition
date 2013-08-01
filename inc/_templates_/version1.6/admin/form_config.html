@@ -327,6 +327,71 @@
   </td>
 </tr>
 <tr>
+  <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(9)" style="cursor:pointer">
+    <table class="hperc" cellspacing="1">
+      <tr>
+        <td style="width:1%"><img id="img7" src="../inc/images/expand.gif" alt="" /></td>
+        <td><span class="fontBold">[lang_admin_eml_config_head]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr id="more9" style="display:none">
+  <td><table class="hperc" cellspacing="0">
+    <tr>
+      <td class="contentMainTop" width="180"><span class="fontBold">[lang_admin_eml_config_ext]:</span></td>
+      <td class="contentMainFirst" align="center">[mail_ext_select]
+      </td>
+    </tr>
+          <tr>
+        <td colspan="2" class="contentMainTop"><hr /></td>
+      </tr>
+  </table>
+    <table class="hperc" cellspacing="0">
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">[lang_smtp_host]:</span></td>
+        <td class="contentMainFirst" align="center"><input type="text" name="smtp_host" value="[smtp_host]" class="inputField_dis"
+          onfocus="this.className='inputField_en';"
+          onblur="this.className='inputField_dis';" id="smtp_host" /></td>
+      </tr>
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">[lang_smtp_port]:</span></td>
+        <td class="contentMainFirst" align="center"><input type="text" name="smtp_port" value="[smtp_port]" class="inputField_dis_mid"
+          onfocus="this.className='inputField_en_mid';"
+          onblur="this.className='inputField_dis_mid';" id="smtp_port" /></td>
+      </tr>
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">[lang_smtp_username]:</span></td>
+        <td class="contentMainFirst" align="center"><input type="text" name="smtp_username" value="[smtp_username]" class="inputField_dis"
+          onfocus="this.className='inputField_en';"
+          onblur="this.className='inputField_dis';" id="smtp_username" /></td>
+      </tr>
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">[lang_smtp_passwort]:</span></td>
+        <td class="contentMainFirst" align="center"><input type="password" name="smtp_pass" value="[smtp_pass]" class="inputField_dis"
+          onfocus="this.className='inputField_en';"
+          onblur="this.className='inputField_dis';" id="smtp_pass" /></td>
+      </tr>
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">[lang_smtp_tls_ssl]:</span></td>
+        <td class="contentMainFirst" align="center">
+          <select name="smtp_tls_ssl" class="dropdown">[smtp_tls_ssl]</select></td>
+      </tr>
+      <tr>
+        <td colspan="2" class="contentMainTop"><hr /></td>
+      </tr>
+    </table>
+    <table class="hperc" cellspacing="0">
+      <tr>
+        <td width="180" class="contentMainTop"><span class="fontBold">[lang_smtp_sendmail_path]:</span></td>
+        <td class="contentMainFirst" align="center"><input type="text" name="sendmail_path" value="[sendmail_path]" class="inputField_dis"
+          onfocus="this.className='inputField_en';"
+          onblur="this.className='inputField_dis';" id="sendmail_path" /></td>
+      </tr>
+      </table>
+    </td>
+</tr>
+<tr>
   <td class="contentMainTop" colspan="2" onclick="DZCP.toggle(7)" style="cursor:pointer" onmouseover="DZCP.showInfo('[eml_info]');this.className='contentMainFirst'" onmouseout="DZCP.hideInfo();this.className='contentMainTop'">
     <table class="hperc" cellspacing="1">
       <tr>

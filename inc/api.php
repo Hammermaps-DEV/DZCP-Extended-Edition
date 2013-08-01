@@ -8,6 +8,8 @@
 
 class API extends API_CORE
 {
+    public static $version = '1.0';
+
     /**
      *  Ist ein bestimmtes Addon installiert
      *

@@ -1,5 +1,5 @@
 <?php
-/*~ class.pop3.inc.php
+/*~ class.pop3.php
 .---------------------------------------------------------------------------.
 |  Software: PHPMailer - PHP email class                                    |
 |   Version: 5.2.6                                                          |

@@ -773,6 +773,7 @@ function install_mysql_create()
       `smileys` int(1) NOT NULL DEFAULT '0',
       `sponsors` int(1) NOT NULL DEFAULT '0',
       `shoutbox` int(1) NOT NULL DEFAULT '0',
+      `startpage` int(1) NOT NULL DEFAULT '0',
       `support` int(1) NOT NULL DEFAULT '0',
       `votes` int(1) NOT NULL DEFAULT '0',
       `votesadmin` int(1) NOT NULL DEFAULT '0',
@@ -926,6 +927,13 @@ function install_mysql_create()
       `eml_fabo_tedit` text,
       `eml_fabo_pedit` text,
       `eml_pn` text,
+      `smtp_hostname` varchar(200) NOT NULL DEFAULT 'localhost',
+      `smtp_port` int(11) NOT NULL DEFAULT '25',
+      `smtp_username` varchar(200) NOT NULL DEFAULT '',
+      `smtp_password` text,
+      `smtp_tls_ssl` int(1) NOT NULL DEFAULT '0',
+      `sendmail_path` varchar(200) NOT NULL DEFAULT '/usr/sbin/sendmail',
+      `mail_extension` varchar(200) NOT NULL DEFAULT 'mail' COMMENT 'mail,sendmail,smtp',
       `memcache_host` VARCHAR(50) NOT NULL DEFAULT '',
       `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211',
       `k_vwz` varchar(200) NOT NULL DEFAULT '',
@@ -1001,6 +1009,18 @@ function install_mysql_create()
       `pos` int(5) NOT NULL,
       `hits` int(50) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
+    //-> Startseite =================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('startpage')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('startpage')."` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `name` varchar(200) NOT NULL,
+        `url` varchar(200) NOT NULL,
+        `level` int(1) NOT NULL DEFAULT '1',
+        PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
@@ -1168,6 +1188,7 @@ function install_mysql_create()
       `pnmail` int(1) NOT NULL DEFAULT '1',
       `profile_access` int(1) NOT NULL DEFAULT '0',
       `rss_key` varchar(50) NOT NULL DEFAULT '',
+      `startpage` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`),
       UNIQUE KEY `id` (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);

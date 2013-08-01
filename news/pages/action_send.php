@@ -50,9 +50,9 @@ else
         else
         {
             $hp = show(_contact_hp, array("hp" => links($hp)));
-            $nick = !$fromUser ? $nick : blank_autor();
+            $nick = !$fromUser ? $nick : fabo_autor(0,_user_link_blank);
             $von_nick = !$fromUser ? '0' : userid();
-            $titel = !$fromUser ? show(_news_send_titel, array("nick" => $nick)) : show(_news_send_titel, array("nick" => blank_autor()));
+            $titel = !$fromUser ? show(_news_send_titel, array("nick" => $nick)) : show(_news_send_titel, array("nick" => fabo_autor(0,_user_link_blank)));
             $email = !$fromUser ? show(_email_mailto, array("email" => $email)) : '--';
             $sendnews = !$fromUser ? '1' : '2';
             $user = !$fromUser ? $nick : userid();
