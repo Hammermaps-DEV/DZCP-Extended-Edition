@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * <DZCP-Extended Edition>
  * @package: DZCP-Extended Edition
@@ -6,9 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-####################################
-## Wird in einer Index ausgeführt ##
-####################################
 if (!defined('IS_DZCP'))
     exit();
 
