@@ -6,11 +6,7 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-####################################
-## Wird in einer Index ausgeführt ##
-####################################
-if (!defined('IS_DZCP'))
-    exit();
+if (!defined('IS_DZCP')) exit();
 
 //-> Checkt ob ein Ereignis neu ist
 # DEPRECATED #
@@ -26,7 +22,7 @@ function check_new_old($datum, $new = "", $datum2 = "") //Out of date!
     return '';
 }
 
-if (_version < '1.0') //Mindest Version pruefen
+if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {

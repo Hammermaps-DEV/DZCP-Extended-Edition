@@ -6,19 +6,14 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-####################################
-## Wird in einer Index ausgeführt ##
-####################################
-if (!defined('IS_DZCP'))
-    exit();
-
-if (_version < '1.0') //Mindest Version pruefen
+if (!defined('IS_DZCP')) exit();
+if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-$where = $where.' - '._info;
-  if(checkme() == "unlogged" || checkme() < "2")
-  {
+	$where = $where.' - '._info;
+	if(checkme() == "unlogged" || checkme() < "2")
+	{
     $index = error(_error_wrong_permissions);
   } else {
     $qry = db("SELECT * FROM ".dba::get('away')."

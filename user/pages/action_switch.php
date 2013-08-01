@@ -6,11 +6,7 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-####################################
-## Wird in einer Index ausgeführt ##
-####################################
-if (!defined('IS_DZCP'))
-    exit();
+if (!defined('IS_DZCP')) exit();
 
 #####################
 ## Template switch ##

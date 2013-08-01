@@ -6,13 +6,8 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-####################################
-## Wird in einer Index ausgeführt ##
-####################################
-if (!defined('IS_DZCP'))
-    exit();
-
-if (_version < '1.0') //Mindest Version pruefen
+if (!defined('IS_DZCP')) exit();
+if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::get('downloads')." WHERE id = ".$dl_id=convert::ToInt($_GET['id']),true))
     $index = error(show(_id_dont_exist_dl,array('id' => $dl_id)));
