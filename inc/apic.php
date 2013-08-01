@@ -33,6 +33,11 @@ class API_CORE
                     $additional_languages = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/'.language::get_language().'/',false,true,array('php'));
                     $additional_tpl = get_files(basePath.'/inc/additional-addons/'.$addon.'/_templates_/',true); $addon_infos = array();
                     $additional_pages = get_files(basePath.'/inc/additional-addons/'.$addon.'/',true,false,array(),false,array('_templates_','functions','languages'));
+
+                    $additional_admin = array();
+                    if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin') && file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu'))
+                        $additional_admin = get_files(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/',false,true,array('php'));
+
                     $addon_infos = array();
 
                     if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/addon_info.xml'))
@@ -67,6 +72,7 @@ class API_CORE
                     $addon_infos['include_languages'] = (count($additional_languages) >= 1 && !empty($additional_languages) || count($additional_languages_global) && !empty($additional_languages_global) ? true : false);
                     $addon_infos['additional-languages-global'] = (count($additional_languages_global) >= 1 && !empty($additional_languages_global) ? $additional_languages_global : array());
                     $addon_infos['additional-languages'] = (count($additional_languages) >= 1 && !empty($additional_languages) ? $additional_languages : array());
+                    $addon_infos['additional-admin'] = (count($additional_admin) >= 1 && !empty($additional_admin) ? $additional_admin : array());
                     unset($additional_languages,$additional_languages_global);
 
                     $addon_infos['include_tpl'] = (count($additional_tpl) >= 1 && !empty($additional_tpl) && array_var_exists($tmpdir,$additional_tpl) ? true : false);
@@ -74,6 +80,9 @@ class API_CORE
 
                     $addon_infos['additional_pages'] = (count($additional_pages) >= 1 && !empty($additional_pages) ? true : false);
                     unset($additional_pages);
+
+                    $addon_infos['additional_admin'] = (count($additional_admin) >= 1 && !empty($additional_admin) ? true : false);
+                    unset($additional_admin);
 
                     self::$addon_index[$addon] = $addon_infos;
                 }
@@ -85,6 +94,39 @@ class API_CORE
          */
         self::$MobileClass = new Mobile_Detect();
         self::$MobileDevice = self::$MobileClass->isMobile();
+    }
+
+    public static function load_additional_adminmenu()
+    {
+        $index = array();
+        foreach (self::$addon_index as $addon => $addon_infos)
+        {
+            if(!$addon_infos['additional_admin']) continue;
+            foreach ($addon_infos['additional-admin'] as $file)
+            { $index[] = array('dir' => $addon, 'file' => $file); }
+        }
+
+        return $index;
+    }
+
+    public static function is_additional_adminmenu()
+    { if(!modapi_enabled) return false; return count(self::$addon_index) >= 1 ? true : false; }
+
+    public static function call_additional_adminmenu($menu='')
+    {
+        if(!modapi_enabled) return false;
+        foreach (self::$addon_index as $addon => $addon_infos)
+        {
+            if(!$addon_infos['additional_admin']) continue;
+            foreach ($addon_infos['additional-admin'] as $file)
+            {
+                if(str_replace('.php', '', $file) != $menu) continue;
+                if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$file))
+                    return basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$file;
+            }
+        }
+
+        return false;
     }
 
     /**
