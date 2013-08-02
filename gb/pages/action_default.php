@@ -6,8 +6,8 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-if (!defined('IS_DZCP')) exit();´
-if (_version < '1.0')
+if(!defined('IS_DZCP')) exit();
+if(_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
