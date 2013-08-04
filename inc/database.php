@@ -8,7 +8,7 @@
 
 function db($query,$rows=false,$fetch=false,$log=false)
 {
-    database::init();
+    database::init_pre();
     if($rows || $fetch)
     {
         database::query($query,$log);
@@ -29,7 +29,7 @@ function db($query,$rows=false,$fetch=false,$log=false)
 
 function db_stmt($query,$params=array(),$rows=false,$fetch=false,$log=false)
 {
-    database::init();
+    database::init_pre();
     if($rows || $fetch)
     {
         database::stmt_query($query,$params,$log);
@@ -192,18 +192,35 @@ function dbinfo()
 // #######################################
 class database
 {
-    private static $mysqli = null;
-    private static $sql_query = null;
-    private static $insert_id = 0;
-    private static $runned = false;
-    private static $stmt = null;
+    public static $mysqli = null;
+    public static $sql_query = null;
+    public static $insert_id = 0;
+    public static $runned = false;
+    public static $stmt = null;
+    public static $remote = false;
+
+    public static final function init_pre()
+    {
+        if(self::$remote)
+            remote_database::init(null);
+        else
+            self::init();
+    }
 
     /**
      * Datenbank Connect
      */
-    public static final function init()
+    public static function init()
     {
         global $db_array;
+
+        if(self::$remote)
+        {
+            if(is_resource(self::$mysqli) && self::$mysqli != null)
+                mysqli_close(self::$mysqli);
+
+            self::$remote = false;
+        }
 
         if(!self::$runned)
         {
@@ -253,7 +270,7 @@ class database
      * Datenbank Query senden
      * @param string $sql_query
      */
-    public static final function query($sql_query='',$log=false)
+    public static function query($sql_query='',$log=false)
     {
         global $db_array;
         if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
@@ -276,7 +293,7 @@ class database
      * @param string $static_query
      * @param array params
      */
-    public static final function stmt_query($query='SELECT * FROM test WHERE name=?',$params=array('si', 'hallo', '4'), $log=false)
+    public static function stmt_query($query='SELECT * FROM test WHERE name=?',$params=array('si', 'hallo', '4'), $log=false)
     {
         if($log || debug_all_sql_querys) DebugConsole::wire_log('debug', 9, 'SQL_Query', $query);
         if(self::$stmt = mysqli_prepare(self::$mysqli, $query))
@@ -326,7 +343,7 @@ class database
         return false;
     }
 
-    private static final function refValues($arr)
+    private static function refValues($arr)
     {
         if (strnatcmp(phpversion(),'5.3') >= 0)
         {
@@ -343,7 +360,7 @@ class database
     /**
      * Datenbankverbindung übergeben
      */
-    public static final function get_insert_id()
+    public static function get_insert_id()
     { return self::$insert_id; }
 
     /**
@@ -352,7 +369,7 @@ class database
      * @param boolean $array
      * @param mysqli_result $result
      */
-    public static final function fetch($array=false,$result=null)
+    public static function fetch($array=false,$result=null)
     {
         if(is_array($result) || (!empty(self::$sql_query) && count(self::$sql_query) >= 1) && is_array(self::$sql_query))
         {
@@ -382,7 +399,7 @@ class database
      *
      * @param mysqli_result $result
      */
-    public static final function rows($result=null)
+    public static function rows($result=null)
     {
         if(is_array($result) || is_array(self::$sql_query))
             return is_array($result) ? $result['_stmt_rows_'] : self::$sql_query['_stmt_rows_'];
@@ -396,7 +413,7 @@ class database
     /**
      * Gibt den Ergebnisspeicher frei
      */
-    public static final function free_result()
+    public static function free_result()
     {
         if(self::$sql_query != null && !empty(self::$sql_query))
             mysqli_free_result(self::$sql_query);
@@ -405,7 +422,7 @@ class database
     /**
      * Schließt die Datenbankverbindung
      */
-    public static final function close()
+    public static function close()
     {
         if(is_resource(self::$mysqli) && self::$mysqli != null)
             mysqli_close(self::$mysqli);
@@ -414,7 +431,7 @@ class database
     /**
      * Gibt Datenbank Fehler aus und stoppt die Ausführung des CMS
      **/
-    private static final function print_db_error($query=false)
+    private static function print_db_error($query=false)
     {
         global $prefix;
         echo '<b>MySQL-Query failed:</b><br /><ul>'.
@@ -428,7 +445,7 @@ class database
     /**
      * Gibt die MySQL Version zurück
      */
-    public static final function version()
+    public static function version()
     { return mysqli_get_server_info(self::$mysqli); }
 
     /**
@@ -436,7 +453,7 @@ class database
      *
      * @return string
      */
-    public static final function backup()
+    public static function backup()
     {
         global $db_array;
         $backup_table_data = array();
@@ -514,6 +531,68 @@ class database
         unset($data);
         return $sql_backup;
     }
+}
+
+class remote_database extends database
+{
+    private static $db_array_save = array();
+    private static $runned_remote = false;
+
+    /**
+     * Datenbank Connect
+     */
+    public static function init($db_array=array())
+    {
+        if(!self::$runned_remote)
+        {
+            DebugConsole::insert_initialize('remote_database::init()', 'DZCP Database-Core * Remote');
+            self::$runned_remote = true;
+        }
+
+        if(count(self::$db_array_save) >= 1 && !count($db_array) || $db_array == null)
+            $db_array = self::$db_array_save;
+        else
+            self::$db_array_save = $db_array;
+
+        if(!self::$remote)
+            self::$mysqli = null;
+
+        if(is_resource(self::$mysqli) && self::$mysqli != null) //already connected
+            return;
+
+        if(!empty($db_array['host']) && !empty($db_array['user']) && !empty($db_array['pass']) && !empty($db_array['db']))
+        {
+            if(!self::$mysqli = mysqli_init())
+                die('mysqli_init failed');
+
+            if(!mysqli_options(self::$mysqli, MYSQLI_OPT_CONNECT_TIMEOUT, 5))
+                die('Setting MYSQLI_OPT_CONNECT_TIMEOUT failed');
+
+            if (!self::$mysqli=mysqli_connect($db_array['host'], $db_array['user'], $db_array['pass'], $db_array['db']))
+                self::print_db_error();
+
+            self::$remote = true;
+        }
+        else
+        {
+            self::$mysqli = null;
+            echo '<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" /></head><body><b>';
+            if(empty($db_array['host']))
+                echo "Das MySQL-Hostname fehlt in der Configuration!<p>";
+
+            if(empty($db_array['user']))
+                echo "Der MySQL-Username fehlt in der Configuration!<p>";
+
+            if(empty($db_array['pass']))
+                echo "Das MySQL-Passwort fehlt in der Configuration!<p>";
+
+            if(empty($db_array['db']))
+                echo "Der MySQL-Datenbankname fehlt in der Configuration!<p>";
+
+            die("</b></body></html>");
+        }
+    }
+
 }
 
 ############# DBA #############
