@@ -50,6 +50,7 @@ class API_CORE
                             $info_array['xml_addon_autor'] = convert::ToString($xml->addon_autor);
                             $info_array['xml_addon_autor_url'] = convert::ToString($xml->addon_autor_url);
                             $info_array['xml_addon_autor_mail'] = convert::ToString($xml->addon_autor_mail);
+                            $info_array['xml_addon_version'] = convert::ToString($xml->addon_version);
                             $info_array['xml_addon_info'] = convert::ToString($xml->addon_info);
                             $info_array['xml_addon_version'] = convert::ToString($xml->addon_version);
                             $info_array['xml_addon_init_call'] = convert::ToString($xml->addon_init_call);
@@ -75,7 +76,7 @@ class API_CORE
                     $addon_infos['additional-admin'] = (count($additional_admin) >= 1 && !empty($additional_admin) ? $additional_admin : array());
                     unset($additional_languages,$additional_languages_global);
 
-                    $addon_infos['include_tpl'] = (count($additional_tpl) >= 1 && !empty($additional_tpl) && array_var_exists($tmpdir,$additional_tpl) ? true : false);
+                    $addon_infos['include_tpl'] = (count($additional_tpl) >= 1 && !empty($additional_tpl) && (array_var_exists($tmpdir,$additional_tpl) || array_var_exists('default',$additional_tpl)) ? true : false);
                     unset($additional_tpl);
 
                     $addon_infos['additional_pages'] = (count($additional_pages) >= 1 && !empty($additional_pages) ? true : false);
@@ -177,18 +178,17 @@ class API_CORE
     */
     public static function load_additional_language()
     {
-        global $ajaxThumbgen;
-        $return = false;
+        global $ajaxThumbgen; $languages_array = false;
         if(allow_additional && !$ajaxThumbgen)
         {
             $additional_languages_global = get_files(basePath.'/inc/additional-languages/',false,true,array('php'));
             if(count($additional_languages_global) >= 1 && !empty($additional_languages_global))
-            { foreach($additional_languages_global as $lang_g) { if(file_exists(basePath.'/inc/additional-languages/'.$lang_g)) $return[] = basePath.'/inc/additional-languages/'.$lang_g; } }
+            { foreach($additional_languages_global as $lang_g) { if(file_exists(basePath.'/inc/additional-languages/'.$lang_g)) $languages_array[] = basePath.'/inc/additional-languages/'.$lang_g; } }
 
             $additional_languages = get_files(basePath.'/inc/additional-languages/'.language::get_language().'/',false,true,array('php'));
             if(count($additional_languages) >= 1 && !empty($additional_languages))
             { foreach($additional_languages as $lang) { if(file_exists(basePath.'/inc/additional-languages/'.language::get_language().'/'.$lang))
-                $return[] = basePath.'/inc/additional-languages/'.language::get_language().'/'.$lang; } }
+              $languages_array[] = basePath.'/inc/additional-languages/'.language::get_language().'/'.$lang; } }
             unset($additional_languages,$additional_languages_global);
         }
 
@@ -201,14 +201,13 @@ class API_CORE
                     $dir = $addon['dir'];
                     if($addon['include_languages'])
                     {
-                        $return = array();
                         $languages_globals = $addon['additional-languages-global'];
                         if(count($languages_globals) >= 1)
                         {
                             foreach($languages_globals as $global)
                             {
                                 if(file_exists($dir.'languages/'.$global))
-                                    $return[] = $dir.'languages/'.$global;
+                                    $languages_array[] = $dir.'languages/'.$global;
                             }
                             unset($global,$languages_globals);
                         }
@@ -219,8 +218,9 @@ class API_CORE
                             foreach($languages as $lang)
                             {
                                 if(file_exists($dir.'languages/'.language::get_language().'/'.$lang))
-                                    $return[] = $dir.'languages/'.language::get_language().'/'.$lang;
+                                    $languages_array[] = ($dir.'languages/'.language::get_language().'/'.$lang);
                             }
+
                             unset($lang,$languages);
                         }
                     }
@@ -228,7 +228,7 @@ class API_CORE
             }
         }
 
-        return $return;
+        return $languages_array;
     }
 
     /**

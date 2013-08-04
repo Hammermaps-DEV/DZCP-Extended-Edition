@@ -14,6 +14,7 @@
 function get_files($dir=null,$only_dir=false,$only_files=false,$file_ext=array(),$preg_match=false,$blacklist=array())
 {
     $files = array();
+    if(!file_exists($dir) && !is_dir($dir)) return $files;
     $hash = md5($dir.$only_dir.$only_files.count($file_ext).$preg_match.count($blacklist));
 
     if(!RTBuffer::check($hash))
@@ -387,7 +388,7 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
 
         if($template_additional != false && file_exists($template_additional.".html"))
             $tpl = file_get_contents($template_additional.".html");
-        else if($template_additional != false && ($tpli=API_CORE::load_additional_tpl($tpl)) && !file_exists($template_additional.".html"))
+        else if($template_additional != false && !file_exists($template_additional.".html") && ($tpli=API_CORE::load_additional_tpl($tpl)))
             $tpl = $tpli;
         else if(allow_additional && file_exists($template.".html") && !file_exists($template_additional.".html"))
             $tpl = file_get_contents($template.".html");

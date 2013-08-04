@@ -29,11 +29,22 @@ if(_adminMenu != 'true')
     $support .= "DZCP API: V".API::$version."\r\n";
     $support .= "\r\n";
 
-    $support .= "#####################\r\n";
-    $support .= "DZCP Erweiterungen \r\n";
-    $support .= "#####################\r\n";
-    $support .= "GameQ: ".GameQ::VERSION."\r\n";
-    $support .= "\r\n";
+    if(count(API_CORE::$addon_index) >= 1)
+    {
+        $support .= "#####################\r\n";
+        $support .= "DZCP Addons \r\n";
+        $support .= "#####################\r\n";
+        foreach(API_CORE::$addon_index as $addon)
+        {
+            $support .= "===========================\r\n";
+            $support .= "Addon: ".$addon['xml']['xml_addon_name']."\r\n";
+            $support .= "Autor: ".$addon['xml']['xml_addon_autor']."\r\n";
+            $support .= "Homepage: ".$addon['xml']['xml_addon_autor_url']."\r\n";
+            $support .= "E-Mail: ".$addon['xml']['xml_addon_autor_mail']."\r\n";
+            $support .= "Version: ".$addon['xml']['xml_addon_version']."\r\n";
+            $support .= "===========================\r\n\r\n";
+        }
+    }
 
     $support .= "#####################\r\n";
     $support .= "Domain & User\r\n";
@@ -45,6 +56,7 @@ if(_adminMenu != 'true')
     $support .= "#####################\r\n";
     $support .= "Server Versionen\r\n";
     $support .= "#####################\r\n";
+    $support .= "GameQ: ".GameQ::VERSION."\r\n";
     $support .= "Server OS: ".@php_uname()."\r\n";
     $support .= "Webserver: ".(array_key_exists('apache2handler', $PhpInfo) ? (array_key_exists('Apache Version', $PhpInfo['apache2handler']) ? $PhpInfo['apache2handler']['Apache Version'] : 'PHP l&auml;uft als CGI <Keine Info>' ) : 'PHP l&auml;uft als CGI <Keine Info>')."\r\n";
     $support .= "PHP-Version: ".phpversion()." (".php_sapi_type().")"."\r\n";
