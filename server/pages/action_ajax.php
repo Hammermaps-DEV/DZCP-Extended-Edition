@@ -275,7 +275,7 @@ else
                 $image_map .= '<div id="'.$clsid.'"><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></div>';
             }
             else
-                $image_map = '<a href="../inc/images/maps/'.$image_map.'" rel="lightbox[maps_'.$get['id'].']"><img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120" class="ServerPic" alt="" /></a>';
+                $image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120" class="ServerPic" alt="" /></a>';
 
             $image_pwd = ($server['game_password'] ? '<img src="../inc/images/closed.png" alt="" alt="" title="Server Password" class="icon" />' : ''); //Server Password
             $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server

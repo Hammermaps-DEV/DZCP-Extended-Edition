@@ -6,10 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function welcome()
 {
     $return = "<script language=\"javascript\" type=\"text/javascript\">

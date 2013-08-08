@@ -6,14 +6,9 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function languages()
 {
-    $lang="";
-    $files = language::get_language_files();
+    $lang=""; $files = language::get_language_files();
     foreach($files as $file)
     {
         $file = str_replace('.php','',$file);

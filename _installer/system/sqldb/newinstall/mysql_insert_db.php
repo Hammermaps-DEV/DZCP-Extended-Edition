@@ -335,7 +335,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L'z Clanportal, das CMS for Online-Clans!</p>")."', `box` = 1, `pos` = 2;",false,false,true);
     db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP Rotationsbanner', `link` = 'http://www.dzcp.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal</p>")."', `banner` = 1, `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `pos` = 3;",false,false,true);
-    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP - Extended Edition', `link` = 'http://www.hammermaps.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal - Extended Edition</p>")."', `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `box` = 1, `pos` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('sponsoren')."` SET `name` = 'DZCP - Extended Edition', `link` = 'http://www.hammermaps.de', `beschreibung` = '".string::encode("<p>deV!L`z Clanportal - Extended Edition</p>")."', `blink` = '', `box` = 1, `pos` = 1;",false,false,true);
 
     //===============================================================
     //-> Glossar ====================================================

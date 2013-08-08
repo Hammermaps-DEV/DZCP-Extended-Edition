@@ -370,18 +370,6 @@ function checkme($userid_set=0)
     }
 }
 
-//-> wysiwyg editor zustand
-final class wysiwyg
-{
-    //advanced
-    protected static $set = 'normal';
-    public static final function set($set='normal')
-    { self::$set = $set; }
-
-    public static final function get()
-    { return self::$set; }
-}
-
 //-> Templateswitch
 if(!$ajaxThumbgen)
 {
@@ -397,9 +385,6 @@ if(!$ajaxThumbgen)
     //-> API & RSS call after Templateswitch & Language
     API_CORE::init();
     rss_feed::init();
-
-    //-> wysiwyg editor
-    wysiwyg::set();
 
     //-> BBOCDE
     bbcode::init();
@@ -771,8 +756,8 @@ function squad($code)
 {
     global $picformat;
 
-    if(file_exists(basePath.'/inc/images/gameicons/'.$code))
-        return '<img src="../inc/images/gameicons/'.$code.'" alt="" class="icon" />';
+    if(file_exists(basePath.'/inc/images/gameicons/custom/'.$code))
+        return '<img src="../inc/images/gameicons/custom/'.$code.'" alt="" class="icon" />';
 
     return '<img src="../inc/images/gameicons/nogame.gif" alt="" class="icon" />';
 }
@@ -876,12 +861,7 @@ function img_size($img,$width=0,$height=0)
 {
     $width = ($width != 0 ? '&width='.$width : '');
     $height = ($height != 0 ? '&height='.$height : '');
-    return "<a href=\"../inc/images/uploads/".$img."\" rel=\"lightbox[l_".convert::ToInt($img)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$img.$width.$height."\" alt=\"\" /></a>";
-}
-
-function img_cw($folder="", $img="")
-{
-    return "<a href=\"../".$folder."_".$img."\" rel=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$folder."_".$img."\" alt=\"\" /></a>";
+    return "<a href=\"../inc/images/uploads/".$img."\" data-lightbox=\"l_".convert::ToInt($img)."\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$img.$width.$height."\" alt=\"\" /></a>";
 }
 
 //-> Blaetterfunktion
@@ -1750,25 +1730,16 @@ function page($index,$title,$where,$time,$index_templ=false)
     mailmgr::Send();
 
     // JS-Dateine einbinden
-    javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no)); //basic confirm box
-    $lng = (language::get_language()=='deutsch') ? 'de':'en';
-    $edr = wysiwyg::get();
-    $lcolor = ($cp_color) ? 'lcolor=true,':'';
-    $java_vars = "<script language=\"javascript\" type=\"text/javascript\">var maxW = ".config('maxwidth').", lng = '".$lng."', dzcp_editor = '".$edr."', ".$lcolor." json_from_php = '".javascript::encode()."';</script>";
-    unset($lcolor,$edr,$lng);
+    javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no, 'maxW' => config('maxwidth'), 'lng' => (language::get_language()=='deutsch') ? 'de':'en', 'domain' => settings('i_domain'),
+    'extern' => convert::BoolToInt(extern_urls_detect), 'worker' => convert::BoolToInt(use_html5_worker), 'tmpdir' => '../inc/_templates_/'.$tmpdir));
+    $java_vars = "<script language=\"javascript\" type=\"text/javascript\">var json_from_php = '".javascript::encode()."';</script>";
     $login = ''; $check_msg = ''; $ukrss = '';
-
-    if(!API::is_mobile())
-        $java_vars .= '<script language="javascript" type="text/javascript" src="'.$designpath.'/_js/wysiwyg.js"></script>';
 
     if(settings("wmodus") && checkme() != 4)
     {
         $secure = (config('securelogin') ? show("menu/secure", array("help" => _login_secure_help, "security" => _register_confirm)) : '');
         $login = show("errors/wmodus_login", array("what" => _login_login, "secure" => $secure, "signup" => _login_signup, "permanent" => _login_permanent, "lostpwd" => _login_lostpwd));
-        echo show("errors/wmodus", array("tmpdir" => $tmpdir, "java_vars" => $java_vars,
-                                         "dir" => $designpath,
-                                         "title" => string::decode(strip_tags($title)),
-                                         "login" => $login));
+        echo show("errors/wmodus", array("tmpdir" => $tmpdir, "java_vars" => $java_vars, "dir" => $designpath, "title" => string::decode(strip_tags($title)), "login" => $login));
     }
     else
     {
@@ -1848,7 +1819,7 @@ function page($index,$title,$where,$time,$index_templ=false)
                     if($menu_xml['xml'])
                     {
                         $arr[$phold] = '';
-                        if(!$MenuConfig['AjaxLoad'] || array_key_exists($phold, $AjaxLoad_blacklist) || !AjaxLoad)
+                        if(!$MenuConfig['AjaxLoad'] || (array_key_exists($phold, $AjaxLoad_blacklist) && !$AjaxLoad_blacklist[$phold]) || !AjaxLoad)
                         {
                             if((!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && !$MenuConfig['Only_Users']) ||
                             (!$MenuConfig['Only_Root'] && !$MenuConfig['Only_Admin'] && $MenuConfig['Only_Users'] &&  checkme() != "unlogged" && checkme() != "banned") ||

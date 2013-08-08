@@ -1,25 +1,25 @@
 </table>
 <table class="mainContent" cellspacing="1">
 <tr>
-  <td class="contentHead" colspan="3" align="center"><span class="fontBold">[head]</span></td>
+  <td class="contentHead" colspan="5" align="center"><span class="fontBold">[lang_cw_players_head]</span></td>
 </tr>
 <tr>
-  <td class="contentMainTop" colspan="1"><span class="fontBold">[nick]</span></td>
-  <td class="contentMainTop" colspan="2"><span class="fontBold">[status]</span></td>
+  <td class="contentMainTop" colspan="3"><span class="fontBold">[lang_nick]</span></td>
+  <td class="contentMainTop" colspan="4"><span class="fontBold">[lang_status]</span></td>
 </tr>
 [show_players]
 <tr>
-  <td class="contentMainTop" colspan="3" align="center"><span class="fontBold">[play]</span></td>
+  <td class="contentMainTop" colspan="5" align="center"><span class="fontBold">[lang_cw_players_play]</span></td>
 </tr>
 <form name="cwstatus" action="?action=update&amp;id=[id]" method="post" onsubmit="return(DZCP.submitButton())">
 <tr>
-  <td class="contentMainFirst" colspan="3" align="center">
-  <input class="checkbox" type="radio" name="status" value="0" [sely] /> [yes] 
-  <input class="checkbox" type="radio" name="status" value="1" [seln] /> [no] 
-  <input class="checkbox"  type="radio" name="status" value="2" [selm] /> [maybe]</td>
+  <td class="contentMainFirst" colspan="5" align="center">
+  <input class="checkbox" type="radio" name="status" value="0" [sely] /> [lang_yes]
+  <input class="checkbox" type="radio" name="status" value="1" [seln] /> [lang_no]
+  <input class="checkbox"  type="radio" name="status" value="2" [selm] /> [lang_maybe]</td>
 </tr>
 <tr>
-  <td class="contentBottom" colspan="3">
+  <td class="contentBottom" colspan="5">
     <input id="contentSubmit" type="submit" value="[value]" class="submit" />
     [admin]
   </td>

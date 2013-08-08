@@ -6,10 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function server($serverID = 0)
 {
     global $picformat;

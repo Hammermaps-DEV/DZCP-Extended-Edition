@@ -6,7 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._news_admin_head;
-wysiwyg::set('advanced');
       if($_GET['do'] == "add")
       {
         $qryk = db("SELECT * FROM ".dba::get('newskat')."");

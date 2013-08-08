@@ -210,3 +210,7 @@ Neue Einstellungen für das Senden von E-Mails von der Webseite aus, wurde hinzu
 * SMTP + Account Login zbs. bei Verwendung von GMX,Web.de Servern etc. 
 * Sendmail + Pfadangabe für die Sendmail Anwendung oder vergleichbares.
 * PHP Mail Funktion *Standard* verwendet die PHP eigene Mail Funktion.
+
+Einführung von Web Workern, ermöglicht Threading für JavaScript und paralleles lädt von Seiten Inhalten.
+* Ist Template abhängig, Änderungen an der JavaScript Seite notwendig, im Standard Template bereits vorhanden.
+

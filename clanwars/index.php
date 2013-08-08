@@ -25,7 +25,6 @@ include(basePath."/clanwars/helper.php");
 $dir = "clanwars";
 $where = _site_clanwars;
 $index = "";
-$maxcw = config('m_clanwars');
 
 ##############
 ## SECTIONS ##

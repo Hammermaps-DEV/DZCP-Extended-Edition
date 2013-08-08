@@ -5,10 +5,75 @@
   var isIE  = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
   var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
   var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
-  var json = jQuery.parseJSON(json_from_php);
+  var index = new Array(); var i = 0; var pool;
+
+  //Web Worker Pool
+  function Pool(size)
+  {
+      var _this = this;
+      this.taskQueue = [];
+      this.workerQueue = [];
+      this.poolSize = size;
+
+      this.addWorkerTask = function(workerTask)
+      {
+          if (_this.workerQueue.length > 0)
+          { var workerThread = _this.workerQueue.shift(); workerThread.run(workerTask); }
+          else { _this.taskQueue.push(workerTask); }
+      }
+
+      this.init = function()
+      {
+          for (var i = 0 ; i < size ; i++)
+          { _this.workerQueue.push(new WorkerThread(_this)); }
+      }
+
+      this.freeWorkerThread = function(workerThread)
+      {
+          if (_this.taskQueue.length > 0)
+          {
+              var workerTask = _this.taskQueue.shift();
+              workerThread.run(workerTask);
+          }
+          else
+          {
+              _this.taskQueue.push(workerThread);
+          }
+      }
+  }
+
+  function WorkerThread(parentPool)
+  {
+      var _this = this;
+
+      this.parentPool = parentPool;
+      this.workerTask = {};
+
+      this.run = function(workerTask)
+      {
+          this.workerTask = workerTask;
+          var worker = new Worker(json.tmpdir + '/_js/worker/XMLHttpRequest.js');
+          worker.addEventListener('message', dummyCallback, false);
+          worker.postMessage(workerTask.startMessage);
+      }
+
+      function dummyCallback(event)
+      {
+          _this.workerTask.callback(event);
+          _this.parentPool.freeWorkerThread(_this);
+      }
+  }
+
+  // task to run
+  function WorkerTask(callback, msg)
+  {
+      this.callback = callback;
+      this.startMessage = msg;
+  };
 
 // DZCP JAVASCRIPT LIBARY FOR JQUERY >= V1.9
-  var DZCP = {
+  var DZCP =
+  {
   //init
     init: function()
     {
@@ -21,8 +86,11 @@
         // init jquery-ui
         DZCP.initJQueryUI();
 
-        // init lightbox
-        DZCP.initLightbox();
+        // resize images
+        DZCP.resizeImages();
+
+        // init Worker
+        DZCP.initWorker();
 
         // PreLoad checkPassword Pics
         images = new Array();
@@ -39,7 +107,16 @@
         imageObj = new Image();
         var i; for(i=0; i<=3; i++)
         { imageObj.src=images[i]; }
+
+        if(json.extern == '1')
+            $("a:not([href*="+json.domain+"])").attr("target","_blank");
     },
+
+    loadNow: function()
+    { },
+
+    resizeNow: function()
+    { /* Bei einer Größenänderung des Browserfensters */ },
 
     checkPassword: function(passwd)
     {
@@ -72,25 +149,7 @@
         else { $('#Words').html(level[4]); }
     },
 
-  // init lightbox
-    initLightbox: function() {
-      $('a[rel^=lightbox]').lightBox({
-          fixedNavigation:      true,
-          overlayBgColor:       '#000',
-             overlayOpacity:       0.8,
-            imageLoading:         '../inc/images/lightbox/loading.gif',
-             imageBtnClose:        '../inc/images/lightbox/close.gif',
-            imageBtnPrev:         '../inc/images/lightbox/prevlabel.gif',
-             imageBtnNext:         '../inc/images/lightbox/nextlabel.gif',
-            containerResizeSpeed: 350,
-            txtImage:             (lng == 'de' ? 'Bild' : 'Image'),
-             txtOf:                (lng == 'de' ? 'von' : 'of'),
-            maxHeight: screen.height * 0.9,
-            maxWidth: screen.width * 0.9
-      });
-    },
-
-  // init jquery-ui
+    // init jquery-ui
     initJQueryUI: function() {
         $(".slidetabs").tabs(".images > div", { effect: 'fade', rotate: true }).slideshow({ autoplay: true, interval: 6000 });
         $(".tabs").tabs("> .switchs", { effect: 'fade' });
@@ -188,10 +247,41 @@
         request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
     },
 
+    // init Web Worker * HTML5
+    initWorker: function()
+    {
+        if (typeof (Worker) !== "undefined" && json.worker == '1')
+        {
+            pool = new Pool(6); pool.init();
+            for (var i in index)
+            {
+                data = index[i];
+                var workerTask = new WorkerTask(DZCP.callback_replacement, {'ajax' : data[1], 'tag' : data[0], 'post': false, 'postdata': '' }); //Bug
+                pool.addWorkerTask(workerTask);
+            }
+        }
+    },
+
+    //replacement div for Web Workers * HTML5
+    callback_replacement: function(event)
+    {
+        worker = event.data;
+        $('#' + worker.tag).html( worker.data ).hide().fadeIn("normal");
+    },
+
     // init Ajax DynLoader
-    initDynLoader: function(tag,menu,options) {
-        var request = $.ajax({ url: "../inc/ajax.php?loader=menu&mod=" + menu + options, type: "GET", data: {}, cache:true, dataType: "html", contentType: "application/x-www-form-urlencoded; charset=iso-8859-1" });
-        request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
+    initDynLoader: function(tag,menu,options)
+    {
+        if (typeof (Worker) !== "undefined" && json.worker == '1')
+        {
+            index[i] = new Array(tag,'ajax.php?loader=menu&mod=' + menu + options);
+            i++;
+        }
+        else
+        {
+            var request = $.ajax({ url: "../inc/ajax.php?loader=menu&mod=" + menu + options, type: "GET", data: {}, cache:true, dataType: "html", contentType: "application/x-www-form-urlencoded; charset=iso-8859-1" });
+            request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
+        }
     },
 
     // submit shoutbox
@@ -316,56 +406,6 @@
             $('#img_'+id).prop({alt: 'hidden', src: '../inc/images/toggle_hidden.png'});
     },
 
-    // resize images
-    resizeImages: function() {
-        for(var i=0;i<doc.images.length;i++)
-        {
-            var d = doc.images[i];
-
-            if(d.className == 'content')
-            {
-                var imgW = d.width;
-                var imgH = d.height;
-
-                if(maxW != 0 && imgW > maxW)
-                {
-                    d.width = maxW;
-                    d.height = Math.round(imgH * (maxW / imgW));
-
-                    if(!DZCP.linkedImage(d))
-                    {
-                        var textLink = doc.createElement("span");
-                        var popupLink = doc.createElement("a");
-
-                        textLink.appendChild(doc.createElement("br"));
-                        textLink.setAttribute('class', 'resized');
-                        textLink.appendChild(doc.createTextNode('auto resized to '+d.width+'x'+d.height+' px'));
-
-                        popupLink.setAttribute('href', d.src);
-                        popupLink.setAttribute('rel', 'lightbox');
-                        popupLink.appendChild(d.cloneNode(true));
-
-                        d.parentNode.appendChild(textLink);
-                        d.parentNode.replaceChild(popupLink, d);
-
-                        DZCP.initLightbox();
-                    }
-                }
-            }
-        }
-    },
-
-    linkedImage: function(node) {
-        do
-        {
-            node = node.parentNode;
-            if (node.nodeName == 'A')
-                return true;
-        }
-        while(node.nodeName != 'TD' && node.nodeName != 'BODY');
-        return false;
-    },
-
     // ajax calendar switch
     calSwitch: function(m, y) {
         $('#navKalender').load('../inc/ajax.php?i=kalender&month=' + m + '&year=' + y);
@@ -484,8 +524,32 @@
         $('input[name='+ do_obj +']').val(do_a);
         $("#" + formId).submit();
     },
+
+    // resize images
+    resizeImages: function()
+    {
+        $("table.mainContent img").each(function(i) //Bilder filtern nach class="mainContent"
+        {
+            var imgWidth = $(this).width();
+            var imgHeight = $(this).height();
+
+            if(imgWidth > json.maxW)
+            {
+                var new_width = json.maxW;
+                var new_height = Math.round(imgHeight * (json.maxW / imgWidth));
+                var src = $(this).attr("src"); var alt = $(this).attr("alt");
+                if(!$(this).parent().attr("href"))
+                    $(this).replaceWith("<div style=\"opacity: 1; height: "+new_height+"px; width: "+new_width+"px; overflow: hidden;\"><a data-lightbox='resize_mainContent' class=\"field-anchor\" href=\"" + src + "\"><img class=\"resizeImage\" alt=\"" + alt + "\" src=\"" + src + "\" /></a></div><span class=\"resized\">auto resized to " + imgWidth + "x" + imgHeight + "px</span>");
+                else
+                    $(this).replaceWith("<div style=\"opacity: 1; height: "+new_height+"px; width: "+new_width+"px; overflow: hidden;\"><img class=\"resizeImage\" alt=\"" + alt + "\" src=\"" + src + "\" /></div><span class=\"resized\">auto resized to " + imgWidth + "x" + imgHeight + "px</span>");
+
+                $('img.resizeImage').imgscale({ fade : 200, WidthPX : new_width, HeightPX : new_height });
+            }
+        });
+    },
 }
 
 // load global events
 $(document).ready(function() { DZCP.init(); });
-$(window).load(function() { DZCP.resizeImages(); });
+$(window).load(function() { DZCP.loadNow(); });
+$(window).resize(function() { DZCP.resizeNow(); });

@@ -6,7 +6,6 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._editor_head;
-wysiwyg::set('advanced');
       if($_GET['do'] == "add")
       {
         $qry = db("SELECT s2.*, s1.name AS katname, s1.placeholder FROM ".dba::get('navi_kats')." AS s1 LEFT JOIN ".dba::get('navi')." AS s2 ON s1.`placeholder` = s2.`kat`

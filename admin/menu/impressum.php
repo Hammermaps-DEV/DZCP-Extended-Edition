@@ -13,8 +13,6 @@ if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_impressum_head;
-wysiwyg::set('advanced');
-
 $get = db("SELECT i_domain,i_autor FROM ".dba::get('settings'),false,true);
 $show = show($dir."/form_impressum", array(
         "domain" => string::decode($get['i_domain']),

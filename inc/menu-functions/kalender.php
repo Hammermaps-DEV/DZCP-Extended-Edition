@@ -6,10 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function kalender($month="",$year="")
 {
     $menu_xml = get_menu_xml('kalender');

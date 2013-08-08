@@ -6,10 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function slideshow()
 {
     $qry = db("SELECT * FROM ".dba::get('slideshow')." ORDER BY `pos` ASC LIMIT 4");

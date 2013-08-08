@@ -13,8 +13,6 @@ if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._artikel;
-wysiwyg::set('advanced');
-
 switch($do)
 {
     case 'add':

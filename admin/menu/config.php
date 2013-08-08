@@ -13,7 +13,6 @@ if(_adminMenu != 'true')
     exit();
 
 $where = $where.': '._config_global_head; $show = '';
-wysiwyg::set('advanced');
 switch ($do)
 {
     case 'update':

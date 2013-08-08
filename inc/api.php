@@ -141,14 +141,6 @@ class API extends API_CORE
     { return self::add_additional_bbcode($bbcode,$html_replacement); }
 
     /**
-     * Aktiviert am WYSIWYG-Editor den Advanced Modus oder deaktiviert ihn.
-     *
-     * @param boolean $bool
-     */
-    public static function set_advanced_wysiwyg($bool = false)
-    { wysiwyg::set($bool ? 'advanced' : 'normal'); }
-
-    /**
      * Codiert Strings und Texte in UTF8.
      * Schreiben von Werten in die Datenbank.
      *

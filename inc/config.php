@@ -19,7 +19,7 @@ define('save_debug_console', false); //Speichert alle in der Debug Console ausge
 define('buffer_gzip_compress', true); // Seite mit Hilfe der GZIP-Komprimierung übertragen
 define('buffer_gzip_compress_level', 1); // Level der Kompression 1 - 9 *Optimal Level 1
 
-define('dzcp_version_checker', true); // Version auf DZCP.de abgleichen und benachrichtigen ob eine neue Version zur verfügung steht
+define('dzcp_version_checker', true); // Version auf DZCP.de abgleichen und benachrichtigen ob eine neue Version zur Verfügung steht
 define('dzcp_version_checker_refresh', (30*60)); // Wie lange soll gewartet werden um einen Versionsabgleich auszuführen
 
 define('xfire_preloader', true); // XFire Profil per AJAX laden
@@ -35,6 +35,9 @@ define('cache_thumbgen', true); // zwischenspeichern der Thumbgen generierten Bi
 define('use_curl', true); // Verwendet die CURL PHP Erweiterung, anstelle von file_get_contents() für externe Zugriffe, wenn vorhanden.
 define('use_trash_mails', false); // Erlaubt Trashmail Server als E-Mail Adresse.
 define('trash_mail_url', 'http://www.mogelmail.de/mogelmails.xml'); // Liste der Trashmail Server * XML Format
+
+define('extern_urls_detect', false); //DZCP erkennt selbständig externe URLs und öffnet sie in einen neuen Tab, Vorrausetzung ist das die Domain im Impressum richtig eingetragen wurde.
+define('use_html5_worker', true); //Verwendet für AJAX Requests die neuen HTML5 Web Worker *So fern im Zielbrowser unterstützt* um Seiten und Inhalte Parallel zu laden.
 
 define('salt', true); // Salt für die Passwort Codierung, *Der Salt darf nach der Installation nicht mehr geändert werden.
 // Die Datei inc/mysql_salt.php muss gesichert werden *Backup* !
@@ -62,7 +65,7 @@ define('check_msg_email', (5*60)); // Wann soll überprüft werden, ob ein User ei
 define('runtime_buffer', true);
 
 /*
- * Bitte vor der aktivierung der Persistent Connections lesen:
+ * Bitte vor der Aktivierung der Persistent Connections lesen:
  * http://php.net/manual/de/features.persistent-connections.php
  */
 define('runtime_sql_persistconns', false);
@@ -83,7 +86,7 @@ $dsl_formats = array("DSL 1000"=>1024, "DSL 2000"=>2048, "DSL 6000"=>6144, "DSL2
 //                           Alphabet groß:                Alphabet klein:                Zahlen:        Sonderzeichen:
 $passwordComponents = array("ABCDEFGHIJKLMNOPQRSTUVWXYZ" , "abcdefghijklmnopqrstuvwxyz" , "0123456789" , "#$@!");
 
-$AjaxLoad_blacklist = array('welcome','server','teamspeak','infos'); // Ajax Preload gesperrte Menüs *Nur ändern wenn nötig!
+$AjaxLoad_blacklist = array('welcome'=>false,'server'=>false,'teamspeak'=>false,'infos'=>false); // Ajax Preload gesperrte Menüs *Nur ändern wenn nötig!
 $picformat = array('jpg', 'jpeg', 'gif', 'png'); // Unterstützte Bildformate
 
 ## Downloads Filesize Extended START ##

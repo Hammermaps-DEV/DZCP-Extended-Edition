@@ -234,7 +234,7 @@ class database
         if($_SESSION['installer'] && !$_SESSION['db_install']) //For Installer
             return;
 
-        if(!empty($db_array['host']) && !empty($db_array['user']) && !empty($db_array['pass']) && !empty($db_array['db']))
+        if(!empty($db_array['host']) && !empty($db_array['user']) && !empty($db_array['db']))
         {
             if(!self::$mysqli = mysqli_init())
                 die('mysqli_init failed');
@@ -255,9 +255,6 @@ class database
 
             if(empty($db_array['user']))
                 echo "Der MySQL-Username fehlt in der Configuration!<p>";
-
-            if(empty($db_array['pass']))
-                echo "Das MySQL-Passwort fehlt in der Configuration!<p>";
 
             if(empty($db_array['db']))
                 echo "Der MySQL-Datenbankname fehlt in der Configuration!<p>";

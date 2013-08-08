@@ -6,10 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function shout($ajax = 0)
 {
     $shoutconfig = config(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));

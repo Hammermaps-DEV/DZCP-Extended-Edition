@@ -6,10 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-##### Menu-File #####
-#####################
-
 function random_gallery()
 {
     global $picformat;
@@ -41,7 +37,6 @@ function random_gallery()
     }
     else
         $gallery = Cache::get('nav_random_gallery');
-
 
     return empty($gallery) ? '' : '<table class="navContent" cellspacing="0">'.$gallery.'</table>';
 }
