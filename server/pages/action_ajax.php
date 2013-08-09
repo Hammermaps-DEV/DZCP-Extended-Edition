@@ -324,7 +324,7 @@ else
                     "image_map" => $image_map,
                     "klapp_show_start" => (!$klapp_show ? '<!--' : ''),
                     "klapp_show_end" => (!$klapp_show ? '-->' : '')));
-            if($no_ajax) return $index; else die($index);
+            if($no_ajax) return $index; else { if(use_html5_worker) header("Content-Type: text/html; charset=utf-8"); die($index); }
     }
 
     if(isset($_GET['sID'])) server_show();

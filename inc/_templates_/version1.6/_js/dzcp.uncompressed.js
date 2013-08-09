@@ -5,7 +5,8 @@
   var isIE  = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
   var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
   var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
-  var index = new Array(); var i = 0; var pool;
+  var index = new Array(); var i = 0;
+  var pool = new Pool(6);
 
   //Web Worker Pool
   function Pool(size)
@@ -243,8 +244,16 @@
 
     // init Ajax DynLoader Sides via Ajax
     initPageDynLoader: function(tag,url) {
-        var request = $.ajax({ url: url, type: "GET", data: {}, cache:true, dataType: "html", contentType: "application/x-www-form-urlencoded; charset=iso-8859-1" });
-        request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
+        if (typeof (Worker) !== "undefined" && json.worker == '1')
+        {
+            index[i] = new Array(tag,'../../../../' + url);
+            i++;
+        }
+        else
+        {
+            var request = $.ajax({ url: url, type: "GET", data: {}, cache:true, dataType: "html", contentType: "application/x-www-form-urlencoded; charset=iso-8859-1" });
+            request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
+        }
     },
 
     // init Web Worker * HTML5
@@ -252,7 +261,7 @@
     {
         if (typeof (Worker) !== "undefined" && json.worker == '1')
         {
-            pool = new Pool(6); pool.init();
+            pool.init();
             for (var i in index)
             {
                 data = index[i];
@@ -274,7 +283,7 @@
     {
         if (typeof (Worker) !== "undefined" && json.worker == '1')
         {
-            index[i] = new Array(tag,'ajax.php?loader=menu&mod=' + menu + options);
+            index[i] = new Array(tag,'../../../../ajax.php?loader=menu&mod=' + menu + options);
             i++;
         }
         else
