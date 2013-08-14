@@ -22,8 +22,14 @@ class cache_memcache extends Cache
             if(ping_port(self::$_memconfig[self::$_hash]['host'],self::$_memconfig[self::$_hash]['port'],0.1))
             {
                 self::$_memcached = @memcache_connect(self::$_memconfig[self::$_hash]['host'], self::$_memconfig[self::$_hash]['port']);
+
+                if(show_cache_debug)
+                    DebugConsole::insert_successful('inc/additional-kernel/cache/class_cache_memcache.php', 'Connected to Memcache Server on '.self::$_memconfig[self::$_hash]['host'].':'.self::$_memconfig[self::$_hash]['port']);
+
                 return true;
             }
+            else
+                DebugConsole::insert_error('inc/additional-kernel/cache/class_cache_memcache.php', 'Memcache Server on '.self::$_memconfig[self::$_hash]['host'].':'.self::$_memconfig[self::$_hash]['port'].' is unavailable');
 
             return false;
         }

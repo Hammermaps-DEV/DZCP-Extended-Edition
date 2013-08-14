@@ -7,8 +7,8 @@
  */
 
 ## Added for DZCP 1.0 Extended Edition ##
-define('_holder',"['[link]','?admin=[name]','background-image:url(menu/[name].[end]);'],\n");
-define('_holder_addons',"['[link]','?admin=[name]','background-image:url(../[pdir]/[name].[end]);'],\n");
+define('_holder',"['[link]','?admin=[name]','background-image:url(menu/[name]/icon.[end]);'],\n");
+define('_holder_addons',"['[link]','?admin=[name]','background-image:url(../[pdir]/icon.[end]);'],\n");
 define('_teamspeak_default_icon_yes', '<a href="?admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="../inc/images/default_server_yes.png" alt="" class="icon" /></a>');
 define('_teamspeak_default_icon_no', '<a href="?admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="../inc/images/default_server_no.png" alt="" class="icon" /></a>');
 define('_teamspeak_default_icon_yes_no', '<img src="../inc/images/default_server_yesno.png" alt="" class="icon" />');
@@ -370,7 +370,7 @@ define('_profil_custom_mail', '
   <td class="contentMainFirst" align="center"><img src="../inc/images/mailto.gif" alt="" class="icon" /> <a href="mailto:[value]">[value]</a></td>
 </tr>');
 
-## Userprofil editieren ##
+## Userprofil bearbeiten ##
 define('_profil_head_cont', '
 <tr>
   <td class="contentMainTop" colspan="4" align="center"><span class="fontBold">[what]</span></td>

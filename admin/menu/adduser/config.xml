@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<settings>
+	<Menu>settingsmenu</Menu>
+	<Rights>editusers</Rights>
+	<Only_Admin>false</Only_Admin>
+	<Only_Root>false</Only_Root>
+	<Where>_config_useradd_head</Where>
+</settings>

@@ -24,7 +24,7 @@ function cw_screenshots($cwid=0)
 {
     global $picformat,$dir;
     $files = get_files(basePath."/inc/images/uploads/clanwars/",false,true,$picformat,"#^".$cwid."_(.*?)#"); $i=1; $b=1; $screens = array(); $tr = '';
-    if($files && count($files) >= 1)
+    if($files != false && count($files) >= 1)
     {
         foreach($files as $file)
         { $screens[$b][] = $file; $i++; if($i % 4 == 1) $b++; }

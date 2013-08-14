@@ -54,11 +54,25 @@ else
 
                         ## Ereignis in den Adminlog schreiben ##
                         wire_ipcheck("ident(".userid()."_".convert::ToInt($_GET['id']).")");
+                        db("UPDATE ".dba::get('users')." SET online = '0', sessid = '', pkey = '' WHERE id = '".userid()."'");
+
+                        cookie::clear();
+                        cookie::save();
+                        session_unset();
+                        session_destroy();
+                        session_regenerate_id();
+
+                        //-> Set DZCP-Install default variable after Logout
+                        if(!isset($_SESSION['installer']))
+                            $_SESSION['installer'] = false;
+
+                        if(!isset($_SESSION['db_install']))
+                            $_SESSION['db_install'] = false;
 
                         ## User aus der Datenbank suchen ##
                         if(!empty($_GET['id']))
                         {
-                            $sql = db("SELECT id,pwd,time FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_GET['id'])."' AND level != '0'");
+                            $sql = db("SELECT id,pwd,time,language FROM ".dba::get('users')." WHERE id = '".convert::ToInt($_GET['id'])."' AND level != '0'");
                             if(_rows($sql))
                             {
                                 $get = _fetch($sql);
@@ -68,6 +82,9 @@ else
                                 $_SESSION['pwd']        = $get['pwd'];
                                 $_SESSION['lastvisit']  = $get['time'];
                                 $_SESSION['ip']         = visitorIp();
+
+                                if(string::decode($get['language']) != 'default')
+                                    language::run_language(string::decode($get['language']));
 
                                 ## Aktualisiere Datenbank ##
                                 db("UPDATE ".dba::get('users')." SET `online` = '1', `sessid` = '".session_id()."', `ip` = '".visitorIp()."', `pkey` = '' WHERE id = '".$get['id']."'");

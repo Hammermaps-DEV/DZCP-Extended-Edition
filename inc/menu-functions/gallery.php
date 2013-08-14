@@ -15,7 +15,7 @@ function gallery()
         $get = db("SELECT id,kat FROM ".dba::get('gallery')." ORDER BY RAND()",false,true); $gallery = '';
         $files = get_files(basePath.'/inc/images/uploads/gallery/',false,true,$picformat,"#^".convert::ToInt($get['id'])."_(.*)#");
         $cnt = count($files);
-        if($files && count($files) >= 1)
+        if($files != false && count($files) >= 1)
         {
             shuffle($files); $files = limited_array($files,1,4);
             foreach($files as $file)

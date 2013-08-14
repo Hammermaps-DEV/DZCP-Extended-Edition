@@ -94,6 +94,7 @@ define('_admin_bezeichnung' , 'Description');
 //Startpage
 define('_profil_startpage', 'Startseite');
 define('_config_startpage', 'Startseiten');
+define('_admin_startpage', 'Startseiten');
 define('_perm_startpage', 'Startseiten verwalten');
 define('_admin_startpage_url', 'Ziel URL');
 define('_admin_startpage_level', 'Sichtbar ab Level');

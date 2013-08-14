@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+	<Menu>settingsmenu</Menu>
+	<Rights>activateusers</Rights>
+	<Only_Admin>false</Only_Admin>
+	<Only_Root>false</Only_Root>
+	<Where>_config_activate_user</Where>
+</settings>

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<settings>
-	<Menu>rootmenu</Menu>
-	<Rights>backup</Rights>
-	<Only_Admin>false</Only_Admin>
-	<Only_Root>true</Only_Root>
-</settings>

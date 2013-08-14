@@ -253,7 +253,7 @@ class bbcode
     private static function make_smileys()
     {
         $files = get_files(basePath.'/inc/images/smileys',false,true,array('gif'));
-        if(count($files) >= 1)
+        if($files != false && count($files) >= 1)
         {
             foreach($files as $file)
             {

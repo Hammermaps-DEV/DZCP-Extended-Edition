@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<settings>
+	<Menu>contentmenu</Menu>
+	<Rights>slideshow</Rights>
+	<Only_Admin>false</Only_Admin>
+	<Only_Root>false</Only_Root>
+	<Where></Where>
+</settings>

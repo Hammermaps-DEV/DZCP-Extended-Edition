@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<settings>
+	<Menu>contentmenu</Menu>
+	<Rights>clanwars</Rights>
+	<Only_Admin>false</Only_Admin>
+	<Only_Root>false</Only_Root>
+	<Where>_clanwars</Where>
+</settings>

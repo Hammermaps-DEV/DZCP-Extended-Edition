@@ -512,17 +512,27 @@ function ipcheck($what,$time = "")
  *
  * @return boolean
  */
-function isSpider()
+function isBot()
 {
-    $uagent = $_SERVER['HTTP_USER_AGENT'];
-    $ex = explode("\n", file_get_contents(basePath.'/inc/_spiders.txt'));
-    for($i=0;$i<=count($ex)-1;$i++)
-    {
-        if(stristr($uagent, trim($ex[$i])))
-            return true;
-    }
+    $arrstrBots = array (
+            'googlebot'        => '/Googlebot/',
+            'msnbot'           => '/MSNBot/',
+            'slurp'            => '/Inktomi/',
+            'yahoo'            => '/Yahoo/',
+            'askjeeves'        => '/AskJeeves/',
+            'fastcrawler'      => '/FastCrawler/',
+            'infoseek'         => '/InfoSeek/',
+            'lycos'            => '/Lycos/',
+            'yandex'           => '/YandexBot/',
+            'geohasher'        => '/GeoHasher/',
+            'gigablast'        => '/Gigabot/',
+            'baidu'            => '/Baiduspider/',
+            'spinn3r'          => '/Spinn3r/');
 
-    return false;
+    if(isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT']))
+        $arrstrBotMatches = preg_filter( $arrstrBots, array_fill( 1, count( $arrstrBots ), '$0' ), array( trim( $_SERVER['HTTP_USER_AGENT'] )));
+    else return true;
+    return ( is_array( $arrstrBotMatches ) == true && 0 < count( $arrstrBotMatches )) ? true : false;
 }
 
 /**
@@ -837,25 +847,30 @@ class xml // Class by DZCP-Extended Edition
     */
     public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
     {
-        if(!array_key_exists($XMLTag,self::$xmlobj))
+        if(file_exists(basePath . '/' . $XMLFile))
         {
-            self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
-
-            if(!$oneModule)
+            if(!array_key_exists($XMLTag,self::$xmlobj))
             {
-                if(!file_exists(basePath . '/' . $XMLFile))
-                    file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
+                self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
+
+                if(!$oneModule)
+                {
+                    if(!file_exists(basePath . '/' . $XMLFile))
+                        file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
+                }
+
+                self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
+
+                if(self::$xmlobj[$XMLTag]['objekt'] != false)
+                    return true;
+                else
+                    return false;
             }
-
-            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
-
-            if(self::$xmlobj[$XMLTag]['objekt'] != false)
-                return true;
             else
-                return false;
+                return true;
         }
-        else
-            return true;
+
+        return false;
     }
 
     /**
@@ -1022,6 +1037,9 @@ class convert
 
     public static final function ToHTML($input)
     { return htmlentities($input, ENT_COMPAT, _charset); }
+
+    public static final function objectToArray($d)
+    { return json_decode(json_encode($d, JSON_FORCE_OBJECT), true); }
 }
 
 #############################################

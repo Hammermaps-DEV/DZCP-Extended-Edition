@@ -10,7 +10,7 @@ function counter()
 {
     global $where;
     $menu_xml = get_menu_xml('counter');
-    if(!isSpider())
+    if(!isBot())
     {
         if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_counter'))
         {

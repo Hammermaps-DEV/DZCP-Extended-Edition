@@ -36,7 +36,19 @@ class API_CORE
 
                     $additional_admin = array();
                     if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin') && file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu'))
-                        $additional_admin = get_files(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/',false,true,array('php'));
+                    {
+                        $additional_admin_dirs = get_files(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/',true);
+                        foreach ($additional_admin_dirs as $additional_admin_dir)
+                        {
+                            $con_dir = basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$additional_admin_dir;
+                            if(!file_exists($con_dir.'/config.xml'))
+                                continue;
+
+                            $additional_admin[] = $additional_admin_dir;
+                        }
+
+                        unset($additional_admin_dirs);
+                    }
 
                     $addon_infos = array();
 
@@ -52,7 +64,6 @@ class API_CORE
                             $info_array['xml_addon_autor_mail'] = convert::ToString($xml->addon_autor_mail);
                             $info_array['xml_addon_version'] = convert::ToString($xml->addon_version);
                             $info_array['xml_addon_info'] = convert::ToString($xml->addon_info);
-                            $info_array['xml_addon_version'] = convert::ToString($xml->addon_version);
                             $info_array['xml_addon_init_call'] = convert::ToString($xml->addon_init_call);
                             $info_array['xml_addon_msrv_id'] = convert::ToString($xml->addon_check_server_id);
                             $info_array['xml_addon_obj'] = $xml;
@@ -97,19 +108,27 @@ class API_CORE
         self::$MobileDevice = self::$MobileClass->isMobile();
     }
 
+    /**
+     * Gibt eine Liste der zusäzlichen Administrations Menus aus
+     * @return array
+     */
     public static function load_additional_adminmenu()
     {
         $index = array();
         foreach (self::$addon_index as $addon => $addon_infos)
         {
             if(!$addon_infos['additional_admin']) continue;
-            foreach ($addon_infos['additional-admin'] as $file)
-            { $index[] = array('dir' => $addon, 'file' => $file); }
+            foreach ($addon_infos['additional-admin'] as $dir)
+            { $index[] = array('dir' => $addon, 'file_dir' => $dir); }
         }
 
         return $index;
     }
 
+    /**
+     * Werden zusäzliche Administration Menus verwendet
+     * @return boolean
+     */
     public static function is_additional_adminmenu()
     { if(!modapi_enabled) return false; return count(self::$addon_index) >= 1 ? true : false; }
 
@@ -119,15 +138,101 @@ class API_CORE
         foreach (self::$addon_index as $addon => $addon_infos)
         {
             if(!$addon_infos['additional_admin']) continue;
-            foreach ($addon_infos['additional-admin'] as $file)
+            foreach ($addon_infos['additional-admin'] as $dir)
             {
-                if(str_replace('.php', '', $file) != $menu) continue;
-                if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$file))
-                    return basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$file;
+                if($dir != $menu) continue;
+                return array('require_index' => basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php',
+                             'require_functions' => self::load_additional_admin_functions($menu,true,$addon),
+                             'require_languages' => self::load_additional_admin_languages($menu,true,$addon),
+                             'require_case_dir' => self::load_admin_case_dir($menu,true,$addon),
+                             'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'));
             }
         }
 
         return false;
+    }
+
+    /**
+     * Gibt eine Liste der Addon XML files für die Administration aus
+     * @return boolean|Ambigous <boolean, multitype:string >
+     */
+    public static function call_additional_adminmenu_xml()
+    {
+        if(!modapi_enabled) return false; $return = array();
+        foreach (self::$addon_index as $addon => $addon_infos)
+        {
+            if(!$addon_infos['additional_admin']) continue;
+            foreach ($addon_infos['additional-admin'] as $dir)
+            {
+                if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/config.xml'))
+                    $return[] = '/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/config.xml';
+            }
+        }
+
+        return count($return) >= 1 ? $return : false;
+    }
+
+    /**
+     * Gibt eine Liste der für die Administration zusäzlichen funktionen aus
+     * @param string $menu
+     * @param string $addon
+     * @param string $addon_dir
+     * @return Ambigous <boolean, multitype:string >|boolean
+     */
+    public static function load_additional_admin_functions($menu='',$addon=false,$addon_dir='')
+    {
+        $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/functions' : basePath.'/admin/menu/'.$menu.'/functions');
+        if(is_dir($dir))
+        {
+            $files = get_files($dir.'/',false,true,array('php')); $inc_files = array();
+            if($files != false && count($files) >= 1)
+            {
+                foreach ($files as $file) { $inc_files[] = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/' : basePath.'/').'admin/menu/'.$menu.'/functions/'.$file; }
+                return count($inc_files) >= 1 ? $inc_files : false;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Gibt eine Liste der für die Administration zusäzlichen Sprachen aus
+     * @param string $menu
+     * @param string $addon
+     * @param string $addon_dir
+     * @return Ambigous <boolean, multitype:string >|boolean
+     */
+    public static function load_additional_admin_languages($menu='',$addon=false,$addon_dir='')
+    {
+        $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/languages' : basePath.'/admin/menu/'.$menu.'/languages');
+        if(is_dir($dir))
+        {
+            $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/languages/'.language::get_language() : basePath.'/admin/menu/'.$menu.'/languages/'.language::get_language());
+            if(is_dir($dir))
+            {
+                $files = get_files($dir.'/',false,true,array('php')); $inc_files = array();
+                if($files != false && count($files) >= 1)
+                {
+                    foreach ($files as $file) { $inc_files[] = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/' : basePath.'/').'admin/menu/'.$menu.'/languages/'.language::get_language().'/'.$file; }
+                    return count($inc_files) >= 1 ? $inc_files : false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Laden der Administration Cases
+     * @param string $menu
+     * @param string $addon
+     * @param string $addon_dir
+     * @return string|boolean
+     */
+    public static function load_admin_case_dir($menu='',$addon=false,$addon_dir='')
+    {
+        $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/case' : basePath.'/admin/menu/'.$menu.'/case');
+        if(is_dir($dir)) return $dir; return false;
     }
 
     /**
@@ -270,9 +375,7 @@ class API_CORE
         global $tmpdir,$ajaxThumbgen;
         if(modapi_enabled && !$ajaxThumbgen)
         {
-            if(!count(self::$addon_index))
-                return false;
-
+            if(!count(self::$addon_index)) return false;
             foreach(self::$addon_index as $addon)
             {
                 if($addon['xml']['xml_addon_init_call'] != 'false' && !empty($addon['xml']['xml_addon_init_call']))

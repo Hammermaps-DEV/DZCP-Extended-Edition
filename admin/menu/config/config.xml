@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<settings>
+	<Menu>rootmenu</Menu>
+	<Rights>config</Rights>
+	<Only_Admin>false</Only_Admin>
+	<Only_Root>false</Only_Root>
+	<Where>_config_global_head</Where>
+</settings>

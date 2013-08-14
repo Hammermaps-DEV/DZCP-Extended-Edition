@@ -15,7 +15,7 @@ function random_gallery()
         $imgArr = array(); $gallery = '';
         $files = get_files(basePath.'/inc/images/uploads/gallery/',false,true,$picformat);
 
-        if($files && count($files) >= 1)
+        if($files != false && count($files) >= 1)
         {
             $get = db("SELECT id,kat FROM ".dba::get('gallery')." ORDER BY RAND()",false,true);
 

@@ -24,7 +24,7 @@ class Cache
 
         ## Include Classes ##
         $files = get_files(basePath . '/inc/additional-kernel/cache',false,true,array("php"));
-        if($files && count($files) >= 1)
+        if($files != false && count($files) >= 1)
         {
             foreach($files as $func)
             {

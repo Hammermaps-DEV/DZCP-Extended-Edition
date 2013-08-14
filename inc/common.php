@@ -94,7 +94,7 @@ function check_ip()
 {
     global $ajaxThumbgen,$ajaxJob;
 
-    if(!$ajaxThumbgen && !$ajaxJob)
+    if(!$ajaxThumbgen && !$ajaxJob && !isBot())
     {
         if(($ip=visitorIp()) == '0.0.0.0' || $ip == false || empty($ip))
             die('Deine IP ist ung&uuml;ltig!<p>Your IP is invalid!');
@@ -117,7 +117,7 @@ function check_ip()
 }
 
 //-> Auslesen der Cookies und automatisch anmelden
-if(!$ajaxThumbgen)
+if(!$ajaxThumbgen && !isBot())
 {
     if(cookie::get('id') != false && cookie::get('pkey') != false && !$ajaxJob && checkme() == "unlogged")
     {
@@ -502,13 +502,6 @@ function wrap($str, $width = 75, $break = "\n", $cut = true)
     return strtr(str_replace(htmlentities($break), $break, htmlentities(wordwrap(html_entity_decode($str), $width, $break, $cut), ENT_QUOTES)), array_flip(get_html_translation_table(HTML_SPECIALCHARS, ENT_COMPAT)));
 }
 
-//-> Funktion um einer id einen Nick zuzuweisen
-function nick_id($tid)
-{
-    $get = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$tid."'",false,true);
-    return $get['nick'];
-}
-
 //-> Counter updaten
 function updateCounter()
 {
@@ -546,7 +539,7 @@ function update_maxonline()
 //-> Prueft, wieviele Besucher gerade online sind
 function online_guests($where='')
 {
-    if(!isSpider())
+    if(!isBot())
     {
         db("DELETE FROM ".dba::get('c_who')." WHERE online < ".time());
         db("REPLACE INTO ".dba::get('c_who')." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".string::encode($where)."', `login` = '".(checkme() == 'unlogged' ? '0' : '1')."'");
@@ -629,7 +622,7 @@ function permission($check)
 //-> Checkt, ob neue Nachrichten vorhanden sind
 function check_msg()
 {
-    if(db("SELECT page FROM ".dba::get('msg')." WHERE an = '".$_SESSION['id']."' AND page = '0'",true))
+    if(db("SELECT id FROM ".dba::get('msg')." WHERE an = '".$_SESSION['id']."' AND page = '0'",true))
     {
         db("UPDATE ".dba::get('msg')." SET `page` = '1' WHERE an = '".$_SESSION['id']."'");
         return show("user/new_msg", array("new" => _site_msg_new));
@@ -765,10 +758,7 @@ function squad($code)
 //-> Funktion um bei DB-Eintraegen URLs einem http:// zuzuweisen
 function links($hp)
 {
-    if(!empty($hp))
-        return links_check_url($hp) ? $hp : "http://".$hp;
-
-    return $hp;
+    return (!empty($hp) ? links_check_url($hp) ? $hp : "http://".$hp : $hp);
 }
 
 //-> Funktion um URL Adressen zu erkennen
@@ -938,48 +928,147 @@ function autor($uid="", $class="", $nick="", $email="", $cut="",$add="")
 
 function cleanautor($uid, $class="", $nick="", $email="", $cut="")
 {
-    $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
-    if(_rows($qry))
+    if(!$uid = ($uid != 0 ? convert::ToInt($uid) : userid()))
+        return "";
+
+    $qry = "SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'";
+    $hash = md5($qry);
+
+    if(Cache::is_mem())
     {
-        $get = _fetch($qry);
-        return show(_user_link_preview, array("id" => $uid, "country" => flag($get['country']), "class" => $class, "nick" => string::decode($get['nick'])));
+        //MEM
+        if(Cache::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                Cache::set($hash,$get,2);
+            }
+            else
+                return show(_user_link_noreg, array("nick" => string::decode($nick), "class" => $class, "email" => eMailAddr($email)));
+        }
+        else
+            $get = Cache::get($hash);
     }
     else
-        return show(_user_link_noreg, array("nick" => string::decode($nick), "class" => $class, "email" => eMailAddr($email)));
+    {
+        //RTBuffer
+        if(RTBuffer::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                RTBuffer::set($hash,$get);
+            }
+            else
+                return show(_user_link_noreg, array("nick" => string::decode($nick), "class" => $class, "email" => eMailAddr($email)));
+        }
+        else
+            $get = RTBuffer::get($hash);
+    }
+
+    return show(_user_link_preview, array("id" => $uid, "country" => flag($get['country']), "class" => $class, "nick" => string::decode($get['nick'])));
 }
 
 function rawautor($uid)
 {
-    $qry = db("SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'");
-    if(_rows($qry))
+    if(!$uid = ($uid != 0 ? convert::ToInt($uid) : userid()))
+        return "";
+
+    $qry = "SELECT nick,country FROM ".dba::get('users')." WHERE id = '".convert::ToInt($uid)."'";
+    $hash = md5($qry);
+
+    if(Cache::is_mem())
     {
-        $get = _fetch($qry);
-        return rawflag($get['country'])." ".jsconvert(string::decode($get['nick']));
+        //MEM
+        if(Cache::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                Cache::set($hash,convert::objectToArray($get),2);
+            }
+            else
+                return rawflag('')." ".jsconvert(string::decode($uid));
+        }
+        else
+            $get = Cache::get($hash);
     }
     else
-        return rawflag('')." ".jsconvert(string::decode($uid));
+    {
+        //RTBuffer
+        if(RTBuffer::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                RTBuffer::set($hash,$get);
+            }
+            else
+                return rawflag('')." ".jsconvert(string::decode($uid));
+        }
+        else
+            $get = convert::objectToArray(RTBuffer::get($hash));
+    }
+
+    return rawflag($get['country'])." ".jsconvert(string::decode($get['nick']));
 }
 
 //-> Nickausgabe ohne Profillink oder Emaillink für das ForenAbo
 function fabo_autor($uid,$show=_user_link_fabo)
 {
-    $return = '';
-    $qry = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$uid."'");
-    if(_rows($qry))
+    if(!$uid = ($uid != 0 ? convert::ToInt($uid) : userid()))
+        return "";
+
+    $qry = "SELECT nick FROM ".dba::get('users')." WHERE id = '".$uid."'";
+    $hash = md5($qry);
+
+    if(Cache::is_mem())
     {
-        $get = _fetch($qry);
-        $return = show($show, array("nick" => string::decode($get['nick'])));
+        //MEM
+        if(Cache::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                Cache::set($hash,convert::objectToArray($get),2);
+            }
+            else
+                return '';
+        }
+        else
+            $get = Cache::get($hash);
+    }
+    else
+    {
+        //RTBuffer
+        if(RTBuffer::check($hash))
+        {
+            $qry = db($qry);
+            if(_rows($qry))
+            {
+                $get = _fetch($qry);
+                RTBuffer::set($hash,$get);
+            }
+            else
+                return '';
+        }
+        else
+            $get = convert::objectToArray(RTBuffer::get($hash));
     }
 
-    return $return;
+    return show($show, array("nick" => string::decode($get['nick'])));
 }
 
 //-> Rechte abfragen
 function jsconvert($txt)
 {
-    $search  = array("'", "&#039;", "\"", "\r", "\n");
-    $replace = array("\'", "\'", "&quot;", '', '');
-    return str_replace($search, $replace, $txt);
+    return str_replace(array("'", "&#039;", "\"", "\r", "\n"), array("\'", "\'", "&quot;", '', ''), $txt);
 }
 
 //-> interner Forencheck
@@ -1358,12 +1447,21 @@ function admin_perms($userid)
     if(db("SELECT id FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."'",true))
     {
         $admin_settings = array();
-        $files = get_files(basePath.'/admin/menu/',false,true,array('xml'));
-        foreach($files AS $file)
+        $dirs = get_files(basePath.'/admin/menu/',true);
+        foreach($dirs AS $dir)
         {
             ## XML Auslesen ##
-            $XMLTag = 'admin_'.str_ireplace('.xml', '', $file);
-            if(xml::openXMLfile($XMLTag,"admin/menu/".$file))
+            $XMLTag = 'admin_'.$dir;
+            if(xml::openXMLfile($XMLTag,"admin/menu/".$dir."/config.xml"))
+                $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
+        }
+
+        $dirs_addon = API_CORE::call_additional_adminmenu_xml();
+        foreach($dirs_addon AS $dir_addon)
+        {
+            ## XML Auslesen ##
+            $XMLTag = 'admin_'.$dir_addon;
+            if(xml::openXMLfile($XMLTag,$dir_addon))
                 $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
         }
 

@@ -1,7 +1,0 @@
-<?xml version="1.0"?>
-<settings>
-	<Menu>rootmenu</Menu>
-	<Rights>clear</Rights>
-	<Only_Admin>true</Only_Admin>
-	<Only_Root>false</Only_Root>
-</settings>

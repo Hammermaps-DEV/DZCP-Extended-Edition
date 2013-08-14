@@ -9,7 +9,6 @@
 #########################################
 //-> DZCP Settings Start
 #########################################
-date_default_timezone_set('Europe/Berlin');
 
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug, Seiten gecached werden können

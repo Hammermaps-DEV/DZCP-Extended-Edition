@@ -264,14 +264,14 @@ class cache_file extends Cache
     {
         self::$_file = basePath . '/inc/_cache/';
         $files = get_files(self::$_file, false, true, array("cache","index"));
-        if(count($files) >= 1)
+        if($files != false && count($files) >= 1)
         {
             foreach($files as $file)
             { @unlink(self::$_file . $file); }
         }
 
         $files = get_files(self::$_file.'binary/', false, true, array("bin","index"));
-        if(count($files) >= 1)
+        if($files != false && count($files) >= 1)
         {
             foreach($files as $file)
             { @unlink(self::$_file.'binary/' . $file); }

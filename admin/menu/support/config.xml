@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<settings>
+	<Menu>rootmenu</Menu>
+	<Rights>support</Rights>
+	<Only_Admin>true</Only_Admin>
+	<Only_Root>false</Only_Root>
+	<Where></Where>
+</settings>

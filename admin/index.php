@@ -34,40 +34,38 @@ else
 
     //Lade XML Daten
     $amenu = array();
-    $files = get_files(basePath.'/admin/menu/',false,true,array('xml'));
-    foreach($files AS $file)
+    $dirs = get_files(basePath.'/admin/menu/',true,false);
+    foreach($dirs AS $dir_admin)
     {
-        ## XML Auslesen ##
-        $XMLTag = 'admin_'.str_ireplace('.xml', '', $file);
-        if(!xml::openXMLfile($XMLTag,"admin/menu/".$file)) continue;
-        $settings = array();
-        $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
-        $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
-        $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
-        $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
-        $settings['file_name'] = str_replace('.xml', '', $file);
-        $settings['file_name_php'] = str_replace('.xml', '.php', $file);
-
-        if(file_exists(basePath."/admin/menu/".$settings['file_name_php']))
+        if(file_exists(basePath."/admin/menu/".$dir_admin."/config.xml"))
         {
+            ## XML Auslesen ##
+            $XMLTag = 'admin_'.$dir_admin;
+            if(!xml::openXMLfile($XMLTag,"admin/menu/".$dir_admin."/config.xml")) continue;
+            $settings = array();
+            $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
+            $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
+            $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
+            $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
+
             ## Menu ##
-            eval("\$link = _config_".$settings['file_name'].";");
+            $link = constant('_config_'.$dir_admin);
             $permission =  ($settings['Rights'] != 'done' ? permission($settings['Rights']) : false);
 
             foreach($picformat AS $end)
             {
-                if(file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
+                if(file_exists(basePath.'/admin/menu/'.$dir_admin.'/icon.'.$end))
                     break;
             }
 
-            if(!file_exists(basePath.'/admin/menu/'.$settings['file_name'].'.'.$end))
+            if(!file_exists(basePath.'/admin/menu/'.$dir_admin.'/icon.'.$end))
             {
-                $settings['file_name'] = 'unknown';
+                $dir_admin = '';
                 $end = 'gif';
             }
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || (checkme() == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && userid() == convert::ToInt($rootAdmin)))
-                $amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $settings['file_name'], "end" => $end));
+                $amenu[$settings['Typ']][$link] = show(_holder, array("link" => $link, 'name' => $dir_admin, "end" => $end));
 
             unset($settings,$XMLTag,$link,$permission,$file);
         }
@@ -80,41 +78,36 @@ else
         foreach($menus AS $file)
         {
             ## XML Auslesen ##
-            $xml_file = str_ireplace('.php', '.xml', $file['file']);
-            $XMLTag = 'admin_'.str_ireplace('.xml', '', $xml_file);
-            if(!xml::openXMLfile($XMLTag,'inc/additional-addons/'.$file['dir']."/admin/menu/".$xml_file)) continue;
+            $XMLTag = 'admin_'.$file['file_dir'];
+            if(!xml::openXMLfile($XMLTag,'inc/additional-addons/'.$file['dir']."/admin/menu/".$file['file_dir']."/config.xml")) continue;
 
             $settings = array();
             $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
             $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
-            $settings['file_name'] = str_replace('.php', '', $file['file']);
-            $settings['file_name_php'] = $file['file'];
+            $settings['file_dir'] = $file['file_dir'];
 
-            if(file_exists(basePath.'/inc/additional-addons/'.$file['dir'].'/admin/menu/'.$settings['file_name_php']))
+            ## Menu ##
+            $link = constant('_config_'.$settings['file_dir']);
+            $permission =  ($settings['Rights'] != 'done' ? permission($settings['Rights']) : false);
+
+            foreach($picformat AS $end)
             {
-                ## Menu ##
-                eval("\$link = _config_".$settings['file_name'].";");
-                $permission =  ($settings['Rights'] != 'done' ? permission($settings['Rights']) : false);
-
-                foreach($picformat AS $end)
-                {
-                    if(file_exists(basePath.'/inc/additional-addons/'.$file['dir'].'/admin/menu/'.$settings['file_name'].'.'.$end))
-                        break;
-                }
-
-                if(!file_exists(basePath.'/inc/additional-addons/'.$file['dir'].'/admin/menu/'.$settings['file_name'].'.'.$end))
-                {
-                    $settings['file_name'] = 'unknown';
-                    $end = 'gif';
-                }
-
-                if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || (checkme() == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && userid() == convert::ToInt($rootAdmin)))
-                    $amenu[$settings['Typ']][$link] = show(_holder_addons, array("pdir" => 'inc/additional-addons/'.$file['dir'].'/admin/menu', "link" => $link, 'name' => $settings['file_name'], "end" => $end));
-
-                unset($settings,$XMLTag,$link,$permission);
+                if(file_exists(basePath.'/inc/additional-addons/'.$file['dir'].'/admin/menu/'.$settings['file_dir'].'/icon.'.$end))
+                    break;
             }
+
+            if(!file_exists(basePath.'/inc/additional-addons/'.$file['dir'].'/admin/menu/'.$settings['file_dir'].'/icon.'.$end))
+            {
+                $settings['file_dir'] = '';
+                $end = 'gif';
+            }
+
+            if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || (checkme() == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && userid() == convert::ToInt($rootAdmin)))
+                $amenu[$settings['Typ']][$link] = show(_holder_addons, array("pdir" => 'inc/additional-addons/'.$file['dir'].'/admin/menu/'.$file['file_dir'], "link" => $link, 'name' => $settings['file_dir'], "end" => $end));
+
+            unset($settings,$XMLTag,$link,$permission);
         }
     }
 
@@ -163,31 +156,49 @@ else
 
     if(isset($_GET['admin']))
     {
-        if(file_exists(basePath."/admin/menu/".($inc_file=((string)$_GET['admin']).".php")))
+        $index_require = false; $inc_file = '';
+        if(file_exists(basePath."/admin/menu/".($admin_do=((string)$_GET['admin']))."/config.xml"))
+        {
+            $inc_file = $admin_do."/index.php";
+            $index_require = file_exists(basePath."/admin/menu/".$admin_do."/index.php");
+            $inc_file_functions = API_CORE::load_additional_admin_functions($admin_do,false);
+            $inc_file_languages = API_CORE::load_additional_admin_languages($admin_do,false);
+            $inc_file_case_dir = API_CORE::load_admin_case_dir($admin_do,false);
             $basic_require = true;
+        }
 
         if(modapi_enabled)
         {
             if(($inc_file_addons = API_CORE::call_additional_adminmenu(((string)$_GET['admin']))) != false)
             {
-                $inc_file = $inc_file_addons;
-                $basic_require = false;
-                unset($inc_file_addons);
+                $inc_file = $inc_file_addons['require_index'];
+                $inc_file_functions = $inc_file_addons['require_functions'];
+                $inc_file_languages = $inc_file_addons['require_languages'];
+                $inc_file_case_dir = $inc_file_addons['require_case_dir'];
+                $index_require = $inc_file_addons['require_index_file'];
+                $basic_require = false; unset($inc_file_addons);
             }
         }
 
-        if(file_exists($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file))
+        if(($index_require && file_exists($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)) || !$index_require)
         {
             unset($settings); $settings = array();
             $XMLTag = 'admin_'.((string)$_GET['admin']);
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
-            $do = (isset($_GET['do']) ? $_GET['do'] : (isset($_POST['do']) ? $_POST['do'] : '') );
+            $where_ext = ((string)xml::getXMLvalue($XMLTag, 'Where'));
+            $do = (isset($_GET['do']) ? strtolower($_GET['do']) : (isset($_POST['do']) ? strtolower($_POST['do']) : '') );
             $page = (isset($_GET['page']) ? $_GET['page'] : '1');
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || (checkme() == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && userid() == convert::ToInt($rootAdmin)))
-                require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file));
+            {
+                if($inc_file_functions != false) { foreach ($inc_file_functions as $inc_file_function) { require_once($inc_file_function); } }
+                if($inc_file_languages != false) { foreach ($inc_file_languages as $inc_file_language) { require_once($inc_file_language); } }
+                if($index_require) require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)); $where = (empty($where_ext) ? $where : $where.': '.constant($where_ext));
+                if($inc_file_case_dir != false && file_exists(($modul_file=$inc_file_case_dir.'/case_'.( !empty($do) ? $do : 'default').'.php'))) require_once $modul_file;
+                if(!file_exists($modul_file) && file_exists(($modul_file=$inc_file_case_dir.'/case_default.php'))) require_once $modul_file;
+            }
             else
                 $show = error(_error_wrong_permissions);
         }
