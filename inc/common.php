@@ -1457,6 +1457,7 @@ function admin_perms($userid)
         }
 
         $dirs_addon = API_CORE::call_additional_adminmenu_xml();
+    	if($dir_addons != false)
         foreach($dirs_addon AS $dir_addon)
         {
             ## XML Auslesen ##

@@ -953,7 +953,9 @@ class xml // Class by DZCP-Extended Edition
     {
         if(!array_key_exists($XMLTag,self::$xmlobj))
         {
+        	if(is_debug)
             trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geöffnet.');
+
             return false;
         }
 
