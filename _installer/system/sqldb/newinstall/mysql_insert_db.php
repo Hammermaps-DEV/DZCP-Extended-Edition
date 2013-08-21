@@ -49,6 +49,10 @@ function install_mysql_insert($db_infos)
     `memcache_host`        = 'localhost',
     `memcache_port`        = '11211',
     `db_version`           = '1600',
+    `ftp_hostname`         = '".string::encode($_SESSION['ftp_host'])."',
+    `ftp_username`         = '".string::encode($_SESSION['ftp_user'])."',
+    `ftp_password`         = '".(!empty($_SESSION['ftp_pwd']) ? encryptData($_SESSION['ftp_pwd']) : '')."',
+    `ftp_path`             = '".string::encode($_SESSION['ftp_pfad'])."',
     `eml_reg_subj`         = '".string::encode(emlv('eml_reg_subj'))."',
     `eml_pwd_subj`         = '".string::encode(emlv('eml_pwd_subj'))."',
     `eml_reg`              = '".string::encode(emlv('eml_reg'))."',
@@ -240,9 +244,9 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Startseite =================================================
     //===============================================================
-	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
-	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
-	
+    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
+
     //===============================================================
     //-> Shoutbox ===================================================
     //===============================================================

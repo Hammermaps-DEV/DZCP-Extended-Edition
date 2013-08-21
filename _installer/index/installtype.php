@@ -1,11 +1,13 @@
 <?php
 if (!defined('IN_DZCP'))
-exit();
+    exit();
 
-if(isset($_POST['agb_checkbox']))
+if(isset($_COOKIE['agb']) && $_COOKIE['agb'] == true)
+    $index = show("installtype"); //Auswahl: Update oder Neuinstallation
+else if(isset($_POST['agb_checkbox']))
 {
     $index = show("installtype"); //Auswahl: Update oder Neuinstallation
-    $_SESSION['agb'] = true;
+    setcookie('agb',true);
 }
 else
     $index = show("/msg/agb_error"); //AGB nicht akzeptiert!

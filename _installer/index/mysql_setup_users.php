@@ -33,6 +33,10 @@ if(isset($_POST['save']))
                                 sql_installer(true,$db_infos);
                                 $nextlink = show("/msg/nextlink",array("ac" => 'action=done'));
                                 $msg = writemsg(saved_user,false);
+                                unset($_SESSION['ftp_host']);
+                                unset($_SESSION['ftp_pfad']);
+                                unset($_SESSION['ftp_user']);
+                                unset($_SESSION['ftp_pwd']);
                                 $disabled = 'disabled="disabled"';
                             }
                             else

@@ -13,6 +13,7 @@ require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/config.php');
 require_once(basePath.'/inc/database.php');
 require_once(basePath.'/inc/kernel.php');
+require_once(basePath.'/inc/additional-kernel/class.ftp.inc.php');
 require_once(basePath.'/_installer/system/global.php');
 require_once(basePath.'/_installer/system/emlv.php');
 
@@ -23,9 +24,9 @@ define('IN_DZCP', true);
 function steps()
 {
     $lizenz = ''; $type = ''; $prepare = ''; $mysql = '';
-    $db = ''; $update = ''; $adminacc = ''; $done = '';
+    $db = ''; $update = ''; $adminacc = ''; $done = ''; $ftp = '';
 
-    switch (!isset($_GET['action']) ? "" : $_GET['action']):
+    switch($_SESSION['setup_step']):
         default:
             $lizenz = show(_step,array("text" => _link_start));
             $type = show(_step,array("text" => _link_type_1));
@@ -37,7 +38,23 @@ function steps()
         case'prepare'; //Schreibrechte PrÃ¼fen
             $lizenz = show(_step,array("text" => _link_start_1));
             $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp_1));
             $prepare = show(_step,array("text" => _link_prepare));
+            $mysql = show(_step,array("text" => _link_mysql_1));
+            $db = show(_step,array("text" => _link_db_1));
+
+            if($_SESSION['type'] == 1)
+                $update = show(_step,array("text" => _link_update_1));
+            else
+                $adminacc = show(_step,array("text" => _link_adminacc_1));
+
+            $done = show(_step,array("text" => _link_done_1));
+        break;
+        case'ftp'; //Schreibrechte PrÃ¼fen
+            $lizenz = show(_step,array("text" => _link_start_1));
+            $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp));
+            $prepare = show(_step,array("text" => _link_prepare_1));
             $mysql = show(_step,array("text" => _link_mysql_1));
             $db = show(_step,array("text" => _link_db_1));
 
@@ -51,6 +68,7 @@ function steps()
         case'mysql'; //MySQL Verbindung abfragen & herstellen
             $lizenz = show(_step,array("text" => _link_start_1));
             $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp_1));
             $prepare = show(_step,array("text" => _link_prepare_1));
             $mysql = show(_step,array("text" => _link_mysql));
             $db = show(_step,array("text" => _link_db_1));
@@ -65,6 +83,7 @@ function steps()
         case'mysql_setup'; //MySQL Config schreiben
             $lizenz = show(_step,array("text" => _link_start_1));
             $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp_1));
             $prepare = show(_step,array("text" => _link_prepare_1));
             $mysql = show(_step,array("text" => _link_mysql_1));
             $db = show(_step,array("text" => _link_db));
@@ -79,9 +98,10 @@ function steps()
         case 'mysql_setup_tb';
             $lizenz = show(_step,array("text" => _link_start_1));
             $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp_1));
             $prepare = show(_step,array("text" => _link_prepare_1));
             $mysql = show(_step,array("text" => _link_mysql_1));
-            $db = show(_step,array("text" => _link_db_1));
+            $db = show(_step,array("text" => _link_db));
 
             if($_SESSION['type'] == 1)
                 $update = show(_step,array("text" => _link_update));
@@ -93,6 +113,7 @@ function steps()
         case 'mysql_setup_users'; //Administrator anlegen,Erste Konfiguration etc.
             $lizenz = show(_step,array("text" => _link_start_1));
             $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp_1));
             $prepare = show(_step,array("text" => _link_prepare_1));
             $mysql = show(_step,array("text" => _link_mysql_1));
             $db = show(_step,array("text" => _link_db_1));
@@ -102,6 +123,7 @@ function steps()
         case 'done';
             $lizenz = show(_step,array("text" => _link_start_1));
             $type = show(_step,array("text" => _link_type_1));
+            $ftp = show(_step,array("text" => _link_ftp_1));
             $prepare = show(_step,array("text" => _link_prepare_1));
             $mysql = show(_step,array("text" => _link_mysql_1));
             $db = show(_step,array("text" => _link_db_1));
@@ -115,7 +137,7 @@ function steps()
         break;
     endswitch;
 
-    return $lizenz.$type.$prepare.$mysql.$db.$update.$adminacc.$done;
+    return $lizenz.$type.$ftp.$prepare.$mysql.$db.$update.$adminacc.$done;
 }
 
 //-> Welche Datenbank Engine soll verwedet werden
@@ -318,55 +340,24 @@ function write_sql_config()
     return (file_exists(basePath.'/inc/mysql.php') && file_exists(basePath.'/inc/mysql_salt.php'));
 }
 
-//-> Setzt über FTP die chmod
-function set_chmod_ftp($array,$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd,$connect_test=false,$login_test=false)
-{
-    if($connect_test)
-    {
-        if(@fsockopen($ftp_host, 21, $errno, $errstr, 1))
-        {
-            if(!ftp_connect($ftp_host))
-                return false;
-            else
-                return true;
-        }
-        else
-            return false;
-    }
-    else if($login_test)
-        return ftp_login(ftp_connect($ftp_host), $ftp_user, $ftp_pwd);
-    else
-    {
-        $ftpcon=ftp_connect($ftp_host);
-        ftp_login($ftpcon, $ftp_user, $ftp_pwd);
-        foreach($array as $file)
-        { ftp_site($ftpcon, $com='CHMOD 0774 '.$ftp_pfad.'/'.$file); }
-
-        return true;
-    }
-}
-
 //-> Prüft ob Datei existiert und ob auf ihr geschrieben werden kann
 function is_writable_array($array)
 {
-    $i=0;
-    $data=array();
-    $status=true;
-
+    $i=0; $data=array(); $status=true;
     foreach($array as $file)
     {
-        if(is_dir('../'.$file))
-            $what = "Ordner:&nbsp;";
-        else
-            $what = "Datei:";
+        $what = "Ordner:&nbsp;";
+        $exp = explode('.', str_replace('/', '', $file));
+        if(count($exp) >= 2)
+        { if($exp[1] == 'php') $what = "Datei:&nbsp;"; }
 
         $_file = preg_replace("#\.\.#Uis", "", '../'.$file);
 
         if(is_writable('../'.$file))
-            $data[$i] = _true."<font color='green'><b>".$what."</b>&nbsp;&nbsp;&nbsp; ".$_file."</font><br />";
+            $data[$i] = "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"90\"><font color='green'>"._true."<b>".$what."</b></font></td><td><font color='green'>".$_file."</font></td></tr></table>";
         else
         {
-            $data[$i] = _false."<font color='red'><b>".$what."</b>&nbsp;&nbsp;&nbsp; ".$_file."</font><br />";
+            $data[$i] = "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"90\"><font color='red'>"._false."<b>".$what."</b></font></td><td><font color='red'>".$_file."</font><br /></td></tr></table>";
             $status=false;
         }
 
@@ -378,12 +369,8 @@ function is_writable_array($array)
 
 //-> EMail wird auf korrekten Syntax überprüft
 function check_email($email)
-{
-    return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email);
-}
+{ return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email); }
 
 //-> Ist ein Zend Server
 function is_zs()
-{
-    return strripos(phpversion(), 'ZS') === false ? false : true;
-}
+{ return strripos(phpversion(), 'ZS') === false ? false : true; }

@@ -2,7 +2,7 @@
 if (!defined('IN_DZCP'))
     exit();
 
-if($_SESSION['agb'] =! true)
+if($_COOKIE['agb'] =! true)
     $index = show("/msg/agb_error");
 else
 {
@@ -14,8 +14,9 @@ else
             $write=true;
             $from = '<form action="" method="post" id="from"><from>';
             $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup_tb'));
+            $salt = show("salt",array("salt" => $_SESSION['mysql_salt']));
             $index = writemsg(mysql_setup_saved,false);
-            $index = $from.$index.$nextlink;
+            $index = $from.$index.$salt.$nextlink;
         }
     }
 

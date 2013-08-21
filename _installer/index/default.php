@@ -2,6 +2,8 @@
 if (!defined('IN_DZCP'))
     exit();
 
+setcookie('agb',false);
+
 if(!is_php('5.3.0'))
     $index = writemsg(php_version_error,true);
 else

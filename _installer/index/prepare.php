@@ -2,21 +2,20 @@
 if(!defined('IN_DZCP'))
     exit();
 
-if($_SESSION['agb'] =! true)
+if($_COOKIE['agb'] =! true)
     $index = show("/msg/agb_error");
 else
 {
     $set_chmod_ftp = false; $disabled = '';
-    $ftp_host = isset($_POST['host']) ? $_POST['host'] : '';
-    $ftp_pfad = isset($_POST['pfad']) ? $_POST['pfad'] : '';
-    $ftp_user = isset($_POST['user']) ? $_POST['user'] : '';
-    $ftp_pwd = isset($_POST['pwd']) ? $_POST['pwd'] : '';
+    $ftp_host = isset($_SESSION['ftp_host']) ? $_SESSION['ftp_host'] : '';
+    $ftp_pfad = isset($_SESSION['ftp_pfad']) ? $_SESSION['ftp_pfad'] : '';
+    $ftp_user = isset($_SESSION['ftp_user']) ? $_SESSION['ftp_user'] : '';
+    $ftp_pwd = isset($_SESSION['ftp_pwd']) ? $_SESSION['ftp_pwd'] : '';
 
     $array_script = array(
             'admin',
             'banner',
             'banner/partners',
-            'server',
             'upload',
             'upload/index.php',
             'inc',
@@ -37,8 +36,7 @@ else
             'inc/images/uploads/clanwars',
             'inc/images/uploads/newskat',
             'inc/images/uploads/news',
-            'inc/tinymce_files',
-            'inc/config.php');
+            'inc/tinymce_files');
 
     $array_install = array('_installer','_installer/index.php');
 
@@ -47,34 +45,46 @@ else
     {
         if($_GET['do'] == 'set_chmods')
         {
-            if(function_exists('ftp_connect') && function_exists('ftp_login') && function_exists('ftp_site'))
+            if(!empty($_SESSION['ftp_host']) && !empty($_SESSION['ftp_pfad']) && !empty($_SESSION['ftp_user']))
             {
-                if(set_chmod_ftp(array(),$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd,true))
+                FTP::init(); $ftp_port = 21;
+                $ftp_host_array = explode(':', $ftp_host);
+                if(count($ftp_host) >= 2)
                 {
-                    if(set_chmod_ftp(array(),$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd,false,true))
+                    $ftp_port = $ftp_host_array[1];
+                    $ftp_host_save = $ftp_host_array[0];
+                }
+                else
+                    $ftp_host_save = $ftp_host;
+
+                FTP::set('host',$ftp_host_save);
+                FTP::set('port',$ftp_port);
+                FTP::set('user',$ftp_user);
+                FTP::set('pass',$ftp_pwd);
+
+                if(FTP::connect())
+                {
+                    if(FTP::login())
                     {
-                        set_chmod_ftp($array_install,$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd); //CHMOD
-                        set_chmod_ftp($array_script,$ftp_host,$ftp_pfad,$ftp_user,$ftp_pwd); //CHMOD
+                        $next = true;
+                        FTP::move($ftp_pfad);
+                        asort($array_script);
+                        foreach ($array_script as $list)
+                        {
+                            FTP::chmod($list,'774');
+                        }
+
+                        asort($array_install);
+                        foreach ($array_install as $list)
+                        {
+                            FTP::chmod($list,'774');
+                        }
                     }
-                    else //Login Error
-                    {
-                        $set_chmod_ftp = true;
+                    else
                         $success_status = writemsg(prepare_no_ftp_login,true);
-                        $nextlink = '';
-                    }
                 }
-                else //Connect Error
-                {
-                    $set_chmod_ftp = true;
+                else
                     $success_status = writemsg(prepare_no_ftp_connect,true);
-                    $nextlink = '';
-                }
-            }
-            else //No FTP Error
-            {
-                $set_chmod_ftp = true;
-                $success_status = writemsg(prepare_no_ftp,true);
-                $nextlink = '';
             }
         }
     }
@@ -90,16 +100,15 @@ else
     //Schleife für Installationsdateien
     $install='';
     foreach($prepare_array_install['return'] as $get_check_result)
-    {
-        $install .= $get_check_result;
-    }
+    { $install .= $get_check_result; }
 
     //Schleife für Scriptdateien
     $script='';
     foreach($prepare_array_script['return'] as $get_check_result)
-    {
-        $script .= $get_check_result;
-    }
+    { $script .= $get_check_result; }
+
+    if(empty($_SESSION['ftp_host']) || empty($_SESSION['ftp_pfad']) || empty($_SESSION['ftp_user']))
+        $disabled = 'disabled="disabled"';
 
     if(!$set_chmod_ftp)
     {
@@ -112,7 +121,11 @@ else
         }
         else
         {
-            $success_status = writemsg(prepare_files_error,true);
+            if(empty($_SESSION['ftp_host']) || empty($_SESSION['ftp_pfad']) || empty($_SESSION['ftp_user']))
+                $success_status = writemsg(prepare_files_error_non_ftpauto,true);
+            else
+                $success_status = writemsg(prepare_files_error,true);
+
             $nextlink = '';
         }
     }

@@ -7,10 +7,12 @@
  */
 
 ob_start();
-    @session_start();
+    session_start();
 
     if((isset($_SESSION['db_install']) ? $_SESSION['db_install'] : false) == true && (isset($_GET['action']) ? $_GET['action'] : '') == '')
         $_SESSION['db_install'] = false;
+
+    $_SESSION['setup_step'] = (!isset($_GET['action']) ? (!empty($_SESSION['setup_step']) ? $_SESSION['setup_step'] : '') : $_GET['action']);
 
     define('basePath', dirname(dirname(__FILE__).'../'));
     require_once(basePath.'/_installer/system/core.php');
@@ -22,6 +24,9 @@ ob_start();
     break;
     case 'installtype'; //Auswahl: Installation / Update
         require_once(basePath.'/_installer/index/installtype.php');
+    break;
+    case'ftp'; //Schreibrechte Prüfen
+        require_once(basePath.'/_installer/index/ftp.php');
     break;
     case'prepare'; //Schreibrechte Prüfen
         require_once(basePath.'/_installer/index/prepare.php');

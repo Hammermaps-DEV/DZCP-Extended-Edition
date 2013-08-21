@@ -2,7 +2,7 @@
 if (!defined('IN_DZCP'))
     exit();
 
-if($_SESSION['agb'] =! true)
+if($_COOKIE['agb'] =! true)
     $index = show("/msg/agb_error");
 else
 {

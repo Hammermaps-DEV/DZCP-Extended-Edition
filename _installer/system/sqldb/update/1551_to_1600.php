@@ -85,8 +85,10 @@ function install_155x_1600_update()
                                                ADD `smtp_tls_ssl` INT( 1 ) NOT NULL DEFAULT '0' AFTER `smtp_password` ,
                                                ADD `sendmail_path` VARCHAR( 200 ) NOT NULL DEFAULT '/usr/sbin/sendmail' AFTER `smtp_tls_ssl` ,
                                                ADD `mail_extension` VARCHAR( 200 ) NOT NULL DEFAULT 'mail' AFTER `sendmail_path`;",false,false,true);
-
-
+    db("ALTER TABLE `".dba::get('settings')."` ADD `ftp_hostname` VARCHAR( 100 ) NOT NULL DEFAULT 'localhost' AFTER `mail_extension` ,
+    ADD `ftp_username` VARCHAR( 100 ) NOT NULL DEFAULT '' AFTER `ftp_hostname` ,
+    ADD `ftp_password` VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER `ftp_username` ,
+    ADD `ftp_path` VARCHAR( 255 ) NOT NULL DEFAULT '/' AFTER `ftp_password` ;",false,false,true);
 
     //Update E-Mail Templates
     db("UPDATE `".dba::get('settings')."` SET `eml_akl_register_subj` = '".emlv('eml_akl_register_subj')."' WHERE `id` = 1;",false,false,true);
@@ -516,8 +518,8 @@ function install_155x_1600_update()
         PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
-	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
-	db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
-	
+    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
+
     return true;
 }
