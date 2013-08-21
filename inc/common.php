@@ -370,9 +370,9 @@ function checkme($userid_set=0)
     }
 }
 
-//-> Templateswitch
 if(!$ajaxThumbgen)
 {
+    //-> Templateswitch
     $files = get_files(basePath.'/inc/_templates_/',true,false);
     if(cookie::get('tmpdir') != false)
         $tmpdir = (file_exists(basePath."/inc/_templates_/".cookie::get('tmpdir')."/index.html") ? cookie::get('tmpdir') : $files[0]);
@@ -391,6 +391,9 @@ if(!$ajaxThumbgen)
 
     //-> Mail
     mailmgr::init();
+
+    //FTP
+    FTP::init();
 }
 
 //-> User bearbeiten, Level Menu
@@ -1448,22 +1451,27 @@ function admin_perms($userid)
     {
         $admin_settings = array();
         $dirs = get_files(basePath.'/admin/menu/',true);
-        foreach($dirs AS $dir)
+        if($dirs != false && is_array($dirs))
         {
-            ## XML Auslesen ##
-            $XMLTag = 'admin_'.$dir;
-            if(xml::openXMLfile($XMLTag,"admin/menu/".$dir."/config.xml"))
-                $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
+            foreach($dirs AS $dir)
+            {
+                ## XML Auslesen ##
+                $XMLTag = 'admin_'.$dir;
+                if(xml::openXMLfile($XMLTag,"admin/menu/".$dir."/config.xml"))
+                    $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
+            }
         }
 
         $dirs_addon = API_CORE::call_additional_adminmenu_xml();
-    	if($dir_addons != false)
-        foreach($dirs_addon AS $dir_addon)
+        if($dirs_addon != false && is_array($dirs_addon))
         {
-            ## XML Auslesen ##
-            $XMLTag = 'admin_'.$dir_addon;
-            if(xml::openXMLfile($XMLTag,$dir_addon))
-                $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
+            foreach($dirs_addon AS $dir_addon)
+            {
+                ## XML Auslesen ##
+                $XMLTag = 'admin_'.$dir_addon;
+                if(xml::openXMLfile($XMLTag,$dir_addon))
+                    $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
+            }
         }
 
         $check = db("SELECT * FROM ".dba::get('permissions')." WHERE user = '".convert::ToInt($userid)."'",false,true);
