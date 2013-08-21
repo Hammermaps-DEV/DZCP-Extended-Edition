@@ -847,7 +847,8 @@ class xml // Class by DZCP-Extended Edition
     */
     public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
     {
-        if(file_exists(basePath . '/' . $XMLFile))
+        if(empty($XMLTag) || empty($XMLFile)) return false;
+        if(file_exists(basePath . '/' . $XMLFile) || !$oneModule)
         {
             if(!array_key_exists($XMLTag,self::$xmlobj))
             {
@@ -878,6 +879,7 @@ class xml // Class by DZCP-Extended Edition
      */
     public static function openXMLStream($XMLTag,$XMLStream)
     {
+        if(empty($XMLTag) || empty($XMLStream)) return false;
         if(!array_key_exists($XMLTag,self::$xmlobj))
         {
             self::$xmlobj[$XMLTag]['xmlFile'] = $XMLStream;
@@ -899,6 +901,7 @@ class xml // Class by DZCP-Extended Edition
     */
     public static function getXMLvalue($XMLTag, $xmlpath)
     {
+        if(empty($XMLTag) || empty($xmlpath)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
             $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
@@ -909,12 +912,13 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * XML Werte Ã¤ndern
+    * XML Werte ändern
     *
     * @return boolean
      */
     public static function changeXMLvalue($XMLTag, $xmlpath, $xmlnode, $xmlvalue='')
     {
+        if(empty($XMLTag) || empty($xmlpath) || empty($xmlnode)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
             $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
@@ -926,12 +930,13 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen neuen XML Knoten hinzufÃ¼gen
+    * Einen neuen XML Knoten hinzufügen
     *
     * @return boolean
     */
     public static function createXMLnode($XMLTag, $xmlpath, $xmlnode, $attributes=array(), $text='')
     {
+        if(empty($XMLTag) || empty($xmlpath) || empty($xmlnode)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
              $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
@@ -951,11 +956,10 @@ class xml // Class by DZCP-Extended Edition
     */
     public static function saveXMLfile($XMLTag)
     {
+        if(empty($XMLTag)) return false;
         if(!array_key_exists($XMLTag,self::$xmlobj))
         {
-        	if(is_debug)
-            trigger_error('Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" wurde nie geÃ¶ffnet.');
-
+            DebugConsole::insert_warning('xml::saveXMLfile()','Die Datei "'.self::$xmlobj[$XMLTag]['xmlFile'].'" ist nicht geladen!');
             return false;
         }
 
@@ -965,12 +969,13 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen XML Knoten lÃ¶schen
+    * Einen XML Knoten löschen
     *
     * @return boolean
     */
     public static function deleteXMLnode($XMLTag, $xmlpath, $xmlnode)
     {
+        if(empty($XMLTag) || empty($xmlpath) || empty($xmlnode)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
             $parent = self::getXMLvalue($XMLTag, $xmlpath);
@@ -982,12 +987,13 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen XML Knoten Attribut lÃ¶schen
+    * Einen XML Knoten Attribut löschen
     *
     * @return boolean
     */
     public static function deleteXMLattribut($XMLTag, $xmlpath, $key, $value )
     {
+        if(empty($XMLTag) || empty($xmlpath) || empty($key) || empty($value)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
             $nodes = self::getXMLvalue($XMLTag, $xmlpath);
@@ -1192,13 +1198,14 @@ class language
         return '<select id="language" name="language" class="dropdown">'.'<option value="default" '.( $lang == 'default' ? 'selected="selected"' : '').'> '._default.'</option>'.$options.'</select>';
     }
 
-	/* Converts place holder into language*/
-	public static function display($lang)
-	{
-		if(defined($lang))
-			return constant($lang);
-		else return $lang;
-	}
+    /* Converts place holder into language*/
+    public static function display($lang='')
+    {
+        if(defined($lang))
+            return constant($lang);
+
+        return $lang;
+    }
 }
 
 function encryptData($text='',$salt='')
