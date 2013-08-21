@@ -1189,14 +1189,6 @@ class language
 
         return '<select id="language" name="language" class="dropdown">'.'<option value="default" '.( $lang == 'default' ? 'selected="selected"' : '').'> '._default.'</option>'.$options.'</select>';
     }
-
-	/* Converts place holder into language*/
-	public static function display($lang)
-	{
-		if(defined($lang))
-			return constant($lang);
-		else return $lang;
-	}
 }
 
 function encryptData($text='',$salt='')
