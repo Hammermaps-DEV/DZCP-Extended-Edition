@@ -8,9 +8,4 @@ else
 {
     $index = show("done");
     $_SESSION['db_install'] = false;
-
-    //Unset Installer Sessions
-    unset($_SESSION['setup_step']);
-
-
 }

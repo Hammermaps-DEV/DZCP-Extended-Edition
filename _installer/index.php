@@ -51,4 +51,7 @@ ob_start();
     if((isset($_GET['action']) ? $_GET['action'] : '') == 'done')
         $_SESSION['installer'] = false;
 
+    if(isset($_GET['action']) ? $_GET['action'] : '' == 'done')
+        unset($_SESSION['setup_step']);
+
 ob_end_flush();
