@@ -1384,8 +1384,8 @@ function navi_name($name)
     if(preg_match("#^_(.*?)_$#Uis",$name))
     {
         $name = preg_replace("#_(.*?)_#Uis", "$1", $name);
-        @eval("\$name = _".$name.";");
-    }
+        return language::display("_".$name);
+    } else return $name;
 
     return $name;
 }
@@ -1525,9 +1525,8 @@ function getPermissions($checkID = 0, $pos = 0)
     {
         if($get['Field'] != 'id' && $get['Field'] != 'user' && $get['Field'] != 'pos' && $get['Field'] != 'intforum')
         {
-            @eval("\$lang = _perm_".$get['Field'].";");
             $chk = empty($checked[$get['Field']]) ? '' : ' checked="checked"';
-            $permission[$lang] = '<input type="checkbox" class="checkbox" id="'.$get['Field'].'" name="perm[p_'.$get['Field'].']" value="1"'.$chk.' /><label for="'.$get['Field'].'"> '.$lang.'</label> ';
+            $permission[] = '<input type="checkbox" class="checkbox" id="'.$get['Field'].'" name="perm[p_'.$get['Field'].']" value="1"'.$chk.' /><label for="'.$get['Field'].'"> '.language::display("_perm_".$get['Field']).'</label> ';
         }
     }
 
