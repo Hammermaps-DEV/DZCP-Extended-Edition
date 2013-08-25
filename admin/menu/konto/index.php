@@ -61,7 +61,7 @@ switch ($do)
         $get = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".dba::get('settings'),false,true);
         $waehrung = string::decode($get['k_waehrung']);
         $waehrung_list = _select_field_waehrung;
-        $waehrung_list = str_replace('<option value="'.$waehrung.'">","<option value="'.$waehrung.'" selected="selected">', $waehrung_list);
+        $waehrung_list = str_replace('<option value="'.$waehrung.'">"','"<option value="'.$waehrung.'" selected="selected">', $waehrung_list);
         $konto_show = show($dir."/form_konto", array("inhaber" => string::decode($get['k_inhaber']),
                                                      "kontonr" => $get['k_nr'],
                                                      "waehrung" => $waehrung_list,
