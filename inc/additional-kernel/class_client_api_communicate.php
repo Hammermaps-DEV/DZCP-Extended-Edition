@@ -50,25 +50,48 @@ final class client_api_communicate
 
     public static function download($url='',$save_to_file='',$return_binary=false)
     {
+        if(use_curl && extension_loaded('curl'))
+        {
+            $timeout = 30; $curl = curl_init();
+            if(!$curl) return false;
+            curl_setopt($curl, CURLOPT_HEADER, false);
+            curl_setopt($curl, CURLOPT_URL, 'http://'.$url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($curl, CURLOPT_CONNECTTIMEOUT , $timeout);
+            curl_setopt($curl, CURLOPT_TIMEOUT, $timeout * 2); // x 2
+            $stream = curl_exec($curl);
+            curl_close($curl);
 
+            if(!empty($stream))
+            {
+                if($return_binary) return $stream;
+                file_put_contents(basePath.'/'.$save_to_file, $stream);
+            }
+        }
+        else
+        {
+            $snoopy = new Snoopy;
+            $snoopy->rawheaders["Pragma"] = "no-cache";
+            $snoopy->submit('http://'.$url);
+            $stream = $snoopy->results;
+
+            if(!empty($stream))
+            {
+                if($return_binary) return $stream;
+                file_put_contents(basePath.'/'.$save_to_file, $stream);
+            }
+        }
     }
 
     public static function set_api_url($host='',$port=80)
     { self::$apihost = $host.':'.$port; }
-
-    ## Private ##
-    private static function check_server()
-    {
-
-    }
 
     private static final function send_curl()
     {
         $host_port = explode(':', self::$apihost);
         if(ping_port($host_port[0],$host_port[1],4))
         {
-            $timeout = 30;
-            $curl = curl_init();
+            $timeout = 30; $curl = curl_init();
             if(!$curl) return false;
             curl_setopt($curl, CURLOPT_HEADER, false);
             curl_setopt($curl, CURLOPT_URL, 'http://'.self::$apihost.'/DZCP-EE-API/index.php');
