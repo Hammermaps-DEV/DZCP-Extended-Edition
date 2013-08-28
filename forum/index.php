@@ -18,6 +18,7 @@ include(basePath."/inc/debugger.php");
 include(basePath."/inc/config.php");
 include(basePath."/inc/common.php");
 include(basePath."/forum/helper.php");
+include(basePath."/user/helper.php");
 
 ##############
 ## SETTINGS ##
