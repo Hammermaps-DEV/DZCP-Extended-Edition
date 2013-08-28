@@ -1432,6 +1432,10 @@ function hoveruserpic($userid, $width=170,$height=210)
     return(empty($pic) ? "../inc/images/nopic.gif', '".$width."', '".$height."" : $pic);
 }
 
+#################
+## Permissions ##
+#################
+
 // Adminberechtigungen ueberpruefen
 function admin_perms($userid)
 {
@@ -1587,39 +1591,6 @@ function startpage()
 
     $get = _fetch($sql);
     return $get['level'] <= checkme() ? string::decode($get['url']) : 'user/?action=userlobby';
-}
-
-//-> Show Xfire Status
-function xfire($username='')
-{
-    if(empty($username))
-        return '-';
-
-    switch(xfire_skin)
-    {
-        case 'shadow': $skin = 'sh'; break;
-        case 'kampf': $skin = 'co'; break;
-        case 'scifi': $skin = 'sf'; break;
-        case 'fantasy': $skin = 'os'; break;
-        case 'wow': $skin = 'wow'; break;
-        default: $skin = 'bg'; break;
-    }
-
-    if(xfire_preloader)
-    {
-        if(Cache::check_binary('xfire_'.$username))
-        {
-            if(!$img_stream = fileExists('http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'))
-                return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
-
-            Cache::set_binary('xfire_'.$username, $img_stream, '', xfire_refresh);
-            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_stream)));
-        }
-        else
-            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary('xfire_'.$username))));
-    }
-
-    return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 }
 
 // Prüft ob die Seite in der Navigation als Intern eingestellt ist.

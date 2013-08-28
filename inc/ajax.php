@@ -48,6 +48,39 @@ if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,a
     }
 }
 
+//-> Show Xfire Status
+function xfire($username='')
+{
+    if(empty($username))
+        return '-';
+
+    switch(xfire_skin)
+    {
+        case 'shadow': $skin = 'sh'; break;
+        case 'kampf': $skin = 'co'; break;
+        case 'scifi': $skin = 'sf'; break;
+        case 'fantasy': $skin = 'os'; break;
+        case 'wow': $skin = 'wow'; break;
+        default: $skin = 'bg'; break;
+    }
+
+    if(xfire_preloader)
+    {
+        if(Cache::check_binary('xfire_'.$username))
+        {
+            if(!$img_stream = fileExists('http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'))
+                return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
+
+            Cache::set_binary('xfire_'.$username, $img_stream, '', xfire_refresh);
+            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_stream)));
+        }
+        else
+            return show(_xfireicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary('xfire_'.$username))));
+    }
+
+    return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
+}
+
 ## SETTINGS ##
 $dir = "sites";
 
