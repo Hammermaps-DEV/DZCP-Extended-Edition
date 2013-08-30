@@ -34,6 +34,7 @@ class cache_file extends Cache
     public static function file_set($key, $data, $ttl = 3600)
     {
         global $prev;
+        if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $hash = md5($key.$prev);
         if(xml::getXMLvalue('cache_index', '/cache_index/file[@hash="'.$hash.'"]/ttl'))
             xml::changeXMLvalue('cache_index', '/cache_index/file[@hash="'.$hash.'"]', 'ttl', $ttl);
@@ -78,6 +79,7 @@ class cache_file extends Cache
         global $prev;
         $hash = md5($key.$prev);
 
+        if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : '';
         $file_hash_check = convert::ToString(xml::getXMLvalue('cache_index_binary', '/cache_index_binary/file[@hash="'.$hash.'"]/stream_hash'));

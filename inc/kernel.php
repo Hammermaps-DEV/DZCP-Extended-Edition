@@ -873,6 +873,15 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
+     * Ist XML Datei geladen
+     */
+    public static function loadedXML($XMLTag)
+    {
+        if(empty($XMLTag)) return false;
+        return (!array_key_exists($XMLTag,self::$xmlobj)) ? false : true;
+    }
+
+    /**
     * XML Wert auslesen
     *
     * @return XMLObj / boolean

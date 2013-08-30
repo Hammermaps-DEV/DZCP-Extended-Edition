@@ -20,6 +20,8 @@ class cache_mysql extends Cache
      */
     public static function mysqlc_set($key, $data, $ttl = 3600)
     {
+        if(empty($ttl) || !is_int($ttl)) $ttl = 5;
+
         //Array Erkennung
         if(is_array($data))
         {
@@ -55,6 +57,7 @@ class cache_mysql extends Cache
     public static function mysqlc_set_binary($key, $binary, $original_file=false, $ttl = 0)
     {
         $key = 'bin_'.$key;
+        if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $data = bin2hex($binary);
         if(db("SELECT qry FROM `".dba::get('cache')."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))

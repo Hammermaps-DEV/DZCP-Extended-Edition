@@ -16,8 +16,10 @@ class cache_apc extends Cache
      *
      * @return boolean
      */
-    public static function apc_set($key, $data, $ttl = 3600)
+    public static function apc_set($key, $data, $ttl = 3200)
     {
+        if(empty($ttl) || !is_int($ttl)) $ttl = 5;
+
         //Array Erkennung
         if(is_array($data))
         {
@@ -38,8 +40,9 @@ class cache_apc extends Cache
      *
      * @return boolean
      */
-    public static function apc_set_binary($key, $binary, $original_file=false, $ttl = 86400)
+    public static function apc_set_binary($key, $binary, $original_file=false, $ttl = 0)
     {
+        if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $key = 'bin_'.$key;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $binary = bin2hex($binary);

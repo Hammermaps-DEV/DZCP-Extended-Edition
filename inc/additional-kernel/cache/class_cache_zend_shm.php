@@ -18,6 +18,8 @@ class cache_zend_shm extends Cache
      */
     public static function shm_set($key, $data, $ttl = 3600)
     {
+        if(empty($ttl) || !is_int($ttl)) $ttl = 5;
+
         //Array Erkennung
         if(is_array($data))
         {
@@ -42,6 +44,7 @@ class cache_zend_shm extends Cache
     public static function shm_set_binary($key, $binary, $original_file=false, $ttl = 86400)
     {
         $key = 'bin_'.$key;
+        if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
         $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $binary = bin2hex($binary);
         self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));

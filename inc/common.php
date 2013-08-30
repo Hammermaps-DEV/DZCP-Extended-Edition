@@ -1718,6 +1718,9 @@ function get_menu_xml($phold='')
     $xml_config=false; $MenuConfig = array();
     if(@file_exists(basePath.'/inc/menu-functions/'.$phold.'.xml')) //XML Extension
     {
+        if(!xml::loadedXML('menu_'.$phold))
+            xml::openXMLfile('menu_'.$phold, 'inc/menu-functions/'.$phold.'.xml');
+
         $MenuConfig['AjaxLoad'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'AjaxLoad'));
         $MenuConfig['Only_Users'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Users'));
         $MenuConfig['Only_Admin'] = xml::bool(xml::getXMLvalue('menu_'.$phold, 'Only_Admin'));
