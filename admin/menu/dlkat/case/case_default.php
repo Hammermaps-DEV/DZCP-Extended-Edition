@@ -8,24 +8,23 @@
 
 if(_adminMenu != 'true') exit();
 
-$where = $where.': '._admin_dlkat;
 $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name");
 while($get = _fetch($qry))
 {
-	$edit = show("page/button_edit_single", array("id" => $get['id'],
-	                                              "action" => "admin=dlkat&amp;do=edit",
-	                                              "title" => _button_title_edit));
-	$delete = show("page/button_delete_single", array("id" => $get['id'],
-	                                                  "action" => "admin=dlkat&amp;do=delete",
-	                                                  "title" => _button_title_del,
-	                                                  "del" => _confirm_del_kat));
-	$class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+    $edit = show("page/button_edit_single", array("id" => $get['id'],
+                                                  "action" => "admin=dlkat&amp;do=edit",
+                                                  "title" => _button_title_edit));
+    $delete = show("page/button_delete_single", array("id" => $get['id'],
+                                                      "action" => "admin=dlkat&amp;do=delete",
+                                                      "title" => _button_title_del,
+                                                      "del" => _confirm_del_kat));
+    $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-	$show_ .= show($dir."/dlkats_show", array("gameicon" => $gameicon,
-	                                         "edit" => $edit,
-	                                         "name" => string::decode($get['name']),
-	                                         "class" => $class,
-	                                         "delete" => $delete));
+    $show_ .= show($dir."/dlkats_show", array("gameicon" => $gameicon,
+                                             "edit" => $edit,
+                                             "name" => string::decode($get['name']),
+                                             "class" => $class,
+                                             "delete" => $delete));
 }
 
 $show = show($dir."/dlkats", array("head" => _admin_dlkat,
