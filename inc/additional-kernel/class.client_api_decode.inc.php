@@ -27,16 +27,26 @@ final class client_api_decode
 
     public static final function init()
     {
+        DebugConsole::insert_initialize('client_api_decode::init()', 'API-Decoder');
+
         if (!extension_loaded('json'))
-            die("Die JSON Erweiterung ist nicht geladen!");
+        {
+            DebugConsole::insert_error('client_api_decode::init()', "Die JSON Erweiterung ist nicht geladen!");
+            return false;
+        }
 
         if (!extension_loaded('mcrypt'))
-            die("Die Mcrypt Erweiterung ist nicht geladen!");
+        {
+            DebugConsole::insert_error('client_api_decode::init()', "Die Mcrypt Erweiterung ist nicht geladen!");
+            return false;
+        }
 
         self::$options['decode_hex'] = true;
         self::$options['decode_gzip'] = true;
         self::$options['decode_crypt'] = true;
         self::$options['decode_base'] = true;
+
+        return true;
     }
 
     public static final function client_decode_cryptkey($key="")

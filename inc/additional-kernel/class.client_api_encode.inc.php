@@ -28,13 +28,26 @@ final class client_api_encode
 
     public static final function init()
     {
-        if (!extension_loaded('json')) die("Die JSON Erweiterung ist nicht geladen!");
-        if (!extension_loaded('mcrypt')) die("Die Mcrypt Erweiterung ist nicht geladen!");
+        DebugConsole::insert_initialize('client_api_encode::init()', 'API-Encoder');
+
+        if (!extension_loaded('json'))
+        {
+            DebugConsole::insert_error('client_api_encode::init()', "Die JSON Erweiterung ist nicht geladen!");
+            return false;
+        }
+
+        if (!extension_loaded('mcrypt'))
+        {
+            DebugConsole::insert_error('client_api_encode::init()', "Die Mcrypt Erweiterung ist nicht geladen!");
+            return false;
+        }
 
         self::$options['encode_hex'] = true;
         self::$options['encode_gzip'] = true;
         self::$options['encode_crypt'] = true;
         self::$options['encode_base'] = true;
+
+        return true;
     }
 
     public static final function set_options($key="",$var='')

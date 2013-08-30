@@ -32,12 +32,14 @@ final class client_api_communicate
     private static $options = array();
     private static $cryptkey = '12345';
     private static $apihost = 'localhost:80';
+    private static $ident = 'adsdaasd';
 
     public static final function send($data='')
     {
         if(!fsockopen_support()) return false;
         if(!client_api_encode::init()) return false;
         if(!client_api_decode::init()) return false;
+        DebugConsole::insert_info('client_api_communicate::send()', 'Send request');
 
         self::$data = $data;
         if(!self::encode()) return false;
@@ -86,6 +88,12 @@ final class client_api_communicate
     public static function set_api_url($host='',$port=80)
     { self::$apihost = $host.':'.$port; }
 
+    public static function set_api_cryptkey($cryptkey='')
+    { self::$cryptkey = $cryptkey; }
+
+    public static function set_api_ident($identkey='')
+    { self::$ident = $identkey; }
+
     private static final function send_curl()
     {
         $host_port = explode(':', self::$apihost);
@@ -101,6 +109,9 @@ final class client_api_communicate
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, array('input' => self::$stream)); //Send Stream
             self::$stream = curl_exec($curl); //Get Stream
+
+            die(self::$stream);
+
             curl_close($curl); if(!empty(self::$stream)) return true;
         }
 
@@ -130,14 +141,17 @@ final class client_api_communicate
         self::$options['encode_crypt'] = !empty(self::$cryptkey) ? true : false;
         self::$options['encode_base'] = is_array(self::$data) ? true : false;
         self::$options['file_stream'] = false;
+        self::$options['ident'] = self::$ident;
 
         //Encode
         client_api_encode::set_options('encode_hex',self::$options['encode_hex']);
         client_api_encode::set_options('encode_gzip',self::$options['encode_gzip']);
         client_api_encode::set_options('encode_crypt',self::$options['encode_crypt']);
         client_api_encode::set_options('encode_base',self::$options['encode_base']);
-        self::$data_stream = client_api_encode::client_encode(self::$data);
-        self::$data = null;
+        self::$data_stream = client_api_encode::client_encode(self::$data); self::$data = null;
+        if(!empty(self::$data_stream) && self::$data_stream != false) return true;
+
+        return false;
     }
 
     private static final function decode()
@@ -149,9 +163,9 @@ final class client_api_communicate
         client_api_decode::set_options('decode_gzip',self::$options['decode_gzip']);
         client_api_decode::set_options('decode_crypt',self::$options['decode_crypt']);
         client_api_decode::set_options('decode_base',self::$options['decode_base']);
-        self::$data = client_api_decode::client_decode(self::$data_stream);
-        self::$data_stream = null; #self::$options = array();
-        return true;
+        self::$data = client_api_decode::client_decode(self::$data_stream); self::$data_stream = null;
+        if(!empty(self::$data) && self::$data != false) return true;
+        return false;
     }
 
     private static final function wire_control()
@@ -164,20 +178,26 @@ final class client_api_communicate
         (self::$options['encode_base'] ? '1' : '0').'|'. // JSON
         (self::$options['file_stream'] ? '1' : '0').'|'. // File Stream
         (generatetime() - $time_start).'|'. // Prozesstime
+        self::$options['ident'].'|'. // Ident
         self::$data_stream; // Data
-        self::$data_stream = null; #self::$options = array();
+        self::$data_stream = null;
+        if(!empty(self::$stream) && self::$stream != false) return true;
+        return false;
     }
 
     private static final function read_control()
     {
-        $data = explode('|', self::$stream, 7);
+        $data = explode('|', self::$stream, 8);
         self::$options['decode_hex'] = convert::IntToBool($data[0]);
         self::$options['decode_gzip'] = convert::IntToBool($data[1]);
         self::$options['decode_crypt'] = convert::IntToBool($data[2]);
         self::$options['decode_base'] = convert::IntToBool($data[3]);
         self::$options['file_stream'] = convert::IntToBool($data[4]);
         self::$options['prozesstime'] = convert::ToString($data[5]);
-        self::$data_stream = $data[6]; unset($data);
+        self::$options['ident'] = $data[6];
+        self::$data_stream = $data[7]; unset($data);
         self::$stream = null;
+        if(!empty(self::$data_stream) && self::$data_stream != false) return true;
+        return false;
     }
 }
