@@ -39,7 +39,6 @@ final class client_api_communicate
         if(!fsockopen_support()) return false;
         if(!client_api_encode::init()) return false;
         if(!client_api_decode::init()) return false;
-        DebugConsole::insert_info('client_api_communicate::send()', 'Send request');
 
         self::$data = $data;
         if(!self::encode()) return false;
@@ -109,7 +108,6 @@ final class client_api_communicate
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, array('input' => self::$stream)); //Send Stream
             self::$stream = curl_exec($curl); //Get Stream
-            DebugConsole::insert_info('client_api_communicate:send_curl()',self::$stream);
             curl_close($curl); if(!empty(self::$stream)) return true;
         }
 
@@ -125,7 +123,6 @@ final class client_api_communicate
             $snoopy->rawheaders["Pragma"] = "no-cache";
             $snoopy->submit('http://'.self::$apihost.'/DZCP-EE-API/index.php', array('input' => self::$stream)); //Send Stream
             self::$stream = $snoopy->results; //Get Stream
-            DebugConsole::insert_info('client_api_communicate:send_curl()',self::$stream);
             unset($snoopy); if(!empty(self::$stream)) return true; return false;
         }
     }
