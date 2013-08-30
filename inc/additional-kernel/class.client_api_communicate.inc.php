@@ -30,7 +30,7 @@ final class client_api_communicate
     private static $data_stream = null; //Hex etc.
     private static $data = array();
     private static $options = array();
-    private static $cryptkey = '12345';
+    private static $cryptkey = '';
     private static $apihost = 'localhost:80';
     private static $ident = 'adsdaasd';
 
@@ -109,9 +109,7 @@ final class client_api_communicate
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, array('input' => self::$stream)); //Send Stream
             self::$stream = curl_exec($curl); //Get Stream
-
-            die(self::$stream);
-
+            DebugConsole::insert_info('client_api_communicate:send_curl()',self::$stream);
             curl_close($curl); if(!empty(self::$stream)) return true;
         }
 
@@ -127,7 +125,8 @@ final class client_api_communicate
             $snoopy->rawheaders["Pragma"] = "no-cache";
             $snoopy->submit('http://'.self::$apihost.'/DZCP-EE-API/index.php', array('input' => self::$stream)); //Send Stream
             self::$stream = $snoopy->results; //Get Stream
-            unset($snoopy);
+            DebugConsole::insert_info('client_api_communicate:send_curl()',self::$stream);
+            unset($snoopy); if(!empty(self::$stream)) return true; return false;
         }
     }
 
