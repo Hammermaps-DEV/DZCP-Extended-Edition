@@ -356,7 +356,6 @@ function pholderreplace($pholder)
     $pholder = preg_replace("#<style(.*?)</style>#is","",$pholder);
     $pholder = preg_replace($search, '', $pholder);
     $pholder = str_replace(" ","",$pholder);
-    $pholder = preg_replace("#[0-9]#is","",$pholder);
     $pholder = preg_replace("#&(.*?);#s","",$pholder);
     $pholder = str_replace("\r","",$pholder);
     $pholder = str_replace("\n","",$pholder);
@@ -533,27 +532,6 @@ function isBot()
         $arrstrBotMatches = preg_filter( $arrstrBots, array_fill( 1, count( $arrstrBots ), '$0' ), array( trim( $_SERVER['HTTP_USER_AGENT'] )));
     else return true;
     return ( is_array( $arrstrBotMatches ) == true && 0 < count( $arrstrBotMatches )) ? true : false;
-}
-
-/**
- * Wandelt einen Boolean zu einem Boolean-String um.
- *
- * @return String
- */
-function Bool_to_StringConverter($bool)
-{
-    return ($bool ? "+#bool#+" : "-#bool#-");
-}
-
-/**
- * Wandelt einen Boolean-String zu Boolean um.
- * Added by DZCP-Extended Edition
- *
- * @return boolean
- */
-function String_to_boolConverter($bool_coded)
-{
-    return ($bool_coded == "+#bool#+" ? true : false);
 }
 
 /**
@@ -912,7 +890,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * XML Werte ändern
+    * XML Werte ï¿½ndern
     *
     * @return boolean
      */
@@ -930,7 +908,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen neuen XML Knoten hinzufügen
+    * Einen neuen XML Knoten hinzufï¿½gen
     *
     * @return boolean
     */
@@ -969,7 +947,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen XML Knoten löschen
+    * Einen XML Knoten lï¿½schen
     *
     * @return boolean
     */
@@ -987,7 +965,7 @@ class xml // Class by DZCP-Extended Edition
     }
 
     /**
-    * Einen XML Knoten Attribut löschen
+    * Einen XML Knoten Attribut lï¿½schen
     *
     * @return boolean
     */
