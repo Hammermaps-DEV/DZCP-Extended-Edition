@@ -10,10 +10,10 @@ if(_adminMenu != 'true')
       while($get = _fetch($qry))
       {
         $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                      "action" => "admin=dl&amp;do=edit",
+                                                      "action" => "admin=dlkat&amp;do=edit",
                                                       "title" => _button_title_edit));
         $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                          "action" => "admin=dl&amp;do=delete",
+                                                          "action" => "admin=dlkat&amp;do=delete",
                                                           "title" => _button_title_del,
                                                           "del" => _confirm_del_kat));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -28,7 +28,7 @@ if(_adminMenu != 'true')
       $show = show($dir."/dlkats", array("head" => _admin_dlkat,
                                          "show" => $show_,
                                          "add" => _dl_new_head,
-                                         "whatkat" => 'dl',
+                                         "whatkat" => 'dlkat',
                                          "download" => _admin_download_kat,
                                          "edit" => _editicon_blank,
                                          "delete" => _deleteicon_blank));
@@ -53,13 +53,13 @@ if(_adminMenu != 'true')
                      SET `name` = '".string::encode($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          $show = info(_dl_admin_edited, "?admin=dl");
+          $show = info(_dl_admin_edited, "?admin=dlkat");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".dba::get('dl_kat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_dl_admin_deleted, "?admin=dl");
+        $show = info(_dl_admin_deleted, "?admin=dlkat");
 
       } elseif($_GET['do'] == "new") {
         $show = show($dir."/dlkats_form", array("newhead" => _dl_new_head,
@@ -75,6 +75,6 @@ if(_adminMenu != 'true')
           $qry = db("INSERT INTO ".dba::get('dl_kat')."
                      SET `name` = '".string::encode($_POST['kat'])."'");
 
-          $show = info(_dl_admin_added, "?admin=dl");
+          $show = info(_dl_admin_added, "?admin=dlkat");
         }
       }
