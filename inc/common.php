@@ -758,7 +758,7 @@ function squad($code)
     return '<img src="../inc/images/gameicons/nogame.gif" alt="" class="icon" />';
 }
 
-//-> Funktion um bei DB-Eintraegen URLs einem http:// zuzuweisen
+//-> Funktion um URLs einem http:// zuzuweisen
 function links($hp)
 {
     return (!empty($hp) ? links_check_url($hp) ? $hp : "http://".$hp : $hp);

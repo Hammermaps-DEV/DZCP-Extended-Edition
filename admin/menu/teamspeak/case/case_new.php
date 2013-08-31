@@ -7,7 +7,7 @@
  */
 
 if(_adminMenu != 'true') exit();
-$error = ''; $show = '';
+$error = '';
 if(isset($_POST['ip']))
 {
     if(empty($_POST['ip']))

@@ -582,7 +582,7 @@ function install_mysql_create()
     db("CREATE TABLE IF NOT EXISTS `".dba::get('links')."` (
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `url` varchar(249) NOT NULL DEFAULT '',
-      `text` varchar(249) NOT NULL DEFAULT '',
+      `blink` varchar(249) NOT NULL DEFAULT '',
       `banner` int(1) NOT NULL DEFAULT '0',
       `beschreibung` text,
       `hits` int(50) NOT NULL DEFAULT '0',

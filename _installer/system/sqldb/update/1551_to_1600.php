@@ -89,6 +89,8 @@ function install_155x_1600_update()
     ADD `ftp_username` VARCHAR( 100 ) NOT NULL DEFAULT '' AFTER `ftp_hostname` ,
     ADD `ftp_password` VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER `ftp_username` ,
     ADD `ftp_path` VARCHAR( 255 ) NOT NULL DEFAULT '/' AFTER `ftp_password` ;",false,false,true);
+    db("ALTER TABLE `".dba::get('links')."` CHANGE `text` `blink` VARCHAR( 249 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
+
 
     //Update E-Mail Templates
     db("UPDATE `".dba::get('settings')."` SET `eml_akl_register_subj` = '".emlv('eml_akl_register_subj')."' WHERE `id` = 1;",false,false,true);

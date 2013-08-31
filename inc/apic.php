@@ -6,7 +6,6 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-// Use Class API::XXXXX
 class API_CORE
 {
     public static $addon_index = array();

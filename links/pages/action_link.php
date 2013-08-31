@@ -8,9 +8,6 @@
 
 if (!defined('IS_DZCP')) exit();
 
-###################
-## Link Besuchen ##
-###################
 if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
@@ -20,5 +17,5 @@ else
     if(count_clicks('link',$get['id']))
         db("UPDATE ".dba::get('links')." SET `hits` = ".($get['hits'] + 1)." WHERE `id` = '".$get['id']."'");
 
-    header("Location: ".$get['url']);
+    header("Location: ".links(string::decode($get['url'])));
 }

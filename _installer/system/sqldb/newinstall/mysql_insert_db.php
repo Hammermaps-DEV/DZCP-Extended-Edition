@@ -102,8 +102,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Links ======================================================
     //===============================================================
-    db("INSERT INTO ".dba::get('links')." SET `url` = 'http://www.dzcp.de', `text` = 'http://www.dzcp.de/banner/dzcp.gif', `banner` = 1, `beschreibung` = 'deV!L`z Clanportal';",false,false,true);
-    db("INSERT INTO ".dba::get('links')." SET `url` = 'http://www.my-starmedia.de', `text` = 'http://www.my-starmedia.de/extern/b3/b3.gif', `banner` = 1, `beschreibung` = '<b>my-STARMEDIA</b><br />my-STARMEDIA.de - DZCP Mods and Coding';",false,false,true);
+    db("INSERT INTO ".dba::get('links')." SET `url` = 'http://www.dzcp.de', `blink` = 'http://www.dzcp.de/banner/dzcp.gif', `banner` = 1, `beschreibung` = 'deV!L`z Clanportal';",false,false,true);
+    db("INSERT INTO ".dba::get('links')." SET `url` = 'http://www.my-starmedia.de', `blink` = 'http://www.my-starmedia.de/extern/b3/b3.gif', `banner` = 1, `beschreibung` = '<b>my-STARMEDIA</b><br />my-STARMEDIA.de - DZCP Mods and Coding';",false,false,true);
 
     //===============================================================
     //-> LinkUs =====================================================
@@ -244,8 +244,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Startseite =================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
-    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` = 'news/', `level` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` = 'forum/', `level` = 1;",false,false,true);
 
     //===============================================================
     //-> Shoutbox ===================================================
