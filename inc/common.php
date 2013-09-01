@@ -45,6 +45,7 @@ if(!$ajaxThumbgen)
     require_once(basePath."/inc/cookie.php");
 
 require_once(basePath."/inc/cache.php");
+require_once(basePath."/inc/protect.php");
 
 if(!$ajaxThumbgen)
     require_once(basePath.'/inc/gameq.php');
@@ -158,9 +159,20 @@ if(!$ajaxThumbgen && !isBot())
 
             ## Aktualisiere die User-Statistik ##
             db("UPDATE ".dba::get('userstats')." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
+
+            ## Reset CMS Protect ##
+            cms_protect::reset_login_search();
         }
         else
         {
+            $sql = db_stmt("SELECT user FROM ".dba::get('users')." WHERE id = ?",array('i', cookie::get('id'))); //Use prepare sql statement
+            if(_rows($sql))
+            {
+                $get_user = _fetch($sql);
+                cms_protect::detect_login_search($get_user['user']);
+            }
+
+            unset($sql,$get_user);
             DebugConsole::insert_error('inc/bbcode.php', 'Autologin for ID: '.cookie::get('id').'" was not successful'); //Debug Log
             logout(); ## User Logout ##
         }
@@ -201,6 +213,7 @@ function login($username='',$pwd='',$permanent=false)
         if($get['pwd'] != pass_hash($pwd,$get['pwd_encoder']))
         {
             ## Schreibe Adminlog ##
+            cms_protect::detect_login_search($username);
             wire_ipcheck("tryloginpwd(".$get['id'].")");
             return false;
         }
@@ -232,11 +245,15 @@ function login($username='',$pwd='',$permanent=false)
         ## Aktualisiere die User-Statistik ##
         db("UPDATE ".dba::get('userstats')." SET `logins` = logins+1 WHERE user = '".$get['id']."'");
 
+        ## Reset CMS Protect ##
+        cms_protect::reset_login_search();
+
         ## Ereignis in den Adminlog schreiben ##
         wire_ipcheck("login(".$get['id'].")");
         return true;
     }
 
+    cms_protect::detect_login_search($username);
     return false;
 }
 
@@ -394,6 +411,9 @@ if(!$ajaxThumbgen)
 
     //FTP
     FTP::init();
+
+    //CMS Protect
+    cms_protect::detect_login_search_run();
 }
 
 //-> User bearbeiten, Level Menu

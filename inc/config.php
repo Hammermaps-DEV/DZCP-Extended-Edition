@@ -57,6 +57,17 @@ define('rss_cache_private_news', (5*60)); // Wann soll der Interne RSS Feed aktu
 define('check_msg_email', (5*60)); // Wann soll überprüft werden, ob ein User eine neue Nachricht hat * E-Mail Senden *
 
 /*
+ * DZCP - Extended Protect
+ * Diese Einstellungen regeln wann eine IP automatisch gesperrt wird, um die Sicherheit des CMS und der User zu gewährleisten.
+ */
+define('max_protect_users', 5); //Die Maximale Anzahl der Usernamen die während der Zeit des "max_protect_cache_time" verwendet werden dürfen.
+define('max_protect_time_diff', 2); //Die Zeit die vergehen muss, zwischen jedem einzelnen Login versuch.
+define('max_protect_cache_time', 30); //Die Zeit die der Index im Cache verbleibt.
+
+define('use_protect_block_timer', true); //User blockieren die zu oft in kürzester Zeit versuchen sich anzumelden. "max_protect_time_diff"
+define('use_protect_block_user', true); //User blockieren die versuchen Usernamen zu erraten. "max_protect_users" abhänig von "max_protect_cache_time"
+
+/*
  * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit.
  * Reduziert Abfragen an die MySQL Datenbank und Festplattenzugriffe zbs. dürch Datenlisten etc.
  * Sollte nur auf false gestellt werden wenn es umbedingt nötig ist.
