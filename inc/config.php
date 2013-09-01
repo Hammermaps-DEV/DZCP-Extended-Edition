@@ -64,6 +64,7 @@ define('max_protect_users', 5); //Die Maximale Anzahl der Usernamen die während 
 define('max_protect_time_diff', 2); //Die Zeit die vergehen muss, zwischen jedem einzelnen Login versuch.
 define('max_protect_cache_time', 30); //Die Zeit die der Index im Cache verbleibt.
 
+define('use_dzcp_protect', true); //Ob DZCP - Extended Protect verwendet werden soll.
 define('use_protect_block_timer', true); //User blockieren die zu oft in kürzester Zeit versuchen sich anzumelden. "max_protect_time_diff"
 define('use_protect_block_user', true); //User blockieren die versuchen Usernamen zu erraten. "max_protect_users" abhänig von "max_protect_cache_time"
 

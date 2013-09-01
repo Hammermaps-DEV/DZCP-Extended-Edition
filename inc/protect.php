@@ -14,6 +14,7 @@ class cms_protect
     //Erkennt versuche, um Logins herauszufinden
     public static final function detect_login_search($username='')
     {
+        if(!use_dzcp_protect) return;
         self::$client_ip = visitorIp(); self::load();
         self::$index[self::$client_ip][] = array('username' => $username, 'time' => time());
         self::save();
@@ -21,6 +22,7 @@ class cms_protect
 
     public static final function reset_login_search()
     {
+        if(!use_dzcp_protect) return;
         self::$client_ip = visitorIp(); self::load();
         if(array_key_exists(self::$client_ip, self::$index))
             unset(self::$index[self::$client_ip]);
@@ -31,6 +33,7 @@ class cms_protect
     //Erkennt versuche, um Logins herauszufinden
     public static final function detect_login_search_run()
     {
+        if(!use_dzcp_protect) return;
         self::$client_ip = visitorIp(); self::load();
         if(array_key_exists(self::$client_ip, self::$index))
         {
