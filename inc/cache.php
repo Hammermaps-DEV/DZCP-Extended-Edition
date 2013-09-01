@@ -176,6 +176,17 @@ class Cache
     }
 
     /**
+     * Prüft ob ein Cache verwendet wird
+     */
+    public static function use_cache()
+    {
+        if(self::$dummy_overwrite || self::$cacheType == 'dummy' || empty(self::$cacheType))
+            return false;
+
+        return true;
+    }
+
+    /**
      * Gibt die liste geladenen Cache Classe aus *Support*
      *
      * @return array
