@@ -446,6 +446,22 @@ class database
     { return mysqli_get_server_info(self::$mysqli); }
 
     /**
+     * Gibt eine Liste der vorhandenen MySQL Tabellen aus.
+     * @param string $db
+     * @return array/boolean
+     */
+    public static function list_tables($db='')
+    {
+        global $db_array;
+        $db = (empty($db) ? $db_array['db'] : $db);
+        if(!self::query('SHOW TABLES FROM '.$db.';')) return false;
+        $tables = array();
+        while($row = self::fetch())
+        { $tables[] = $row['Tables_in_'.$db]; }
+        return count($tables) >= 1 ? $tables : false;
+    }
+
+    /**
      * Erstellt ein Datenbank Backup
      *
      * @return string
