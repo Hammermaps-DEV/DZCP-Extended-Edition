@@ -195,7 +195,7 @@ else
             {
                 if($inc_file_functions != false) { foreach ($inc_file_functions as $inc_file_function) { require_once($inc_file_function); } }
                 if($inc_file_languages != false) { foreach ($inc_file_languages as $inc_file_language) { require_once($inc_file_language); } }
-                if($index_require) require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)); $where = (empty($where_ext) ? $where : $where.': '.constant($where_ext));
+                if($index_require) require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)); $where = (empty($where_ext) ? $where : $where.': '.language::display($where_ext));
                 if($inc_file_case_dir != false && file_exists(($modul_file=$inc_file_case_dir.'/case_'.( !empty($do) ? $do : 'default').'.php'))) require_once $modul_file;
                 if(!file_exists($modul_file) && file_exists(($modul_file=$inc_file_case_dir.'/case_default.php'))) require_once $modul_file;
             }
