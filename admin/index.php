@@ -89,7 +89,7 @@ else
             $settings['file_dir'] = $file['file_dir'];
 
             ## Menu ##
-            $link = constant('_config_'.$settings['file_dir']);
+            $link = language::display('_config_'.$settings['file_dir']);
             $permission =  ($settings['Rights'] != 'done' ? permission($settings['Rights']) : false);
 
             foreach($picformat AS $end)
