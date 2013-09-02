@@ -49,7 +49,7 @@ else
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
 
             ## Menu ##
-            $link = language::dispaly('_config_'.$dir_admin);
+            $link = language::display('_config_'.$dir_admin);
             $permission =  ($settings['Rights'] != 'done' ? permission($settings['Rights']) : false);
 
             foreach($picformat AS $end)
