@@ -515,7 +515,7 @@ define('_partnerbuttons_textlink', 'Textlink');
 define('_config_forum_subkats_add', '
     <form action="" method="get" onsubmit="DZCP.submitButton()">
       <input type="hidden" name="admin" value="forum" />
-      <input type="hidden" name="do" value="newskat" />
+      <input type="hidden" name="do" value="newsubkat" />
       <input type="hidden" name="id" value="[id]" />
       <input id="contentSubmit" type="submit" class="submit" value="Neue Unterkategorie hinzuf&uuml;gen" />
     </form>
