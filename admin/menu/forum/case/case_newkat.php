@@ -8,7 +8,7 @@
  */
 
 if (_adminMenu != 'true') exit();
-
+$positions='';
 $qry = db("SELECT * FROM " . dba::get('f_kats') . " ORDER BY kid");
 while ($get = _fetch($qry))
 {

@@ -8,7 +8,7 @@
 
 if(_adminMenu != 'true') exit();
 
-
+$positions='';
 $qry = db("SELECT * FROM ".dba::get('f_skats')." WHERE sid = " . convert::ToInt($_GET['id']) .
 	" ORDER BY pos");
 while($get = _fetch($qry))

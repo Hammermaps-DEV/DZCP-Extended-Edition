@@ -1782,6 +1782,8 @@ This disclaimer is to be regarded as part of the internet publication which you 
 define('_config_head' , 'Administrative area');
 define('_config_empty_katname' , 'You have to indicate a category description!');
 define('_config_katname' , 'Category description');
+define('_config_forum_icon','Forum Icon');
+define('_config_forum_icon_delete_error','We had an issue to delete the Icons please verify it manually and delete the file.');
 define('_config_set' , 'The attitudes were successfully saved!');
 define('_config_forum_status' , 'Status');
 define('_config_forum_head' , 'Board categories');

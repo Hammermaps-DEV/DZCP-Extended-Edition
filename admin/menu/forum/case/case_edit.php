@@ -9,6 +9,7 @@
 
 if (_adminMenu != 'true') exit();
 
+$positions='';
 $qry = db("SELECT * FROM " . dba::get('f_kats') . " WHERE id = '" . convert::ToInt($_GET['id']) . "'");
 
 while ($get = _fetch($qry))

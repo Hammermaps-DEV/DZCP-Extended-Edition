@@ -7,7 +7,10 @@
  */
 
 if(_adminMenu != 'true') exit();
-
+ $maincolor=0; $subcolor=0; $mainkats='';
+ if(isset($_GET['expand']))
+ 	$expand = $_GET['expand'];
+ else $expand =0;
 $qry = db("SELECT * FROM ".dba::get('f_kats')." ORDER BY kid");
 while($get = _fetch($qry))
 {
@@ -18,7 +21,7 @@ while($get = _fetch($qry))
                       ON s1.id = s2.sid
                       WHERE s1.id = '".convert::ToInt($get['id'])."'
                       ORDER BY s2.pos");
-	unset($subkats);
+	$subkats='';
 	while($getk = _fetch($qryk))
 	{
 		if(!empty($getk['kattopic']))
@@ -88,8 +91,8 @@ while($get = _fetch($qry))
 													 "id" => convert::ToInt($get['id']),
 													 "subkats"=>$subkatshow ,
 													 "icon"=>$icon,
-													 "expand"=>(convert::ToInt($_GET['expand'])==convert::ToInt($get['id']))? 'show':'none',
-													 "toggle"=>(convert::ToInt($_GET['expand'])==convert::ToInt($get['id']))? 'collapse':'expand',
+													 "expand"=>(convert::ToInt($expand)==convert::ToInt($get['id']))? 'show':'none',
+													 "toggle"=>(convert::ToInt($expand)==convert::ToInt($get['id']))? 'collapse':'expand',
 	                                                 "status" => ($get['intern'] == 1)?_config_forum_intern:_config_forum_public,
 	                                                 "skats" => cnt(dba::get('f_skats'), " WHERE sid = '".convert::ToInt($get['id'])."'"),
 	                                                 "edit" => $edit,
