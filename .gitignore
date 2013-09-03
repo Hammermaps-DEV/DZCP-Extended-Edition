@@ -1,7 +1,9 @@
 __installer/
+_installer/
 inc/mysql.php
 inc/mysql_salt.php
 inc/config.php
-_cache/
-_cache/binary/
-_cache/tinymce/
+inc/_cache/
+inc/_cache/binary/
+inc/_cache/tinymce/
+inc/_logs/
