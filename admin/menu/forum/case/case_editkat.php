@@ -29,7 +29,32 @@ if(empty($_POST['kat']))
                        SET `name`    = '".string::encode($_POST['kat'])."',
                            ".$kid."
                            `intern`  = '".convert::ToInt($_POST['intern'])."'
-                       WHERE id = '".convert::ToInt($_GET['id'])."'");
+                       WHERE id = '".convert::ToInt($_POST['id'])."'");
+
+
+	$insert_id=convert::ToInt($_POST['id']);
+	$tmpname = $_FILES['icon']['tmp_name'];
+	$name = $_FILES['icon']['name'];
+	$type = $_FILES['icon']['type'];
+	$size = $_FILES['icon']['size'];
+	$imageinfo = @getimagesize($tmpname);
+
+	$endung = explode(".", $_FILES['icon']['name']);
+	$endung = strtolower($endung[count($endung)-1]);
+
+	if($tmpname)
+	{
+		foreach($picformat as $tmpendung)
+		{
+			if(file_exists(basePath."/inc/images/uploads/forum/mainkat/".$insert_id.".".$tmpendung))
+			{
+				@unlink(basePath."/inc/images/uploads/forum/mainkat/".$insert_id.".".$tmpendung);
+			}
+		}
+		copy($tmpname, basePath."/inc/images/uploads/forum/mainkat/".$insert_id.".".strtolower($endung)."");
+		@unlink($_FILES['icon']['tmp_name']);
+
+	}
 
 	$show = info(_config_forum_kat_edited, "?admin=forum");
 }
