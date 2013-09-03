@@ -3,7 +3,7 @@
 </tr>
 <tr>
 <td>
-<form name="forum" enctype="multipart/form-data" action="?admin=forum&amp;do=editkat&amp;id=[id]" method="post" onsubmit="return(DZCP.submitButton())"> 
+<form name="forum" enctype="multipart/form-data" action="?admin=forum&amp;do=[what]" method="post" onsubmit="return(DZCP.submitButton())">
 <table class="hperc" cellspacing="1">
 <tr>
   <td class="contentMainTop" width="150"><span class="fontBold">[fkat]:</span></td>
@@ -32,6 +32,14 @@
     </select>
   </td>
 </tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[icon]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="file" name="icon"/>
+    [icon_edit]
+  </td>
+</tr>
+<input type="hidden" name="id" value="[id]"/>
 <tr>
   <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[value]" class="submit" /></td>
 </tr>

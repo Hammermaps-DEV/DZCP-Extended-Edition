@@ -1820,6 +1820,8 @@ define('_config_set', 'Die Einstellungen wurden erfolgreich &uuml;bernommen!');
 define('_config_forum_status', 'Status');
 define('_config_forum_head', 'Forenkategorien');
 define('_config_forum_mainkat', 'Hauptkategorie');
+define('_config_forum_icon','Forum Icon');
+define('_config_forum_icon_delete_error','Es ist leider ein Fehler aufgetreten bitte pr&uuml;fen Sie manuel ob das Icon noch vorhanden ist und entfernene es bei bedarf manuel');
 define('_config_forum_subkathead', 'Unterkategorien von <span class="fontUnder">[kat]</span>');
 define('_config_forum_subkat', 'Unterkategorie');
 define('_config_forum_subkats', '<span class="fontBold">[topic]</span><br /><span class="fontItalic">[subtopic]</span>');
