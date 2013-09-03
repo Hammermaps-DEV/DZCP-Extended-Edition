@@ -1,7 +1,20 @@
+#################### Config ######################
 inc/mysql.php
 inc/mysql_salt.php
 inc/config.php
+
+################ Cache und logs ##################
 inc/_cache/
 inc/_cache/binary/
 inc/_cache/tinymce/
 inc/_logs/
+
+################# User Uploads ###################
+inc/images/uploads/forum/
+inc/images/uploads/forum/mainkat/
+inc/images/uploads/forum/subkat/
+
+########### Stuff was Aviator benutzt ############
+dzcp_extended.PHPEditProject
+
+######### Stuff was Hammermaps benutzt ###########
