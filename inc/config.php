@@ -10,7 +10,7 @@
 //-> DZCP Settings Start
 #########################################
 
-define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
+define('is_debug', true); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug, Seiten gecached werden können
 define('show_debug_console', true); //Zeigt die Debug Console
 define('save_debug_console', false); //Speichert alle in der Debug Console ausgegebenen Texte in eine Log Datei
