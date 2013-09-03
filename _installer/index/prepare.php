@@ -36,6 +36,8 @@ else
             'inc/images/uploads/clanwars',
             'inc/images/uploads/newskat',
             'inc/images/uploads/news',
+		    'inc/images/uploads/forum/mainkat',
+		    'inc/images/uploads/forum/subkat',
             'inc/tinymce_files');
 
     $array_install = array('_installer','_installer/index.php');
