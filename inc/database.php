@@ -681,6 +681,7 @@ class settings
             $data = self::$index[$what];
             $data['value'] = cut($var,((int)$data['length']),false);
             self::$index[$what] = $data;
+            DebugConsole::insert_successful('settings::set()', 'Set "'.$what.'" to "'.$var.'"');
             return db("UPDATE `".dba::get('settings')."` SET `value` = '".cut($var,((int)$data['length']),false)."' WHERE `key` = '".$what."';");
         }
 

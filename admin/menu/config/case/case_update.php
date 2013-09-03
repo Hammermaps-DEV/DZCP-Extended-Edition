@@ -75,7 +75,7 @@ if(isset($_POST))
         if(settings::changed(($key='cache_teamspeak'),($var=convert::ToInt($_POST['cache_teamspeak'])))) settings::set($key,$var);
         if(settings::changed(($key='cache_server'),($var=convert::ToInt($_POST['cache_server'])))) settings::set($key,$var);
         if(settings::changed(($key='cache_news'),($var=convert::ToInt($_POST['cache_news'])))) settings::set($key,$var);
-        if(settings::changed(($key='cache_engine'),($var=convert::ToInt($_POST['cache_engine'])))) settings::set($key,$var);
+        if(settings::changed(($key='cache_engine'),($var=string::encode($_POST['cache_engine'])))) settings::set($key,$var);
         if(settings::changed(($key='l_nwars'),($var=convert::ToInt($_POST['l_nwars'])))) settings::set($key,$var);
         if(settings::changed(($key='news_feed'),($var=convert::ToInt($_POST['feed'])))) settings::set($key,$var);
         if(settings::changed(($key='use_akl'),($var=convert::ToInt($_POST['akl'])))) settings::set($key,$var);
@@ -107,7 +107,7 @@ if(isset($_POST))
         if(settings::changed(($key='eml_pwd'),($var=string::encode($_POST['eml_pwd'])))) settings::set($key,$var);
         if(settings::changed(($key='eml_nletter'),($var=string::encode($_POST['eml_nletter'])))) settings::set($key,$var);
         if(settings::changed(($key='eml_pn'),($var=string::encode($_POST['eml_pwd'])))) settings::set($key,$var);
-        if(settings::changed(($key='eml_fabo_npost'),($var=string::encode($_POST['eml_nletter'])))) settings::set($key,$var);
+        if(settings::changed(($key='eml_fabo_npost'),($var=string::encode($_POST['eml_fabo_npost'])))) settings::set($key,$var);
         if(settings::changed(($key='eml_fabo_tedit'),($var=string::encode($_POST['eml_fabo_tedit'])))) settings::set($key,$var);
         if(settings::changed(($key='eml_fabo_pedit'),($var=string::encode($_POST['eml_fabo_pedit'])))) settings::set($key,$var);
         if(settings::changed(($key='eml_akl_register'),($var=string::encode($_POST['eml_akl_regist'])))) settings::set($key,$var);
