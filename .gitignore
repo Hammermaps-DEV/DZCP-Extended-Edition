@@ -9,6 +9,9 @@ inc/_cache/binary/
 inc/_cache/tinymce/
 inc/_logs/
 
+################ Addons und CO ##################
+inc/additional-addons/
+
 ################# User Uploads ###################
 inc/images/uploads/forum/
 inc/images/uploads/forum/mainkat/
