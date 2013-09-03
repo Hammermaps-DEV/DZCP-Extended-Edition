@@ -21,3 +21,6 @@ inc/images/uploads/forum/subkat/
 dzcp_extended.PHPEditProject
 
 ######### Stuff was Hammermaps benutzt ###########
+.settings/*
+.buildpath
+.project
