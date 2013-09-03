@@ -638,6 +638,11 @@ class settings
 {
     protected static $index = array();
 
+    /**
+     * Gibt eine Einstellung aus der Settings Tabelle zurück
+     * @param string $what
+     * @return string|int|boolean
+     */
     public static function get($what='')
     {
         $what = strtolower($what);
@@ -652,6 +657,11 @@ class settings
         return false;
     }
 
+    /**
+     * Gibt mehrere Einstellungen aus der Settings Tabelle zurück
+     * @param string $what
+     * @return array|boolean
+     */
     public static function get_array($what=array())
     {
         if(!is_array($what) || !count($what) || empty($what))
@@ -673,6 +683,12 @@ class settings
         return false;
     }
 
+    /**
+     * Aktualisiert die Werte innerhalb der Settings Tabelle
+     * @param string $what
+     * @param string $var
+     * @return boolean
+     */
     public static function set($what='',$var='')
     {
         $what = strtolower($what);
@@ -682,12 +698,18 @@ class settings
             $data['value'] = cut($var,((int)$data['length']),false);
             self::$index[$what] = $data;
             DebugConsole::insert_successful('settings::set()', 'Set "'.$what.'" to "'.$var.'"');
-            return db("UPDATE `".dba::get('settings')."` SET `value` = '".cut($var,((int)$data['length']),false)."' WHERE `key` = '".$what."';");
+            return db("UPDATE `".dba::get('settings')."` SET `value` = '".cut($var,((int)$data['length']),false)."' WHERE `key` = '".$what."';") ? true : false;
         }
 
         return false;
     }
 
+    /**
+     * Vergleicht den Aktuellen Wert mit dem neuen Wert ob ein Update erforderlich ist
+     * @param string $what
+     * @param string $var
+     * @return boolean
+     */
     public static function changed($what='',$var='')
     {
         $what = strtolower($what);
@@ -700,9 +722,17 @@ class settings
         return false;
     }
 
+    /**
+     * Prüft ob ein Key existiert
+     * @param string $what
+     * @return boolean
+     */
     public static function is_exists($what='')
     { return (array_key_exists(strtolower($what), self::$index)); }
 
+    /**
+     * Laden der Einstellungen aus der Datenbank
+     */
     public static final function load()
     {
         $sql = db("SELECT * FROM `".dba::get('settings')."`");
@@ -714,7 +744,58 @@ class settings
             $setting['default'] = $get['type'] == 'int' ? ((int)$get['default']) : ((string)$get['default']);
             $setting['length'] = ((int)$get['length']);
             self::$index[$get['key']] = $setting;
+            unset($setting);
         }
+    }
+
+    /**
+     * Eine neue Einstellung in die Datenbank schreiben
+     * @param string $what
+     * @param string/int $var
+     * @param string/int $default
+     * @param int $length
+     * @param boolean $int
+     * @return boolean
+     */
+    public static function add($what='',$var='',$default='',$length='',$int=false)
+    {
+        $what = strtolower($what);
+        if(!self::is_exists($what))
+        {
+            $setting = array();
+            $setting['value'] = !((int)$length) ? $int ? ((int)$var) : ((string)$var)
+            : cut($int ? ((int)$var) : ((string)$var),((int)$length),false);
+            $setting['default'] = $int ? ((int)$default) : ((string)$default);
+            $setting['length'] = ((int)$length);
+            self::$index[$what] = $setting;
+            unset($setting);
+
+            return db("INSERT INTO `".dba::get('settings')."` SET
+                        `key` = '".$what."',
+                        `value` = '".$var."',
+                        `default` = '".$default."',
+                        `length` = '".$length."',
+                        `type` = '".($int ? 'int' : 'string')."';",false,false,true);
+        }
+
+        return false;
+    }
+
+    /**
+     * Löscht eine Einstellung aus der Datenbank
+     * @param string $what
+     * @return boolean
+     */
+    public static function remove($what='')
+    {
+        $what = strtolower($what);
+        if(self::is_exists($what))
+        {
+            unset(self::$index[$what]);
+            return db("DELETE FROM `".dba::get('settings')."` WHERE `key` = '".$what."';",false,false,true) ? true : false;
+        }
+
+        return false;
     }
 }
 
