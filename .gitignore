@@ -1,3 +1,4 @@
 inc/mysql.php
 inc/mysql_salt.php
 inc/config.php
+_cache/**/* 
