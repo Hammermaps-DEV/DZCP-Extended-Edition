@@ -564,6 +564,75 @@ class remote_database extends database
 
 }
 
+############# DBA #############
+class dba
+{
+    private static $dba = array();
+
+    public static final function init()
+    {
+        global $db_array;
+        foreach ($db_array as $dba_key => $dba_val)
+        {
+            if($dba_key == 'host' || $dba_key == 'user' || $dba_key == 'pass' || $dba_key == 'db' || $dba_key == 'prefix')
+                continue;
+
+            self::$dba[$dba_key] = $db_array['prefix'].$dba_val; // Add prefix
+        }
+    }
+
+    public static function get($tag = '')
+    {
+        if(empty($tag) || $tag == false || !array_key_exists($tag, self::$dba))
+            return '';
+        else
+            return self::$dba[$tag];
+    }
+
+    public static function set($tag = '', $table = '')
+    {
+        global $db_array;
+
+        if(array_key_exists($tag, self::$dba))
+            return false;
+
+        self::$dba[$tag] = $db_array['prefix'].$table; // Add prefix
+        return true;
+    }
+
+    //array(array('test' => 'test123'),array('dl' => 'downloads'));
+    public static function set_array($array = array())
+    {
+        global $db_array;
+
+        if(!is_array($array) || !count($array))
+            return false;
+
+        $i=0;
+        foreach($array as $dba_key => $dba_val)
+        {
+            if(array_key_exists($dba_key, self::$dba)) continue;
+            self::$dba[$dba_key] = $db_array['prefix'].$dba_val; // Add prefix
+            $i++;
+        }
+
+        return $i >= 1 ? true : false;
+    }
+
+    public static function replace($tag = '', $new_table = '')
+    {
+        global $db_array;
+
+        if(!array_key_exists($tag, self::$dba))
+            return false;
+
+        self::$dba[$tag] = $db_array['prefix'].$new_table; // Add prefix
+        return true;
+    }
+}
+
+dba::init(); //Run DBA
+
 ############# CMS Settings #############
 class settings
 {
@@ -649,72 +718,3 @@ class settings
 }
 
 settings::load(); //Load all settings
-
-############# DBA #############
-class dba
-{
-    private static $dba = array();
-
-    public static final function init()
-    {
-        global $db_array;
-        foreach ($db_array as $dba_key => $dba_val)
-        {
-            if($dba_key == 'host' || $dba_key == 'user' || $dba_key == 'pass' || $dba_key == 'db' || $dba_key == 'prefix')
-                continue;
-
-            self::$dba[$dba_key] = $db_array['prefix'].$dba_val; // Add prefix
-        }
-    }
-
-    public static function get($tag = '')
-    {
-        if(empty($tag) || $tag == false || !array_key_exists($tag, self::$dba))
-            return '';
-        else
-            return self::$dba[$tag];
-    }
-
-    public static function set($tag = '', $table = '')
-    {
-        global $db_array;
-
-        if(array_key_exists($tag, self::$dba))
-            return false;
-
-        self::$dba[$tag] = $db_array['prefix'].$table; // Add prefix
-        return true;
-    }
-
-    //array(array('test' => 'test123'),array('dl' => 'downloads'));
-    public static function set_array($array = array())
-    {
-        global $db_array;
-
-        if(!is_array($array) || !count($array))
-            return false;
-
-        $i=0;
-        foreach($array as $dba_key => $dba_val)
-        {
-            if(array_key_exists($dba_key, self::$dba)) continue;
-            self::$dba[$dba_key] = $db_array['prefix'].$dba_val; // Add prefix
-            $i++;
-        }
-
-        return $i >= 1 ? true : false;
-    }
-
-    public static function replace($tag = '', $new_table = '')
-    {
-        global $db_array;
-
-        if(!array_key_exists($tag, self::$dba))
-            return false;
-
-        self::$dba[$tag] = $db_array['prefix'].$new_table; // Add prefix
-        return true;
-    }
-}
-
-dba::init(); //Run DBA
