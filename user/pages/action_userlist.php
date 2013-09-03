@@ -15,7 +15,7 @@ else
     ## Userliste  ##
     ################
     $where = _site_ulist;
-    $maxuserlist = config('m_userlist');
+    $maxuserlist = settings('m_userlist');
     $search = (isset($_GET['search']) && !empty($_GET['search']) ? $_GET['search'] : _nick);
 
     if(checkme() == 4 || permission('editusers') || permission('activateusers'))

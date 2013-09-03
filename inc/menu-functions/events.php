@@ -12,7 +12,7 @@ function events()
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_eventbox'))
     {
         $eventbox = '';
-        $qry = db("SELECT id,datum,title,event FROM ".dba::get('events')." WHERE datum > ".time()." ORDER BY datum LIMIT ".config('m_events')."");
+        $qry = db("SELECT id,datum,title,event FROM ".dba::get('events')." WHERE datum > ".time()." ORDER BY datum LIMIT ".settings('m_events')."");
 
         if(_rows($qry))
         {

@@ -68,7 +68,7 @@ else
 
     if(empty($index))
     {
-        $gb_config = config(array('m_gb','f_gb'));
+        $gb_config = settings(array('m_gb','f_gb'));
         $activ = (($gb_activ=settings('gb_activ')) && !permission("gb")) ? "WHERE public = 1" : "";
         $qry = db("SELECT * FROM ".dba::get('gb')." ".$activ." ORDER BY datum DESC LIMIT " . ($page - 1) * $gb_config['m_gb'].",".$gb_config['m_gb']."");
         $entrys = cnt(dba::get('gb')); $i = $entrys - ($page - 1) * $gb_config['m_gb'];

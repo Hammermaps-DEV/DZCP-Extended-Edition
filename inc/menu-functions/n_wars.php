@@ -12,7 +12,7 @@ function n_wars()
     $menu_xml = get_menu_xml('n_wars');
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_n_wars'))
     {
-        $nwarsconfig = config(array('m_nwars','l_nwars')); $nwars = '';
+        $nwarsconfig = settings(array('m_nwars','l_nwars')); $nwars = '';
         $qry = db("SELECT s1.id,s1.datum,s1.clantag,s1.maps,s1.gegner,s1.squad_id,s2.icon,s1.xonx,s2.name FROM ".dba::get('cw')." AS s1 LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
         WHERE s1.datum > ".time()." ORDER BY s1.datum LIMIT ".$nwarsconfig['m_nwars']."");
 

@@ -210,7 +210,7 @@ define('_dzcp_vcheck', 'The DZCP Version Checker will inform about new DZCP upda
 define('_debug_on', 'Debug mode is enabled!');
 define('_no_entrys_yet_all' , '
 <tr>
-  <td class="contentMainFirst" colspan="[colspan]" align="center">No entries!</td>
+  <td class="contentMainSecond" colspan="[colspan]" align="center">No entries!</td>
 </tr>');
 define('_include_action_error','<tr><td class="contentHead" align="center" colspan="3"><span class="fontBold"><br>File: "[file]" is missing or corrupted!<br/>The module functions are not available!<br></br></span></td></tr>');
 
@@ -1786,8 +1786,6 @@ define('_config_set' , 'The attitudes were successfully saved!');
 define('_config_forum_status' , 'Status');
 define('_config_forum_head' , 'Board categories');
 define('_config_forum_mainkat' , 'Main category');
-define('_config_forum_icon','Forum Icon');
-define('_config_forum_icon_delete_error','There was an issue with the deletion please verify manuel that the icon is deleted else delete it manual');
 define('_config_forum_subkathead' , 'Sub categories from <span class="fontUnder">[kat]</span>');
 define('_config_forum_subkat' , 'Sub  category');
 define('_config_forum_subkats' , '<span class="fontBold">[topic]</span><br /><span class="fontItalic">[subtopic]</span>');

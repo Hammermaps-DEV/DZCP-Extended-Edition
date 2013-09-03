@@ -17,7 +17,7 @@ else
         $index = error(_error_unregistered);
     else
     {
-        $downloadcomconfig = config(array('f_downloadcom','m_comments'));
+        $downloadcomconfig = settings(array('f_downloadcom','m_comments'));
         #################################### do case ####################################
         $error = '';
         $get = db("SELECT comments FROM ".dba::get('downloads')." WHERE id = '".$dl_id."'",false,true);
@@ -151,8 +151,7 @@ else
         if(empty($index))
         {
             $get = db("SELECT * FROM ".dba::get('downloads')." WHERE id = '".$dl_id."'",false,true);
-            $file = preg_replace("#added...#Uis", "files/", $get['url']);
-            $size = filesize_extended($file);
+            $size = filesize_extended(basePath.'/'.$get['url']);
             $getfile = show(_dl_getfile, array("file" => string::decode($get['download'])));
 
             if(!$size)
@@ -253,8 +252,8 @@ else
 
             //////////////////////////////////////////////////////////////////////////////////////////
 
-            $rawfile = (!links_check_url($file) ? @basename($file) : string::decode($get['download']));
-            $date = (empty($get['date']) ? (!$size ? 'n/a' : date("d.m.Y H:i",@filemtime($file))._uhr) : date("d.m.Y H:i",$get['date'])._uhr);
+            $rawfile = (!links_check_url($get['url']) ? @basename($get['url']) : string::decode($get['download']));
+            $date = (empty($get['date']) ? (!$size ? 'n/a' : date("d.m.Y H:i",@filemtime($get['url']))._uhr) : date("d.m.Y H:i",$get['date'])._uhr);
             $lastdate = date("d.m.Y H:i",$get['last_dl'])._uhr;
             $index = show($dir."/info", array("getfile" => $getfile,
                                               "br1" => $br1,

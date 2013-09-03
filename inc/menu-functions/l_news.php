@@ -13,7 +13,7 @@ function l_news()
     $menu_xml = get_menu_xml('l_news');
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_l_news'))
     {
-        $lnewsconfig = config(array('m_lnews','l_lnews')); $l_news = '';
+        $lnewsconfig = settings(array('m_lnews','l_lnews')); $l_news = '';
         $qry = db("SELECT id,titel,autor,datum,kat,public,timeshift FROM ".dba::get('news')." WHERE public = 1 AND datum <= ".time()." ".(!permission("intnews") ? "AND intern = 0" : "")." ORDER BY id DESC LIMIT ".$lnewsconfig['m_lnews']."");
 
         if(_rows($qry))

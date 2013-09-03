@@ -11,7 +11,7 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    $t = 1; $cnt = 0; $color = 1; $show = ''; $galleryconfig = config(array('gallery','m_gallery'));
+    $t = 1; $cnt = 0; $color = 1; $show = ''; $galleryconfig = settings(array('gallery','m_gallery'));
     $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat,"#^".convert::ToInt($_GET['id'])."_(.*)#");
     $start_on = ($page >= 2 ? ($page - 1)*$galleryconfig['m_gallery']+1 : 1); ksort($files);
     $files_foreach = limited_array($files,$start_on,$galleryconfig['m_gallery']);

@@ -22,7 +22,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
     {
         $host = $_SERVER['HTTP_HOST'];
         $pfad = dirname($_SERVER['PHP_SELF']);
-        rss_feed::set_main_config('pagetitle',$clanname.' - RSS-Feed für '.string::decode($user['user']));
+        rss_feed::set_main_settings('pagetitle',$clanname.' - RSS-Feed für '.string::decode($user['user']));
 
         // Intern News
         if($rss_uconf['show_intern_news'])
@@ -81,7 +81,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
 }
 else
 {
-    if(config('news_feed'))
+    if(settings('news_feed'))
     {
         if(cache::check('public_news_rss'))
         {

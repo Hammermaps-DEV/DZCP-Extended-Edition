@@ -22,7 +22,7 @@ else
         $entrys = cnt(dba::get('away'));
         $qry = db("SELECT * FROM ".dba::get('away')."
                ORDER BY id DESC
-               LIMIT ".($page - 1)*($maxaway=config('m_away')).",".$maxaway."");
+               LIMIT ".($page - 1)*($maxaway=settings('m_away')).",".$maxaway."");
 
         $show = '';
         while($get = _fetch($qry))

@@ -25,7 +25,7 @@ else
         {
             $index = error(_upload_no_data);
         }
-        elseif($size > config('upicsize')."000")
+        elseif($size > settings('upicsize')."000")
         {
             $index = error(_upload_wrong_size);
         }

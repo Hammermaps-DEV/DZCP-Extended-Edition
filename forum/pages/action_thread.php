@@ -452,7 +452,7 @@ else
     {
       $index = error(_error_unregistered);
     } else {
-      if(!ipcheck("fid(".$_GET['kid'].")", config('f_forum')))
+      if(!ipcheck("fid(".$_GET['kid'].")", settings('f_forum')))
       {
         if(permission("forum"))
         {
@@ -529,7 +529,7 @@ else
                                             "vote" => $vote,
                                             "posteintrag" => ""));
       } else {
-        $index = error(show(_error_flood_post, array("sek" => config('f_forum'))));
+        $index = error(show(_error_flood_post, array("sek" => settings('f_forum'))));
       }
     }
   } elseif($_GET['do'] == "addthread") {

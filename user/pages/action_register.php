@@ -5,7 +5,7 @@
  * @author: DZCP Developer Team || Hammermaps.de Developer Team
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
- 
+
 if (!defined('IS_DZCP')) exit();
 if (_version < '1.0')
     $index = _version_for_page_outofdate;
@@ -61,7 +61,7 @@ else
         }
         else
         {
-            $use_akl = config('use_akl');
+            $use_akl = settings('use_akl');
             ## Wurde ein Passwort eingegeben ##
             $mkpwd = (empty($_POST['pwd']) ? mkpwd() : $_POST['pwd']);
 

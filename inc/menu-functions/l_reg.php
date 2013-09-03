@@ -11,7 +11,7 @@ function l_reg()
     $menu_xml = get_menu_xml('l_reg');
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_l_reg'))
     {
-        $lregconfig = config(array('m_lreg','l_lreg')); $lreg = '';
+        $lregconfig = settings(array('m_lreg','l_lreg')); $lreg = '';
         $qry = db("SELECT id,nick,country,regdatum FROM ".dba::get('users')." ORDER BY regdatum DESC LIMIT ".$lregconfig['m_lreg']."");
 
         if(_rows($qry))

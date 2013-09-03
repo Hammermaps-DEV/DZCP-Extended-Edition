@@ -26,7 +26,7 @@ include(basePath."/user/helper.php");
 $dir = "forum";
 $where = _site_forum;
 $index = "";
-$maxfposts = config('m_fposts');
+$maxfposts = settings('m_fposts');
 
 ##############
 ## SECTIONS ##

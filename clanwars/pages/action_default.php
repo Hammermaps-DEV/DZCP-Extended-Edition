@@ -65,12 +65,12 @@ else
                 LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
                 WHERE s1.squad_id='".$get['id']."'
                 AND s1.datum < ".time()."
-                ORDER BY s1.datum DESC LIMIT ".config('m_clanwars')."");
+                ORDER BY s1.datum DESC LIMIT ".settings('m_clanwars')."");
         while($getm = _fetch($qrym))
         {
             $game = squad($getm['icon']);
             $flagge = flag($getm['gcountry']);
-            $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($getm['clantag']." - ".$getm['gegner'], config('l_clanwars'))), "url" => '?action=details&amp;id='.$getm['id']));
+            $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($getm['clantag']." - ".$getm['gegner'], settings('l_clanwars'))), "url" => '?action=details&amp;id='.$getm['id']));
             $details = show(_cw_show_details, array("id" => $getm['id']));
             $squad = show(_member_squad_squadlink, array("squad" => string::decode($get['name']), "id" => $get['id'], "shown" => $shown));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -119,7 +119,7 @@ else
                                            "ges_wars" => $anz_ges_wars,
                                            "ges_points" => $anz_ges_points));
 
-        $more = (cnt(dba::get('cw'), " WHERE squad_id = ".$get['id']." AND datum < ".time()."") > config('m_clanwars') ? show(_cw_show_all, array("id" => $get['id'])) : '');
+        $more = (cnt(dba::get('cw'), " WHERE squad_id = ".$get['id']." AND datum < ".time()."") > settings('m_clanwars') ? show(_cw_show_all, array("id" => $get['id'])) : '');
         if(cnt(dba::get('cw'), " WHERE squad_id = ".$get['id']." AND datum < ".time()."") > 0)
         {
             $show .= show($dir."/squads_show", array("id" => $get['id'],

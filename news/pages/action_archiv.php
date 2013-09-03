@@ -22,7 +22,7 @@ else
         $intern2 = "WHERE intern = 0 AND datum <= ".time()." AND public = 1";
     }
 
-    $narchivconfig = config(array('m_archivnews','l_newsarchiv'));
+    $narchivconfig = settings(array('m_archivnews','l_newsarchiv'));
     $page = (isset($_GET['page']) ? $_GET['page'] : 1);
     $n_kat = (empty($kat) ? '' : "AND kat = '".$kat."'");
     $qry = db("SELECT id,titel,autor,datum,kat,text FROM ".dba::get('news')." ".$intern2." ".$n_kat." ORDER BY datum DESC LIMIT ".($page - 1)*$narchivconfig['m_archivnews'].",".$narchivconfig['m_archivnews']."");

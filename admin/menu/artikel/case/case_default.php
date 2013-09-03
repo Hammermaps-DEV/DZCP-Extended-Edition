@@ -9,12 +9,12 @@
 if(_adminMenu != 'true') exit();
 
 $entrys = cnt(dba::get('artikel')); $show = ''; $color = 1;
-$qry = db("SELECT * FROM ".dba::get('artikel')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminartikel=config('m_adminartikel')).",".$maxadminartikel."");
+$qry = db("SELECT * FROM ".dba::get('artikel')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminartikel=settings('m_adminartikel')).",".$maxadminartikel."");
 while($get = _fetch($qry))
 {
-	$edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=artikel&amp;do=edit","title" => _button_title_edit));
+    $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=artikel&amp;do=edit","title" => _button_title_edit));
     $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=artikel&amp;do=delete","title" => _button_title_del,"del" => _confirm_del_artikel));
-    $titel = show(_artikel_show_link, array("titel" => string::decode(cut($get['titel'],config('l_newsadmin'))),"id" => $get['id']));
+    $titel = show(_artikel_show_link, array("titel" => string::decode(cut($get['titel'],settings('l_newsadmin'))),"id" => $get['id']));
     $public = '<a href="?admin=artikel&amp;do=public&amp;id='.$get['id'].'"><img src="../inc/images/'.($get['public'] ? 'public.gif' : 'nonpublic.gif').'" alt="" title="'._public.'" /></a>';
     $datum = (empty($get['datum']) ? _no_public : date("d.m.y H:i", $get['datum'])._uhr);
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -27,5 +27,5 @@ while($get = _fetch($qry))
                                                     "delete" => $delete));
 }
 
-$nav = nav($entrys,config('m_adminnews'),"?admin=artikel");
+$nav = nav($entrys,settings('m_adminnews'),"?admin=artikel");
 $show = show($dir."/admin_artikel", array("nav" => $nav,"show" => $show));

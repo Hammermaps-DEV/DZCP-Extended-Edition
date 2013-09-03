@@ -13,7 +13,7 @@ else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::
     $index = error(_id_dont_exist);
 else
 {
-    $flood_artikelcom = config('f_artikelcom');
+    $flood_artikelcom = settings('f_artikelcom');
     $check = db("SELECT public FROM ".dba::get('artikel')." WHERE id = ".$artikel_id,false,true);
     if(!permission("artikel") && !$check['public'])
         $index = error(_error_wrong_permissions);
@@ -33,7 +33,7 @@ else
                             $index = error(_error_have_to_be_logged);
                         else
                         {
-                            if(!ipcheck("artid(".$artikel_id.")", config('f_artikelcom')))
+                            if(!ipcheck("artid(".$artikel_id.")", settings('f_artikelcom')))
                             {
                                 if(userid() != 0)
                                     $toCheck = empty($_POST['comment']);
@@ -178,7 +178,7 @@ else
             if($get['comments'])
             {
                 $entrys = cnt(dba::get('acomments'), " WHERE artikel = ".$artikel_id);
-                $i = $entrys-($page - 1)*($maxcomments=config('m_comments'));
+                $i = $entrys-($page - 1)*($maxcomments=settings('m_comments'));
 
                 $qryc = db("SELECT * FROM ".dba::get('acomments')." WHERE artikel = ".$artikel_id." ORDER BY datum DESC LIMIT ".($page - 1)*$maxcomments.",".$maxcomments.""); $comments = '';
                 while($getc = _fetch($qryc))

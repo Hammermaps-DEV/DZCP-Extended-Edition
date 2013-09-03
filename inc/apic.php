@@ -28,6 +28,7 @@ class API_CORE
                 foreach($addons as $addon)
                 {
                     $additional_functions = get_files(basePath.'/inc/additional-addons/'.$addon.'/functions/',false,true,array('php'));
+                    $additional_kernel = get_files(basePath.'/inc/additional-addons/'.$addon.'/',false,true,array('php'));
                     $additional_languages_global = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/',false,true,array('php'));
                     $additional_languages = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/'.language::get_language().'/',false,true,array('php'));
                     $additional_tpl = get_files(basePath.'/inc/additional-addons/'.$addon.'/_templates_/',true); $addon_infos = array();
@@ -80,6 +81,10 @@ class API_CORE
                     $addon_infos['additional-functions'] = (!empty($additional_functions) && count($additional_functions) >= 1 ? $additional_functions : array());
                     unset($additional_functions);
 
+                    $addon_infos['include_kernel_functions'] = (!empty($additional_kernel) && count($additional_kernel) >= 1 ? true : false);
+                    $addon_infos['additional-kernel-functions'] = (!empty($additional_kernel) && count($additional_kernel) >= 1 ? $additional_kernel : array());
+                    unset($additional_kernel);
+
                     $addon_infos['include_languages'] = (count($additional_languages) >= 1 && !empty($additional_languages) || count($additional_languages_global) && !empty($additional_languages_global) ? true : false);
                     $addon_infos['additional-languages-global'] = (count($additional_languages_global) >= 1 && !empty($additional_languages_global) ? $additional_languages_global : array());
                     $addon_infos['additional-languages'] = (count($additional_languages) >= 1 && !empty($additional_languages) ? $additional_languages : array());
@@ -99,6 +104,9 @@ class API_CORE
                 }
             }
         }
+
+        //Core Sort
+        self::core_sort();
 
         /**
          *  Mobilgeräte erkennen
@@ -266,6 +274,38 @@ class API_CORE
                         {
                             if(file_exists($dir.'functions/'.$function))
                                 $return[] = $dir.'functions/'.$function;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     *  Additional Kernel Functions listen
+     *
+     *  @return array
+     */
+    public static function load_additional_kernel_functions()
+    {
+        global $ajaxThumbgen; $return = false;
+        if(modapi_enabled && !$ajaxThumbgen)
+        {
+            if(count(self::$addon_index))
+            {
+                foreach(self::$addon_index as $addon)
+                {
+                    $dir = $addon['dir'];
+                    if($addon['include_kernel_functions'])
+                    {
+                        $return = array();
+                        $functions = $addon['additional-kernel-functions'];
+                        foreach($functions as $function)
+                        {
+                            if(file_exists($dir.$function))
+                                $return[] = $dir.$function;
                         }
                     }
                 }
@@ -446,4 +486,23 @@ class API_CORE
      */
     public static function add_additional_bbcode($bbcode=array(),$rep=array())
     { self::$bbcode_index[] = array('code' => $bbcode, 'rep' => $rep); }
+
+    /**
+     * Sortiert HM-DZCP-Core an erste Stelle
+     * @param array
+     * @return array:
+     */
+    private static function core_sort()
+    {
+        $array_core = array(); $array_normal = array();
+        foreach (self::$addon_index as $key => $var)
+        {
+            if($key == 'HM-DZCP-Core')
+                $array_core[$key] = $var;
+            else
+                $array_normal[$key] = $var;
+        }
+
+        self::$addon_index = array_merge($array_core,$array_normal);
+    }
 }

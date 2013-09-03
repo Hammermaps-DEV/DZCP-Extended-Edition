@@ -8,7 +8,7 @@
 
 function team($tID = '')
 {
-    $teamRow = config('teamrow');
+    $teamRow = settings('teamrow');
     $where = (!empty($tID) ? "WHERE id = '".convert::ToInt($tID)."' AND navi = 1" : "WHERE navi = '1' ORDER BY RAND()");
     $get = db("SELECT * FROM ".dba::get('squads')." ".$where."",false,true);
     $qrym = db("SELECT s1.squad,s2.id,s2.level,s2.nick,s2.status,s2.rlname,s2.bday,s4.position

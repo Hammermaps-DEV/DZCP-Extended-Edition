@@ -4,5 +4,5 @@
 	<Rights>sponsors</Rights>
 	<Only_Admin>true</Only_Admin>
 	<Only_Root>false</Only_Root>
-	<Where></Where>
+	<Where>_config_sponsors</Where>
 </settings>

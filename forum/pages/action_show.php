@@ -42,7 +42,7 @@ else
                  WHERE kid ='".convert::ToInt($_GET['id'])."'
                  OR global = 1
                  ORDER BY global DESC, sticky DESC, lp DESC, t_date DESC
-                 LIMIT ".(($page - 1)*$maxfthreads=config('m_fthreads')).",".$maxfthreads."");
+                 LIMIT ".(($page - 1)*$maxfthreads=settings('m_fthreads')).",".$maxfthreads."");
         } else {
             $qry = db("SELECT s1.global,s1.topic,s1.subtopic,s1.t_text,s1.t_email,s1.hits,s1.t_reg,s1.t_date,s1.closed,s1.sticky,s1.id
                  FROM ".dba::get('f_threads')." AS s1
@@ -53,7 +53,7 @@ else
                  OR s1.t_text LIKE '%".$_POST['suche']."%'
                  AND s1.kid = '".convert::ToInt($_GET['id'])."'
                  ORDER BY s1.global DESC, s1.sticky DESC, s1.lp DESC, s1.t_date DESC
-                 LIMIT ".($page - 1)*($maxfthreads=config('m_fthreads')).",".$maxfthreads."");
+                 LIMIT ".($page - 1)*($maxfthreads=settings('m_fthreads')).",".$maxfthreads."");
         }
 
         $entrys = cnt(dba::get('f_threads'), " WHERE kid = ".convert::ToInt($_GET['id']));
@@ -81,7 +81,7 @@ else
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
                 $gets = _fetch($qrys);
 
-                $threadlink = show(_forum_thread_link, array("topic" => string::decode(cut($get['topic'],config('l_forumtopic'))),
+                $threadlink = show(_forum_thread_link, array("topic" => string::decode(cut($get['topic'],settings('l_forumtopic'))),
                         "id" => $get['id'],
                         "kid" => $gets['id'],
                         "sticky" => $sticky,
@@ -90,7 +90,7 @@ else
                         "lpid" => $cntpage+1,
                         "page" => $pagenr));
             } else {
-                $threadlink = show(_forum_thread_search_link, array("topic" => string::decode(cut($get['topic'],config('l_forumtopic'))),
+                $threadlink = show(_forum_thread_search_link, array("topic" => string::decode(cut($get['topic'],settings('l_forumtopic'))),
                         "id" => $get['id'],
                         "sticky" => $sticky,
                         "hl" => $_POST['suche'],
@@ -116,7 +116,7 @@ else
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $threads .= show($dir."/forum_show_threads", array("new" => check_new_old($get['lp']),
                     "topic" => $threadlink,
-                    "subtopic" => string::decode(cut($get['subtopic'],config('l_forumsubtopic'))),
+                    "subtopic" => string::decode(cut($get['subtopic'],settings('l_forumsubtopic'))),
                     "hits" => $get['hits'],
                     "replys" => cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'"),
                     "class" => $class,

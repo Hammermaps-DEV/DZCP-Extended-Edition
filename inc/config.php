@@ -60,9 +60,9 @@ define('check_msg_email', (5*60)); // Wann soll überprüft werden, ob ein User ei
  * DZCP - Extended Protect
  * Diese Einstellungen regeln wann eine IP automatisch gesperrt wird, um die Sicherheit des CMS und der User zu gewährleisten.
  */
-define('max_protect_users', 5); //Die Maximale Anzahl der Usernamen die während der Zeit des "max_protect_cache_time" verwendet werden dürfen.
+define('max_protect_users', 2); //Die Maximale Anzahl der Usernamen die während der Zeit des "max_protect_cache_time" verwendet werden dürfen.
 define('max_protect_time_diff', 2); //Die Zeit die vergehen muss, zwischen jedem einzelnen Login versuch.
-define('max_protect_cache_time', 30); //Die Zeit die der Index im Cache verbleibt.
+define('max_protect_cache_time', 3000); //Die Zeit die der Index im Cache verbleibt.
 
 define('use_dzcp_protect', true); //Ob DZCP - Extended Protect verwendet werden soll.
 define('use_protect_block_timer', true); //User blockieren die zu oft in kürzester Zeit versuchen sich anzumelden. "max_protect_time_diff"
@@ -149,7 +149,6 @@ $db_array['ipcheck']          = 'ipcheck';             # dzcp_ipcheck
 $db_array['clankasse']        = 'clankasse';           # dzcp_clankasse
 $db_array['c_kats']           = 'clankasse_kats';      # dzcp_clankasse_kats
 $db_array['c_payed']          = 'clankasse_payed';     # dzcp_clankasse_payed
-$db_array['config']           = 'config';              # dzcp_config
 $db_array['counter']          = 'counter';             # dzcp_counter
 $db_array['c_ips']            = 'counter_ips';         # dzcp_counter_ips
 $db_array['c_who']            = 'counter_whoison';     # dzcp_counter_whoison

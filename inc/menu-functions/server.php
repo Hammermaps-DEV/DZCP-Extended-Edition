@@ -44,7 +44,7 @@ function server($serverID = 0)
                 $server = $server['gs'];
 
                 if(!empty($server) && $server && $server['game_online'] && !(show_gameserver_debug && show_debug_console))
-                    Cache::set('server_'.$cache_hash,$server,config('cache_server'));
+                    Cache::set('server_'.$cache_hash,$server,settings('cache_server'));
             }
             else
                 $server = Cache::get('server_'.$cache_hash);
@@ -165,7 +165,7 @@ function server($serverID = 0)
             $gtype = (!empty($server['game_type']) ? show(_server_gtype, array("type" => string::decode($server['game_type']))) : '');
             $bots = (!empty($server['game_num_bot']) ? show(_server_bots, array("bots" => string::decode($server['game_num_bot']))) : '');
 
-            $servername = jsconvert(string::decode(cut($server['hostname'],($servermenu=config('l_servernavi')))));
+            $servername = jsconvert(string::decode(cut($server['hostname'],($servermenu=settings('l_servernavi')))));
             $servernameout = (!empty($server['game_hostname'])) ? $server['game_hostname'] : _navi_gsv_no_name_available;
 
             $info = 'onmouseover="DZCP.showInfo(\''.$servernameout.'\', \'IP/Port:;;'._navi_gsv_game.':;Map:;'._navi_gsv_players_online.':;'._navi_gsv_on_the_game.':\', \''.$get['ip'].':'.$get['port'].';;'.jsconvert(string::decode('<img src="'.$game_icon.'" alt=""  class="icon" />')).' '.$server['game_name_long'].';'.(array_key_exists('game_maptitle', $server) ? $server['game_maptitle'] : (empty($server['game_map']) ? '-' : $server['game_map'])).';'.$server['game_num_players'].' / '.$server['game_max_players'].';'.$players.'\')" onmouseout="DZCP.hideInfo()"';

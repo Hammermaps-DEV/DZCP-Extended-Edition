@@ -23,7 +23,7 @@ else
         if(!$tmpname)
         {
             $index = error(_upload_no_data, 1);
-        } elseif($size > config('upicsize')."000") {
+        } elseif($size > settings('upicsize')."000") {
             $index = error(_upload_wrong_size);
         } else {
             copy($tmpname, basePath."/inc/images/gameicons/custom/".$_FILES['file']['name']);

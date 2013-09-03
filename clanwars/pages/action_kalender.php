@@ -20,9 +20,9 @@ else
              LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
              WHERE DATE_FORMAT(FROM_UNIXTIME(s1.datum), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'
              ORDER BY s1.datum DESC
-             LIMIT ".($page - 1)*config('m_clanwars').",".config('m_clanwars')."");
+             LIMIT ".($page - 1)*settings('m_clanwars').",".settings('m_clanwars')."");
 
-    $i = $entrys-($page - 1)*config('m_clanwars');
+    $i = $entrys-($page - 1)*settings('m_clanwars');
     $entrys = cnt(dba::get('cw'), " WHERE DATE_FORMAT(FROM_UNIXTIME('".$get['datum']."'), '%d.%m.%Y') = '".date("d.m.Y",convert::ToInt($_GET['time']))."'");
 
     if(_rows($qry))
@@ -32,7 +32,7 @@ else
         {
             $img = squad($get['icon']);
             $flagge = flag($get['gcountry']);
-            $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($get['clantag']." - ".$get['gegner'], config('l_clanwars'))),
+            $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($get['clantag']." - ".$get['gegner'], settings('l_clanwars'))),
                     "url" => '?action=details&amp;id='.$get['id']));
 
             $details = show(_cw_show_details, array("id" => $get['id']));
@@ -136,7 +136,7 @@ else
         $show = show($dir."/clanwars_no_show", array("clanwars_no_show" => _clanwars_no_show));
     }
 
-    $nav = nav($entrys,config('m_clanwars'),"?action=nav");
+    $nav = nav($entrys,settings('m_clanwars'),"?action=nav");
     $index = show($dir."/clanwars", array("head" => _cw_head_clanwars,
             "game" => _cw_head_game,
             "datum" => _cw_head_datum,

@@ -8,7 +8,7 @@
 
 if(_adminMenu != 'true') exit();
 
-$positions='';
+
 $qry = db("SELECT * FROM ".dba::get('f_skats')."
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 while($get = _fetch($qry)) //--> Start while subkat sort
@@ -24,23 +24,7 @@ while($get = _fetch($qry)) //--> Start while subkat sort
 		}
 	}
 
-	if(file_exists(basePath."/inc/images/uploads/forum/subkat/".convert::ToInt($get['id']).".jpg"))
-		$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/subkat/".convert::ToInt($get['id']).".jpg\" alt=\"\" title=\"\"/>";
-	elseif(file_exists(basePath."/inc/images/uploads/forum/subkat/".convert::ToInt($get['id']).".png"))
-		$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/subkat/".convert::ToInt($get['id']).".png\" alt=\"\" title=\"\"/>";
-	elseif(file_exists(basePath."/inc/images/uploads/forum/subkat/".convert::ToInt($get['id']).".gif"))
-		$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/subkat/".convert::ToInt($get['id']).".gif\" alt=\"\" title=\"\"/>";
-	else $icon=false;
-
-	if($icon!=false){
-		$delete="<a href=\"?admin=forum&amp;do=deleteicon&amp;kat=subkat&amp;id=".convert::ToInt($get['id'])."\">"._button_title_del."<a/>";
-		$icon_edit = show($dir."/forum/forum_icon_preview", array("icon"=>$icon,
-															  "delete"=>$delete));
-	}
-	else $icon_edit="";
-
-
-	$show = show($dir."/forum/forum_subkat_form", array("head" => _config_forum_edit_skat,
+	$show = show($dir."/skatform", array("head" => _config_forum_edit_skat,
 	                                   "fkat" => _config_forum_skatname,
 	                                   "fstopic" => _config_forum_stopic,
 	                                   "skat" => string::decode($get['kattopic']),
@@ -48,9 +32,7 @@ while($get = _fetch($qry)) //--> Start while subkat sort
 	                                   "stopic" => string::decode($get['subtopic']),
 	                                   "id" => $_GET['id'],
 	                                   "sid" => $get['sid'],
-	                                   "icon_edit"=>$icon_edit,
 	                                   "nothing" => _nothing,
-	                                   "icon"=>_config_forum_icon,
 	                                   "tposition" => _position,
 	                                   "position" => $positions,
 	                                   "value" => _button_value_edit));

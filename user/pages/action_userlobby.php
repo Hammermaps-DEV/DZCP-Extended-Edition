@@ -25,7 +25,7 @@ else
         //Get Userinfos
         $lastvisit = userstats(userid(), 'lastvisit');
         $lastvisit = empty($lastvisit) ? "0" : $lastvisit;
-        $maxfposts = config('m_fposts');
+        $maxfposts = settings('m_fposts');
 
         ##################################
         ## Neue Foreneintraege anzeigen ##

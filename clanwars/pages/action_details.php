@@ -20,7 +20,7 @@ else
                 {
                     $index = error(_error_have_to_be_logged);
                 } else {
-                    if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
+                    if(!ipcheck("cwid(".$_GET['id'].")", settings('f_cwcom')))
                     {
                         if(userid() != 0)
                             $toCheck = empty($_POST['comment']);
@@ -81,7 +81,7 @@ else
                             $index = info(_comment_added, "?action=details&amp;id=".$_GET['id']."");
                         }
                     } else {
-                        $index = error(show(_error_flood_post, array("sek" => config('f_cwcom'))));
+                        $index = error(show(_error_flood_post, array("sek" => settings('f_cwcom'))));
                     }
                 }
             } else{
@@ -205,7 +205,7 @@ else
             $editcw = permission("clanwars") ? show("page/button_edit_single", array("id" => $get['id'], "action" => "action=admin&amp;do=edit", "title" => _button_title_edit)) : '';
             $bericht = ($get['bericht'] ? bbcode::parse_html($get['bericht']) : "&nbsp;");
             $screens = cw_screenshots(convert::ToInt($_GET['id']));
-            $qryc = db("SELECT * FROM ".dba::get('cw_comments')." WHERE cw = ".convert::ToInt($_GET['id'])." ORDER BY datum DESC LIMIT ".($page - 1)*($maxcwcomments=config('m_cwcomments')).",".$maxcwcomments."");
+            $qryc = db("SELECT * FROM ".dba::get('cw_comments')." WHERE cw = ".convert::ToInt($_GET['id'])." ORDER BY datum DESC LIMIT ".($page - 1)*($maxcwcomments=settings('m_cwcomments')).",".$maxcwcomments."");
             $entrys = cnt(dba::get('cw_comments'), " WHERE cw = ".convert::ToInt($_GET['id']));
             $i = $entrys-($page - 1)*$maxcwcomments;
 
@@ -253,7 +253,7 @@ else
             else
             {
                 $add = "";
-                if(!ipcheck("cwid(".$_GET['id'].")", config('f_cwcom')))
+                if(!ipcheck("cwid(".$_GET['id'].")", settings('f_cwcom')))
                 {
                     $form = (userid() != 0 ? show("page/editor_regged", array("nick" => autor())) : show("page/editor_notregged", array("postemail" => '', "posthp" => '', "postnick" => '')));
                     $add = show("page/comments_add", array("titel" => _cw_comments_add,

@@ -19,7 +19,7 @@ else
     {
         case 'yes':
             ## Prüfe ob der Secure Code aktiviert ist und richtig eingegeben wurde ##
-            if(config('securelogin') && ($_POST['secure'] != $_SESSION['sec_login'] || !isset($_POST['secure']) || empty($_SESSION['sec_login'])))
+            if(settings('securelogin') && ($_POST['secure'] != $_SESSION['sec_login'] || !isset($_POST['secure']) || empty($_SESSION['sec_login'])))
             {
                 ## Der Secure Code ist falsch ##
                 $index = error(_error_invalid_regcode);
@@ -69,7 +69,7 @@ else
         break;
         default:
             if(checkme() == "unlogged")
-                $index = show($dir."/login", array("secure" => (config('securelogin') ? show($dir.'/secure', array('help' => _login_secure_help, 'security' => _register_confirm)) : '')));
+                $index = show($dir."/login", array("secure" => (settings('securelogin') ? show($dir.'/secure', array('help' => _login_secure_help, 'security' => _register_confirm)) : '')));
             else
             {
                 ## Schreibe Adminlog ##

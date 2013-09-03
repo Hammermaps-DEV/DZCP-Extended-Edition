@@ -14,7 +14,7 @@ function top_dl()
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_top_dl'))
     {
         $top_dl = '';
-        $qry = db("SELECT id,download,hits,date,kat FROM ".dba::get('downloads')." ORDER BY hits DESC LIMIT ".config('m_topdl')."");
+        $qry = db("SELECT id,download,hits,date,kat FROM ".dba::get('downloads')." ORDER BY hits DESC LIMIT ".settings('m_topdl')."");
         if(_rows($qry))
         {
             while($get = _fetch($qry))
@@ -25,7 +25,7 @@ function top_dl()
                     $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['download'])).'\', \''._datum.';'._dl_dlkat.';'._hits.'\', \''.date("d.m.Y H:i", $get['date'])._uhr.';'.jsconvert(string::decode($getkat['name'])).';'.$get['hits'].'\')" onmouseout="DZCP.hideInfo()"';
                 }
 
-                $top_dl .= show("menu/top_dl", array("id" => $get['id'], "titel" => cut(string::decode($get['download']),config('l_topdl')), "info" => $info, "hits" => $get['hits']));
+                $top_dl .= show("menu/top_dl", array("id" => $get['id'], "titel" => cut(string::decode($get['download']),settings('l_topdl')), "info" => $info, "hits" => $get['hits']));
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

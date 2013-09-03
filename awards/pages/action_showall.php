@@ -11,7 +11,7 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    $maxawards = config('m_awards');
+    $maxawards = settings('m_awards');
     $qry = db("SELECT * FROM ".dba::get('awards')." WHERE id = '".convert::ToInt($_GET['id'])."'");
     while($get = _fetch($qry))
     {

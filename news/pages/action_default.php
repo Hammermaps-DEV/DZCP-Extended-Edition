@@ -25,7 +25,7 @@ else
     }
 
     //Interne News
-    $newsconfig = config(array('m_news','cache_news'));
+    $newsconfig = settings(array('m_news','cache_news'));
     $qry = db("SELECT kat,id,klapptext,viewed,link1,link2,link3,url1,url2,url3,titel,intern,text,datum,autor,custom_image FROM ".dba::get('news')."
                WHERE sticky >= ".time()." AND datum <= ".time()." AND public = 1 ".(!permission("intnews") ? "AND `intern` = '0'" : '')." ".$n_kat."
                ORDER BY datum DESC LIMIT ".($page - 1)*$newsconfig['m_news'].",".$newsconfig['m_news']."");

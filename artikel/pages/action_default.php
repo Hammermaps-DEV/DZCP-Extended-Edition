@@ -11,7 +11,7 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    $qry = db("SELECT * FROM ".dba::get('artikel')." WHERE public = 1 ORDER BY datum DESC LIMIT ".($page - 1)*($martikel=config('m_artikel')).",".$martikel."");
+    $qry = db("SELECT * FROM ".dba::get('artikel')." WHERE public = 1 ORDER BY datum DESC LIMIT ".($page - 1)*($martikel=settings('m_artikel')).",".$martikel."");
     $entrys = cnt(dba::get('artikel'));
 
     if(_rows($qry))

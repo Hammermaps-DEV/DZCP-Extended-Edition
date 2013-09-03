@@ -17,7 +17,7 @@ else
     {
         $has_permission = permission("clankasse");
         $entrys = cnt(dba::get('clankasse'));
-        $qry = db("SELECT * FROM ".dba::get('clankasse')." ORDER BY datum DESC LIMIT ".($page - 1)*($maxclankasse = config('m_clankasse')).",".$maxclankasse."");
+        $qry = db("SELECT * FROM ".dba::get('clankasse')." ORDER BY datum DESC LIMIT ".($page - 1)*($maxclankasse = settings('m_clankasse')).",".$maxclankasse."");
 
         $show = ''; $color = 1;
         while ($get = _fetch($qry))

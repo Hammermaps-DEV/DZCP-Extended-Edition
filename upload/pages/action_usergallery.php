@@ -13,7 +13,7 @@ else
 {
     if(checkme() != 'unlogged')
     {
-        $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
+        $infos = show(_upload_usergallery_info, array("userpicsize" => settings('upicsize')));
 
         $index = show($dir."/usergallery", array("uploadhead" => _upload_head_usergallery,
                 "file" => _upload_file,
@@ -34,9 +34,9 @@ else
             if(!$tmpname)
             {
                 $index = error(_upload_no_data);
-            } elseif($size > config('upicsize')."000") {
+            } elseif($size > settings('upicsize')."000") {
                 $index = error(_upload_wrong_size);
-            } elseif(cnt(dba::get('usergallery'), " WHERE user = ".userid()) == config('m_gallerypics')) {
+            } elseif(cnt(dba::get('usergallery'), " WHERE user = ".userid()) == settings('m_gallerypics')) {
                 $index = error(_upload_over_limit, '2');
             } elseif(file_exists(basePath."/inc/images/uploads/usergallery/".userid()."_".$_FILES['file']['name'])) {
                 $index = error(_upload_file_exists);
@@ -58,7 +58,7 @@ else
 
             if($get['user'] == userid())
             {
-                $infos = show(_upload_usergallery_info, array("userpicsize" => config('upicsize')));
+                $infos = show(_upload_usergallery_info, array("userpicsize" => settings('upicsize')));
 
                 $index = show($dir."/usergallery_edit", array("uploadhead" => _upload_head_usergallery,
                         "file" => _upload_file,

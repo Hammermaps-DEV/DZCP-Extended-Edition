@@ -13,7 +13,7 @@ function l_artikel()
     $menu_xml = get_menu_xml('l_artikel');
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check('nav_l_artikel'))
     {
-        $lartikelconfig = config(array('m_lartikel','l_lartikel')); $l_articles = '';
+        $lartikelconfig = settings(array('m_lartikel','l_lartikel')); $l_articles = '';
         $qry = db("SELECT id,titel,text,autor,datum,kat,public FROM ".dba::get('artikel')." WHERE public = 1 ORDER BY id DESC LIMIT ".$lartikelconfig['m_lartikel']."");
 
         if(_rows($qry))

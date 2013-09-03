@@ -112,51 +112,7 @@ function sum($db, $where = "", $what)
  * @return mixed/array
  **/
 function settings($what)
-{
-    if(is_array($what))
-    {
-        $sql='';
-        foreach($what as $qy)
-        { $sql .= $qy.", "; }
-        $sql = substr($sql, 0, -2); $hash = md5($sql);
-        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
-        $get = db("SELECT ".$sql." FROM `".dba::get('settings')."`",false,true);
-        RTBuffer::set($hash,$get); return $get;
-    }
-    else
-    {
-        $hash = md5('sql_settings_'.$what);
-        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
-        $get = db("SELECT ".$what." FROM `".dba::get('settings')."`",false,true);
-        RTBuffer::set($hash,$get[$what]); return $get[$what];
-    }
-}
-
-/**
- * Funktion um die CMS Config aus der Datenbank auszulesen
- * Updated for DZCP-Extended Edition
- *
- * @return mixed/array
- **/
-function config($what)
-{
-    if(is_array($what))
-    {
-        $sql='';
-        foreach($what as $qy) { $sql .= $qy.", "; }
-        $sql = substr($sql, 0, -2); $hash = md5($sql);
-        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
-        $get = db("SELECT ".$sql." FROM `".dba::get('config')."`",false,true);
-        RTBuffer::set($hash,$get); return $get;
-    }
-    else
-    {
-        $hash = md5('sql_config_'.$what);
-        if(!RTBuffer::check($hash)) return RTBuffer::get($hash);
-        $get = db("SELECT ".$what." FROM `".dba::get('config')."`",false,true);
-        RTBuffer::set($hash,$get[$what]); return $get[$what];
-    }
-}
+{ return is_array($what) ? settings::get_array($what) : settings::get($what); }
 
 /**
  * Informationen über die MySQL-Datenbank abrufen
@@ -421,7 +377,7 @@ class database
      */
     public static function close()
     {
-        if(is_resource(self::$mysqli) && self::$mysqli != null)
+        if(is_resource(self::$mysqli) && self::$mysqli != null && !runtime_sql_persistconns)
             mysqli_close(self::$mysqli);
     }
 
@@ -607,6 +563,92 @@ class remote_database extends database
     }
 
 }
+
+############# CMS Settings #############
+class settings
+{
+    protected static $index = array();
+
+    public static function get($what='')
+    {
+        $what = strtolower($what);
+        if(array_key_exists($what, self::$index))
+        {
+            $data = self::$index[$what];
+            return $data['value'];
+        }
+        else
+            DebugConsole::insert_error('settings::get()', 'Setting "'.$what.'" not found in '.dba::get('settings'));
+
+        return false;
+    }
+
+    public static function get_array($what=array())
+    {
+        if(!is_array($what) || !count($what) || empty($what))
+            return false;
+
+        $return = array();
+        foreach ($what as $key)
+        {
+            $key = strtolower($key);
+            if(array_key_exists($key, self::$index))
+            {
+                $data = self::$index[$key];
+                $return[$key] = $data['value'];
+                $data = array();
+            }
+        }
+
+        if(count($return) >= 1) return $return;
+        return false;
+    }
+
+    public static function set($what='',$var='')
+    {
+        $what = strtolower($what);
+        if(array_key_exists($what, self::$index))
+        {
+            $data = self::$index[$what];
+            $data['value'] = cut($var,((int)$data['length']),false);
+            self::$index[$what] = $data;
+            return db("UPDATE `".dba::get('settings')."` SET `value` = '".cut($var,((int)$data['length']),false)."' WHERE `key` = '".$what."';");
+        }
+
+        return false;
+    }
+
+    public static function changed($what='',$var='')
+    {
+        $what = strtolower($what);
+        if(array_key_exists($what, self::$index))
+        {
+            $data = self::$index[$what];
+            return ($data['value'] == $var ? false : true);
+        }
+
+        return false;
+    }
+
+    public static function is_exists($what='')
+    { return (array_key_exists(strtolower($what), self::$index)); }
+
+    public static final function load()
+    {
+        $sql = db("SELECT * FROM `".dba::get('settings')."`");
+        while ($get = _fetch($sql))
+        {
+            $setting = array();
+            $setting['value'] = !((int)$get['length']) ? $get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value'])
+            : cut($get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value']),((int)$get['length']),false);
+            $setting['default'] = $get['type'] == 'int' ? ((int)$get['default']) : ((string)$get['default']);
+            $setting['length'] = ((int)$get['length']);
+            self::$index[$get['key']] = $setting;
+        }
+    }
+}
+
+settings::load(); //Load all settings
 
 ############# DBA #############
 class dba

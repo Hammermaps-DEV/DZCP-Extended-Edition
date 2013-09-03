@@ -17,4 +17,7 @@ while($get = _fetch($sql))
     $show .= show($dir."/startpage_show", array("edit" => $edit, "name" => string::decode($get['name']), "url" => string::decode($get['url']), "class" => $class, "delete" => $delete));
 }
 
+if(empty($show))
+    $show = show(_no_entrys_yet, array("colspan" => "4"));
+
 $show = show($dir."/startpage", array("show" => $show, "add" => _dl_new_head, "edit" => _editicon_blank, "delete" => _deleteicon_blank));

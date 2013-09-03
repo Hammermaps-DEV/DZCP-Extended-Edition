@@ -138,7 +138,7 @@ else
 
                     case 'gb':
                         $addgb = show(_usergb_eintragen, array("id" => $view_userID));
-                        $qrygb = db("SELECT * FROM ".dba::get('usergb')." WHERE user = ".convert::ToInt($view_userID)." ORDER BY datum DESC LIMIT ".($page - 1)*($maxusergb=config('m_usergb')).",".$maxusergb."");
+                        $qrygb = db("SELECT * FROM ".dba::get('usergb')." WHERE user = ".convert::ToInt($view_userID)." ORDER BY datum DESC LIMIT ".($page - 1)*($maxusergb=settings('m_usergb')).",".$maxusergb."");
                         $entrys = cnt(dba::get('usergb'), " WHERE user = ".$view_userID);
                         $i = $entrys-($page - 1)*$maxusergb; $membergb = '';
 
@@ -196,7 +196,7 @@ else
                         }
 
                         $add = '';
-                        if(!ipcheck("mgbid(".$_GET['id'].")", config('f_membergb')))
+                        if(!ipcheck("mgbid(".$_GET['id'].")", settings('f_membergb')))
                         {
                             if(userid() != 0)
                                 $form = show("page/editor_regged", array("nick" => autor()));

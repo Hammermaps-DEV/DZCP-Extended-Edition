@@ -36,7 +36,7 @@ else
                 $server = $server['gs'];
 
                 if(!empty($server) && $server && $server['game_online'])
-                    Cache::set('server_'.$cache_hash,$server,config('cache_server'));
+                    Cache::set('server_'.$cache_hash,$server,settings('cache_server'));
             }
             else
             {

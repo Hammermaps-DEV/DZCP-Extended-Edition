@@ -13,7 +13,7 @@ function ftopics()
     $cache_tag = 'nav_ftopics_uid'.userid();
     if(!Cache::is_mem() || !$menu_xml['xml'] || Cache::check($cache_tag))
     {
-        $ftopicsconfig = config(array('m_ftopics','l_ftopics','m_fposts')); $f = 0; $ftopics = '';
+        $ftopicsconfig = settings(array('m_ftopics','l_ftopics','m_fposts')); $f = 0; $ftopics = '';
         $qry = db("SELECT s1.*,s2.id AS subid FROM ".dba::get('f_threads')." s1, ".dba::get('f_skats')." s2, ".dba::get('f_kats')." s3
                    WHERE s1.kid = s2.id AND s2.sid = s3.id ORDER BY s1.lp DESC LIMIT 100");
 

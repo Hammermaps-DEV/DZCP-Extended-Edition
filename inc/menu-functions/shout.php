@@ -8,7 +8,7 @@
 
 function shout($ajax = 0)
 {
-    $shoutconfig = config(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));
+    $shoutconfig = settings(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));
     $qry = db("SELECT * FROM ".dba::get('shout')." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
 
     $i = 1; $color = 1; $show = "";

@@ -24,7 +24,7 @@ switch ($do)
             { $positions .= show(_select_field, array("value" => $get['pos']+1, "what" => _nach.': '.$get['bez'], "sel" => "")); }
         }
 
-        $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
+        $infos = show(_slider_info, array("userpicsize" => settings('upicsize')));
         $show = show($dir."/slideshow_form", array( "id" => "",
                                                     "error" => "",
                                                     "infos" => $infos,
@@ -98,7 +98,7 @@ if($_GET['do'] == 'add'){
             $positions .= show(_select_field, array("value" => $get['pos']+1, "what" => _nach.': '.$get['bez'], "sel" => ""));
         }
 
-        $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
+        $infos = show(_slider_info, array("userpicsize" => settings('upicsize')));
         $show = show($dir."/slideshow_form", array("id" => "",
                                                 "error" => $error,
                                                 "infos" => $infos,
@@ -160,7 +160,7 @@ if($_GET['do'] == 'add'){
                                                 "sel" => ""));
     }
 
-    $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
+    $infos = show(_slider_info, array("userpicsize" => settings('upicsize')));
     $show = show($dir."/slideshow_form", array("id" => string::decode($get['id']),
                                                "error" => "",
                                                 "infos" => $infos,
@@ -192,7 +192,7 @@ if($_GET['do'] == 'add'){
         elseif(empty($_POST['url']) OR $_POST['url'] == "http://") $error = _slider_admin_error_empty_url;
 
         $error = show("errors/errortable", array("error" => $error));
-        $infos = show(_slider_info, array("userpicsize" => config('upicsize')));
+        $infos = show(_slider_info, array("userpicsize" => settings('upicsize')));
         $show = show($dir."/slideshow_form", array("id" => string::decode($_POST['id']),
                                                     "error" => $error,
                                                     "infos" => $infos,

@@ -50,7 +50,7 @@ else
             $results = GameQ::requestData();
 
             if(!empty($results) && $results)
-                Cache::set('teamspeak_'.$cache_hash,$results,config('cache_teamspeak'));
+                Cache::set('teamspeak_'.$cache_hash,$results,settings('cache_teamspeak'));
         }
         else
             $results = Cache::get('teamspeak_'.$cache_hash);

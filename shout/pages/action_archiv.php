@@ -15,7 +15,7 @@ else
     $title = $pagetitle." - ".$where."";
     $page = (isset($_GET['page']) ? convert::ToInt($_GET['page']) : 1);
     $entrys = cnt(dba::get('shout'));
-    $i = $entrys-($page - 1)*($maxshoutarchiv=config('maxshoutarchiv'));
+    $i = $entrys-($page - 1)*($maxshoutarchiv=settings('maxshoutarchiv'));
 
     $show = ''; $color = 1;
     $qry = db("SELECT * FROM ".dba::get('shout')." ORDER BY datum DESC LIMIT ".($page - 1)*$maxshoutarchiv.",".$maxshoutarchiv."");
@@ -25,7 +25,7 @@ else
         if($is_num && !check_email($get['email']))
             $nick = autor($get['email']);
         else
-            $nick = '<a href="mailto:'.$get['email'].'" title="'.$get['nick'].'">'.cut($get['nick'], config('l_shoutnick')).'</a>';
+            $nick = '<a href="mailto:'.$get['email'].'" title="'.$get['nick'].'">'.cut($get['nick'], settings('l_shoutnick')).'</a>';
 
         $class = ($color % 2) ? "contentMainTop" : "contentMainFirst"; $color++;
         $del = (permission("shoutbox") ? "<a href='../shout/?action=admin&amp;do=delete&amp;id=".$get['id']."'><img src='../inc/images/delete_small.gif' border='0' alt=''></a>" : "");

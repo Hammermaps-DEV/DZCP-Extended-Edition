@@ -370,7 +370,7 @@ if(_adminMenu != 'true')
         else $page = 1;
 
         $entrys = cnt(dba::get('news'));
-        $qry = db("SELECT * FROM ".dba::get('news')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminnews=config('m_adminnews')).",".$maxadminnews."");
+        $qry = db("SELECT * FROM ".dba::get('news')." ORDER BY `public` ASC, `datum` DESC LIMIT ".($page - 1)*($maxadminnews=settings('m_adminnews')).",".$maxadminnews."");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
@@ -380,7 +380,7 @@ if(_adminMenu != 'true')
                                                             "action" => "admin=newsadmin&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_news));
-          $titel = show(_news_show_link, array("titel" => string::decode(cut($get['titel'],config('l_newsadmin'))),
+          $titel = show(_news_show_link, array("titel" => string::decode(cut($get['titel'],settings('l_newsadmin'))),
                                                "id" => $get['id']));
 
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

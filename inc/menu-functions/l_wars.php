@@ -12,7 +12,7 @@ function l_wars()
     $menu_xml = get_menu_xml('l_wars');
     if(!Cache::is_mem() || Cache::check('nav_l_wars'))
     {
-        $lwarsconfig = config(array('m_lwars','l_lwars')); $lwars = '';
+        $lwarsconfig = settings(array('m_lwars','l_lwars')); $lwars = '';
         $qry = db("SELECT s1.datum,s1.gegner,s1.id,s1.bericht,s1.xonx,s1.clantag,s1.punkte,s1.gpunkte,s1.squad_id,s2.icon,s2.name FROM ".dba::get('cw')." AS s1
                  LEFT JOIN ".dba::get('squads')." AS s2 ON s1.squad_id = s2.id
                  WHERE datum < ".time()."

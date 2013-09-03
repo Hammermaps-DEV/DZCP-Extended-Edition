@@ -227,7 +227,7 @@ else
             else $closed = "";
                 $cntpage = cnt(dba::get('f_posts'), " WHERE sid = ".$get['id']);
             if($cntpage == 0) $pagenr = 1;
-                else $pagenr = ceil($cntpage/config('m_fposts'));
+                else $pagenr = ceil($cntpage/settings('m_fposts'));
 
                 $qrylp = db("SELECT date,nick,reg,email FROM ".dba::get('f_posts')."
                         WHERE sid = '".$get['id']."'
@@ -243,7 +243,7 @@ else
                     $lpdate = "";
                     }
 
-                    $threadlink = show(_forum_thread_search_link, array("topic" => cut(string::decode($get['topic']),config('l_forumtopic')),
+                    $threadlink = show(_forum_thread_search_link, array("topic" => cut(string::decode($get['topic']),settings('l_forumtopic')),
                             "id" => $get['id'],
                             "sticky" => $sticky,
                             "hl" => $_GET['search'],
@@ -255,7 +255,7 @@ else
 
             $results .= show($dir."/forum_search_results", array("new" => check_new_old($get['lp']),
                         "topic" => $threadlink,
-                        "subtopic" => cut(string::decode($get['subtopic']),config('l_forumsubtopic')),
+                        "subtopic" => cut(string::decode($get['subtopic']),settings('l_forumsubtopic')),
                         "hits" => $get['hits'],
                         "replys" => cnt(dba::get('f_posts'), " WHERE sid = '".$get['id']."'"),
                                 "class" => $class,

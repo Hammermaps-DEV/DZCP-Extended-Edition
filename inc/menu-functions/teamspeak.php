@@ -47,7 +47,7 @@ function teamspeak()
                 $results = GameQ::requestData();
 
                 if(!empty($results) && !(show_teamspeak_debug && show_debug_console))
-                    Cache::set('teamspeak_'.$cache_hash,$results,config('cache_teamspeak'));
+                    Cache::set('teamspeak_'.$cache_hash,$results,settings('cache_teamspeak'));
             }
             else
                 $results = Cache::get('teamspeak_'.$cache_hash);

@@ -8,8 +8,6 @@
 
 if(_adminMenu != 'true') exit();
 
-	$maincolor=0; $subcolor=0; $mainkats='';
-	(isset($_GET['expand'])) ? $expand=$_GET['expand']:$expand=0;
 $qry = db("SELECT * FROM ".dba::get('f_kats')." ORDER BY kid");
 while($get = _fetch($qry))
 {
@@ -20,7 +18,7 @@ while($get = _fetch($qry))
                       ON s1.id = s2.sid
                       WHERE s1.id = '".convert::ToInt($get['id'])."'
                       ORDER BY s2.pos");
-	$subkats='';
+	unset($subkats);
 	while($getk = _fetch($qryk))
 	{
 		if(!empty($getk['kattopic']))
@@ -37,28 +35,18 @@ while($get = _fetch($qry))
 			                                                  "title" => _button_title_del,
 			                                                  "del" => _confirm_del_entry));
 
-			if(file_exists(basePath."/inc/images/uploads/forum/subkat/".convert::ToInt($getk['id']).".jpg"))
-				$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/subkat/".convert::ToInt($getk['id']).".jpg\" alt=\"\" title=\"\"/>";
-			elseif(file_exists(basePath."/inc/images/uploads/forum/subkat/".convert::ToInt($getk['id']).".png"))
-				$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/subkat/".convert::ToInt($getk['id']).".png\" alt=\"\" title=\"\"/>";
-			elseif(file_exists(basePath."/inc/images/uploads/forum/subkat/".convert::ToInt($getk['id']).".gif"))
-				$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/subkat/".convert::ToInt($getk['id']).".gif\" alt=\"\" title=\"\"/>";
-			else $icon="None";
 
-			$subkats .= show($dir."/forum/forum_subkats_show_items", array("subkat" => $subkat,
+			$subkats .= show($dir."/forum_show_subkats_show", array("subkat" => $subkat,
 			                                                        "delete" => $delete,
-			                                                        "icon"=>$icon,
 			                                                        "class" => ($subcolor % 2) ? "contentMainSecond" : "contentMainFirst",
 			                                                        "edit" => $edit));
 			$subcolor++;
 		}
 
 
-
-		$subkatshow = show($dir."/forum/forum_subkats_show", array("head" => _config_forum_head,
+		$subkatshow = show($dir."/forum_show_subkats", array("head" => _config_forum_head,
 		                                               "subkathead" => show(_config_forum_subkathead, array("kat" => string::decode($getk['name']))),
 		                                               "subkats" => $subkats,
-		                                               "icon"=>_config_forum_icon,
 		                                               "add" => show(_config_forum_subkats_add, array("id" => convert::ToInt($get['id']))),
 		                                               "subkat" => _config_forum_subkat,
 		                                               "delete" => _deleteicon_blank,
@@ -77,21 +65,12 @@ while($get = _fetch($qry))
 	                                                  "del" => _confirm_del_entry));
 
 
-	if(file_exists(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($get['id']).".jpg"))
-		$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/mainkat/".convert::ToInt($get['id']).".jpg\" alt=\"\" title=\"\"/>";
-	elseif(file_exists(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($get['id']).".png"))
-		$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/mainkat/".convert::ToInt($get['id']).".png\" alt=\"\" title=\"\"/>";
-	elseif(file_exists(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($get['id']).".gif"))
-		$icon="<img class=\"icon\" src=\"../inc/images/uploads/forum/mainkat/".convert::ToInt($get['id']).".gif\" alt=\"\" title=\"\"/>";
-	else $icon="None";
 
-	$mainkats .= show($dir."/forum/forum_kats_show_items", array("class" => ($maincolor % 2) ? "contentMainSecond" : "contentMainFirst",
+	$mainkats .= show($dir."/forum_show_kats", array("class" => ($maincolor % 2) ? "contentMainSecond" : "contentMainFirst",
 													 "kat" => string::decode($get['name']),
 													 "id" => convert::ToInt($get['id']),
 													 "subkats"=>$subkatshow ,
-													 "icon"=>$icon,
-													 "expand"=>(convert::ToInt($expand)==convert::ToInt($get['id']))? "show":"none",
-													 "toggle"=>(convert::ToInt($expand)==convert::ToInt($get['id']))? "collapse":"expand",
+													 "expand"=>(convert::ToInt($_GET['expand'])==convert::ToInt($get['id']))? 'show':'none',
 	                                                 "status" => ($get['intern'] == 1)?_config_forum_intern:_config_forum_public,
 	                                                 "skats" => cnt(dba::get('f_skats'), " WHERE sid = '".convert::ToInt($get['id'])."'"),
 	                                                 "edit" => $edit,
@@ -99,11 +78,10 @@ while($get = _fetch($qry))
 
 	$maincolor++;
 }
-$show = show($dir."/forum/forum_kats_show", array("head" => _config_forum_head,
+$show = show($dir."/forum", array("head" => _config_forum_head,
                                 "mainkat" => _config_forum_mainkat,
                                 "edit" => _editicon_blank,
                                 "skats" => _cnt,
-                                "icon"=>_config_forum_icon,
                                 "status" => _config_forum_status,
                                 "delete" => _deleteicon_blank,
                                 "add" => _config_forum_kats_add,

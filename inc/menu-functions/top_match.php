@@ -32,7 +32,7 @@ function top_match()
                 $hover = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['name'])).' vs. '.jsconvert(string::decode($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(string::decode($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
 
             $topmatch = show("menu/top_match", array("id" => $get['id'],
-                                                     "clantag" => string::decode(cut($get['clantag'],($llwars=config('l_lwars')))),
+                                                     "clantag" => string::decode(cut($get['clantag'],($llwars=settings('l_lwars')))),
                                                      "team" => string::decode(cut($get['name'],$llwars)),
                                                      //"game" => substr(strtoupper(str_replace('.'.string::decode($get['icon']), '', string::decode($get['icon']))), 0, 5), // unused
                                                      "id" => $get['id'],

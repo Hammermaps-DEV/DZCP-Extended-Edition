@@ -45,7 +45,9 @@ if(!$ajaxThumbgen)
     require_once(basePath."/inc/cookie.php");
 
 require_once(basePath."/inc/cache.php");
-require_once(basePath."/inc/protect.php");
+
+if(!$ajaxThumbgen)
+    require_once(basePath."/inc/protect.php");
 
 if(!$ajaxThumbgen)
     require_once(basePath.'/inc/gameq.php');
@@ -60,11 +62,13 @@ define('IS_DZCP', true);
 $rootAdmin = 1;
 
 ## Settingstabelle auslesen ##
-$settings = settings(array('prev','tmpdir','clanname','pagetitel'));
+$settings = settings(array('prev','tmpdir','clanname','pagetitel','allowhover','cache_engine'));
 $prev = string::decode($settings['prev']).'_';
 $sdir = string::decode($settings['tmpdir']);
 $clanname = string::decode($settings["clanname"]);
 $pagetitle = string::decode($settings["pagetitel"]);
+$allowHover = $settings['allowhover'];
+$cache_engine = string::decode($settings['cache_engine']);
 unset($settings);
 
 ## Cookie initialisierung ##
@@ -74,12 +78,6 @@ if(!$ajaxThumbgen) { cookie::init($prev.'dzcp'); }
 $subfolder = basename(dirname(dirname($_SERVER['PHP_SELF']).'../'));
 $httphost = $_SERVER['HTTP_HOST'].(empty($subfolder) ? '' : '/'.$subfolder);
 $pagetitle = (empty($pagetitle) ? $clanname : $pagetitle);
-
-## Configtabelle auslesen ##
-$config = config(array('allowhover','cache_engine'));
-$allowHover = convert::ToInt($config['allowhover']);
-$cache_engine = string::decode($config['cache_engine']);
-unset($config);
 
 //-> Cache
 Cache::loadClasses();
@@ -802,7 +800,7 @@ function links_check_url($string='')
 //-> Infomeldung ausgeben
 function info($msg, $url, $timeout = 5)
 {
-    if(config('direct_refresh'))
+    if(settings('direct_refresh'))
         return header('Location: '.str_replace('&amp;', '&', $url));
 
     $u = parse_url($url); $parts = '';
@@ -1766,12 +1764,15 @@ function get_menu_xml($phold='')
  */
 if(!$ajaxThumbgen)
 {
+    if(($add_kernel_functions = API_CORE::load_additional_kernel_functions()) != false)
+    { foreach($add_kernel_functions as $func) include($func); }
+
     if(($add_languages = API_CORE::load_additional_language()) != false)
     { foreach($add_languages as $language) include($language); }
 
     if(($add_functions = API_CORE::load_additional_functions()) != false)
     { foreach($add_functions as $func) include($func); }
-    unset($add_languages,$add_functions);
+    unset($add_languages,$add_functions,$add_kernel_functions);
 }
 
 //-> Navigation einbinden
@@ -1830,14 +1831,14 @@ function page($index,$title,$where,$time,$index_templ=false)
     mailmgr::Send();
 
     // JS-Dateine einbinden
-    javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no, 'maxW' => config('maxwidth'), 'lng' => (language::get_language()=='deutsch') ? 'de':'en', 'domain' => settings('i_domain'),
+    javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no, 'maxW' => settings('maxwidth'), 'lng' => (language::get_language()=='deutsch') ? 'de':'en', 'domain' => settings('i_domain'),
     'extern' => convert::BoolToInt(extern_urls_detect), 'worker' => convert::BoolToInt(use_html5_worker), 'tmpdir' => '../inc/_templates_/'.$tmpdir));
     $java_vars = "<script language=\"javascript\" type=\"text/javascript\">var json_from_php = '".javascript::encode()."';</script>";
     $login = ''; $check_msg = ''; $ukrss = '';
 
     if(settings("wmodus") && checkme() != 4)
     {
-        $secure = (config('securelogin') ? show("menu/secure", array("help" => _login_secure_help, "security" => _register_confirm)) : '');
+        $secure = (settings('securelogin') ? show("menu/secure", array("help" => _login_secure_help, "security" => _register_confirm)) : '');
         $login = show("errors/wmodus_login", array("what" => _login_login, "secure" => $secure, "signup" => _login_signup, "permanent" => _login_permanent, "lostpwd" => _login_lostpwd));
         echo show("errors/wmodus", array("tmpdir" => $tmpdir, "java_vars" => $java_vars, "dir" => $designpath, "title" => string::decode(strip_tags($title)), "login" => $login));
     }
@@ -1849,7 +1850,7 @@ function page($index,$title,$where,$time,$index_templ=false)
 
         //check permissions
         if(checkme() == "unlogged")
-            $login = show("menu/login", array("secure" => (config('securelogin') ? show("menu/secure", array("help" => _login_secure_help)) : '')));
+            $login = show("menu/login", array("secure" => (settings('securelogin') ? show("menu/secure", array("help" => _login_secure_help)) : '')));
         else
         {
             $check_msg = check_msg();

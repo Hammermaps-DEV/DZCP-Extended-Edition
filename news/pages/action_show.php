@@ -37,7 +37,7 @@ else
                             $index = error(_error_have_to_be_logged);
                         else
                         {
-                            if(!ipcheck("ncid(".$news_id.")", ($f_newscom=config('f_newscom'))))
+                            if(!ipcheck("ncid(".$news_id.")", ($f_newscom=settings('f_newscom'))))
                             {
                                 if(userid() != 0)
                                     $toCheck = empty($_POST['comment']);
@@ -244,7 +244,7 @@ else
 
                 if($get['comments'])
                 {
-                    $qryc = db("SELECT * FROM ".dba::get('newscomments')." WHERE news = ".$news_id." ORDER BY datum DESC LIMIT ".($page - 1)*($maxcomments=config('m_comments')).",".$maxcomments."");
+                    $qryc = db("SELECT * FROM ".dba::get('newscomments')." WHERE news = ".$news_id." ORDER BY datum DESC LIMIT ".($page - 1)*($maxcomments=settings('m_comments')).",".$maxcomments."");
                     $entrys = cnt(dba::get('newscomments'), " WHERE news = ".$news_id);
                     $i = $entrys-($page - 1)*$maxcomments;
 
@@ -298,7 +298,7 @@ else
                             $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                         $add = '';
-                        if(!ipcheck("ncid(".$news_id.")", config('f_newscom')))
+                        if(!ipcheck("ncid(".$news_id.")", settings('f_newscom')))
                         {
                             $add = show("page/comments_add", array( "titel" => _news_comments_write_head,
                                                                     "form" => $form,
