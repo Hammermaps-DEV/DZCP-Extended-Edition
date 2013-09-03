@@ -8,6 +8,7 @@ inc/_cache/
 inc/_cache/binary/
 inc/_cache/tinymce/
 inc/_logs/
+_installer/system/_logs/
 
 ################ Addons und CO ##################
 inc/additional-addons/
