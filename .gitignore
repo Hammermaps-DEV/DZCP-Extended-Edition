@@ -1,5 +1,5 @@
-__installer/**/* 
-_installer/**/* 
+__installer/
+_installer/
 inc/mysql.php
 inc/mysql_salt.php
 inc/config.php
