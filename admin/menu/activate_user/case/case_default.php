@@ -29,6 +29,6 @@ while($get = _fetch($qry))
 }
 
 if(empty($activate))
-    $activate = '<tr><td colspan="9" class="contentMainFirst">'._no_entrys.'</td></tr>';
+    $activate = '<tr><td colspan="9" class="contentMainSecond">'._no_entrys.'</td></tr>';
 
 $show = show($dir."/activate_user", array("value" => _button_value_search, "show" => $activate));
