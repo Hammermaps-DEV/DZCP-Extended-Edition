@@ -38,37 +38,149 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Settings ===================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('settings')."` SET
-    `clanname`             = '".string::encode($db_infos['clanname'])."',
-    `badwords`             = 'arsch,Arsch,arschloch,Arschloch,hure,Hure',
-    `pagetitel`            = '".string::encode($db_infos['seitentitel'])."',
-    `i_domain`             = '".$_SERVER['SERVER_NAME']."',
-    `domain`               = '".$_SERVER['SERVER_ADDR']."',
-    `mailfrom`             = '".$db_infos['emailweb']."',
-    `prev`                 = '".string::encode(strtolower(mkpwd(3,false)))."',
-    `memcache_host`        = 'localhost',
-    `memcache_port`        = '11211',
-    `db_version`           = '1600',
-    `ftp_hostname`         = '".string::encode($_SESSION['ftp_host'])."',
-    `ftp_username`         = '".string::encode($_SESSION['ftp_user'])."',
-    `ftp_password`         = '".(!empty($_SESSION['ftp_pwd']) ? encryptData($_SESSION['ftp_pwd']) : '')."',
-    `ftp_path`             = '".string::encode($_SESSION['ftp_pfad'])."',
-    `eml_reg_subj`         = '".string::encode(emlv('eml_reg_subj'))."',
-    `eml_pwd_subj`         = '".string::encode(emlv('eml_pwd_subj'))."',
-    `eml_reg`              = '".string::encode(emlv('eml_reg'))."',
-    `eml_pwd`              = '".string::encode(emlv('eml_pwd'))."',
-    `eml_nletter_subj`     = '".string::encode(emlv('eml_nletter_subj'))."',
-    `eml_nletter`          = '".string::encode(emlv('eml_nletter'))."',
-    `eml_fabo_npost_subj`  = '".string::encode(emlv('eml_fabo_npost_subj'))."',
-    `eml_fabo_tedit_subj`  = '".string::encode(emlv('eml_fabo_tedit_subj'))."',
-    `eml_fabo_pedit_subj`  = '".string::encode(emlv('eml_fabo_pedit_subj'))."',
-    `eml_pn_subj`          = '".string::encode(emlv('eml_pn_subj'))."',
-    `eml_fabo_npost`       = '".string::encode(emlv('eml_fabo_npost'))."',
-    `eml_fabo_tedit`       = '".string::encode(emlv('eml_fabo_tedit'))."',
-    `eml_fabo_pedit`       = '".string::encode(emlv('eml_fabo_pedit'))."',
-    `eml_akl_register_subj`= '".string::encode(emlv('eml_akl_register_subj'))."',
-    `eml_akl_register`     = '".string::encode(emlv('eml_akl_register'))."',
-    `eml_pn`               = '".string::encode(emlv('eml_pn'))."';",false,false,true);
+
+    //E-Mail Templates
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_akl_register', `value` = '".string::encode(emlv('eml_akl_register'))."', `default` = '".string::encode(emlv('eml_akl_register'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_akl_register_subj', `value` = '".string::encode(emlv('eml_akl_register_subj'))."', `default` = '".string::encode(emlv('eml_akl_register_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_fabo_npost', `value` = '".string::encode(emlv('eml_fabo_npost'))."', `default` = '".string::encode(emlv('eml_fabo_npost'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_fabo_npost_subj', `value` = '".string::encode(emlv('eml_fabo_npost_subj'))."', `default` = '".string::encode(emlv('eml_fabo_npost_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_fabo_pedit', `value` = '".string::encode(emlv('eml_fabo_pedit'))."', `default` = '".string::encode(emlv('eml_fabo_pedit'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_fabo_pedit_subj', `value` = '".string::encode(emlv('eml_fabo_pedit_subj'))."', `default` = '".string::encode(emlv('eml_fabo_pedit_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_fabo_tedit', `value` = '".string::encode(emlv('eml_fabo_tedit'))."', `default` = '".string::encode(emlv('eml_fabo_tedit'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_fabo_tedit_subj', `value` = '".string::encode(emlv('eml_fabo_tedit_subj'))."', `default` = '".string::encode(emlv('eml_fabo_tedit_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_nletter', `value` = '".string::encode(emlv('eml_nletter'))."', `default` = '".string::encode(emlv('eml_nletter'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_nletter_subj', `value` = '".string::encode(emlv('eml_nletter_subj'))."', `default` = '".string::encode(emlv('eml_nletter_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_pn', `value` = '".string::encode(emlv('eml_pn'))."', `default` = '".string::encode(emlv('eml_pn'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_pn_subj', `value` = '".string::encode(emlv('eml_pn_subj'))."', `default` = '".string::encode(emlv('eml_pn_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_pwd', `value` = '".string::encode(emlv('eml_pwd'))."', `default` = '".string::encode(emlv('eml_pwd'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_pwd_subj', `value` = '".string::encode(emlv('eml_pwd_subj'))."', `default` = '".string::encode(emlv('eml_pwd_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_reg', `value` = '".string::encode(emlv('eml_reg'))."', `default` = '".string::encode(emlv('eml_reg'))."', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_reg_subj', `value` = '".string::encode(emlv('eml_reg_subj'))."', `default` = '".string::encode(emlv('eml_reg_subj'))."', `length` = '0', `type` = 'string';",false,false,true);
+
+    //FTP Zugang
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_hostname', `value` = '".string::encode($_SESSION['ftp_host'])."', `default` = 'localhost', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_password', `value` = '".(!empty($_SESSION['ftp_pwd']) ? encryptData($_SESSION['ftp_pwd']) : '')."', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_path', `value` = '".string::encode($_SESSION['ftp_pfad'])."', `default` = '/', `length` = '200', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_username', `value` = '".string::encode($_SESSION['ftp_user'])."', `default` = '".string::encode($_SESSION['ftp_user'])."', `length` = '100', `type` = 'string';",false,false,true);
+
+    //Config
+    $set_cache = 'file'; //File * Standard *
+    if(function_exists('zend_shm_cache_store')) $set_cache = 'shm'; //ZEND Server - Shared Memory Cache
+    else if(function_exists('apc_store')) $set_cache = 'apc'; //Alternative PHP Cache * APC *
+    else if(function_exists('zend_disk_cache_store')) $set_cache = 'zenddisk'; //ZEND Server - Disk Cache
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'cache_engine', `value` = '".$set_cache."', `default` = 'file', `length` = '20', `type` = 'string';",false,false,true);
+    unset($set_cache);
+
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'securelogin', `value` = '".$db_infos['loginsec']."', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'allowhover', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'badwords', `value` = 'arsch,Arsch,arschloch,Arschloch,hure,Hure', `default` = '', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'bic', `value` = '', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'cache_news', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'cache_server', `value` = '30', `default` = '30', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'cache_teamspeak', `value` = '30', `default` = '30', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'clanname', `value` = '".string::encode($db_infos['clanname'])."', `default` = 'Dein Clanname hier!', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'db_version', `value` = '1600', `default` = '1600', `length` = '8', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'default_pwd_encoder', `value` = '2', `default` = '2', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'direct_refresh', `value` = '0', `default` = '0', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'domain', `value` = '".$_SERVER['SERVER_ADDR']."', `default` = '127.0.0.1', `length` = '150', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'double_post', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'forum_vote', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_artikelcom', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_cwcom', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_downloadcom', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_forum', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_gb', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_membergb', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_newscom', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'f_shout', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'gallery', `value` = '4', `default` = '4', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'gb_activ', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'gmaps_who', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'iban', `value` = '', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'i_autor', `value` = '', `default` = '', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'i_domain', `value` = '".$_SERVER['SERVER_NAME']."', `default` = 'www.deineUrl.de', `length` = '80', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'k_bank', `value` = 'Musterbank', `default` = 'Musterbank', `length` = '200', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'k_blz', `value` = '123456789', `default` = '123456789', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'k_inhaber', `value` = 'Max Mustermann', `default` = 'Max Mustermann', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'k_nr', `value` = '123456789', `default` = '123456789', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'k_vwz', `value` = '', `default` = '', `length` = '200', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'k_waehrung', `value` = '&euro;', `default` = '&euro;', `length` = '15', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'language', `value` = 'deutsch', `default` = 'deutsch', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'last_backup', `value` = '0', `default` = '0', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_clanwars', `value` = '30', `default` = '30', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_forumsubtopic', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_forumtopic', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_ftopics', `value` = '28', `default` = '28', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_lartikel', `value` = '18', `default` = '18', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_lnews', `value` = '22', `default` = '22', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_lreg', `value` = '12', `default` = '12', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_lwars', `value` = '12', `default` = '12', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_newsadmin', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_newsarchiv', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_nwars', `value` = '12', `default` = '12', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_servernavi', `value` = '22', `default` = '22', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_shoutnick', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_shouttext', `value` = '22', `default` = '22', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'l_topdl', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'mailfrom', `value` = '".$db_infos['emailweb']."', `default` = 'info@127.0.0.1', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'mail_extension', `value` = 'mail', `default` = 'mail', `length` = '20', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'maxshoutarchiv', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'maxwidth', `value` = '400', `default` = '400', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'memcache_host', `value` = 'localhost', `default` = 'localhost', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'memcache_port', `value` = '11211', `default` = '11211', `length` = '11', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_adminartikel', `value` = '15', `default` = '15', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_adminnews', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_archivnews', `value` = '30', `default` = '30', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_artikel', `value` = '15', `default` = '15', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_awards', `value` = '15', `default` = '15', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_away', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_clankasse', `value` = '20', `default` = '20', `length` = 5'', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_clanwars', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_comments', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_cwcomments', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_events', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_fposts', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_fthreads', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_ftopics', `value` = '6', `default` = '6', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_gallery', `value` = '36', `default` = '36', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_gallerypics', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_gb', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_lartikel', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_lnews', `value` = '6', `default` = '6', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_lreg', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_lwars', `value` = '6', `default` = '6', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_news', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_nwars', `value` = '6', `default` = '6', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_shout', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_topdl', `value` = '5', `default` = '5', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_usergb', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_userlist', `value` = '40', `default` = '40', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'news_feed', `value` = '2', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'pagetitel', `value` = '".string::encode($db_infos['seitentitel'])."', `default` = 'Dein Seitentitel hier!', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'persinfo', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'prev', `value` = '".string::encode(strtolower(mkpwd(3,false)))."', `default` = '".string::encode(strtolower(mkpwd(3,false)))."', `length` = '3', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = '', `value` = '', `default` = '', `length` = '', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'regcode', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_artikel', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_cwcomments', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_dl', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_dlcomments', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_forum', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_newscomments', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_shout', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'sendmail_path', `value` = '/usr/sbin/sendmail', `default` = '/usr/sbin/sendmail', `length` = '150', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'shout_max_zeichen', `value` = '100', `default` = '100', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_hostname', `value` = 'localhost', `default` = 'localhost', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_password', `value` = '', `default` = '', `length` = '0', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_port', `value` = '25', `default` = '25', `length` = '11', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_tls_ssl', `value` = '0', `default` = '0', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_username', `value` = '', `default` = '', `length` = '150', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'teamrow', `value` = '3', `default` = '3', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'tmpdir', `value` = 'version1.6', `default` = 'version1.6', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'upicsize', `value` = '100', `default` = '100', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'urls_linked', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'use_akl', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'wmodus', `value` = '0', `default` = '0', `length` = '1', `type` = 'int';",false,false,true);
 
     //===============================================================
     //-> Teamspeak ==================================================
@@ -324,15 +436,6 @@ function install_mysql_insert($db_infos)
     //===============================================================
     db("INSERT INTO `".dba::get('c_kats')."` SET `kat` = 'Servermiete';",false,false,true);
     db("INSERT INTO `".dba::get('c_kats')."` SET `kat` = 'Serverbeitrag';",false,false,true);
-
-    //===============================================================
-    //-> Config =====================================================
-    //===============================================================
-    db("INSERT INTO `".dba::get('config')."` SET `id` = 1, `upicsize` = 100, `gallery` = 4, `m_gallery` = 12, `m_usergb` = 10, `m_clanwars` = 10, `maxshoutarchiv` = 20, `m_clankasse` = 20, `m_awards` = 15, `m_userlist` = 40, `maxwidth` = 400, `shout_max_zeichen` = 100,
-     `l_servernavi` = 22, `m_adminnews` = 20, `m_shout` = 10, `m_comments` = 10, `m_archivnews` = 30, `m_gb` = 10, `m_fthreads` = 20, `m_fposts` = 10, `m_news` = 5, `f_forum` = 20, `l_shoutnick` = 20, `f_gb` = 20, `f_membergb` = 20, `f_shout` = 20, `f_newscom` = 20,
-     `f_cwcom` = 20, `f_artikelcom` = 20, `f_downloadcom` = 20, `l_newsadmin` = 20, `l_shouttext` = 22, `l_newsarchiv` = 20, `l_forumtopic` = 20, `l_forumsubtopic` = 20, `l_clanwars` = 30, `m_gallerypics` = 5, `m_lnews` = 6, `m_topdl` = 5, `m_ftopics` = 6,
-     `m_lwars` = 6, `m_nwars` = 6, `l_topdl` = 20, `l_ftopics` = 28, `l_lnews` = 22, `l_lwars` = 12, `l_nwars` = 12, `l_lreg` = 12, `m_lreg` = 5, `m_artikel` = 15, `m_cwcomments` = 10, `m_adminartikel` = 15, `securelogin` = ".$db_infos['loginsec'].",
-     `allowhover` = 1, `teamrow` = 3, `l_lartikel` = 18, `m_lartikel` = 5, `m_events` = 5, `m_away` = 10, `cache_engine` = '".(is_zs() ? 'zenddisk' : 'file')."', `cache_teamspeak` = 30, `cache_server` = 30, `cache_news` = 5, `direct_refresh` = 0, `news_feed` = 1;",false,false,true);
 
     //===============================================================
     //-> Sponsoren ==================================================

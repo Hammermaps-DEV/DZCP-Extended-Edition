@@ -809,7 +809,7 @@ function install_mysql_create()
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `key` varchar(200) NOT NULL DEFAULT '',
         `value` text,
-        `default` varchar(200) NOT NULL DEFAULT '',
+        `default` text,
         `length` int(11) NOT NULL DEFAULT '1',
         `type` varchar(20) NOT NULL DEFAULT 'int' COMMENT 'int/string',
         PRIMARY KEY (`id`),

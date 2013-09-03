@@ -370,7 +370,3 @@ function is_writable_array($array)
 //-> EMail wird auf korrekten Syntax überprüft
 function check_email($email)
 { return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email); }
-
-//-> Ist ein Zend Server
-function is_zs()
-{ return strripos(phpversion(), 'ZS') === false ? false : true; }
