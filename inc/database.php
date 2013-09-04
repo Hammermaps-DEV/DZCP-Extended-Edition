@@ -770,6 +770,7 @@ class settings
             self::$index[$what] = $setting;
             unset($setting);
 
+            DebugConsole::insert_successful('settings::add()', 'Add "'.$what.'" set to "'.$var.'"');
             return db("INSERT INTO `".dba::get('settings')."` SET
                         `key` = '".$what."',
                         `value` = '".$var."',
@@ -791,6 +792,7 @@ class settings
         $what = strtolower($what);
         if(self::is_exists($what))
         {
+            DebugConsole::insert_info('settings::remove()', 'Remove "'.$what.'"');
             unset(self::$index[$what]);
             return db("DELETE FROM `".dba::get('settings')."` WHERE `key` = '".$what."';",false,false,true) ? true : false;
         }
