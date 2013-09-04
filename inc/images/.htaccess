@@ -1,8 +1,0 @@
-# Cached alle image fuer 24 Hours um die Seite eine schnellere ladezeit zu geben
-<ifModule mod_headers.c>
-	<FilesMatch "\.(jpg|jpeg|png|gif)$">
-	  Header set Cache-Control "max-age=86400, public, must-revalidate"
-	  Header unset Last-Modified
-	</FilesMatch>
-</IfModule>
-
