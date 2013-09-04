@@ -1,0 +1,4 @@
+# Cached alle image fuer 24H um die Seite eine schnellere ladezeit zu geben
+<IfModule mod_expires.c>
+Header set Cache-Control "max-age=86400, public"
+</IfModule>
