@@ -159,7 +159,6 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'pagetitel', `value` = '".string::encode($db_infos['seitentitel'])."', `default` = 'Dein Seitentitel hier!', `length` = '50', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'persinfo', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'prev', `value` = '".string::encode(strtolower(mkpwd(3,false)))."', `default` = '".string::encode(strtolower(mkpwd(3,false)))."', `length` = '3', `type` = 'string';",false,false,true);
-    db("INSERT INTO `".dba::get('settings')."` SET `key` = '', `value` = '', `default` = '', `length` = '', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'regcode', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_artikel', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'reg_cwcomments', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);

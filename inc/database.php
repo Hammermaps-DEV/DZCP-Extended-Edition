@@ -320,6 +320,9 @@ class database
         return false;
     }
 
+    public static function get_fetch_fields()
+    { if(count(self::$fetch_fields) >= 1) return self::$fetch_fields; return false; }
+
     private static function refValues($arr)
     {
         if (strnatcmp(phpversion(),'5.3') >= 0)
