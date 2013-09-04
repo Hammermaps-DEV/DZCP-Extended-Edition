@@ -140,13 +140,22 @@ function thumbgen($filename,$width,$height)
         switch($type)
         {
             case 1: ## GIF ##
+            	header("Cache-Control: private, max-age=10800, pre-check=10800");
+            	header("Pragma: private");
+            	header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
                 header("Content-Type: image/gif");
             break;
             default:
             case 2: ## JPEG ##
+            	header("Cache-Control: private, max-age=10800, pre-check=10800");
+            	header("Pragma: private");
+            	header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
                 header("Content-Type: image/jpeg");
             break;
             case 3: ## PNG ##
+            	header("Cache-Control: private, max-age=10800, pre-check=10800");
+            	header("Pragma: private");
+            	header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
                 header("Content-Type: image/png");
             break;
         }
