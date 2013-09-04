@@ -1007,62 +1007,6 @@ class xml // Class by DZCP-Extended Edition
     { return ($value == 'true' ? true : false); }
 }
 
-#############################################
-############### TypeConverter ###############
-#############################################
-class convert
-{
-    public static final function ToString($input)
-    { return (string)$input; }
-
-    public static final function BoolToInt($input)
-    { return ($input == true ? 1 : 0); }
-
-    public static final function IntToBool($input)
-    { return ($input == 0 ? false : true); }
-
-    public static final function ToInt($input)
-    { return (int)$input; }
-
-    public static final function UTF8($input)
-    { return self::ToString(utf8_encode($input)); }
-
-    public static final function UTF8_Reverse($input)
-    { return utf8_decode($input); }
-
-    public static final function ToHTML($input)
-    { return htmlentities($input, ENT_COMPAT, _charset); }
-
-    public static final function objectToArray($d)
-    { return json_decode(json_encode($d, JSON_FORCE_OBJECT), true); }
-}
-
-#############################################
-########### DB-CharsetConverter #############
-#############################################
-class string
-{
-    /**
-     * Codiert Text in das UTF8 Charset.
-     *
-     * @param string $txt
-     */
-    public static function encode($txt='')
-    {
-        return stripcslashes(spChars(convert::ToHTML($txt)));
-    }
-
-    /**
-     * Decodiert UTF8 Text in das aktuelle Charset der Seite.
-     *
-     * @param utf8 string $txt
-     */
-    public static function decode($txt='')
-    {
-        return trim(stripslashes(spChars(html_entity_decode($txt, ENT_COMPAT, 'iso-8859-1'),true)));
-    }
-}
-
 /**
  * Language loader class
  */

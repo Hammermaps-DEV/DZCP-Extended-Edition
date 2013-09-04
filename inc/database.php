@@ -6,12 +6,13 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-function db($query,$rows=false,$fetch=false,$log=false)
+function db($query,$rows=false,$fetch=false,$log=false,$real=true)
 {
     database::init_pre();
     if($rows || $fetch)
     {
-        database::query($query,$log);
+        if(!($real ? database::query_real($query,$log) : database::query($query,$log)))
+            return false;
 
         if($fetch && $rows)
             $return = database::fetch(true);
@@ -24,7 +25,7 @@ function db($query,$rows=false,$fetch=false,$log=false)
         return $return;
     }
 
-    return database::query($query,$log);
+    return ($real ? database::query_real($query,$log) : database::query($query,$log));
 }
 
 function db_stmt($query,$params=array(),$rows=false,$fetch=false,$log=false)
@@ -154,6 +155,7 @@ class database
     public static $runned = false;
     public static $stmt = null;
     public static $remote = false;
+    public static $fetch_fields = array();
 
     public static final function init_pre()
     {
@@ -220,10 +222,10 @@ class database
     }
 
     /**
-     * Datenbank Query senden
+     * Datenbank Query senden *REAL*
      * @param string $sql_query
      */
-    public static function query($sql_query='',$log=false)
+    public static function query_real($sql_query='',$log=false)
     {
         global $db_array;
         if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
@@ -233,8 +235,30 @@ class database
                 DebugConsole::sql_error_handler($sql_query);
             else
             {
-                self::$insert_id = mysqli_insert_id(self::$mysqli);
                 self::$sql_query = mysqli_store_result(self::$mysqli);
+                self::$fetch_fields = self::$sql_query != false ? convert::objectToArray(mysqli_fetch_fields(self::$sql_query)) : array();
+                self::$insert_id = mysqli_insert_id(self::$mysqli);
+                unset($sql_query);
+                return self::$sql_query;
+            }
+        }
+    }
+
+    /**
+     * Datenbank Query senden
+     * @param string $sql_query
+     */
+    public static function query($sql_query='',$log=false)
+    {
+        if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
+        {
+            if($log || debug_all_sql_querys) DebugConsole::wire_log('debug', 9, 'SQL_Query', $sql_query);
+            if(!(self::$sql_query = mysqli_query(self::$mysqli, $sql_query)))
+                DebugConsole::sql_error_handler($sql_query);
+            else
+            {
+                self::$fetch_fields = self::$sql_query != false ? convert::objectToArray(mysqli_fetch_fields(self::$sql_query)) : array();
+                self::$insert_id = mysqli_insert_id(self::$mysqli);
                 unset($sql_query);
                 return self::$sql_query;
             }
@@ -802,3 +826,29 @@ class settings
 }
 
 settings::load(); //Load all settings
+
+#############################################
+########### DB-CharsetConverter #############
+#############################################
+class string
+{
+    /**
+     * Codiert Text in das UTF8 Charset.
+     *
+     * @param string $txt
+     */
+    public static function encode($txt='')
+    {
+        return stripcslashes(spChars(convert::ToHTML($txt)));
+    }
+
+    /**
+     * Decodiert UTF8 Text in das aktuelle Charset der Seite.
+     *
+     * @param utf8 string $txt
+     */
+    public static function decode($txt='')
+    {
+        return trim(stripslashes(spChars(html_entity_decode($txt, ENT_COMPAT, 'iso-8859-1'),true)));
+    }
+}

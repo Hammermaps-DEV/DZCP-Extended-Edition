@@ -8,29 +8,18 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('users')."` CHANGE `whereami` `whereami` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` CHANGE `hlswid` `xfire` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('downloads')."` ADD `last_dl` INT( 20 ) NOT NULL DEFAULT '0' AFTER `date`",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `i_autor` `i_autor` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('gb')."` CHANGE `hp` `hp` VARCHAR(130) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `urls_linked` INT(1) NOT NULL DEFAULT '1', ADD `ts_customicon` INT(1) NOT NULL DEFAULT '1' AFTER `ts_version`, ADD `ts_showchannel` INT(1) NOT NULL DEFAULT '0' AFTER `ts_customicon`",false,false,true);
     db("ALTER TABLE `".dba::get('msg')."` CHANGE `see_u` `see_u` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".dba::get('msg')."` CHANGE `page` `page` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".dba::get('away')."` CHANGE `lastedit` `lastedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` DROP `pfad`",false,false,true);
     db("ALTER TABLE `".dba::get('newskat')."` CHANGE `katimg` `katimg` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('newskat')."` CHANGE `kategorie` `kategorie` VARCHAR( 60 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('server')."` CHANGE `name` `name` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('server')."` DROP `bl_file`, DROP `bl_path`, DROP `ftp_pwd`, DROP `ftp_login`, DROP `ftp_host`;",false,false,true);
     db("ALTER TABLE `".dba::get('serverliste')."` CHANGE `clanname` `clanname` VARCHAR( 50 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('serverliste')."` CHANGE `datum` `datum` INT( 11 ) NOT NULL DEFAULT '0'",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `db_version` VARCHAR( 5 ) NOT NULL DEFAULT '00000'");
-    db("ALTER TABLE `".dba::get('config')."` ADD `cache_engine` varchar(50) NOT NULL DEFAULT 'file'",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `memcache_host` VARCHAR( 50 ) NOT NULL DEFAULT '';",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `memcache_port` INT( 11 ) NOT NULL DEFAULT '11211';",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` ADD `cache_news` INT( 10 ) NOT NULL DEFAULT '5' AFTER `cache_server`;",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` ADD `news_feed` INT( 1 ) NOT NULL DEFAULT '1'",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` DROP `gmaps_key`",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `pkey` VARCHAR( 50 ) NOT NULL DEFAULT '' AFTER `sessid`;",false,false,true);
     db("ALTER TABLE `".dba::get('navi')."` ADD `extended_perm` varchar(50) DEFAULT NULL AFTER `editor`;",false,false,true);
-    db("TABLE `".dba::get('settings')."` DROP `gametiger`,`squadtmpl`,`balken_vote`,`balken_vote_menu`,`balken_cw`;",false,false,true);
     db("ALTER TABLE `".dba::get('newscomments')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('acomments')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('cw_comments')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
@@ -39,107 +28,78 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('usergb')."` ADD INDEX ( `user` );",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` CHANGE `gmaps_koord` `gmaps_koord` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `pwd_encoder` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pwd`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `default_pwd_encoder` INT( 1 ) NOT NULL DEFAULT '2' AFTER `urls_linked`;",false,false,true);
     db("ALTER TABLE `".dba::get('artikel')."` ADD `viewed` INT( 11 ) NOT NULL DEFAULT '0' AFTER `url3`;",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` ADD `f_downloadcom` INT( 5 ) NOT NULL DEFAULT '20' AFTER `f_artikelcom`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `reg_dlcomments` INT( 1 ) NOT NULL DEFAULT '1' AFTER `reg_newscomments`;",false,false,true);
     db("ALTER TABLE `".dba::get('downloads')."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '0' AFTER `last_dl`;",false,false,true);
     db("ALTER TABLE `".dba::get('f_posts')."` CHANGE `edited` `edited` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('rankings')."` CHANGE `lastranking` `lastranking` INT( 10 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `profile_access` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pnmail`;",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` ADD `m_gallery` INT( 11 ) NOT NULL DEFAULT '36' AFTER `gallery`;",false,false,true);
     db("ALTER TABLE `".dba::get('news')."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '1' AFTER `timeshift`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `rss_key` VARCHAR( 50 ) NOT NULL DEFAULT '' AFTER `profile_access`;",false,false,true);
     db("ALTER TABLE `".dba::get('artikel')."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '1' AFTER `public`;",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` DROP `m_banned`;",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` DROP `l_team`;",false,false,true);
     db("ALTER TABLE `".dba::get('server')."` ADD `custom_icon` VARCHAR( 30 ) NOT NULL DEFAULT '' AFTER `qport`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `language` VARCHAR( 15 ) NOT NULL DEFAULT 'default' AFTER `country`;",false,false,true);
     db("ALTER TABLE `".dba::get('news')."` ADD `custom_image` INT( 1 ) NOT NULL DEFAULT '0' AFTER `comments` ;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `actkey` VARCHAR( 50 ) NOT NULL DEFAULT '' AFTER `pkey`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `eml_akl_register` TEXT NULL DEFAULT NULL AFTER `eml_nletter`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `eml_akl_register_subj` TEXT NULL DEFAULT NULL AFTER `eml_fabo_pedit_subj`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_reg_subj` `eml_reg_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pwd_subj` `eml_pwd_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_nletter` `eml_nletter` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_nletter_subj` `eml_nletter_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_reg` `eml_reg` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pwd` `eml_pwd` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_npost_subj` `eml_fabo_npost_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_tedit_subj` `eml_fabo_tedit_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_pedit_subj` `eml_fabo_pedit_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pn_subj` `eml_pn_subj` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_npost` `eml_fabo_npost` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_tedit` `eml_fabo_tedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_fabo_pedit` `eml_fabo_pedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` CHANGE `eml_pn` `eml_pn` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;",false,false,true);
     db("ALTER TABLE `".dba::get('userstats')."` ADD `akl` INT( 5 ) NOT NULL DEFAULT '1' AFTER `cws`;",false,false,true);
-    db("ALTER TABLE `".dba::get('config')."` ADD `use_akl` INT( 1 ) NOT NULL DEFAULT '1' AFTER `news_feed`;",false,false,true);
     db("ALTER TABLE `".dba::get('artikel')."` ADD `custom_image` INT( 1 ) NOT NULL DEFAULT '0' AFTER `comments`;",false,false,true);
     db("ALTER TABLE `".dba::get('navi')."` ADD `title` VARCHAR( 249 ) NOT NULL DEFAULT '' AFTER `name`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `startpage` INT( 5 ) NOT NULL DEFAULT '0' AFTER `rss_key`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `smtp_hostname` VARCHAR( 200 ) NOT NULL DEFAULT 'localhost' AFTER `eml_pn`,
-                                               ADD `smtp_port` INT( 11 ) NOT NULL DEFAULT '25' AFTER `smtp_hostname`,
-                                               ADD `smtp_username` VARCHAR( 200 ) NOT NULL DEFAULT '' AFTER `smtp_port`,
-                                               ADD `smtp_password` TEXT NULL DEFAULT NULL AFTER `smtp_username` ,
-                                               ADD `smtp_tls_ssl` INT( 1 ) NOT NULL DEFAULT '0' AFTER `smtp_password` ,
-                                               ADD `sendmail_path` VARCHAR( 200 ) NOT NULL DEFAULT '/usr/sbin/sendmail' AFTER `smtp_tls_ssl` ,
-                                               ADD `mail_extension` VARCHAR( 200 ) NOT NULL DEFAULT 'mail' AFTER `sendmail_path`;",false,false,true);
-    db("ALTER TABLE `".dba::get('settings')."` ADD `ftp_hostname` VARCHAR( 100 ) NOT NULL DEFAULT 'localhost' AFTER `mail_extension` ,
-    ADD `ftp_username` VARCHAR( 100 ) NOT NULL DEFAULT '' AFTER `ftp_hostname` ,
-    ADD `ftp_password` VARCHAR( 255 ) NOT NULL DEFAULT '' AFTER `ftp_username` ,
-    ADD `ftp_path` VARCHAR( 255 ) NOT NULL DEFAULT '/' AFTER `ftp_password` ;",false,false,true);
     db("ALTER TABLE `".dba::get('links')."` CHANGE `text` `blink` VARCHAR( 249 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
 
-
-    //Update E-Mail Templates
-    db("UPDATE `".dba::get('settings')."` SET `eml_akl_register_subj` = '".emlv('eml_akl_register_subj')."' WHERE `id` = 1;",false,false,true);
-    db("UPDATE `".dba::get('settings')."` SET `eml_akl_register` = '".emlv('eml_akl_register')."' WHERE `id` = 1;",false,false,true);
-
-    // Add UNIQUE INDEX
-    if(db("SELECT id FROM `".dba::get('config')."`",true) >= 2)
+    // Ersetze Settings Tabelle
+    database::init_pre(); database::query("SELECT * FROM `".dba::get('settings')."`",false);
+    if(database::$runned_query != false)
     {
-        $get_old = db("SELECT * FROM `".dba::get('config')."` LIMIT 0 , 1",false,true);
-        db("TRUNCATE TABLE `".dba::get('config')."`",false,false,true);
-        db("ALTER TABLE `".dba::get('config')."` ADD UNIQUE (`id`)",false,false,true);
-        $count = count($get_old); $i = 1; $set = '';
-        foreach ($get_old as $key => $var)
+        $finfo = mysqli_fetch_fields(database::$runned_query);
+        print_r($finfo);
+        #foreach ($finfo as $key => $val)
+       # {
+       # }
+        mysqli_free_result(database::$runned_query);
+    }
+
+
+    $qry = db("SELECT * FROM `".dba::get('permissions')."`");
+    if(_rows($qry) >= 1)
+    {
+        $cache_array_sql = array();
+        while($get = _fetch($qry))
         {
-            $i++;
-            if($i <= $count)
-                $set .= $key." = '".$var."', ";
-            else
-                $set .= $key." = '".$var."';";
+            $cache_array_sql[] = "INSERT INTO `".dba::get('permissions')."` SET
+            `user` = ".$get['user'].",
+            `pos` = ".$get['pos'].",
+            `intforum` = ".$get['intforum'].",
+            `clankasse` = ".$get['clankasse'].",
+            `clanwars` = ".$get['clanwars'].",
+            `shoutbox` = ".$get['shoutbox'].",
+            `serverliste` = ".$get['serverliste'].",
+            `editusers` = ".$get['editusers'].",
+            `editsquads` = ".$get['editsquads'].",
+            `editserver` = ".$get['editserver'].",
+            `editkalender` = ".$get['editkalender'].",
+            `news` = ".$get['news'].",
+            `gb` = ".$get['gb'].",
+            `forum` = ".$get['forum'].",
+            `votes` = ".$get['votes'].",
+            `gallery` = ".$get['gallery'].",
+            `votesadmin` = ".$get['votesadmin'].",
+            `links` = ".$get['links'].",
+            `downloads` = ".$get['downloads'].",
+            `newsletter` = ".$get['newsletter'].",
+            `intnews` = ".$get['intnews'].",
+            `rankings` = ".$get['rankings'].",
+            `contact` = ".$get['contact'].",
+            `joinus` = ".$get['joinus'].",
+            `awards` = ".$get['awards'].",
+            `artikel` = ".$get['artikel'].",
+            `receivecws` = ".$get['receivecws'].",
+            `editor` = ".$get['editor'].",
+            `glossar` = ".$get['glossar'].",
+            `gs_showpw` = ".$get['gs_showpw'].";";
         }
 
-        db("INSERT INTO `".dba::get('config')."` SET ".$set,false,false,true);
+        unset($qry,$get);
     }
-    else
-        db("ALTER TABLE `".dba::get('config')."` ADD UNIQUE (`id`)",false,false,true);
-
-    // Add UNIQUE INDEX
-    if(db("SELECT id FROM `".dba::get('settings')."`",true) >= 2)
-    {
-        $get_old = db("SELECT * FROM `".dba::get('settings')."` LIMIT 0 , 1",false,true);
-        db("TRUNCATE TABLE `".dba::get('settings')."`",false,false,true);
-        db("ALTER TABLE `".dba::get('settings')."` ADD UNIQUE (`id`)",false,false,true);
-        $count = count($get_old); $i = 1; $set = '';
-        foreach ($get_old as $key => $var)
-        {
-            $i++;
-            if($i <= $count)
-                $set .= $key." = '".$var."', ";
-            else
-                $set .= $key." = '".$var."';";
-        }
-
-        db("INSERT INTO `".dba::get('settings')."` SET ".$set,false,false,true);
-    }
-    else
-        db("ALTER TABLE `".dba::get('settings')."` ADD UNIQUE (`id`)",false,false,true);
-
-    // Schreibe DB Version in Datenbank
-    db("UPDATE ".dba::get('settings')." SET `db_version` = '1600' WHERE id = 1",false,false,true);
 
     // Lösche dzcp_banned Tabelle
     dba::set('banned','banned'); //Tempadd
