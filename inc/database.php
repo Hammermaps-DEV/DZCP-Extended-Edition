@@ -236,7 +236,7 @@ class database
             else
             {
                 self::$sql_query = mysqli_store_result(self::$mysqli);
-                self::$fetch_fields = self::$sql_query != false ? convert::objectToArray(mysqli_fetch_fields(self::$sql_query)) : array();
+                self::$fetch_fields = self::$sql_query != false && is_object(self::$sql_query) ? convert::objectToArray(mysqli_fetch_fields(self::$sql_query)) : array();
                 self::$insert_id = mysqli_insert_id(self::$mysqli);
                 unset($sql_query);
                 return self::$sql_query;
@@ -257,7 +257,7 @@ class database
                 DebugConsole::sql_error_handler($sql_query);
             else
             {
-                self::$fetch_fields = self::$sql_query != false ? convert::objectToArray(mysqli_fetch_fields(self::$sql_query)) : array();
+                self::$fetch_fields = self::$sql_query != false && is_object(self::$sql_query) ? convert::objectToArray(mysqli_fetch_fields(self::$sql_query)) : array();
                 self::$insert_id = mysqli_insert_id(self::$mysqli);
                 unset($sql_query);
                 return self::$sql_query;
