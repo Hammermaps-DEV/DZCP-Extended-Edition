@@ -762,16 +762,19 @@ class settings
      */
     public static final function load()
     {
-        $sql = db("SELECT * FROM `".dba::get('settings')."`");
-        while ($get = _fetch($sql))
+        if(!$_SESSION['installer'] && !$_SESSION['db_install']) //For Installer
         {
-            $setting = array();
-            $setting['value'] = !((int)$get['length']) ? $get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value'])
-            : cut($get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value']),((int)$get['length']),false);
-            $setting['default'] = $get['type'] == 'int' ? ((int)$get['default']) : ((string)$get['default']);
-            $setting['length'] = ((int)$get['length']);
-            self::$index[$get['key']] = $setting;
-            unset($setting);
+            $sql = db("SELECT * FROM `".dba::get('settings')."`");
+            while ($get = _fetch($sql))
+            {
+                $setting = array();
+                $setting['value'] = !((int)$get['length']) ? $get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value'])
+                : cut($get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value']),((int)$get['length']),false);
+                $setting['default'] = $get['type'] == 'int' ? ((int)$get['default']) : ((string)$get['default']);
+                $setting['length'] = ((int)$get['length']);
+                self::$index[$get['key']] = $setting;
+                unset($setting);
+            }
         }
     }
 
@@ -854,4 +857,34 @@ class string
     {
         return trim(stripslashes(spChars(html_entity_decode($txt, ENT_COMPAT, 'iso-8859-1'),true)));
     }
+}
+
+#############################################
+############### TypeConverter ###############
+#############################################
+class convert
+{
+    public static final function ToString($input)
+    { return (string)$input; }
+
+    public static final function BoolToInt($input)
+    { return ($input == true ? 1 : 0); }
+
+    public static final function IntToBool($input)
+    { return ($input == 0 ? false : true); }
+
+    public static final function ToInt($input)
+    { return (int)$input; }
+
+    public static final function UTF8($input)
+    { return self::ToString(utf8_encode($input)); }
+
+    public static final function UTF8_Reverse($input)
+    { return utf8_decode($input); }
+
+    public static final function ToHTML($input)
+    { return htmlentities($input, ENT_COMPAT, _charset); }
+
+    public static final function objectToArray($d)
+    { return json_decode(json_encode($d, JSON_FORCE_OBJECT), true); }
 }

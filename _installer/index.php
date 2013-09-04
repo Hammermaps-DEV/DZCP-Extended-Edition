@@ -8,7 +8,6 @@
 
 ob_start();
     session_start();
-
     if((isset($_SESSION['db_install']) ? $_SESSION['db_install'] : false) == true && (isset($_GET['action']) ? $_GET['action'] : '') == '')
         $_SESSION['db_install'] = false;
 

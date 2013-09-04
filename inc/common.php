@@ -27,36 +27,6 @@ if(is_debug)
 $ajaxJob = (!isset($ajaxJob) ? false : $ajaxJob);
 $ajaxThumbgen = (!isset($ajaxThumbgen) ? false : $ajaxThumbgen);
 
-#############################################
-############### TypeConverter ###############
-#############################################
-class convert
-{
-    public static final function ToString($input)
-    { return (string)$input; }
-
-    public static final function BoolToInt($input)
-    { return ($input == true ? 1 : 0); }
-
-    public static final function IntToBool($input)
-    { return ($input == 0 ? false : true); }
-
-    public static final function ToInt($input)
-    { return (int)$input; }
-
-    public static final function UTF8($input)
-    { return self::ToString(utf8_encode($input)); }
-
-    public static final function UTF8_Reverse($input)
-    { return utf8_decode($input); }
-
-    public static final function ToHTML($input)
-    { return htmlentities($input, ENT_COMPAT, _charset); }
-
-    public static final function objectToArray($d)
-    { return json_decode(json_encode($d, JSON_FORCE_OBJECT), true); }
-}
-
 ## INCLUDES/REQUIRES ##
 require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');

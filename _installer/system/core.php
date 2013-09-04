@@ -5,9 +5,6 @@ $host = str_replace('www.','',$_SERVER['HTTP_HOST']);
 if((isset($_GET['action']) ? $_GET['action'] : '') == 'mysql_setup_tb')
     $_SESSION['db_install'] = true;
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
 require_once(basePath."/inc/debugger.php");
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/config.php');
@@ -16,6 +13,14 @@ require_once(basePath.'/inc/kernel.php');
 require_once(basePath.'/inc/additional-kernel/class.ftp.inc.php');
 require_once(basePath.'/_installer/system/global.php');
 require_once(basePath.'/_installer/system/emlv.php');
+
+error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED ^ E_WARNING);
+
+if(is_debug)
+{
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+}
 
 //-> Sichert die ausgelagerten Dateien gegen directe Ausführung
 define('IN_DZCP', true);
