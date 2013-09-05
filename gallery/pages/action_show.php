@@ -20,16 +20,35 @@ else
         $tr1 = ($t == 0 || $t == 1 ? '<tr>' : '');
         $tr2 = ($t == $galleryconfig['gallery'] ? '</tr>' : '');
         $t = ($t == $galleryconfig['gallery'] ? 0 : $t);
-
+		$filetime=filemtime(basePath."/inc/images/uploads/gallery/".$file);
         $del = (permission("gallery") ? show("page/button_delete_gallery", array("action" => "admin=gallery&amp;do=delete&amp;pic=".$file, "title" => _button_title_del, "del" => _confirm_del_galpic)) : '');
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-        $show .= show($dir."/show_gallery", array("img" => $file,
+    	if(check_apache_modul('mod_rewrite')&&use_mod_rewrite)
+    	{
+    		$endung = explode(".", $file);
+    		$endung = strtolower($endung[count($endung)-1]);
+    		$file=str_replace('.'.$endung,'',$file);
+    		$show .= show($dir."/show_gallery_rewrite", array("img" => $file,
+										    		  "cnt" => $cnt,
+										    		  "tr1" => $tr1,
+										    		  "endung"=>$endung,
+										    		  "time"=>$filetime,
+										    		  "max" => $galleryconfig['gallery'],
+										    		  "width" => convert::ToInt(round(100/$galleryconfig['gallery'])),
+										    		  "del" => $del,
+										    		  "tr2" => $tr2));
+    	}
+    	else{
+    		$show .= show($dir."/show_gallery", array("img" => $file,
                                                   "cnt" => $cnt,
                                                   "tr1" => $tr1,
+                                                  "time"=>$filetime,
                                                   "max" => $galleryconfig['gallery'],
                                                   "width" => convert::ToInt(round(100/$galleryconfig['gallery'])),
                                                   "del" => $del,
                                                   "tr2" => $tr2));
+    	}
+
         $t++; $cnt++;
     }
 

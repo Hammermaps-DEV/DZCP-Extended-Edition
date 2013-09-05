@@ -155,7 +155,21 @@ function php_sapi_type()
     "apache2handler" => 'Apache 2: Handler', "cgi" => 'CGI', "cgi-fcgi" => 'Fast-CGI', "cli" => 'CLI', "isapi" => 'ISAPI', "nsapi" => 'NSAPI');
     return(empty($sapi_types[substr($sapi_type, 0, 3)]) ? substr($sapi_type, 0, 3) : $sapi_types[substr($sapi_type, 0, 3)]);
 }
+/**
+ *	Funktion um ein Apche Modul zu pruefen
+ *
+ **/
+function check_apache_modul($module_name)
+{
+	$modules = apache_get_modules();
+	foreach ($modules as $module)
+	{
+		if ($module == $module_name)
+			return true;
+	}
 
+	return false;
+}
 /**
  * Funktion um eine Datei im Web auf Existenz zu prüfen und abzurufen
  * Updated for DZCP-Extended Edition
