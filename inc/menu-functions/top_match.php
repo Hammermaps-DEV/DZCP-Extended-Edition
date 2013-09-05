@@ -29,7 +29,7 @@ function top_match()
             }
 
         	$filetimesquad=filemtime(basePath.'/inc/images/uploads/squads/'.$squad);
-        	$filetimegegner=filemtime(basePath.'/inc/images/uploads/squads/'.$gegner);
+        	$filetimegegner=filemtime(basePath.'/inc/images/uploads/clanwars/'.$gegner);
             if($allowHover == 1 || $allowHover == 2)
                 $hover = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['name'])).' vs. '.jsconvert(string::decode($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(string::decode($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
 
