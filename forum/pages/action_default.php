@@ -34,7 +34,7 @@ else
         {
             if(!$get['intern'] || ($get['intern'] && fintern($gets['id'])))
             {
-                unset($lpost);
+                $lpost='';
                 $getlt = db("SELECT t_date,t_nick,t_email,t_reg,lp,first,topic
                      FROM ".dba::get('f_threads')."
                      WHERE kid = '".$gets['id']."'
