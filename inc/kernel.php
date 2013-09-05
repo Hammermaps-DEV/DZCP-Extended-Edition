@@ -161,14 +161,16 @@ function php_sapi_type()
  **/
 function check_apache_modul($module_name)
 {
-	$modules = apache_get_modules();
-	foreach ($modules as $module)
-	{
-		if ($module == $module_name)
-			return true;
-	}
 
-	return false;
+	if (function_exists('apache_get_modules')) {
+		$modules = apache_get_modules();
+		$mod_rewrite = in_array($module_name, $modules);
+	}
+	elseif($modul_name=='mod_rewrite'&&!function_exists('apache_get_modules'))
+	{
+		$mod_rewrite =  getenv('HTTP_MOD_REWRITE')=='On' ? true : false ;
+	}
+	return $mod_rewrite;
 }
 /**
  * Funktion um eine Datei im Web auf Existenz zu prüfen und abzurufen
