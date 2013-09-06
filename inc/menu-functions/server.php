@@ -32,8 +32,8 @@ function server($serverID = 0)
     {
         if(fsockopen_support())
         {
-            $sID = $_GET['serverID'];
-            $get = db("SELECT * FROM ".dba::get('server')." WHERE `id` = ".$sID,false,true);
+            $sID = convert::ToInt($_GET['serverID']);
+            $get = db_stmt("SELECT * FROM ".dba::get('server')." WHERE `id` = ?",array('i', $sID),false,true);
             $cache_hash = md5($get['ip'].':'.$get['port'].'_'.$get['game']);
             if(Cache::check('server_'.$cache_hash))
             {
@@ -155,17 +155,18 @@ function server($serverID = 0)
                 if(file_exists(basePath.'/inc/images/gameicons/custom/'.$get['custom_icon']))
                     $game_icon = '../inc/images/gameicons/custom/'.$get['custom_icon'];
             }
-        	if(check_apache_modul('mod_rewrite')&&use_mod_rewrite)
-        	{
-        		$endung = explode(".", $image_map);
-        		$endung = strtolower($endung[count($endung)-1]);
-        		$map_path=str_replace('.'.$endung,'',$image_map);
-        		$image_map = '<img src="../inc/ajax/thumbgen/maps/'.$map_path.'_160_120_'.filemtime(basePath.'/inc/images/maps/'.$image_map).'.'.$endung.'" class="navServerPic" alt="" />';
 
-        	}else
-        	{
-        		$image_map = '<img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120&time='.filemtime(basePath.'/inc/images/maps/'.$image_map).'" class="navServerPic" alt="" />';
-        	}
+            if(check_mod_rewrite())
+            {
+                $endung = explode(".", $image_map);
+                $endung = strtolower($endung[count($endung)-1]);
+                $map_path = str_replace('.'.$endung,'',$image_map);
+                $image_map = '<img src="../inc/ajax/thumbgen/maps/'.$map_path.'_160_120_'.filemtime(basePath.'/inc/images/maps/'.$image_map).'.'.$endung.'" class="navServerPic" alt="" />';
+
+            }
+            else
+                $image_map = '<img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120&time='.filemtime(basePath.'/inc/images/maps/'.$image_map).'" class="navServerPic" alt="" />';
+
             $image_pwd = ($server['game_password'] ? '<img src="../inc/images/closed.png" alt="" alt="" title="Server Password" class="icon" />' : ''); //Server Password
             $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server
             $os = ($server['game_os'] ? '<img src="../inc/images/'.$server['game_os'].'_os.png" alt="" title="'.($server['game_os'] == 'windows' ? 'Windows' : 'Linux').' Server" class="icon" />' : ''); //Server OS

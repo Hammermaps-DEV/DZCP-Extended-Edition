@@ -274,20 +274,19 @@ else
                 $image_map  = '<script type="text/javascript">swfobject.embedSWF("'.$image_map.'", "'.$clsid.'", "160", "120", "9.0.0", "../inc/images/flash/expressInstall.swf");</script>';
                 $image_map .= '<div id="'.$clsid.'"><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></div>';
             }
-    	else{
-    			$filetime=filemtime(basePath.'/inc/images/maps/'.$image_map);
-	    		if(check_apache_modul('mod_rewrite')&&use_mod_rewrite)
-	    		{
-	    			$endung = explode(".", $image_map);
-	    			$endung = strtolower($endung[count($endung)-1]);
-	    			$map_path=str_replace('.'.$endung,'',$image_map);
-	    			$image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax/thumbgen/maps/'.$map_path.'_160_120_'.$filetime.'.'.$endung.'" class="ServerPic" alt="" /></a>';
-
-	    		}else
-	    		{
-	    			$image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120&time='.$filetime.'" class="ServerPic" alt="" /></a>';
-	    		}
-    	    }
+            else
+            {
+                $filetime = filemtime(basePath.'/inc/images/maps/'.$image_map);
+                if(check_mod_rewrite())
+                {
+                    $endung = explode(".", $image_map);
+                    $endung = strtolower($endung[count($endung)-1]);
+                    $map_path = str_replace('.'.$endung,'',$image_map);
+                    $image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax/thumbgen/maps/'.$map_path.'_160_120_'.$filetime.'.'.$endung.'" class="ServerPic" alt="" /></a>';
+                }
+                else
+                    $image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120&time='.$filetime.'" class="ServerPic" alt="" /></a>';
+            }
 
             $image_pwd = ($server['game_password'] ? '<img src="../inc/images/closed.png" alt="" alt="" title="Server Password" class="icon" />' : ''); //Server Password
             $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server

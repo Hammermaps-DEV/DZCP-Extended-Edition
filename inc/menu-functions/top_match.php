@@ -28,50 +28,49 @@ function top_match()
                     $squad = $get['squad_id'].'_logo.'.$end;
             }
 
-        	$filetimesquad=filemtime(basePath.'/inc/images/uploads/squads/'.$squad);
-        	$filetimegegner=filemtime(basePath.'/inc/images/uploads/clanwars/'.$gegner);
+            $filetimesquad = filemtime(basePath.'/inc/images/uploads/squads/'.$squad);
+            $filetimegegner = filemtime(basePath.'/inc/images/uploads/clanwars/'.$gegner);
             if($allowHover == 1 || $allowHover == 2)
                 $hover = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['name'])).' vs. '.jsconvert(string::decode($get['gegner'])).'\', \''._played_at.';'._cw_xonx.';'._result.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.jsconvert(string::decode($get['xonx'])).';'.cw_result_nopic_nocolor($get['punkte'],$get['gpunkte']).';'.cnt(dba::get('cw_comments'), "WHERE cw = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
 
-        	if(check_apache_modul('mod_rewrite')&&use_mod_rewrite)
-        	{
-        	$endungs = explode(".", $squad);
-        	$endungs = strtolower($endungs[count($endungs)-1]);
-        	$squad=str_replace('.'.$endungs,'',$squad);
+            if(check_mod_rewrite())
+            {
+                $endungs = explode(".", $squad);
+                $endungs = strtolower($endungs[count($endungs)-1]);
+                $squad=str_replace('.'.$endungs,'',$squad);
 
-        	$endungg = explode(".", $gegner);
-        	$endungg = strtolower($endungg[count($endungg)-1]);
-        	$gegner=str_replace('.'.$endungg,'',$gegner);
+                $endungg = explode(".", $gegner);
+                $endungg = strtolower($endungg[count($endungg)-1]);
+                $gegner=str_replace('.'.$endungg,'',$gegner);
 
-        	$topmatch = show("menu/top_match_rewrite", array("id" => $get['id'],
-									        		"clantag" => string::decode(cut($get['clantag'],($llwars=settings('l_lwars')))),
-									        		"team" => string::decode(cut($get['name'],$llwars)),
-									        		//"game" => substr(strtoupper(str_replace('.'.string::decode($get['icon']), '', string::decode($get['icon']))), 0, 5), // unused
-									        		"id" => $get['id'],
-									        		"gegner" => $gegner,
-									        		"times"=>$filetimesquad,
-									        		"timeg"=>$filetimegegner,
-									        		"endungs"=>$endungs,
-									        		"endungg"=>$endungg,
-									        		"squad" => $squad,
-									        		"hover" => $hover,
-									        		"info" => ($get['datum'] > time() ? date("d.m.Y", $get['datum']) : cw_result_nopic($get['punkte'],$get['gpunkte']))));
-        	}
-        	else
-        	{
-            $topmatch = show("menu/top_match", array("id" => $get['id'],
-                                                     "clantag" => string::decode(cut($get['clantag'],($llwars=settings('l_lwars')))),
-                                                     "team" => string::decode(cut($get['name'],$llwars)),
-                                                     //"game" => substr(strtoupper(str_replace('.'.string::decode($get['icon']), '', string::decode($get['icon']))), 0, 5), // unused
-                                                     "id" => $get['id'],
-                                                     "gegner" => $gegner,
-										            "times"=>$filetimesquad,
-										            "timeg"=>$filetimegegner,
-                                                     "squad" => $squad,
-                                                     "hover" => $hover,
-                                                     "info" => ($get['datum'] > time() ? date("d.m.Y", $get['datum']) : cw_result_nopic($get['punkte'],$get['gpunkte']))));
-
-        	}
+                $topmatch = show("menu/top_match_rewrite", array("id" => $get['id'],
+                                                        "clantag" => string::decode(cut($get['clantag'],($llwars=settings('l_lwars')))),
+                                                        "team" => string::decode(cut($get['name'],$llwars)),
+                                                        //"game" => substr(strtoupper(str_replace('.'.string::decode($get['icon']), '', string::decode($get['icon']))), 0, 5), // unused
+                                                        "id" => $get['id'],
+                                                        "gegner" => $gegner,
+                                                        "times"=>$filetimesquad,
+                                                        "timeg"=>$filetimegegner,
+                                                        "endungs"=>$endungs,
+                                                        "endungg"=>$endungg,
+                                                        "squad" => $squad,
+                                                        "hover" => $hover,
+                                                        "info" => ($get['datum'] > time() ? date("d.m.Y", $get['datum']) : cw_result_nopic($get['punkte'],$get['gpunkte']))));
+            }
+            else
+            {
+                $topmatch = show("menu/top_match", array("id" => $get['id'],
+                                                         "clantag" => string::decode(cut($get['clantag'],($llwars=settings('l_lwars')))),
+                                                         "team" => string::decode(cut($get['name'],$llwars)),
+                                                         //"game" => substr(strtoupper(str_replace('.'.string::decode($get['icon']), '', string::decode($get['icon']))), 0, 5), // unused
+                                                         "id" => $get['id'],
+                                                         "gegner" => $gegner,
+                                                        "times"=>$filetimesquad,
+                                                        "timeg"=>$filetimegegner,
+                                                         "squad" => $squad,
+                                                         "hover" => $hover,
+                                                         "info" => ($get['datum'] > time() ? date("d.m.Y", $get['datum']) : cw_result_nopic($get['punkte'],$get['gpunkte']))));
+            }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache
                 Cache::set('nav_top_match',$topmatch,$menu_xml['config']['update']);

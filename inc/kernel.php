@@ -156,21 +156,18 @@ function php_sapi_type()
     return(empty($sapi_types[substr($sapi_type, 0, 3)]) ? substr($sapi_type, 0, 3) : $sapi_types[substr($sapi_type, 0, 3)]);
 }
 /**
- *	Funktion um ein Apche Modul zu pruefen
+ * Funktion zu prüfen ob mod_rewrite aktiviert ist
+ * Added by DZCP-Extended Edition
  *
+ * @return boolean
  **/
-function check_apache_modul($module_name)
+function check_mod_rewrite()
 {
+    if(!use_mod_rewrite) return false;
+    if(function_exists('apache_get_modules'))
+        return in_array('mod_rewrite', apache_get_modules());
 
-	if (function_exists('apache_get_modules')) {
-		$modules = apache_get_modules();
-		$mod_rewrite = in_array($module_name, $modules);
-	}
-	elseif($module_name=='mod_rewrite'&&!function_exists('apache_get_modules'))
-	{
-		$mod_rewrite =  getenv('HTTP_MOD_REWRITE')=='On' ? true : false ;
-	}
-	return $mod_rewrite;
+    return getenv('HTTP_MOD_REWRITE') == 'On' ? true : false ;
 }
 /**
  * Funktion um eine Datei im Web auf Existenz zu prüfen und abzurufen

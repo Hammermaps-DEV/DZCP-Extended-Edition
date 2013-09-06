@@ -20,28 +20,28 @@ function gallery()
             shuffle($files); $files = limited_array($files,1,4);
             foreach($files as $file)
             {
-            	$filetime=filemtime(basePath.'/inc/images/uploads/gallery/'.$file);
-                if(!empty($file)&&check_apache_modul('mod_rewrite')&&use_mod_rewrite)
+                $filetime = filemtime(basePath.'/inc/images/uploads/gallery/'.$file);
+                if(!empty($file) && check_mod_rewrite())
                 {
 
-                	$endung = explode(".", $file);
-                	$endung = strtolower($endung[count($endung)-1]);
-                	$file=str_replace('.'.$endung,'',$file);
-                	$info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['kat'])).'\', \''._gal_pics.'\', \''.$cnt.'\')" onmouseout="DZCP.hideInfo()"';
-                	$gallery .= show("menu/gallery_rewrite", array("info" => '<p><b>'.jsconvert(string::decode($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
-										                	"image" => $file,
-										                	"endung"=>$endung,
-										                	"time"=>$filetime,
-										                	"kat" => string::decode($get['kat']),
-										                	"info" => $info,
-										                	"id" => $get['id']));
+                    $endung = explode(".", $file);
+                    $endung = strtolower($endung[count($endung)-1]);
+                    $file = str_replace('.'.$endung,'',$file);
+                    $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['kat'])).'\', \''._gal_pics.'\', \''.$cnt.'\')" onmouseout="DZCP.hideInfo()"';
+                    $gallery .= show("menu/gallery_rewrite", array("info" => '<p><b>'.jsconvert(string::decode($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
+                                                            "image" => $file,
+                                                            "endung" => $endung,
+                                                            "time" => $filetime,
+                                                            "kat" => string::decode($get['kat']),
+                                                            "info" => $info,
+                                                            "id" => $get['id']));
                 }
-            	elseif(!empty($file))
+                else if(!empty($file))
                 {
                     $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['kat'])).'\', \''._gal_pics.'\', \''.$cnt.'\')" onmouseout="DZCP.hideInfo()"';
                     $gallery .= show("menu/gallery", array("info" => '<p><b>'.jsconvert(string::decode($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
                                                            "image" => $file,
-                                                           "filetime"=>$filetime,
+                                                           "filetime" => $filetime,
                                                            "kat" => string::decode($get['kat']),
                                                            "info" => $info,
                                                            "id" => $get['id']));

@@ -19,35 +19,35 @@ else
         {
             $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat,"#^".$get['id']."_(.*?)#");
             $cnt = convert::ToString($files ? count($files) : 0);
-        	$file=$files[rand(0,$cnt-1)];
-        	$filetime=filemtime(basePath."/inc/images/uploads/gallery/".$file);
-        	$cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
-        	if(check_apache_modul('mod_rewrite')&&use_mod_rewrite)
-        	{
-	        		$endung = explode(".", $file);
-	        		$endung = strtolower($endung[count($endung)-1]);
-	        		$file=str_replace('.'.$endung,'',$file);
-        			$filetime=filemtime (basePath."/inc/images/uploads/gallery/".$file.".".$endung);
-        			$show .= show($dir."/gallery_show_rewrite", array("link" => string::decode($get['kat']),
-											        		  "images" => $cntpics,
-											        		  "image" => '../inc/ajax/thumbgen/uploads/gallery/'.$file,
-											        		  "endung"=>$endung,
-											        		  "id" => $get['id'],
-											        		  "time"=>$filetime,
-											        		  "beschreibung" => bbcode::parse_html($get['beschreibung']),
-											        		  "cnt" => $cnt));
-        	}
-        	else {
-        	$show .= show($dir."/gallery_show", array("link" => string::decode($get['kat']),
-									        		  "images" => $cntpics,
-									        		  "image" => '../inc/ajax.php?loader=thumbgen&file=uploads/gallery/'.$file,
-									        		  "id" => $get['id'],
-									        		  "time"=>$filetime,
-									        		  "beschreibung" => bbcode::parse_html($get['beschreibung']),
-									        		  "cnt" => $cnt));
-        	}
+            $file = $files[rand(0,$cnt-1)];
+            $filetime = filemtime(basePath."/inc/images/uploads/gallery/".$file);
+            $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
 
-
+            if(check_mod_rewrite())
+            {
+                $endung = explode(".", $file);
+                $endung = strtolower($endung[count($endung)-1]);
+                $file = str_replace('.'.$endung,'',$file);
+                $filetime = filemtime(basePath."/inc/images/uploads/gallery/".$file.".".$endung);
+                $show .= show($dir."/gallery_show_rewrite", array("link" => string::decode($get['kat']),
+                                                                  "images" => $cntpics,
+                                                                  "image" => '../inc/ajax/thumbgen/uploads/gallery/'.$file,
+                                                                  "endung"=>$endung,
+                                                                  "id" => $get['id'],
+                                                                  "time"=>$filetime,
+                                                                  "beschreibung" => bbcode::parse_html($get['beschreibung']),
+                                                                  "cnt" => $cnt));
+            }
+            else
+            {
+                $show .= show($dir."/gallery_show", array("link" => string::decode($get['kat']),
+                                                          "images" => $cntpics,
+                                                          "image" => '../inc/ajax.php?loader=thumbgen&file=uploads/gallery/'.$file,
+                                                          "id" => $get['id'],
+                                                          "time"=>$filetime,
+                                                          "beschreibung" => bbcode::parse_html($get['beschreibung']),
+                                                          "cnt" => $cnt));
+            }
         }
     }
     else
