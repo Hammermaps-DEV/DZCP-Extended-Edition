@@ -160,4 +160,58 @@ class API extends API_CORE
      */
     public static function re($txt = '')
     { return string::decode($txt); }
+
+    /**
+     * Legt eine neue Einstellung in der dzcp_settings Datenbank an.
+     * Anwendung:
+     * add_settings('hallo','hihi','huhu',4,false);
+     * Speichert eine neue Einstellung als 'dzcp_addons_hallo' mit dem Wert 'hihi' in der Settings Tabelle.
+     * Ausgabe: dzcp_addons_hallo => hihi
+     *
+     * Zurücksetzen des Wert mit dem Default Wert, sofern er gesetzt wurde *huhu*, kann es mit API::reset_setting('hallo') erreicht werden.
+     * Ausgabe: dzcp_addons_hallo => huhu
+     *
+     * Length ist die Maximale Länge des Wertes alles was länger als x Zeichen ist wird abgeschnitten kann mit 0 ausgeschaltet werden.
+     * Int ist true oder false, im Fall von true wird der Wert als Int gespeichert andernfalls als String.
+     *
+     * Einstellungen mit Int:
+     * add_settings('test123',2,1,1,true);
+     * Ausgabe: dzcp_addons_test123 => 2
+     *
+     * @param string $what
+     * @param string/int $var
+     * @param string/int $default
+     * @param int $length
+     * @param boolean $is_int
+     * @return boolean
+     */
+    public static function add_setting($key='',$var='',$default='',$length=50,$is_int=false)
+    { return self::create_settings($key,$var,$default,$length,$is_int); }
+
+    /**
+     * Zurücksetzen eines Werts mit dem Standard Wert, sofern er gesetzt wurde.
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public static function reset_setting($key='')
+    { return self::reset_settings($key); }
+
+    /**
+     * Löscht eine Einstellung aus der dzcp_settings Datenbank.
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public static function remove_setting($key='')
+    { return self::remove_settings($key); }
+
+    /**
+     * Löscht einzelne Einstellungen aus der dzcp_settings Datenbank.
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public static function get_setting($key='')
+    { return self::get_settings($key); }
 }

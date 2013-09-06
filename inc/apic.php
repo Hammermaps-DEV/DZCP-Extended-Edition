@@ -489,20 +489,98 @@ class API_CORE
 
     /**
      * Sortiert HM-DZCP-Core an erste Stelle
+     *
      * @param array
      * @return array:
      */
     private static function core_sort()
     {
+        $array_core_addons = array();
         $array_core = array(); $array_normal = array();
         foreach (self::$addon_index as $key => $var)
+        { key_exists($key, $array_core_addons) ? $array_core[$key] = $var : $array_normal[$key] = $var; }
+        self::$addon_index = array_merge($array_core,$array_normal);
+    }
+
+    /**
+     * Eine neue Einstellung in die Datenbank schreiben mit dem Prefix *addon_*
+     *
+     * @param string $what
+     * @param string/int $var
+     * @param string/int $default
+     * @param int $length
+     * @param boolean $int
+     * @return boolean
+     */
+    public static function create_settings($key='',$var='',$default='',$length=50,$int=false)
+    {
+        if(empty($key) || empty($var) || !$length || !is_bool($int))
+            return false;
+
+        if(settings::is_exists('addons_'.$key))
         {
-            if($key == 'HM-DZCP-Core')
-                $array_core[$key] = $var;
-            else
-                $array_normal[$key] = $var;
+            DebugConsole::insert_error('API_CORE::create_settings()', 'Setting "'.'addons_'.$key.'" is already exists!');
+            return false;
         }
 
-        self::$addon_index = array_merge($array_core,$array_normal);
+        return settings::add('addons_'.$key,$var,$default,$length,$int);
+    }
+
+    /**
+     * Setzt einen Wert auf den Standard zurück.
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public static function reset_settings($key='')
+    {
+        if(empty($key) || !settings::is_exists('addons_'.$key))
+            return false;
+
+        $default = settings::get_default('addons_'.$key);
+        if(!empty($default))
+            return settings::set('addons_'.$key,$default);
+    }
+
+    /**
+     * Löscht eine Einstellung aus der dzcp_settings Datenbank.
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public static function remove_settings($key='')
+    {
+        if(empty($key) || !settings::is_exists('addons_'.$key))
+            return false;
+
+        return settings::remove('addons_'.$key);
+    }
+
+    /**
+     * Gibt Einstellungen aus der Settings Tabelle zurück.
+     *
+     * @param string $keys
+     * @return boolean|mixed
+     */
+    public static function get_settings($keys='')
+    {
+        if(is_array($keys))
+        {
+            if(empty($keys) || !count($keys))
+                return false;
+
+            $keys_new = array();
+            foreach ($keys as $key)
+            { $keys_new[$key] = settings::get('addons_'.$key); }
+
+            return $keys_new;
+        }
+        else
+        {
+            if(empty($keys) && settings::is_exists('addons_'.$keys))
+                return false;
+
+            return settings::get('addons_'.$keys);
+        }
     }
 }

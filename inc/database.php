@@ -711,6 +711,25 @@ class settings
     }
 
     /**
+     * Gibt die Standard Einstellung einer Einstellung zurück
+     * @param string $what
+     * @return mixed|boolean
+     */
+    public static function get_default($what='')
+    {
+        $what = strtolower($what);
+        if(array_key_exists($what, self::$index))
+        {
+            $data = self::$index[$what];
+            return $data['default'];
+        }
+        else
+            DebugConsole::insert_error('settings::get_default()', 'Setting "'.$what.'" not found in '.dba::get('settings'));
+
+        return false;
+    }
+
+    /**
      * Aktualisiert die Werte innerhalb der Settings Tabelle
      * @param string $what
      * @param string $var
