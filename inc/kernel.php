@@ -156,7 +156,7 @@ function php_sapi_type()
     return(empty($sapi_types[substr($sapi_type, 0, 3)]) ? substr($sapi_type, 0, 3) : $sapi_types[substr($sapi_type, 0, 3)]);
 }
 /**
- * Funktion zu prüfen ob mod_rewrite aktiviert ist
+ * Funktion um zu prüfen ob mod_rewrite aktiviert ist
  * Added by DZCP-Extended Edition
  *
  * @return boolean
