@@ -395,7 +395,7 @@ class database
      */
     public static function free_result()
     {
-        if(self::$sql_query != null && !empty(self::$sql_query))
+        if(self::$sql_query != null && !empty(self::$sql_query) && !is_array(self::$sql_query))
             mysqli_free_result(self::$sql_query);
     }
 
@@ -411,7 +411,7 @@ class database
     /**
      * Gibt Datenbank Fehler aus und stoppt die Ausführung des CMS
      **/
-    private static function print_db_error($query=false)
+    public static function print_db_error($query=false)
     {
         global $prefix;
         echo '<b>MySQL-Query failed:</b><br /><ul>'.
