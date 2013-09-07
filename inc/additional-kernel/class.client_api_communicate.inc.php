@@ -107,7 +107,18 @@ final class client_api_communicate
             curl_setopt($curl, CURLOPT_TIMEOUT, $timeout * 2); // x 2
             curl_setopt($curl, CURLOPT_POST, 1);
             curl_setopt($curl, CURLOPT_POSTFIELDS, array('input' => self::$stream)); //Send Stream
+
+            if(show_api_communicate_debug)
+                DebugConsole::insert_info('client_api_communicate::send_curl()', 'Send: '.cut(self::$stream,100,true));
+
             self::$stream = curl_exec($curl); //Get Stream
+
+            if(show_pure_communicate_debug)
+                die(self::$stream);
+
+            if(show_api_communicate_debug)
+                DebugConsole::insert_info('client_api_communicate::send_curl()', 'Reserved: '.cut(self::$stream,100,true));
+
             curl_close($curl); if(!empty(self::$stream)) return true;
         }
 
@@ -122,7 +133,15 @@ final class client_api_communicate
             $snoopy = new Snoopy;
             $snoopy->rawheaders["Pragma"] = "no-cache";
             $snoopy->submit('http://'.self::$apihost.'/DZCP-EE-API/index.php', array('input' => self::$stream)); //Send Stream
+
+            if(show_api_communicate_debug)
+                DebugConsole::insert_info('client_api_communicate::send_fsockopen()', 'Send: '.cut(self::$stream,100,true));
+
             self::$stream = $snoopy->results; //Get Stream
+
+            if(show_api_communicate_debug)
+                DebugConsole::insert_info('client_api_communicate::send_fsockopen()', 'Reserved: '.cut(self::$stream,100,true));
+
             unset($snoopy); if(!empty(self::$stream)) return true; return false;
         }
     }

@@ -464,20 +464,21 @@ input.loginName_en,input.loginPwd_en {
 }
 
 input.loginSubmit {
-  width: 60px;
+    /* Use JQuery UI */
+  width: 70px;
   padding: 1px;
-  background-image: url(../images/submit.jpg);
   border: 1px solid #5F5F5F;
   color: #fff;
   cursor: pointer;
 }
 
 input.loginSignUp:hover,input.loginSubmit:hover {
-  background-image: url(../images/submit_hover.jpg);
+    /* Use JQuery UI */
 }
 
 input.loginSubmit {
   font-weight: bold;
+  font-size:12px;
 }
 
 /*---------------------------------------------
@@ -492,16 +493,14 @@ td.navVoteButton {
 }
 
 input.voteSubmit {
-  padding: 1px;
-  padding-left: 10px;
-  padding-right: 10px;
-  background-image: url(../images/submit.jpg);
-  border: 1px solid #5F5F5F;
-  color: #fff;
-  cursor: pointer;
+    /* Use JQuery UI */
+    padding: 1px;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
 }
 input.voteSubmit:hover {
-  background-image: url(../images/submit_hover.jpg);
+    /* Use JQuery UI */
 }
 /*IE Hack*/
 *+html input.voteSubmit { overflow: visible; }
@@ -551,16 +550,16 @@ textarea.shoutTextfield_dis,textarea.shoutTextfield_en {
 Shoutbox submit button
 ---------------------------------------------*/
 input.shoutSubmit {
+    /* Use JQuery UI */
   padding: 1px;
   padding-left: 10px;
   padding-right: 10px;
-  background-image: url(../images/submit.jpg);
   border: 1px solid #5F5F5F;
   color: #fff;
   cursor: pointer;
 }
 input.shoutSubmit:hover {
-  background-image: url(../images/submit_hover.jpg);
+  /* Use JQuery UI */
 }
 /*IE Hack*/
 *+html input.shoutSubmit { overflow: visible; }
@@ -1251,18 +1250,17 @@ textarea.inputField_dis_nletter,textarea.inputField_en_nletter {
 Atrributes of (submit)buttons
 ---------------------------------------------*/
 input.submit {
+  /* Use JQuery UI */
   margin: 0px;
-  padding: 1px;
-  padding-left: 10px;
-  padding-right: 10px;
-  background-image: url(../images/submit.jpg);
-  border: 1px solid #5F5F5F;
-  color: #fff;
+  padding: 2px;
+  padding-left: 12px;
+  padding-right: 12px;
   cursor: pointer;
   font-weight: normal;
+  border: 1px solid #5F5F5F;
 }
 input.submit:hover {
-  background-image: url(../images/submit_hover.jpg);
+    /* Use JQuery UI */
 }
 /*IE Hack*/
 *+html input.submit { overflow: visible; }

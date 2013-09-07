@@ -10,6 +10,8 @@ define('show_warning', true);
 define('show_cache_debug', false);
 define('show_gameserver_debug', false);
 define('show_teamspeak_debug', false);
+define('show_api_communicate_debug', false);
+define('show_pure_communicate_debug', false); //End with die();
 
 define('debug_all_sql_querys', false);
 

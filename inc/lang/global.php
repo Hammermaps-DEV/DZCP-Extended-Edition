@@ -404,4 +404,5 @@ define('_klapptext_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="i
 define('_klapptext_dont_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/expand.gif" alt="" class="icon" /></a>');
 define('_klapptext_show_link', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/expand.gif" alt="" class="icon" />[link]</a>');
 define('_klapptext_server_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/[moreicon].gif" alt="" class="icon" />[link]</a>');
+define('_klapptext_no_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/[moreicon].gif" alt="" class="icon [class_ext]" /></a>');
 define('_select_field_fightus', '<option value="[id]">[squad] ([game])</option>');

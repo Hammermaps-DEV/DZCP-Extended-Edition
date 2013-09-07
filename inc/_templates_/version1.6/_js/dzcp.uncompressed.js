@@ -187,6 +187,14 @@
             $('#dialog').dialog('option', 'position', ['center', (document.body.clientHeight / 3)]);
             $("#dialog").dialog("open");
         });
+
+        DZCP.UpdateJQueryUI();
+    },
+
+    // update jquery-ui
+    UpdateJQueryUI: function() {
+        $("input[type=submit]" ).button().click(function( ) { $(this).find("form").submit(); });
+        $("input[type=button]" ).button().click(function( ) { $(this).find("form").submit(); });
     },
 
   // handle events
@@ -253,6 +261,7 @@
         {
             var request = $.ajax({ url: url, type: "GET", data: {}, cache:true, dataType: "html", contentType: "application/x-www-form-urlencoded; charset=iso-8859-1" });
             request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
+            DZCP.UpdateJQueryUI();
         }
     },
 
@@ -276,6 +285,7 @@
     {
         worker = event.data;
         $('#' + worker.tag).html( worker.data ).hide().fadeIn("normal");
+        DZCP.UpdateJQueryUI();
     },
 
     // init Ajax DynLoader
@@ -290,6 +300,7 @@
         {
             var request = $.ajax({ url: "../inc/ajax.php?loader=menu&mod=" + menu + options, type: "GET", data: {}, cache:true, dataType: "html", contentType: "application/x-www-form-urlencoded; charset=iso-8859-1" });
             request.done(function(msg) { $('#' + tag).html( msg ).hide().fadeIn("normal"); });
+            DZCP.UpdateJQueryUI();
         }
     },
 
@@ -299,6 +310,7 @@
         if(req) alert(req.replace(/  /g, ' '));
         $('#navShout').load('../inc/ajax.php?i=shoutbox');
         if(!req) $('#shouteintrag').prop('value', '');
+        DZCP.UpdateJQueryUI();
       });
 
       return false;

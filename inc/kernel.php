@@ -550,19 +550,27 @@ function isBot()
 
 /**
  * Wandelt einen Json-String in ein Array um.
+ * Optional‎: Kann komprimierten Json-String decodieren und in ein Array umwandeln.
  *
  * @return array
  */
-function string_to_array($str='')
-{ return json_decode($str, true); }
+function string_to_array($str='',$compress=false)
+{
+    if($compress) $str = gzuncompress(hextobin($str));
+    return json_decode($str, true);
+}
 
 /**
  * Wandelt einen Array in einen Json-String um.
+ * Optional‎: Der Json-String kann komprimiert werden und wird als Hex zurückgegeben.
  *
  * @return String
  */
-function array_to_string($arr=array())
-{ return json_encode($arr,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); }
+function array_to_string($arr=array(),$compress=false)
+{
+    $json = json_encode($arr,JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP);
+    return $compress ? bin2hex(gzcompress($json)) : $json;
+}
 
 /**
  * Wird verwendet um die Ladezeit der Seite zu errechnen.

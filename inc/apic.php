@@ -9,6 +9,7 @@
 class API_CORE
 {
     public static $addon_index = array();
+    public static $addon_index_xml = array();
     public static $MobileDevice = false;
     public static $MobileClass = '';
     public static $bbcode_index = array();
@@ -50,8 +51,7 @@ class API_CORE
                         unset($additional_admin_dirs);
                     }
 
-                    $addon_infos = array();
-
+                    $addon_infos = array(); $addon_xml_infos = '';
                     if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/addon_info.xml'))
                     {
                         $moduleName = 'addon_'.$addon; $info_array = array();
@@ -65,8 +65,15 @@ class API_CORE
                             $info_array['xml_addon_version'] = convert::ToString($xml->addon_version);
                             $info_array['xml_addon_info'] = convert::ToString($xml->addon_info);
                             $info_array['xml_addon_init_call'] = convert::ToString($xml->addon_init_call);
-                            $info_array['xml_addon_msrv_id'] = convert::ToString($xml->addon_check_server_id);
-                            $info_array['xml_addon_obj'] = $xml;
+                            $info_array['xml_addon_build_id'] = convert::ToString($xml->addon_build_id);
+
+                            //Updater
+                            $addon_xml_info = convert::objectToArray($xml);
+                            $addon_xml_infos['addon_name'] = $addon_xml_info['addon_name'];
+                            $addon_xml_infos['addon_autor'] = $addon_xml_info['addon_autor'];
+                            $addon_xml_infos['addon_version'] = $addon_xml_info['addon_version'];
+                            $addon_xml_infos['addon_build_rev'] = $addon_xml_info['addon_build_rev'];
+                            unset($addon_xml_info);
                         }
 
                         $addon_infos['xml'] = $info_array;
@@ -101,6 +108,7 @@ class API_CORE
                     unset($additional_admin);
 
                     self::$addon_index[$addon] = $addon_infos;
+                    self::$addon_index_xml[$addon] = $addon_xml_infos;
                 }
             }
         }
