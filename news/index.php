@@ -35,7 +35,7 @@ $index = "";
 ## Action Loader START ##
 #########################
 $IncludeAction=include_action($dir,'default');
-$page=$IncludeAction['page']; $do=$IncludeAction['do'];
+$page=$IncludeAction['page']; $do=$IncludeAction['do']; $addon_dir=$IncludeAction['dir'];
 $IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $IncludeAction['msg'];
 #######################
 ## Action Loader END ##

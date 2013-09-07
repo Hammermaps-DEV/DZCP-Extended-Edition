@@ -1646,13 +1646,13 @@ function include_action($page_dir='',$default='default')
     $page = convert::ToInt((isset($_GET['page']) ? $_GET['page'] : (isset($_POST['page']) ? $_POST['page'] : 1)));
     $action = convert::ToString(isset($_GET['action']) && !empty($_GET['action']) ? htmlentities(strtolower($_GET['action'])) : (isset($_POST['action']) && !empty($_POST['action']) ? htmlentities(strtolower($_POST['action'])) : strtolower($default)));
     if(check_internal_url())
-        return array('include' => false, 'page' => $page, 'do' => $do, 'msg' => error(_error_have_to_be_logged));
-    else if(($modul_file=API_CORE::load_additional_page($page_dir,$action)))
-        return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file);
+        return array('include' => false, 'page' => $page, 'do' => $do, 'dir' => '', 'msg' => error(_error_have_to_be_logged));
+    else if(($modul_file=API_CORE::load_additional_page($page_dir,$action)) && !empty($modul_file['file']))
+        return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file['file'], 'dir' => $modul_file['dir']);
     else if(file_exists(($modul_file=basePath.'/'.$page_dir.'/pages/action_'.$action.'.php')))
-        return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file);
+        return array('include' => true, 'page' => $page, 'do' => $do, 'file' => $modul_file, 'dir' => '');
     else
-        return array('include' => false, 'page' => $page, 'do' => $do, 'msg' => show(_include_action_error,array('file' => $page_dir.'/pages/action_'.$action.'.php')));
+        return array('include' => false, 'page' => $page, 'do' => $do, 'dir' => '', 'msg' => show(_include_action_error,array('file' => $page_dir.'/pages/action_'.$action.'.php')));
 }
 
 //Preuft ob alle clicks nur einmal gezahlt werden *gast/user

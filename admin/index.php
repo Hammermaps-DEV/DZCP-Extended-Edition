@@ -164,7 +164,7 @@ else
             $inc_file_functions = API_CORE::load_additional_admin_functions($admin_do,false);
             $inc_file_languages = API_CORE::load_additional_admin_languages($admin_do,false);
             $inc_file_case_dir = API_CORE::load_admin_case_dir($admin_do,false);
-            $basic_require = true;
+            $addon_dir = ''; $basic_require = true;
         }
 
         if(modapi_enabled)
@@ -176,6 +176,7 @@ else
                 $inc_file_languages = $inc_file_addons['require_languages'];
                 $inc_file_case_dir = $inc_file_addons['require_case_dir'];
                 $index_require = $inc_file_addons['require_index_file'];
+                $addon_dir = $inc_file_addons['addon_dir'];
                 $basic_require = false; unset($inc_file_addons);
             }
         }

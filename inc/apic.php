@@ -152,7 +152,8 @@ class API_CORE
                              'require_functions' => self::load_additional_admin_functions($menu,true,$addon),
                              'require_languages' => self::load_additional_admin_languages($menu,true,$addon),
                              'require_case_dir' => self::load_admin_case_dir($menu,true,$addon),
-                             'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'));
+                             'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'),
+                             'addon_dir' => basePath.'/inc/additional-addons/'.$addon.'/');
             }
         }
 
@@ -454,7 +455,7 @@ class API_CORE
                 if($addon['additional_pages'])
                 {
                     if(file_exists($dir.$page_dir.'/pages/action_'.$action.'.php'))
-                        return $dir.$page_dir.'/pages/action_'.$action.'.php';
+                        return array('file' => $dir.$page_dir.'/pages/action_'.$action.'.php', 'dir' => $dir);
                 }
             }
         }
