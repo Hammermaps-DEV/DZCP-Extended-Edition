@@ -194,6 +194,7 @@ else
 
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || (checkme() == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && userid() == convert::ToInt($rootAdmin)))
             {
+                $modul_file = '';
                 if($inc_file_functions != false) { foreach ($inc_file_functions as $inc_file_function) { require_once($inc_file_function); } }
                 if($inc_file_languages != false) { foreach ($inc_file_languages as $inc_file_language) { require_once($inc_file_language); } }
                 if($index_require) require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)); $where = (empty($where_ext) ? $where : $where.': '.language::display($where_ext));
