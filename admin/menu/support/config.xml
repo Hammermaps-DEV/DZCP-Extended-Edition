@@ -4,5 +4,5 @@
 	<Rights>support</Rights>
 	<Only_Admin>true</Only_Admin>
 	<Only_Root>false</Only_Root>
-	<Where></Where>
+	<Where>_admin_support_head</Where>
 </settings>

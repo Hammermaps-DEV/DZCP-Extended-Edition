@@ -741,10 +741,10 @@ class settings
         if(array_key_exists($what, self::$index))
         {
             $data = self::$index[$what];
-            $data['value'] = cut($var,((int)$data['length']),false);
+            $data['value'] = ($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var);
             self::$index[$what] = $data;
             DebugConsole::insert_successful('settings::set()', 'Set "'.$what.'" to "'.$var.'"');
-            return db("UPDATE `".dba::get('settings')."` SET `value` = '".cut($var,((int)$data['length']),false)."' WHERE `key` = '".$what."';") ? true : false;
+            return db("UPDATE `".dba::get('settings')."` SET `value` = '".($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var)."' WHERE `key` = '".$what."';") ? true : false;
         }
 
         return false;
