@@ -387,7 +387,7 @@ function pholderreplace($pholder)
 */
 function show($tpl="", $array=array(), $array_lang_constant=array(), $array_block=array())
 {
-    global $tmpdir;
+    global $tmpdir,$addon_dir;
 
     if(!empty($tpl) && $tpl != null)
     {
@@ -396,6 +396,7 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
         $template_additional = $_SESSION['installer'] ? false : basePath."/inc/additional-tpl/".$tmpdir."/".$tpl;
         $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;
         $array['dir_img'] = $_SESSION['installer'] ? "html/img/": '../inc/_templates_/'.$tmpdir.'/images/';
+        $array['dir_addon'] = $addon_dir;
         $array['tmpdir'] = $tmpdir;
 
         if($template_additional != false && file_exists($template_additional.".html"))

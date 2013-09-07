@@ -153,7 +153,7 @@ class API_CORE
                              'require_languages' => self::load_additional_admin_languages($menu,true,$addon),
                              'require_case_dir' => self::load_admin_case_dir($menu,true,$addon),
                              'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'),
-                             'addon_dir' => basePath.'/inc/additional-addons/'.$addon.'/');
+                             'addon_dir' => '../inc/additional-addons/'.$addon);
             }
         }
 

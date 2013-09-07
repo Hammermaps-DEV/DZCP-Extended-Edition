@@ -395,6 +395,7 @@ if(!$ajaxThumbgen)
         $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
 
     $designpath = '../inc/_templates_/'.$tmpdir;
+    $addon_dir = ''; // Addon dir
 
     //-> Languagefiles einlesen *Run
     //-> API & RSS call after Templateswitch & Language
