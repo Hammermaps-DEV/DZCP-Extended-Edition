@@ -103,7 +103,7 @@ function check_ip()
         $banned_ip_sql = db("SELECT id,typ FROM `".dba::get('ipban')."` WHERE `ip` = '".$ip."' AND `enable` = '1'");
         if(_rows($banned_ip_sql) >= 1)
         {
-            $banned_ip = _fetch($banned_ip_sql);
+            while($banned_ip = _fetch($banned_ip_sql))
             if($banned_ip['typ'] == '2' || $banned_ip['typ'] == '3')
                 die('Deine IP ist gesperrt!<p>Your IP is banned!');
         }
