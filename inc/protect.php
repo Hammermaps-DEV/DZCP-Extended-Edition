@@ -35,6 +35,7 @@ class cms_protect
     {
         if(!use_dzcp_protect) return;
         self::$client_ip = visitorIp(); self::load();
+        if(!is_array(self::$index) || !count(self::$index)) return;
         if(array_key_exists(self::$client_ip, self::$index))
         {
             if(count(self::$index[self::$client_ip]) >= 1)
