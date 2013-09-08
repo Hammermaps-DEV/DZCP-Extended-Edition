@@ -25,10 +25,12 @@ else
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         if(check_mod_rewrite())
         {
+            $file_original = $file;
             $endung = explode(".", $file);
             $endung = strtolower($endung[count($endung)-1]);
             $file = str_replace('.'.$endung,'',$file);
-            $show .= show($dir."/show_gallery_rewrite", array("img" => $file,
+            $show .= show($dir."/show_gallery_rewrite", array("imgorg" => $file_original,
+                                                              "img" => $file,
                                                               "cnt" => $cnt,
                                                               "tr1" => $tr1,
                                                               "endung" => $endung,
