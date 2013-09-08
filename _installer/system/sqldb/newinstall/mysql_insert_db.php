@@ -134,7 +134,7 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_artikel', `value` = '15', `default` = '15', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_awards', `value` = '15', `default` = '15', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_away', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
-    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_clankasse', `value` = '20', `default` = '20', `length` = 5'', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_clankasse', `value` = '20', `default` = '20', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_clanwars', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_comments', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'm_cwcomments', `value` = '10', `default` = '10', `length` = '5', `type` = 'int';",false,false,true);

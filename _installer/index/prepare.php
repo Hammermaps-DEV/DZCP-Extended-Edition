@@ -22,6 +22,7 @@ else
             'inc/_cache',
             'inc/_cache/binary',
             'inc/_cache/tinymce',
+            'inc/_logs',
             'inc/images',
             'inc/images/gameicons',
             'inc/images/gameicons/custom',
@@ -36,11 +37,11 @@ else
             'inc/images/uploads/clanwars',
             'inc/images/uploads/newskat',
             'inc/images/uploads/news',
-		    'inc/images/uploads/forum/mainkat',
-		    'inc/images/uploads/forum/subkat',
+            'inc/images/uploads/forum/mainkat',
+            'inc/images/uploads/forum/subkat',
             'inc/tinymce_files');
 
-    $array_install = array('_installer','_installer/index.php');
+    $array_install = array('_installer','_installer/index.php','_installer/system/_logs');
 
     //Über FTP die Rechte setzen
     if(isset($_GET['do']))
