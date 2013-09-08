@@ -51,9 +51,7 @@ if(!$ajaxThumbgen)
     require_once(basePath."/inc/protect.php");
     require_once(basePath.'/inc/gameq.php');
 }
-
-// IP Prüfung
-check_ip();
+;
 define('IS_DZCP', true);
 
 ## FUNCTIONS ##
@@ -84,9 +82,12 @@ Cache::loadClasses();
 Cache::setType($cache_engine);
 Cache::init();
 
-//-> GameQ
+//-> GameQ & CMS Protect
 if(!$ajaxThumbgen)
+{
+    cms_protect::load(); //CMS Protect
     spl_autoload_register(array('GameQ', 'auto_load'));
+}
 
 // -> Prüft ob die IP gesperrt und gültig ist
 function check_ip()
@@ -114,6 +115,9 @@ function check_ip()
                  Your IP address is known on <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a>, your IP has been used for spam attacks on websites.');
     }
 }
+
+// IP Prüfung
+check_ip();
 
 //-> Auslesen der Cookies und automatisch anmelden
 if(!$ajaxThumbgen && !isBot())
@@ -884,11 +888,11 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
     if(!$perpage)
         return "&#xAB; <span class=\"fontSites\">0</span> &#xBB;";
 
+    if($entrys <= $perpage || !$entrys)
+        return '';
+
     if($icon)
         $icon = '<img src="../inc/images/multipage.png" alt="" class="icon" /> <span class="fontSites">'._seiten.'</span>';
-
-    if($entrys <= $perpage)
-        return '';
 
     if(!$page || $page < 1)
         $page = 2;
@@ -903,7 +907,7 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
         $first = '<span class="fontSitesMisc">&#xAB;&#xA0;</span>';
 
     if($page == $pages)
-        $last = '<span class="fontSites">'.$pages.'</span><span class="fontSitesMisc">&#xA0;&#xBB;<span>';
+        $last = '<span class="fontWichtig">'.$pages.'</span><span class="fontSitesMisc">&#xA0;&#xBB;<span>';
     else if(($page+5) >= $pages)
         $last = '<a class="sites" href="'.$urlpart.'&amp;page='.($pages).'">'.$pages.'</a>&#xA0;<a class="sites" href="'.$urlpart.'&amp;page='.($page+1).'">&#xBB;</a>';
     else
@@ -912,7 +916,7 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
     $result = '';
     for($i = $page;$i<=($page+5) && $i<=($pages-1);$i++)
     {
-        if($i == $page)
+       if($i == $page)
             $result .= '<span class="fontWichtig">'.$i.'</span><span class="fontSitesMisc">&#xA0;</span>';
         else
             $result .= '<a class="sites" href="'.$urlpart.'&amp;page='.$i.'">'.$i.'</a><span class="fontSitesMisc">&#xA0;</span>';
@@ -1968,6 +1972,9 @@ function page($index,$title,$where,$time,$index_templ=false)
         //index output
         echo (is_debug && show_debug_console ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr);
     }
+
+    // CMS Protect
+    cms_protect::save();
 
     // Cookie speichern
     cookie::save();

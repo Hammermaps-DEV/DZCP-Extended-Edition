@@ -19,7 +19,7 @@ else
     {
         case 'yes':
             ## Prüfe ob der Secure Code aktiviert ist und richtig eingegeben wurde ##
-            if(settings('securelogin') && ($_POST['secure'] != $_SESSION['sec_login'] || !isset($_POST['secure']) || empty($_SESSION['sec_login'])))
+            if(settings('securelogin') && isset($_POST['secure']) && ($_POST['secure'] != $_SESSION['sec_login'] || empty($_SESSION['sec_login'])))
             {
                 ## Der Secure Code ist falsch ##
                 $index = error(_error_invalid_regcode);

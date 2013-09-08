@@ -83,9 +83,9 @@ function thumbgen($filename,$width,$height)
         }
         else //Use GD
         {
-        	header("Cache-Control: private, max-age=10800, pre-check=10800");
-        	header("Pragma: private");
-        	header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
+            header("Cache-Control: private, max-age=10800, pre-check=10800");
+            header("Pragma: private");
+            header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
             $neuesBild = imagecreatetruecolor($neueBreite, $neueHoehe); $bin = null;
             switch($type)
             {
@@ -140,9 +140,9 @@ function thumbgen($filename,$width,$height)
     }
     else
     {
-    	header("Cache-Control: private, max-age=10800, pre-check=10800");
-    	header("Pragma: private");
-    	header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
+        header("Cache-Control: private, max-age=10800, pre-check=10800");
+        header("Pragma: private");
+        header("Expires: " . date(DATE_RFC822,strtotime(" 2 day")));
         switch($type)
         {
             case 1: ## GIF ##

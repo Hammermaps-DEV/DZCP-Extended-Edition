@@ -31,7 +31,7 @@ function gallery()
                     $gallery .= show("menu/gallery_rewrite", array("info" => '<p><b>'.jsconvert(string::decode($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
                                                             "image" => $file,
                                                             "endung" => $endung,
-                                                            "time" => $filetime,
+                                                            "timestamp" => $filetime,
                                                             "kat" => string::decode($get['kat']),
                                                             "info" => $info,
                                                             "id" => $get['id']));
@@ -41,7 +41,7 @@ function gallery()
                     $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['kat'])).'\', \''._gal_pics.'\', \''.$cnt.'\')" onmouseout="DZCP.hideInfo()"';
                     $gallery .= show("menu/gallery", array("info" => '<p><b>'.jsconvert(string::decode($get['kat'])).'</b></p><p>'._gal_pics.$cnt.'</p>',
                                                            "image" => $file,
-                                                           "filetime" => $filetime,
+                                                           "timestamp" => $filetime,
                                                            "kat" => string::decode($get['kat']),
                                                            "info" => $info,
                                                            "id" => $get['id']));

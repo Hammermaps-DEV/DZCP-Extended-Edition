@@ -32,7 +32,7 @@ define('modapi_enabled', true); // DZCP ModAPI erlauben
 define('allow_additional', true); // additional functions,etc erlauben
 define('cache_thumbgen', true); // zwischenspeichern der Thumbgen generierten Bildern
 define('use_curl', true); // Verwendet die CURL PHP Erweiterung, anstelle von file_get_contents() für externe Zugriffe, wenn vorhanden.
-define('use_mod_rewrite',true); // Erlaubt dem CMS Mod rewrite zu benutzen
+define('use_mod_rewrite',true); // Erlaubt dem CMS Mod Rewrite zu benutzen
 define('use_trash_mails', false); // Erlaubt Trashmail Server als E-Mail Adresse.
 define('trash_mail_url', 'http://www.mogelmail.de/mogelmails.xml'); // Liste der Trashmail Server * XML Format
 

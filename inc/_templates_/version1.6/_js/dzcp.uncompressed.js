@@ -93,7 +93,7 @@
         // init Worker
         DZCP.initWorker();
 
-        // PreLoad checkPassword Pics
+        // PreLoad checkPassword
         images = new Array();
         images[0]="../inc/images/lvl0.jpg";
         images[1]="../inc/images/lvl1.jpg";
@@ -102,8 +102,21 @@
         images[4]="../inc/images/lvl4.jpg";
         images[5]="../inc/images/lvl5.jpg";
 
-        images[6]="../inc/_templates_/version1.6/images/submit.jpg";
-        images[6]="../inc/_templates_/version1.6/images/submit_hover.jpg";
+        // PreLoad JQuery UI
+        images[6]="../inc/_templates_/version1.6/_css/smoothness/images/animated-overlay.gif";
+        images[7]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_diagonals-medium_40_d72119_40x40.png";
+        images[8]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_flat_0_000000_40x100.png";
+        images[9]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_flat_0_fafafa_40x100.png";
+        images[10]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_flat_30_d01515_40x100.png";
+        images[11]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_glass_60_ba1512_1x400.png";
+        images[12]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_glass_65_b2120c_1x400.png";
+        images[13]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_highlight-hard_30_ffffff_1x100.png";
+        images[14]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_highlight-soft_60_de1111_1x100.png";
+        images[15]="../inc/_templates_/version1.6/_css/smoothness/images/ui-bg_highlight-soft_65_e32522_1x100.png";
+        images[16]="../inc/_templates_/version1.6/_css/smoothness/images/ui-icons_2e83ff_256x240.png";
+        images[17]="../inc/_templates_/version1.6/_css/smoothness/images/ui-icons_222fbe_256x240.png";
+        images[18]="../inc/_templates_/version1.6/_css/smoothness/images/ui-icons_222222_256x240.png";
+        images[19]="../inc/_templates_/version1.6/_css/smoothness/images/ui-icons_ffffff_256x240.png";
 
         imageObj = new Image();
         var i; for(i=0; i<=3; i++)
