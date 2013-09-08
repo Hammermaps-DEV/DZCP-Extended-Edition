@@ -91,6 +91,7 @@ class cms_protect
 
     public static final function load()
     {
+        if(!use_dzcp_protect) return;
         if(Cache::use_cache())
             self::$index = !Cache::check('cms_protect') ? string_to_array(Cache::get('cms_protect')) : self::$index;
         else
@@ -107,6 +108,7 @@ class cms_protect
 
     public static final function save()
     {
+        if(!use_dzcp_protect) return;
         if(show_cms_protect_debug)
             DebugConsole::insert_info('cms_protect::save()', 'Index saved "'.count(self::$index).'" ip for Save');
 
