@@ -160,7 +160,11 @@ else
         if(file_exists(basePath."/admin/menu/".($admin_do=((string)$_GET['admin']))."/config.xml"))
         {
             $inc_file = $admin_do."/index.php";
+            $inc_file_header = $admin_do."/header.php";
+            $inc_file_footer = $admin_do."/footer.php";
             $index_require = file_exists(basePath."/admin/menu/".$admin_do."/index.php");
+            $inc_header = file_exists(basePath."/admin/menu/".$admin_do."/header.php");
+            $inc_footer = file_exists(basePath."/admin/menu/".$admin_do."/footer.php");
             $inc_file_functions = API_CORE::load_additional_admin_functions($admin_do,false);
             $inc_file_languages = API_CORE::load_additional_admin_languages($admin_do,false);
             $inc_file_case_dir = API_CORE::load_admin_case_dir($admin_do,false);
@@ -171,17 +175,19 @@ else
         {
             if(($inc_file_addons = API_CORE::call_additional_adminmenu(((string)$_GET['admin']))) != false)
             {
-                $inc_file = $inc_file_addons['require_index'];
+                $inc_file = $inc_file_addons['require_indexes'];
                 $inc_file_functions = $inc_file_addons['require_functions'];
                 $inc_file_languages = $inc_file_addons['require_languages'];
                 $inc_file_case_dir = $inc_file_addons['require_case_dir'];
+                $inc_header = $inc_file_addons['require_header_file'];
+                $inc_footer = $inc_file_addons['require_footer_file'];
                 $index_require = $inc_file_addons['require_index_file'];
                 $addon_dir = $inc_file_addons['addon_dir'];
                 $basic_require = false; unset($inc_file_addons);
             }
         }
 
-        if(($index_require && file_exists($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)) || !$index_require)
+        if(($index_require && file_exists($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file.'/index.php')) || !$index_require)
         {
             unset($settings); $settings = array();
             $XMLTag = 'admin_'.((string)$_GET['admin']);
@@ -195,11 +201,13 @@ else
             if(($permission && !$settings['Only_Admin'] && !$settings['Only_Root']) || (checkme() == 4 && $settings['Only_Admin'] && !$settings['Only_Root']) || ($settings['Only_Root'] && userid() == convert::ToInt($rootAdmin)))
             {
                 $modul_file = '';
+                if($inc_header) require_once(($basic_require ? basePath."/admin/menu/".$inc_file_header : $inc_file.'/header.php'));
                 if($inc_file_functions != false) { foreach ($inc_file_functions as $inc_file_function) { require_once($inc_file_function); } }
                 if($inc_file_languages != false) { foreach ($inc_file_languages as $inc_file_language) { require_once($inc_file_language); } }
-                if($index_require) require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file)); $where = (empty($where_ext) ? $where : $where.': '.language::display($where_ext));
+                if($index_require) require_once(($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file.'/index.php'));  $where = (empty($where_ext) ? $where : $where.': '.language::display($where_ext));
                 if($inc_file_case_dir != false && file_exists(($modul_file=$inc_file_case_dir.'/case_'.( !empty($do) ? $do : 'default').'.php'))) require_once $modul_file;
                 if(!file_exists($modul_file) && file_exists(($modul_file=$inc_file_case_dir.'/case_default.php'))) require_once $modul_file;
+                if($inc_footer) require_once(($basic_require ? basePath."/admin/menu/".$inc_file_footer : $inc_file.'/footer.php'));
             }
             else
                 $show = error(_error_wrong_permissions);

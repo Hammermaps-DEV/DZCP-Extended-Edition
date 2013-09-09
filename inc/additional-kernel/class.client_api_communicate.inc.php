@@ -33,14 +33,16 @@ final class client_api_communicate
     private static $cryptkey = '';
     private static $apihost = 'localhost:80';
     private static $ident = 'adsdaasd';
+    private static $debug_output = false;
 
-    public static final function send($data='')
+    public static final function send($data='',$debug_output=false)
     {
         if(!fsockopen_support()) return false;
         if(!client_api_encode::init()) return false;
         if(!client_api_decode::init()) return false;
 
         self::$data = $data;
+        self::$debug_output = $debug_output;
         if(!self::encode()) return false;
         if(!self::wire_control()) return false;
         if(!(use_curl && extension_loaded('curl') ? self::send_curl() : self::send_fsockopen())) return false;
@@ -56,7 +58,7 @@ final class client_api_communicate
             $timeout = 30; $curl = curl_init();
             if(!$curl) return false;
             curl_setopt($curl, CURLOPT_HEADER, false);
-            curl_setopt($curl, CURLOPT_URL, 'http://'.$url);
+            curl_setopt($curl, CURLOPT_URL, $url);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_CONNECTTIMEOUT , $timeout);
             curl_setopt($curl, CURLOPT_TIMEOUT, $timeout * 2); // x 2
@@ -66,22 +68,24 @@ final class client_api_communicate
             if(!empty($stream))
             {
                 if($return_binary) return $stream;
-                file_put_contents(basePath.'/'.$save_to_file, $stream);
+                return file_put_contents(basePath.'/'.$save_to_file, $stream);
             }
         }
         else
         {
             $snoopy = new Snoopy;
             $snoopy->rawheaders["Pragma"] = "no-cache";
-            $snoopy->submit('http://'.$url);
+            $snoopy->submit($url);
             $stream = $snoopy->results;
 
             if(!empty($stream))
             {
                 if($return_binary) return $stream;
-                file_put_contents(basePath.'/'.$save_to_file, $stream);
+                return file_put_contents(basePath.'/'.$save_to_file, $stream);
             }
         }
+
+        return false;
     }
 
     public static function set_api_url($host='',$port=80)
@@ -113,7 +117,7 @@ final class client_api_communicate
 
             self::$stream = curl_exec($curl); //Get Stream
 
-            if(show_pure_communicate_debug)
+            if(self::$debug_output)
                 die(self::$stream);
 
             if(show_api_communicate_debug)
@@ -203,6 +207,7 @@ final class client_api_communicate
     private static final function read_control()
     {
         $data = explode('|', self::$stream, 8);
+        if(count($data) != 8) return false;
         self::$options['decode_hex'] = convert::IntToBool($data[0]);
         self::$options['decode_gzip'] = convert::IntToBool($data[1]);
         self::$options['decode_crypt'] = convert::IntToBool($data[2]);

@@ -156,11 +156,13 @@ class API_CORE
             foreach ($addon_infos['additional-admin'] as $dir)
             {
                 if($dir != $menu) continue;
-                return array('require_index' => basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php',
+                return array('require_indexes' => basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir,
                              'require_functions' => self::load_additional_admin_functions($menu,true,$addon),
                              'require_languages' => self::load_additional_admin_languages($menu,true,$addon),
                              'require_case_dir' => self::load_admin_case_dir($menu,true,$addon),
-                             'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'),
+                             'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'), //For Old Menu
+                             'require_header_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/header.php'),
+                             'require_footer_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/footer.php'),
                              'addon_dir' => '../inc/additional-addons/'.$addon);
             }
         }

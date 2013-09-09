@@ -25,10 +25,15 @@ final class client_api_encode
     protected static $mcrypt_string = null;
     protected static $crypt_key = null;
     private static $options = array();
+    private static $initialize = false;
 
     public static final function init()
     {
-        DebugConsole::insert_initialize('client_api_encode::init()', 'API-Encoder');
+        if(!self::$initialize)
+        {
+            self::$initialize = true;
+            DebugConsole::insert_initialize('client_api_encode::init()', 'API-Encoder');
+        }
 
         if (!extension_loaded('json'))
         {

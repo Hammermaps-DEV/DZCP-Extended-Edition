@@ -24,10 +24,15 @@ final class client_api_decode
     protected static $crypt_key = null;
     protected static $output = null;
     private static $options = array();
+    private static $initialize = false;
 
     public static final function init()
     {
-        DebugConsole::insert_initialize('client_api_decode::init()', 'API-Decoder');
+        if(!self::$initialize)
+        {
+            self::$initialize = true;
+            DebugConsole::insert_initialize('client_api_decode::init()', 'API-Decoder');
+        }
 
         if (!extension_loaded('json'))
         {

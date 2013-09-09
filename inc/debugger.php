@@ -11,8 +11,7 @@ define('show_cache_debug', false);
 define('show_gameserver_debug', false);
 define('show_teamspeak_debug', false);
 define('show_api_communicate_debug', false);
-define('show_pure_communicate_debug', false); //End with die();
-define('show_cms_protect_debug', true);
+define('show_cms_protect_debug', false);
 
 define('debug_all_sql_querys', false);
 
