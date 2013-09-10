@@ -59,9 +59,11 @@ function install_mysql_insert($db_infos)
 
     //FTP Zugang
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_hostname', `value` = '".string::encode($_SESSION['ftp_host'])."', `default` = 'localhost', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_port', `value` = '".$_SESSION['ftp_port']."', `default` = '".$_SESSION['ftp_port']."', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_password', `value` = '".(!empty($_SESSION['ftp_pwd']) ? encryptData($_SESSION['ftp_pwd']) : '')."', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_path', `value` = '".string::encode($_SESSION['ftp_pfad'])."', `default` = '/', `length` = '200', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_username', `value` = '".string::encode($_SESSION['ftp_user'])."', `default` = '".string::encode($_SESSION['ftp_user'])."', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_ssl', `value` = '".convert::ToString($_SESSION['ftp_ssl'])."', `default` = '".convert::ToString($_SESSION['ftp_ssl'])."', `length` = '1', `type` = 'int';",false,false,true);
 
     //Config
     $set_cache = 'file'; //File * Standard *

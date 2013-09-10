@@ -16,8 +16,10 @@ else
         $ftp_pfad = isset($_POST['pfad']) ? $_POST['pfad'] : '/';
         $ftp_user = isset($_POST['ftp_user']) ? $_POST['ftp_user'] : 'root';
         $ftp_pwd = isset($_POST['ftp_pwd']) ? $_POST['ftp_pwd'] : '';
+        $ftp_ssl = isset($_POST['ftp_ssl']) ? $_POST['ftp_ssl'] : '';
         $_SESSION['ftp_host'] = ''; $_SESSION['ftp_pfad'] = '';
         $_SESSION['ftp_user'] = ''; $_SESSION['ftp_pwd'] = '';
+        $_SESSION['ftp_port'] = ''; $_SESSION['ftp_ssl'] = '';
 
         if(isset($_GET['do']) && $_GET['do'] == 'check')
         {
@@ -34,6 +36,7 @@ else
             FTP::set('port',$ftp_port);
             FTP::set('user',$ftp_user);
             FTP::set('pass',$ftp_pwd);
+            FTP::set('ssl', $ftp_ssl);
 
             if(FTP::connect())
             {
@@ -104,13 +107,16 @@ else
             $_SESSION['ftp_host'] = $ftp_host;
             $_SESSION['ftp_pfad'] = $ftp_pfad;
             $_SESSION['ftp_user'] = $ftp_user;
-            $_SESSION['ftp_pwd'] = $ftp_pwd;
+            $_SESSION['ftp_pwd']  = $ftp_pwd;
+            $_SESSION['ftp_port'] = $ftp_port;
+            $_SESSION['ftp_ssl']  = $ftp_ssl;
+
             $disabled = 'disabled="disabled"';
             $success_status = writemsg(ftp_files_success,false);
             $nextlink = show("/msg/nextlink",array("ac" => 'action=prepare'));
         }
 
-        $index = show("ftp",array("disabled" => $disabled, "main" => $main, "core" => $core, "success_status" => $success_status, "next" => $nextlink, "jump" => $jumplink, "ftp_host" => $ftp_host, "ftp_pfad" => $ftp_pfad, "ftp_user" => $ftp_user, "ftp_pwd" => $ftp_pwd));
+        $index = show("ftp",array("disabled" => $disabled, "main" => $main, "core" => $core, "success_status" => $success_status, "next" => $nextlink, "jump" => $jumplink, "ftp_host" => $ftp_host, "ftp_pfad" => $ftp_pfad, "ftp_user" => $ftp_user, "ftp_pwd" => $ftp_pwd, "ftp_ssl" => ( $ftp_ssl ? 'checked="checked"' : '')));
     }
     else
         $index = show("ftp",array("disabled" => '', "main" => '', "core" => '', "success_status" => '', "next" => '', "jump" => $jumplink, "ftp_host" => '', "ftp_pfad" => '', "ftp_user" => '', "ftp_pwd" => ''));

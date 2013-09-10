@@ -19,7 +19,7 @@ class FTP
         self::$options['ssl'] = false;
         self::$options['timeout'] = 90;
 
-        self::$options['host'] = '';
+        self::$options['host'] = 'localhost';
         self::$options['port'] = 21;
         self::$options['user'] = '';
         self::$options['pass'] = '';
@@ -36,6 +36,9 @@ class FTP
      */
     public static function connect()
     {
+        if(self::$connect != false && is_resource(self::$connect))
+            return true;
+
         if(self::$options['ssl'] && function_exists('ftp_ssl_connect'))
             self::$connect = @ftp_ssl_connect(self::$options['host'],self::$options['port']);
         else
