@@ -116,7 +116,7 @@ else
             $nextlink = show("/msg/nextlink",array("ac" => 'action=prepare'));
         }
 
-        $index = show("ftp",array("disabled" => $disabled, "main" => $main, "core" => $core, "success_status" => $success_status, "next" => $nextlink, "jump" => $jumplink, "ftp_host" => $ftp_host, "ftp_pfad" => $ftp_pfad, "ftp_user" => $ftp_user, "ftp_pwd" => $ftp_pwd, "ftp_ssl" => ( $ftp_ssl ? 'checked="checked"' : '')));
+        $index = show("ftp",array("disabled" => $disabled, "main" => $main, "core" => $core, "success_status" => $success_status, "next" => $nextlink, "jump" => $jumplink, "ftp_host" => $ftp_host, "ftp_pfad" => $ftp_pfad, "ftp_user" => $ftp_user, "ftp_pwd" => $ftp_pwd, "ftp_s" => ( $ftp_ssl ? 'checked="checked"' : '')));
     }
     else
         $index = show("ftp",array("disabled" => '', "main" => '', "core" => '', "success_status" => '', "next" => '', "jump" => $jumplink, "ftp_host" => '', "ftp_pfad" => '', "ftp_user" => '', "ftp_pwd" => ''));

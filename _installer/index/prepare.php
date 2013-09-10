@@ -11,6 +11,7 @@ else
     $ftp_pfad = isset($_SESSION['ftp_pfad']) ? $_SESSION['ftp_pfad'] : '';
     $ftp_user = isset($_SESSION['ftp_user']) ? $_SESSION['ftp_user'] : '';
     $ftp_pwd = isset($_SESSION['ftp_pwd']) ? $_SESSION['ftp_pwd'] : '';
+    $ftp_ssl = isset($_SESSION['ftp_ssl']) ? $_SESSION['ftp_pwd'] : false;;
 
     $array_script = array(
             'admin',
@@ -64,6 +65,7 @@ else
                 FTP::set('port',$ftp_port);
                 FTP::set('user',$ftp_user);
                 FTP::set('pass',$ftp_pwd);
+                FTP::set('ssl' ,$ftp_ssl);
 
                 if(FTP::connect())
                 {

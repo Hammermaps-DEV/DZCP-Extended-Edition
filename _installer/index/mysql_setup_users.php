@@ -37,6 +37,8 @@ if(isset($_POST['save']))
                                 unset($_SESSION['ftp_pfad']);
                                 unset($_SESSION['ftp_user']);
                                 unset($_SESSION['ftp_pwd']);
+                                unset($_SESSION['ftp_ssl']);
+                                unset($_SESSION['ftp_port']);
                                 $disabled = 'disabled="disabled"';
                             }
                             else
