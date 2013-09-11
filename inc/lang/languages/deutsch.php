@@ -178,6 +178,7 @@ define('_rss_artikel', 'Artikel im RSS-Feed anzeigen');
 define('_rss_artikel_max', 'Anzahl der Interne News');
 define('_rss_downloads', 'Downloads im RSS-Feed anzeigen');
 define('_rss_downloads_max', 'Anzahl der Downloads');
+define('_rss_pagetitle', '[clanname] - RSS-Feed für [username]'); //Umlaut nicht ändern!
 
 //IP Blocker
 define('_ipban_admin_head', 'IP Blocker');
