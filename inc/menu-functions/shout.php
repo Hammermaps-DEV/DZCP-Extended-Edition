@@ -15,12 +15,7 @@ function shout($ajax = 0)
     while ($get = _fetch($qry))
     {
         $class = ($color % 2) ? "navShoutContentFirst" : "navShoutContentSecond"; $color++;
-
-        if(permission("shoutbox"))
-            $delete = '<a href="../shout/?action=admin&amp;do=delete&amp;id='.$get['id'].'" rel="'._confirm_del_shout.'" class="confirm"><img src="../inc/images/delete_small.gif" title="'._button_title_del.'" alt="'._button_title_del.'" /></a>';
-        else
-            $delete = "";
-
+        $delete = (permission("shoutbox") ? '<a href="../shout/?action=admin&amp;do=delete&amp;id='.$get['id'].'" rel="'._confirm_del_shout.'" class="confirm"><img src="../inc/images/delete_small.gif" title="'._button_title_del.'" alt="'._button_title_del.'" /></a>' : '');
         $is_num = preg_match("#\d#", $get['email']);
 
         if($is_num && !check_email($get['email']))
@@ -48,7 +43,7 @@ function shout($ajax = 0)
         if(checkme() == "unlogged")
         {
             $form = show("menu/shout_form", array("dis" => $dis));
-            $sec = show("menu/shout_antispam", array("help" => _login_secure_help, "dis" => $dis));
+            $sec = show("menu/shout_antispam", array("dis" => $dis));
         }
         else
             $form = autor(userid(), "navShout",'','',$shoutconfig['l_shoutnick']);
@@ -62,18 +57,12 @@ function shout($ajax = 0)
     }
 
     $add = show("menu/shout_add", array("form" => $form,
-                                        "t_zeichen" => _zeichen,
-                                        "noch" => _noch,
                                         "dis1" => $dis1,
                                         "dis" => $dis,
                                         "only4reg" => $only4reg,
                                         "security" => $sec,
                                         "zeichen" => $shoutconfig['shout_max_zeichen']));
 
-    $shout = show("menu/shout", array("shout" => $show,
-                                      "shoutbox" => _shoutbox_head,
-                                      "archiv" => _shoutbox_archiv,
-                                      "add" => $add));
-
+    $shout = show("menu/shout", array("shout" => $show, "add" => $add));
     return empty($ajax) ? '<table class="navContent" cellspacing="0">'.$shout.'</table>' : $show;
 }
