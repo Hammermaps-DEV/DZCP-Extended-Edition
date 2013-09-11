@@ -25,27 +25,32 @@ if(isset($_POST['save']))
                 {
                     if(check_email($_POST['email']))
                     {
-                        if($clanname != '')
+                        if(check_email($_POST['emailweb']))
                         {
-                            if($emailweb != '')
+                            if($clanname != '')
                             {
-                                $db_infos = array("login" => $login, "pwd" => $pwd, "nick" => $nick, "email" => $email, "clanname" => $clanname, "seitentitel" => $seitentitel, "emailweb" => $emailweb, "loginsec" => $loginsec, "loginnow" => $loginnow );
-                                sql_installer(true,$db_infos);
-                                $nextlink = show("/msg/nextlink",array("ac" => 'action=done'));
-                                $msg = writemsg(saved_user,false);
-                                unset($_SESSION['ftp_host']);
-                                unset($_SESSION['ftp_pfad']);
-                                unset($_SESSION['ftp_user']);
-                                unset($_SESSION['ftp_pwd']);
-                                unset($_SESSION['ftp_ssl']);
-                                unset($_SESSION['ftp_port']);
-                                $disabled = 'disabled="disabled"';
+                                if($emailweb != '')
+                                {
+                                    $db_infos = array("login" => $login, "pwd" => $pwd, "nick" => $nick, "email" => $email, "clanname" => $clanname, "seitentitel" => $seitentitel, "emailweb" => $emailweb, "loginsec" => $loginsec, "loginnow" => $loginnow );
+                                    sql_installer(true,$db_infos);
+                                    $nextlink = show("/msg/nextlink",array("ac" => 'action=done'));
+                                    $msg = writemsg(saved_user,false);
+                                    unset($_SESSION['ftp_host']);
+                                    unset($_SESSION['ftp_pfad']);
+                                    unset($_SESSION['ftp_user']);
+                                    unset($_SESSION['ftp_pwd']);
+                                    unset($_SESSION['ftp_ssl']);
+                                    unset($_SESSION['ftp_port']);
+                                    $disabled = 'disabled="disabled"';
+                                }
+                                else
+                                    $msg = writemsg(no_webmail,true);
                             }
                             else
-                                $msg = writemsg(no_webmail,true);
+                                $msg = writemsg(no_clanname,true);
                         }
                         else
-                            $msg = writemsg(no_clanname,true);
+                            $msg = writemsg(_error_invalid_email_web,true);
                     }
                     else
                         $msg = writemsg(_error_invalid_email,true);

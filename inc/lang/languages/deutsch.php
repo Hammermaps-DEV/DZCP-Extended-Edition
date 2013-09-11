@@ -107,7 +107,7 @@ define('_admin_startpage_deleted', 'Startseite wurde erfogreich gel&ouml;scht');
 define('_admin_startpage_editd', 'Startseite wurde erfogreich editiert');
 define('_admin_startpage_no_name', 'Du hast keinen Namen eingegeben');
 define('_admin_startpage_no_url', 'Du hast keine URL eingegeben');
-define('_admin_startpage_add', 'Neue Startseite hinzufügen');
+define('_admin_startpage_add', 'Neue Startseite hinzuf&uuml;gen');
 
 //Activate User
 define('_config_activate_user', 'User aktivieren');
@@ -192,7 +192,7 @@ define('_ipban_edit_head', 'IP Ban bearbeiten');
 define('_ipban_admin_edited', 'IP Ban wurde erfolgreich editiert!');
 define('_ipban_dis', 'Grund / Beschreibung');
 define('_ipban_add_new', 'Neuer Eintrag');
-define('_ipban_assuredness', 'Zuverlässigkeit');
+define('_ipban_assuredness', 'Zuverl&auml;ssigkeit');
 define('_ipban_reports', 'Reports');
 define('_ipban_lastten_global', 'Letzten 10 gebanten IPs by Stopforumspam.com');
 define('_ipban_lastten_sys', 'Letzten 10 gebanten IPs by System');

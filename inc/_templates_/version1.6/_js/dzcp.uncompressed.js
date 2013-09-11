@@ -5,6 +5,7 @@
   var isIE  = (navigator.appVersion.indexOf("MSIE") != -1) ? true : false;
   var isWin = (navigator.appVersion.toLowerCase().indexOf("win") != -1) ? true : false;
   var isOpera = (navigator.userAgent.indexOf("Opera") != -1) ? true : false;
+  var shoutInterval = 20000; // refresh interval of the shoutbox in ms
   var index = new Array(); var i = 0;
   var pool = new Pool(6);
 
@@ -83,6 +84,9 @@
         $('body').append('<div id="dialog"></div>');
         layer = $('#infoDiv')[0];
         doc.body.onmousemove = DZCP.trackMouse;
+
+        // refresh shoutbox
+        if($('#navShout')[0]) window.setInterval("$('#navShout').load('../inc/ajax.php?i=shoutbox');", shoutInterval);
 
         // init jquery-ui
         DZCP.initJQueryUI();

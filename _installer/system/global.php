@@ -52,7 +52,7 @@ define('no_pwd', 'Sie haben kein Passwort eingegeben!<p>&Uuml;berpr&uuml;fen Sie
 define('no_nick', 'Sie haben keinen Nicknamen eingegeben!<p>&Uuml;berpr&uuml;fen Sie ihre Eingaben und wiederholen Sie den Vorgang.');
 define('no_email', 'Sie haben keine E-Mail Adresse eingetragen!<p>&Uuml;berpr&uuml;fen Sie ihre Eingaben und wiederholen Sie den Vorgang.');
 define('no_clanname', 'Sie haben keinen Clannamen eingetragen!<p>&Uuml;berpr&uuml;fen Sie ihre Eingaben und wiederholen Sie den Vorgang.');
-define('mysql_no_prefix', 'Der SQL-Prefix muss angegeben werden!');
+define('mysql_no_prefix', 'Das SQL-Prefix muss angegeben werden!');
 define('mysql_no_ext', 'Die PHP-MySQLi Erweiterung fehlt!');
 define('mysql_no_login', 'Es konnte keine Verbindung zur Datenbank aufgebaut werden!<p>&Uuml;berpr&uuml;fen Sie User und Passwort!');
 define('mysql_no_db', 'Die angegebene Datenbank konnte nicht gefunden werden!<p>&Uuml;berpr&uuml;fen Sie den eingegebenen Datenbanknamen!');
@@ -67,5 +67,6 @@ define('saved_user', 'Die Datenbank Informationen wurden erfolgreich gespeichert
 define('no_db_update', 'Die Datenbank ist bereits aktuell, es ist kein Update deiner Datenbank notwendig.');
 define('no_db_update_selected', 'Du musst die zuvor installierte Version von DZCP ausw&auml;hlen um mit dem Update zu beginnen!');
 define('_error_invalid_email', 'Du hast eine ung&uuml;ltige Emailadresse angegeben!');
-define('php_version_error', 'Die DZCP Extended Edition erfordert PHP 5.3.0 oder höher!');
+define('_error_invalid_email_web', 'E-Mail Absender (Webseite): <p> Du hast eine ung&uuml;ltige Emailadresse angegeben! <p> Die Adresse muss im Format: "username@domain.de" sein, außerdem muss die angegebene Adresse existieren.');
+define('php_version_error', 'Die DZCP Extended Edition erfordert PHP 5.3.0 oder h&ouml;her!');
 define('ftp_files_success', 'Der FTP Zugriff wurde erfolgreich getestet!<p>Klicken Sie unten rechts auf Weiter um fortzufahren.');

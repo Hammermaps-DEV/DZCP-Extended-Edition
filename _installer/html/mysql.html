@@ -20,21 +20,21 @@
     <td colspan="6" align="justify" class="head"><br /><b>&raquo; MySQL Zugangsdaten</b></td>
   </tr>
   <tr>
-    <td colspan="6" class="info"><b>Hinweis:</b> Das Prefix kann optional angegeben werden.
+    <td colspan="6" class="info"><b>Hinweis:</b> Das Prefix muss angegeben werden. * Standard: "dzcp_ee_" * <p>
     Es bietet die M&ouml;glichkeit das Script mehrmals auf einer Datenbank zu installieren!<br /> </td>
   </tr>
   <tr>
     <td width="5%" height="10"></td>
   </tr>
   <tr>
-    <td><b>Host:</b></td><td width="27%"><input type="text" name="host" [disabled] value="[mysql_host]"></td>
+    <td><b>Host:</b></td><td width="27%"><input type="text" name="host" required [disabled] value="[mysql_host]"></td>
     <td width="15%"><b>Datenbank:</b></td>
-    <td width="26%"><input type="text" [disabled] name="database" value="[mysql_database]"></td>
-    <td width="7%"><b>Prefix:</b></td><td width="20%"><input type="text" [disabled] name="prefix" value="[mysql_prefix]"></td>
+    <td width="26%"><input type="text" [disabled] name="database" required value="[mysql_database]"></td>
+    <td width="7%"><b>Prefix:</b></td><td width="20%"><input type="text" required [disabled] name="prefix" value="[mysql_prefix]"></td>
   </tr>
   <tr>
-    <td><b>User:</b></td><td><input type="text" name="user" [disabled] value="[mysql_user]"></td>
-    <td><b>Passwort:</b></td><td><input type="password" [disabled] name="pwd" value="[mysql_pwd]"></td>
+    <td><b>User:</b></td><td><input type="text" name="user" required [disabled] value="[mysql_user]"></td>
+    <td><b>Passwort:</b></td><td><input type="password" required [disabled] name="pwd" value="[mysql_pwd]"></td>
     <td colspan="2"><input style="width:210px;" type="submit" [disabled] value="MySQL-Daten testen!"></td>
   </tr>
   <tr>

@@ -21,7 +21,7 @@ final class mailmgr
         self::$options['smtp_password'] = decryptData(self::$options['smtp_password']);
         self::$options['sendmail_path'] = string::decode(self::$options['sendmail_path']);
         self::$options['mail_extension'] = string::decode(self::$options['mail_extension']);
-        self::$options['mail_from'] = string::decode(settings('mailfrom'));
+        self::$options['mail_from'] = check_email(string::decode(settings('mailfrom'))) ? string::decode(settings('mailfrom')) : 'postmaster@localhost.de';
         self::$mailer_class = new PHPMailer(true);
         self::$mailer_class->SetFrom(self::$options['mail_from']);
         self::$mailer_class->IsHTML(true);

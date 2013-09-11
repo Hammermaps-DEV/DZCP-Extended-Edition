@@ -117,6 +117,9 @@ define('server_show_empty_players', false); //Alle Spieler anzeigen, die deren N
 //-> DZCP Settings Ende
 #########################################
 
+if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
+    @date_default_timezone_set(@date_default_timezone_get());
+
 //-> DZCP-Install default variable
 if(!isset($_SESSION['installer']))
     $_SESSION['installer'] = false;
