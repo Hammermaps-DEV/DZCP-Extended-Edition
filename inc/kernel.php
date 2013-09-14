@@ -527,17 +527,16 @@ function ipcheck($what,$time = "")
  */
 function isBot()
 {
-    $bots_basic = array('bot', 'b o t', 'spider', 'spyder', 'crawl', 'slurp', 'robo', 'yahoo', 'ask', '80legs', 'acoon', 'adressendeutschland', 'agentname',
+    $bots_basic = array('bot', 'b o t', 'spider', 'spyder', 'crawl', 'slurp', 'robo', 'yahoo', 'ask', 'google', '80legs', 'acoon',
             'altavista', 'al_viewer', 'appie', 'appengine-google', 'arachnoidea', 'archiver', 'asterias', 'ask jeeves', 'beholder',
             'bildsauger', 'bingsearch', 'bingpreview', 'bumblebee', 'bramptonmoose', 'cherrypicker', 'crescent', 'coccoc', 'cosmos',
             'docomo', 'drupact', 'emailsiphon', 'emailwolf', 'extractorpro', 'exalead ng', 'ezresult', 'feedfetcher', 'fido', 'fireball',
-            'flipboardproxy', 'gazz', 'getweb', 'gigabaz', 'google talk', 'google-site-verification', 'google web preview', 'gulliver',
-            'harvester', 'hcat', 'heritrix', 'hloader', 'hoge', 'httrack', 'incywincy', 'infoseek', 'infohelfer', 'inktomi', 'indy library',
-            'informant', 'internetami', 'internetseer', 'link', 'larbin', 'jakarta', 'mata hari', 'medicalmatrix', 'mercator', 'miixpc',
-            'moget', 'msnptc', 'muscatferret', 'netcraftsurveyagent', 'openxxx', 'picmole', 'piranha', 'pldi.net', 'p357x', 'quosa',
-            'rambler', 'rippers', 'rganalytics', 'scan', 'scooter', 'ScoutJet', 'siclab', 'siteexplorer', 'sly', 'suchen', 'searchme', 'spy',
-            'swisssearch', 'sqworm', 'trivial', 't-h-u-n-d-e-r-s-t-o-n-e', 'teoma', 'twiceler', 'ultraseek', 'validator', 'webbandit',
-            'webmastercoffee', 'webwhacker', 'wevika', 'wisewire', 'yandex', 'zyborg');
+            'flipboardproxy', 'gazz', 'getweb', 'gigabaz', 'gulliver', 'harvester', 'hcat', 'heritrix', 'hloader', 'hoge', 'httrack',
+            'incywincy', 'infoseek', 'infohelfer', 'inktomi', 'indy library', 'informant', 'internetami', 'internetseer', 'link', 'larbin',
+            'jakarta', 'mata hari', 'medicalmatrix', 'mercator', 'miixpc', 'moget', 'msnptc', 'muscatferret', 'netcraftsurveyagent',
+            'openxxx', 'picmole', 'piranha', 'pldi.net', 'p357x', 'quosa', 'rambler', 'rippers', 'rganalytics', 'scan', 'scooter', 'ScoutJet',
+            'siclab', 'siteexplorer', 'sly', 'suchen', 'searchme', 'spy', 'swisssearch', 'sqworm', 'trivial', 't-h-u-n-d-e-r-s-t-o-n-e', 'teoma',
+            'twiceler', 'ultraseek', 'validator', 'webbandit', 'webmastercoffee', 'webwhacker', 'wevika', 'wisewire', 'yandex', 'zyborg', 'agentname');
 
     $hash = md5('bot_detect_'.visitorIp());
     if(cache::is_mem() && !cache::check($hash)) return cache::get($hash);
