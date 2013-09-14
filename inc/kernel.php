@@ -527,25 +527,25 @@ function ipcheck($what,$time = "")
  */
 function isBot()
 {
-    $arrstrBots = array (
-            'googlebot'        => '/Googlebot/',
-            'msnbot'           => '/MSNBot/',
-            'slurp'            => '/Inktomi/',
-            'yahoo'            => '/Yahoo/',
-            'askjeeves'        => '/AskJeeves/',
-            'fastcrawler'      => '/FastCrawler/',
-            'infoseek'         => '/InfoSeek/',
-            'lycos'            => '/Lycos/',
-            'yandex'           => '/YandexBot/',
-            'geohasher'        => '/GeoHasher/',
-            'gigablast'        => '/Gigabot/',
-            'baidu'            => '/Baiduspider/',
-            'spinn3r'          => '/Spinn3r/');
+    $bots_basic = array('bot', 'b o t', 'spider', 'spyder', 'crawl', 'slurp', 'robo', 'yahoo', 'ask', '80legs', 'acoon', 'adressendeutschland', 'agentname',
+            'altavista', 'al_viewer', 'appie', 'appengine-google', 'arachnoidea', 'archiver', 'asterias', 'ask jeeves', 'beholder',
+            'bildsauger', 'bingsearch', 'bingpreview', 'bumblebee', 'bramptonmoose', 'cherrypicker', 'crescent', 'coccoc', 'cosmos',
+            'docomo', 'drupact', 'emailsiphon', 'emailwolf', 'extractorpro', 'exalead ng', 'ezresult', 'feedfetcher', 'fido', 'fireball',
+            'flipboardproxy', 'gazz', 'getweb', 'gigabaz', 'google talk', 'google-site-verification', 'google web preview', 'gulliver',
+            'harvester', 'hcat', 'heritrix', 'hloader', 'hoge', 'httrack', 'incywincy', 'infoseek', 'infohelfer', 'inktomi', 'indy library',
+            'informant', 'internetami', 'internetseer', 'link', 'larbin', 'jakarta', 'mata hari', 'medicalmatrix', 'mercator', 'miixpc',
+            'moget', 'msnptc', 'muscatferret', 'netcraftsurveyagent', 'openxxx', 'picmole', 'piranha', 'pldi.net', 'p357x', 'quosa',
+            'rambler', 'rippers', 'rganalytics', 'scan', 'scooter', 'ScoutJet', 'siclab', 'siteexplorer', 'sly', 'suchen', 'searchme', 'spy',
+            'swisssearch', 'sqworm', 'trivial', 't-h-u-n-d-e-r-s-t-o-n-e', 'teoma', 'twiceler', 'ultraseek', 'validator', 'webbandit',
+            'webmastercoffee', 'webwhacker', 'wevika', 'wisewire', 'yandex', 'zyborg');
 
-    if(isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT']))
-        $arrstrBotMatches = preg_filter( $arrstrBots, array_fill( 1, count( $arrstrBots ), '$0' ), array( trim( $_SERVER['HTTP_USER_AGENT'] )));
-    else return true;
-    return ( is_array( $arrstrBotMatches ) == true && 0 < count( $arrstrBotMatches )) ? true : false;
+    $hash = md5('bot_detect_'.visitorIp());
+    if(cache::is_mem() && !cache::check($hash)) return cache::get($hash);
+    $UserAgent = trim($_SERVER['HTTP_USER_AGENT']);
+    if(empty($UserAgent)) return false; $return = false;
+    if($UserAgent != str_ireplace($bots_basic, '#', $UserAgent)) $return = true;
+    if(cache::is_mem()) cache::set($hash,$return,30);
+    return $return;
 }
 
 /**

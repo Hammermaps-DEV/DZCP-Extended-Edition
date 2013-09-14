@@ -51,7 +51,7 @@ if(!$ajaxThumbgen)
     require_once(basePath."/inc/protect.php");
     require_once(basePath.'/inc/gameq.php');
 }
-;
+
 define('IS_DZCP', true);
 
 ## FUNCTIONS ##
@@ -179,7 +179,10 @@ if(!$ajaxThumbgen && !isBot())
             logout(); ## User Logout ##
         }
     }
+}
 
+if(!$ajaxThumbgen)
+{
     //-> Change Language
     if(isset($_GET['set_language']) && !empty($_GET['set_language']) && file_exists(basePath."/inc/lang/languages/".$_GET['set_language'].".php"))
     {
