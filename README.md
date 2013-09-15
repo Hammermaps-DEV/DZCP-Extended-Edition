@@ -22,7 +22,7 @@ Viele der Kernfunktionen die in die kernel.php exportiert wurden, haben eine Üb
 Es wurde eine richtige Cache Klasse eingefügt, die standardmäßig auf 'File'  eingestellt ist. 
 Der Cache speichert Seiten und Serverantworten zwischen, so das php nicht ständig die aktuellen Infos bei jedem Seitenaufruf erneut abrufen muss.
 Dabei wird auch zbs. die News Seite in den Cache geladen und alle paar Sekunden aktualisiert, dieses Verfahren ermöglicht eine Entlastung der Datenbank und des Servers bei vielen gleichzeitigen Besuchern.
-Der Cache kann als Files, Memcache, ZEND - Shared Memory, ZEND - Disk oder MySQL Erweiterung betrieben werden.
+Der Cache kann als Files, Memcache, APC, ZEND - Shared Memory, ZEND - Disk oder MySQL Erweiterung betrieben werden.
 Die ZEND Shared Memory und ZEND Disk Cache setzt einen Zend Technologies Server voraus -> http://www.zend.com/de/products/server/
 
 Der Installer / Updater wurde komplett überarbeitet und wird nachfolgende Updates selbständig erkennen und die nötigen Aktualisierungen vornehmen. *Sie müssen nur noch auf 'Weiter' drücken.
@@ -214,3 +214,4 @@ Neue Einstellungen für das Senden von E-Mails von der Webseite aus, wurde hinzu
 Einführung von Web Workern, ermöglicht Threading für JavaScript und paralleles lädt von Seiten Inhalten.
 * Ist Template abhängig, Änderungen an der JavaScript Seite notwendig, im Standard Template bereits vorhanden.
 
+Erkennung von Usern, die versuchen Usernamen und/oder Passwörter rauszufinden werden automatisch geblockt.
