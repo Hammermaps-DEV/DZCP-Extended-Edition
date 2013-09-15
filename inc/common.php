@@ -537,8 +537,18 @@ function wrap($str, $width = 75, $break = "\n", $cut = true)
 }
 
 //-> Counter updaten
-function updateCounter()
+function update_counter()
 {
+    global $ajaxJob;
+    if($ajaxJob || isBot()) return;
+
+    //-> Updatet die Maximalen User die gleichzeitig online sind
+    $get = db("SELECT maxonline FROM ".dba::get('counter')." WHERE today = '".date("j.n.Y")."'",false,true);
+    $count = cnt(dba::get('c_who'));
+
+    if($get['maxonline'] <= $count)
+        db("UPDATE ".dba::get('counter')." SET `maxonline` = '".convert::ToInt($count)."' WHERE today = '".date("j.n.Y")."'");
+
     if(db("SELECT id FROM ".dba::get('c_ips')." WHERE datum+".counter_reload." <= ".time()." OR FROM_UNIXTIME(datum,'%d.%m.%Y') != '".date("d.m.Y")."'",true) >= 1)
         db("DELETE FROM ".dba::get('c_ips')." WHERE datum+".counter_reload." <= ".time()." OR FROM_UNIXTIME(datum,'%d.%m.%Y') != '".date("d.m.Y")."'");
 
@@ -558,16 +568,6 @@ function updateCounter()
         db(($count ? "UPDATE ".dba::get('counter')." SET `visitors` = visitors+1 WHERE today = '".date("j.n.Y")."'" : "INSERT INTO ".dba::get('counter')." SET `visitors` = '1', `today` = '".date("j.n.Y")."'"));
         db("INSERT INTO ".dba::get('c_ips')." SET `ip` = '".VisitorIP()."', `datum`  = '".time()."'");
     }
-}
-
-//-> Updatet die Maximalen User die gleichzeitig online sind
-function update_maxonline()
-{
-    $get = db("SELECT maxonline FROM ".dba::get('counter')." WHERE today = '".date("j.n.Y")."'",false,true);
-    $count = cnt(dba::get('c_who'));
-
-    if($get['maxonline'] <= $count)
-        db("UPDATE ".dba::get('counter')." SET `maxonline` = '".convert::ToInt($count)."' WHERE today = '".date("j.n.Y")."'");
 }
 
 //-> Prueft, wieviele Besucher gerade online sind
@@ -1857,8 +1857,7 @@ function page($index,$title,$where,$time,$index_templ=false)
     }
     else
     {
-        updateCounter();
-        update_maxonline();
+        update_counter();
         load_menu_xml();
 
         //check permissions
