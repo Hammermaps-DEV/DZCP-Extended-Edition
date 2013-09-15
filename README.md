@@ -36,6 +36,9 @@ Teils ist der Code von über 200 Zeilen auf 50 Zeilen geschupft ohne die Quellco
 Die Datenbank wurde von unnötigen Ballst befreit, nicht mehr verwendete Tabellen Zeilen wurden entfernt.
 Fehlende Tabellen Zeilen oder Standartwerte die Probleme auf machen Seiten verursacht haben, SQL Error - xxxx ... wurden beseitigt.
 
+Viele der Datenbank anfragen können mit einem Memory Cache * Memcache, APC, ZEND - Shared Memory * zwischengespeichert werden.
+Dieses Verfahren ermöglicht bis zu 60% weniger SQL Anfragen pro Seitenaufruf.
+
 Richys: Sprachdefinitionen Verbesserung wurde intrigiert und viele der Seiten wurden dafür umgeschrieben um wieder Quellcode einzusparen.
 Das einbinden neuer Statischer Texte wurde somit erleichtert. 
 
