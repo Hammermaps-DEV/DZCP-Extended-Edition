@@ -1618,7 +1618,8 @@ function startpage()
         return checkme() >= 1 ? 'user/?action=userlobby' : 'news/';
 
     $get = _fetch($sql);
-    return $get['level'] <= checkme() ? string::decode($get['url']) : 'user/?action=userlobby';
+    $page = $get['level'] <= checkme() ? string::decode($get['url']) : 'user/?action=userlobby';
+    return (!empty($page) ? $page : 'news/');
 }
 
 // Prüft ob die Seite in der Navigation als Intern eingestellt ist.
