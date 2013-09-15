@@ -573,12 +573,9 @@ function update_counter()
 //-> Prueft, wieviele Besucher gerade online sind
 function online_guests($where='')
 {
-    if(!isBot())
-    {
-        db("DELETE FROM ".dba::get('c_who')." WHERE online < ".time());
-        db("REPLACE INTO ".dba::get('c_who')." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".string::encode($where)."', `login` = '".(checkme() == 'unlogged' ? '0' : '1')."'");
-        return cnt(dba::get('c_who'));
-    }
+    db("DELETE FROM ".dba::get('c_who')." WHERE online < ".time());
+    db("REPLACE INTO ".dba::get('c_who')." SET `ip` = '".VisitorIP()."', `online` = '".convert::ToInt((time()+users_online))."', `whereami` = '".string::encode($where)."', `login` = '".(checkme() == 'unlogged' ? '0' : '1')."'");
+    return cnt(dba::get('c_who'));
 }
 
 //-> Gibt einen Teil eines nummerischen Arrays wieder

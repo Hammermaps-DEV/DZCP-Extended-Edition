@@ -280,6 +280,7 @@ function DNSToIp($address='')
 
 /**
  * Gibt die IP des Besuchers / Users zurück
+ * Forwarded IP Support
  *
  * @return String
  */
