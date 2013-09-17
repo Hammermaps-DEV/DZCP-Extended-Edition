@@ -157,6 +157,15 @@ class database
     public static $remote = false;
     public static $fetch_fields = array();
 
+    /**
+     * Destruktor
+     */
+    public function __destruct()
+    {
+        self::free_result();
+        self::close();
+    }
+
     public static final function init_pre()
     {
         if(self::$remote)

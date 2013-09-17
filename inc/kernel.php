@@ -840,62 +840,80 @@ final class RTBuffer
 #############################################
 class xml // Class by DZCP-Extended Edition
 {
-    private static $xmlobj = array(array()); //XML
+    private static $xmlobj = array(); //XML
 
     /**
-    * XML Datei Laden
+     * Destruktor
+     */
+    public function __destruct()
+    { self::save(); }
+
+    /**
+    * XML Datei Setzen
     */
     public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
     {
         if(empty($XMLTag) || empty($XMLFile)) return false;
+        if(array_key_exists($XMLTag,self::$xmlobj)) return true;
         if(file_exists(basePath . '/' . $XMLFile) || !$oneModule)
         {
-            if(!array_key_exists($XMLTag,self::$xmlobj))
+            self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
+            if(!$oneModule)
             {
-                self::$xmlobj[$XMLTag]['xmlFile'] = $XMLFile;
-
-                if(!$oneModule)
-                {
-                    if(!file_exists(basePath . '/' . $XMLFile))
-                        file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
-                }
-
-                self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_file(basePath . '/' . $XMLFile);
-
-                if(self::$xmlobj[$XMLTag]['objekt'] != false)
-                    return true;
-                else
-                    return false;
+                if(!file_exists(basePath . '/' . $XMLFile))
+                    file_put_contents(basePath . '/' . $XMLFile, '<?xml version="1.0"?><'.$XMLTag.'></'.$XMLTag.'>');
             }
-            else
-                return true;
+
+            self::$xmlobj[$XMLTag]['xmlStream'] = file_get_contents(basePath . '/' . $XMLFile);
+            return self::LoadXMLStream($XMLTag);
         }
 
         return false;
     }
 
     /**
-     * XML Stream Laden
+     * XML Stream setzen
      */
     public static function openXMLStream($XMLTag,$XMLStream)
     {
         if(empty($XMLTag) || empty($XMLStream)) return false;
-        if(!array_key_exists($XMLTag,self::$xmlobj))
-        {
-            self::$xmlobj[$XMLTag]['xmlFile'] = $XMLStream;
-            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_string($XMLStream);
+        if(array_key_exists($XMLTag,self::$xmlobj)) return true;
 
-            if(self::$xmlobj[$XMLTag]['objekt'] != false)
-                return true;
-            else
-                return false;
+        self::$xmlobj[$XMLTag]['xmlFile'] = '';
+        self::$xmlobj[$XMLTag]['xmlStream'] = $XMLStream;
+        return self::LoadXMLStream($XMLTag);
+    }
+
+    /**
+     * XML Stream Laden
+     */
+    public static function LoadXMLStream($XMLTag)
+    {
+        if(empty($XMLTag)) return false;
+        if(array_key_exists($XMLTag,self::$xmlobj))
+        {
+            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_string(self::$xmlobj[$XMLTag]['xmlStream']);
+            return(self::$xmlobj[$XMLTag]['objekt'] != false ? true : false);
         }
-        else
-            return true;
+
+        return false;
+    }
+
+    /**
+     * Gibt die XML Datei als Array zurück
+     *
+     * @return array / boolean
+     */
+    public static function getXMLasArray($XMLTag)
+    {
+        if(empty($XMLTag)) return false;
+        return (!array_key_exists($XMLTag,self::$xmlobj)) ? false : convert::objectToArray(self::$xmlobj);
     }
 
     /**
      * Ist XML Datei geladen
+     *
+     * @return boolean
      */
     public static function loadedXML($XMLTag)
     {
@@ -916,8 +934,8 @@ class xml // Class by DZCP-Extended Edition
             $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
             return ($xmlobj) ? $xmlobj[0] : false;
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**
@@ -934,8 +952,8 @@ class xml // Class by DZCP-Extended Edition
             $xmlobj[0]->{$xmlnode} = htmlspecialchars($xmlvalue);
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**
@@ -954,8 +972,8 @@ class xml // Class by DZCP-Extended Edition
                  $xmlobj2->addAttribute($attr, htmlspecialchars($value));
              return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**
@@ -974,7 +992,7 @@ class xml // Class by DZCP-Extended Edition
 
         $xmlFileValue = self::$xmlobj[$XMLTag]['objekt']->asXML();
         file_put_contents(basePath . '/' . self::$xmlobj[$XMLTag]['xmlFile'], $xmlFileValue);
-        return true;
+        return file_exists(basePath . '/' . self::$xmlobj[$XMLTag]['xmlFile']);
     }
 
     /**
@@ -991,8 +1009,8 @@ class xml // Class by DZCP-Extended Edition
             unset($parent->$xmlnode);
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**
@@ -1014,10 +1032,11 @@ class xml // Class by DZCP-Extended Edition
                     break;
                 }
             }
+
             return true;
         }
-        else
-            return false;
+
+        return false;
     }
 
     /**
@@ -1027,6 +1046,57 @@ class xml // Class by DZCP-Extended Edition
      */
     public static function bool($value)
     { return ($value == 'true' ? true : false); }
+
+    /**
+     * Speichert die XML Basis im Memory Cache zwischen
+     */
+    public static function save()
+    {
+        if(Cache::is_mem())
+        {
+            if(Cache::check('XML-Core-Parser'))
+            {
+                $mem_xml_save = array(); $i=0;
+                foreach(self::$xmlobj as $key => $obj)
+                {
+                    if(!empty($obj['xmlStream']))
+                    {
+                        $mem_xml_save[$key] = bin2hex($obj['xmlStream']);
+                        $i++;
+                    }
+                }
+
+                Cache::set('XML-Core-Parser',array_to_string($mem_xml_save),1);
+                if(show_xml) DebugConsole::insert_successful('xml::save()', 'XML Database "'.$i.'" records saved');
+            }
+
+            unset($mem_xml_save);
+        }
+    }
+
+    /**
+     * Laden der XML Basis aus dem Memory Cache
+     */
+    public static function load()
+    {
+        if(Cache::is_mem())
+        {
+            if(Cache::check('XML-Core-Parser')) return; $i=0;
+            foreach(string_to_array(Cache::get('XML-Core-Parser')) as $key => $hex)
+            {
+                if(empty($key) || empty($hex)) continue;
+                if(!array_key_exists($key,self::$xmlobj))
+                {
+                    self::$xmlobj[$key]['xmlFile'] = '';
+                    self::$xmlobj[$key]['xmlStream'] = hextobin($hex);
+                    self::LoadXMLStream($key); $i++;
+                }
+            }
+
+            unset($hex,$key);
+            if(show_xml) DebugConsole::insert_successful('xml::load()', 'XML Database "'.$i.'" records loaded');
+        }
+    }
 }
 
 /**

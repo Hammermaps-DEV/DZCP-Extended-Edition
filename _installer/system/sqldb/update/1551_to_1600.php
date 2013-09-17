@@ -46,6 +46,9 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('users')."` ADD `startpage` INT( 5 ) NOT NULL DEFAULT '0' AFTER `rss_key`;",false,false,true);
     db("ALTER TABLE `".dba::get('links')."` CHANGE `text` `blink` VARCHAR( 249 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
 
+    // Setze fehlende Indexes * MySQL Optimierung
+    db("ALTER TABLE `".dba::get('squaduser')."` ADD INDEX ( `user` ) ;",false,false,true);
+
     // Ersetze Settings und Config Tabelle
     if($get_settings = db("SELECT * FROM `".dba::get('settings')."` WHERE `id` = 1",false,true))
     {

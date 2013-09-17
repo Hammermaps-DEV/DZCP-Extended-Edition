@@ -918,7 +918,8 @@ function install_mysql_create()
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(5) NOT NULL DEFAULT '0',
       `squad` int(2) NOT NULL DEFAULT '0',
-      PRIMARY KEY (`id`)
+      PRIMARY KEY (`id`),
+      KEY `user` (`user`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================

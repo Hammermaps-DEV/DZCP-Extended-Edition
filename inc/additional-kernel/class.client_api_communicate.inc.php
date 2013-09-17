@@ -51,6 +51,12 @@ final class client_api_communicate
         return (self::$data != false && !empty(self::$data) ? self::$data : false);
     }
 
+    public static function send_custom($url='')
+    {
+        $data = self::download($url,false,true);
+        return (empty($data) ? false : $data);
+    }
+
     public static function download($url='',$save_to_file='',$return_binary=false)
     {
         if(use_curl && extension_loaded('curl'))

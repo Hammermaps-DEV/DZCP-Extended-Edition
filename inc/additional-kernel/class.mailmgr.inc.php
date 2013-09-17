@@ -85,9 +85,11 @@ final class mailmgr
                     self::$mailer_class->MsgHTML($tick['content'], dirname(__FILE__));
                     self::$mailer_class->Body = bbcode::nletter($tick['content']);
 
-                    foreach($tick['addresses'] as $address) {
+                    foreach($tick['addresses'] as $address)
+                    {
                         self::$mailer_class->AddAddress(preg_replace('/(\\n+|\\r+|%0A|%0D)/i', '',$address['email']), $address['name']);
-                        DebugConsole::insert_info('mailmgr::Send()', 'Send to: '.$address['email']); }
+                        DebugConsole::insert_info('mailmgr::Send()', 'Send to: '.$address['email']);
+                    }
 
                     if(key_exists('files', $tick) && count($tick['files']) >= 1)
                     {
@@ -97,6 +99,8 @@ final class mailmgr
 
                     self::$mailer_class->Send(); //send
                 }
+
+                self::$mailer_class->__destruct();
             }
             catch (phpmailerException $e)
             { DebugConsole::insert_error('mailmgr::Send()', $e->errorMessage()); }

@@ -176,14 +176,18 @@ class API_CORE
      */
     public static function call_additional_adminmenu_xml()
     {
-        if(!modapi_enabled) return false; $return = array();
+        if(!modapi_enabled) return false; $return = array(); $i=0;
         foreach (self::$addon_index as $addon => $addon_infos)
         {
             if(!$addon_infos['additional_admin']) continue;
             foreach ($addon_infos['additional-admin'] as $dir)
             {
                 if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/config.xml'))
-                    $return[] = '/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/config.xml';
+                {
+                    $return[$i]['dir'] = '/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/config.xml';
+                    $return[$i]['name'] = $dir;
+                    $i++;
+                }
             }
         }
 

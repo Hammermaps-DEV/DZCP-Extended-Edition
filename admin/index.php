@@ -78,7 +78,7 @@ else
         foreach($menus AS $file)
         {
             ## XML Auslesen ##
-            $XMLTag = 'admin_'.$file['file_dir'];
+            $XMLTag = 'admin_addons_'.$file['file_dir'];
             if(!xml::openXMLfile($XMLTag,'inc/additional-addons/'.$file['dir']."/admin/menu/".$file['file_dir']."/config.xml")) continue;
 
             $settings = array();
@@ -159,6 +159,7 @@ else
         $index_require = false; $inc_file = '';
         if(file_exists(basePath."/admin/menu/".($admin_do=((string)$_GET['admin']))."/config.xml"))
         {
+            $XMLTag = 'admin_'.$admin_do;
             $inc_file = $admin_do."/index.php";
             $inc_file_header = $admin_do."/header.php";
             $inc_file_footer = $admin_do."/footer.php";
@@ -173,8 +174,9 @@ else
 
         if(modapi_enabled)
         {
-            if(($inc_file_addons = API_CORE::call_additional_adminmenu(((string)$_GET['admin']))) != false)
+            if(($inc_file_addons = API_CORE::call_additional_adminmenu(($admin_do=((string)$_GET['admin'])))) != false)
             {
+                $XMLTag = 'admin_addons_'.$admin_do;
                 $inc_file = $inc_file_addons['require_indexes'];
                 $inc_file_functions = $inc_file_addons['require_functions'];
                 $inc_file_languages = $inc_file_addons['require_languages'];
@@ -190,11 +192,10 @@ else
         if(($index_require && file_exists($basic_require ? basePath."/admin/menu/".$inc_file : $inc_file.'/index.php')) || !$index_require)
         {
             unset($settings); $settings = array();
-            $XMLTag = 'admin_'.((string)$_GET['admin']);
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
-            $where_ext = ((string)xml::getXMLvalue($XMLTag, 'Where'));
+            $where_ext = convert::ToString(xml::getXMLvalue($XMLTag, 'Where'));
             $do = (isset($_GET['do']) ? strtolower($_GET['do']) : (isset($_POST['do']) ? strtolower($_POST['do']) : '') );
             $page = (isset($_GET['page']) ? $_GET['page'] : '1');
 

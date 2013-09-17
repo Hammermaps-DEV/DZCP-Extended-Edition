@@ -85,6 +85,7 @@ Cache::init();
 //-> GameQ & CMS Protect
 if(!$ajaxThumbgen)
 {
+    xml::load(); //XML Loader
     cms_protect::load(); //CMS Protect
     spl_autoload_register(array('GameQ', 'auto_load'));
 }
@@ -1500,8 +1501,8 @@ function admin_perms($userid)
             foreach($dirs_addon AS $dir_addon)
             {
                 ## XML Auslesen ##
-                $XMLTag = 'admin_'.$dir_addon;
-                if(xml::openXMLfile($XMLTag,$dir_addon))
+                $XMLTag = 'admin_addons_'.$dir_addon['name'];
+                if(xml::openXMLfile($XMLTag,$dir_addon['dir']))
                     $admin_settings[((string)xml::getXMLvalue($XMLTag, 'Rights'))] = array('Only_Admin' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin')), 'Only_Root' => xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root')));
             }
         }
@@ -1971,21 +1972,14 @@ function page($index,$title,$where,$time,$index_templ=false)
         foreach($pholdervars as $pholdervar)
         { if(isset($$pholdervar)) $arr[$pholdervar] = $$pholdervar; }
 
-        if(save_debug_console)
-            DebugConsole::save_log();
+        cms_protect::save(); // CMS Protect
+        cookie::save(); // Cookie speichern
+        xml::save(); // XML Datenbank speichern
 
-        //index output
-        echo (is_debug && show_debug_console ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr);
+        if(save_debug_console) DebugConsole::save_log();
+        echo (is_debug && show_debug_console ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr); //index output
+        exit(); //Exit, call destruktor
     }
-
-    // CMS Protect
-    cms_protect::save();
-
-    // Cookie speichern
-    cookie::save();
-
-    // Datenbankverbindung beenden
-    database::close();
 }
 
 //Initialisierung der Addon Calls

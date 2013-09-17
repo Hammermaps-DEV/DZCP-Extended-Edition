@@ -7,6 +7,7 @@ define('show_initialize', true);
 define('show_loaded', true);
 define('show_info', true);
 define('show_warning', true);
+define('show_xml', false);
 define('show_cache_debug', false);
 define('show_gameserver_debug', false);
 define('show_teamspeak_debug', false);
