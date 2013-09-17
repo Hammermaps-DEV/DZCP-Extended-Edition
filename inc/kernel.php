@@ -843,12 +843,6 @@ class xml // Class by DZCP-Extended Edition
     private static $xmlobj = array(); //XML
 
     /**
-     * Destruktor
-     */
-    public function __destruct()
-    { self::save(); }
-
-    /**
     * XML Datei Setzen
     */
     public static function openXMLfile($XMLTag,$XMLFile,$oneModule=false)
