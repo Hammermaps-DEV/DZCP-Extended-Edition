@@ -886,7 +886,8 @@ class xml // Class by DZCP-Extended Edition
         if(empty($XMLTag)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
-            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_string(self::$xmlobj[$XMLTag]['xmlStream']);
+            if(empty(self::$xmlobj[$XMLTag]['xmlStream'])) return false;
+            self::$xmlobj[$XMLTag]['objekt'] = simplexml_load_string(self::$xmlobj[$XMLTag]['xmlStream'], 'SimpleXMLElement', LIBXML_NOCDATA);
             return(self::$xmlobj[$XMLTag]['objekt'] != false ? true : false);
         }
 
@@ -1060,7 +1061,7 @@ class xml // Class by DZCP-Extended Edition
                     }
                 }
 
-                Cache::set('XML-Core-Parser',array_to_string($mem_xml_save),1);
+                Cache::set('XML-Core-Parser',array_to_string($mem_xml_save),4);
                 if(show_xml) DebugConsole::insert_successful('xml::save()', 'XML Database "'.$i.'" records saved');
             }
 
