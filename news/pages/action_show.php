@@ -326,6 +326,7 @@ else
                 else
                     $showmore = show("page/comments_no_enabled");
 
+                $where = $where.': '.string::decode($get['titel']);
                 $intern = ($get['intern'] ? _votes_intern : '');
                 $title = string::decode($get['titel']).' - '.$title;
                 $index = show($dir."/news_show_full", array("titel" => string::decode($get['titel']),

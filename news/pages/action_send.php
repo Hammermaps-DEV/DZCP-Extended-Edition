@@ -71,6 +71,7 @@ else
                 "s_text" => (isset($text) && !empty($text) ? $text : ''),
                 "s_info" => (isset($info) && !empty($info) ? $info : ''),));
 
+        $where = _news_send;
         $index = show($dir."/send", array("error" => $error, "form" => $form));
     }
 }

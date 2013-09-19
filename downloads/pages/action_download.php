@@ -252,6 +252,7 @@ else
 
             //////////////////////////////////////////////////////////////////////////////////////////
 
+            $where = $where.': '.string::decode($get['download']);
             $rawfile = (!links_check_url($get['url']) ? @basename($get['url']) : string::decode($get['download']));
             $date = (empty($get['date']) ? (!$size ? 'n/a' : date("d.m.Y H:i",@filemtime($get['url']))._uhr) : date("d.m.Y H:i",$get['date'])._uhr);
             $lastdate = date("d.m.Y H:i",$get['last_dl'])._uhr;

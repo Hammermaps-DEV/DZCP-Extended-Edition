@@ -43,8 +43,7 @@ $IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $Incl
 ##############
 ## SETTINGS ##
 ##############
-$whereami = preg_replace_callback("#autor_(.*?)$#",create_function('$id', 'return data("$id[1]","nick");'),$where);
-$title = $pagetitle." - ".$whereami."";
+$title = $pagetitle." - ".convert::ToString($where);
 $time_end = generatetime();
 $time = round($time_end - $time_start,4);
 page($index, $title, $where, $time);

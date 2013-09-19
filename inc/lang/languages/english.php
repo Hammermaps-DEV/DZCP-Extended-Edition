@@ -57,6 +57,7 @@ define('_profile_access', 'View the profile only clan members');
 define('_profile_access_error', 'This profile is accessible only to members!');
 define('_gb_addcomment_from', 'Comment from');
 define('_gb_addcomment_edit', 'Edit Guestbook Comment');
+define('_gb_addcomment_new', 'Add new guestbook comment');
 define('_gb_comment_edited', 'The guestbook comment has been edited successfully!');
 define('_pass_security', 'Password Security');
 define("_pwd_repeat", 'Repeat password');

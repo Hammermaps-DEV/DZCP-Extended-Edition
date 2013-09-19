@@ -42,7 +42,7 @@ $IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $Incl
 ##############
 ## SETTINGS ##
 ##############
-$title = $pagetitle." - ".$where."";
+$title = $pagetitle." - ".convert::ToString($where);
 $time_end = generatetime();
 $time = round($time_end - $time_start,4);
 page($index, $title, $where, $time);

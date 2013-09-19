@@ -255,6 +255,7 @@ else
             else
                 $showmore = show("page/comments_no_enabled");
 
+            $where = $where.': '.string::decode($get['titel']);
             $index = show($dir."/show_more", array("titel" => string::decode($get['titel']),
                                                     "id" => $get['id'],
                                                     "comments" => "",

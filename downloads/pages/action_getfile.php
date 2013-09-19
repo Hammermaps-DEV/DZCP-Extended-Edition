@@ -20,6 +20,9 @@ else
         if(count_clicks('download',$get['id']))
             db("UPDATE ".dba::get('downloads')." SET `hits` = hits+1, `last_dl` = '".time()."' WHERE id = '".$get['id']."'");
 
-        header("Location: ../".$get['url']);
+        if(links_check_url($get['url']))
+            header("Location: ".$get['url']);
+        else
+            header("Location: ../".$get['url']);
     }
 }

@@ -40,6 +40,7 @@ else
 
                 if(empty($index))
                 {
+                    $where = $where.': '._gb_addcomment_new;
                     $gbhp = ($get['hp'] ? show(_hpicon, array("hp" => $get['hp'])) : '');
                     $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
                     $gbtitel = show(_gb_titel, array("postid" => "?",
@@ -109,12 +110,12 @@ else
                 else
                     $form = show("page/editor_notregged", array("postemail" => $get['email'], "posthp" => string::decode($get['hp']), "postnick" => string::decode($get['nick'])));
 
+                $where = $where.': '._gb_addcomment_edit;
                 $index = show($dir."/edit_com", array("whaturl" => "editgbc&amp;id=".$get['id'],
                                                      "ed" => "&edit=".$get['id']."&postid=".$_GET['postid'],
                                                      "id" => $get['id'],
                                                      "form" => $form,
-                                                     "posteintrag" => string::decode($get['comment']),
-                                                     "eintraghead" => _eintrag));
+                                                     "posteintrag" => string::decode($get['comment'])));
             }
             else
                 $index = error(_error_edit_post);
@@ -128,6 +129,7 @@ else
                 else
                     $form = show("page/editor_notregged", array("postemail" => string::decode($get['email']), "posthp" => string::decode($get['hp']), "postnick" => string::decode($get['nick'])));
 
+                $where = $where.': '._gb_edit_head;
                 $index = show($dir."/add", array("what" => _button_value_edit,
                                                  "reg" => $get['reg'],
                                                  "whaturl" => "action=admin&amp;do=editgb&amp;id=".$get['id'],
@@ -136,8 +138,7 @@ else
                                                  "id" => $get['id'],
                                                  "form" => $form,
                                                  "posteintrag" => string::decode($get['nachricht']),
-                                                 "error" => "",
-                                                 "eintraghead" => _gb_edit_head));
+                                                 "error" => ""));
             }
             else
                 $index = error(_error_edit_post);

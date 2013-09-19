@@ -55,12 +55,11 @@ else
     else
     {
         $view_userID = convert::ToInt($_GET['id']); //UserID
-        $where = _user_profile_of.'autor_'.$view_userID;
-
         if(count_clicks('userprofil',$view_userID))
             db("UPDATE ".dba::get('userstats')." SET `profilhits` = profilhits+1 WHERE user = '".convert::ToInt($view_userID)."'"); //Update Userstats
 
         $get = db("SELECT * FROM ".dba::get('users')." WHERE id = '".convert::ToInt($view_userID)."'",false,true); // Get User
+        $where = _user_profile_of.string::decode($get['nick']);
 
         if($get['profile_access'] && checkme() == 'unlogged')
             $index = error(_profile_access_error,1);
@@ -68,9 +67,7 @@ else
             $index = error(_error_wrong_permissions);
         else
         {
-
             ######### DO ##########
-
             switch($do)
             {
                 case 'delete':
@@ -245,7 +242,7 @@ else
                         if($get['level'] != 1 || isset($_GET['sq']))
                         {
                             $sq = db("SELECT * FROM ".dba::get('userpos')." WHERE user = '".convert::ToInt($view_userID)."'");
-                            $cnt = cnt(dba::get('userpos'), " WHERE user = '".$get['id']."'"); $i=1;
+                            $cnt = cnt(dba::get('userpos'), " WHERE user = '".$get['id']."'"); $i=1; $pos = '';
                             if(_rows($sq) && !isset($_GET['sq']))
                             {
                                 while($getsq = _fetch($sq))
@@ -260,10 +257,7 @@ else
                             else
                                 $pos = getrank($get['id']);
 
-                            //Custom profil fields
-                            $custom_clan = custom_fields($view_userID,2,false);
-                            //Custom profil fields
-
+                            $custom_clan = custom_fields($view_userID,2,false); //Custom profil fields
                             $clan = show($dir."/clan", array("position" => $pos, "status" => $status, "custom_clan" => $custom_clan));
                         }
 

@@ -43,6 +43,7 @@ else
                                                          "comments" => $comments));
     }
 
+    $where = _news_archiv_head;
     $nav = nav($entrys,$narchivconfig['m_archivnews'],"?action=archiv");
     $index = show($dir."/archiv", array("head" => _news_archiv_head,
                                             "date" => _datum,

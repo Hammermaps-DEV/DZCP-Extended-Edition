@@ -57,6 +57,7 @@ define('_profile_access', 'Userprofil nur Mitgliedern anzeigen');
 define('_profile_access_error', 'Dieses Profil ist nur Mitgliedern zug&auml;nglich!');
 define('_gb_addcomment_from', 'Kommentar von');
 define('_gb_addcomment_edit', 'G&auml;stebuch-Kommentar bearbeiten');
+define('_gb_addcomment_new', 'Neuen G&auml;stebuch-Kommentar schreiben');
 define('_gb_comment_edited', 'Der G&auml;stebuch-Kommentar wurde erfolgreich editiert!');
 define('_pass_security', 'Passwort-Sicherheit');
 define('_pwd_repeat', 'Passwort wiederholen');

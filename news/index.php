@@ -23,7 +23,6 @@ include(basePath."/news/helper.php");
 ## SETTINGS ##
 ##############
 $where = _site_news;
-$title = $pagetitle." - ".$where."";
 $dir = "news";
 $index = "";
 
@@ -44,6 +43,7 @@ $IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $Incl
 ##############
 ## SETTINGS ##
 ##############
+$title = $pagetitle." - ".convert::ToString($where);
 $time_end = generatetime();
 $time = round($time_end - $time_start,4);
 page($index, $title, $where, $time);

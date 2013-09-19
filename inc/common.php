@@ -2051,7 +2051,6 @@ function page($index,$title,$where,$time,$index_templ=false)
 
         if(save_debug_console) DebugConsole::save_log();
         echo (is_debug && show_debug_console ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr); //index output
-        exit(); //Exit, call destruktor
     }
 }
 

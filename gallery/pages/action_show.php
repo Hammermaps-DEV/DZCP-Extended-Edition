@@ -66,5 +66,6 @@ else
 
     $seiten = nav(count($files),$galleryconfig['m_gallery'],"?action=show&amp;id=".convert::ToString($_GET['id']).""); unset($files_foreach,$files);
     $get = db("SELECT kat,beschreibung FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+    $where = $where.': '.string::decode($get['kat']);
     $index = show($dir."/show", array("gallery" => string::decode($get['kat']), "show" => $show, "beschreibung" => bbcode::parse_html($get['beschreibung']), "end" => $end, "seiten" => $seiten));
 }
