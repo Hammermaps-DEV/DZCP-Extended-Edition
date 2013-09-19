@@ -176,7 +176,8 @@ class SteamAPI
         if(empty($xml_stream)) return false;
         if(!xml::openXMLStream('steam_community_'.$zone_tag.self::$profile_url, $xml_stream)) return false;
         self::$community_data[str_replace('_', '', $zone_tag)] = convert::objectToArray(xml::getXMLvalue('steam_community_'.$zone_tag.self::$profile_url, '/'.$xml));
-        if(key_exists('error', convert::objectToArray(xml::getXMLvalue('steam_community_'.$zone_tag.self::$profile_url, '/response')))) return false;
+        $array_check = convert::objectToArray(xml::getXMLvalue('steam_community_'.$zone_tag.self::$profile_url, '/response'));
+        if(is_array($array_check) && key_exists('error', $array_check)) return false;
         return true;
 
     }
