@@ -173,17 +173,12 @@
         $(".tabs").tabs("> .switchs", { effect: 'fade' });
         $(".nav" ).button({ text: true });
         $( "#rerun" ).button().click(function() { return false; }).next().button({ text: false, icons: { primary: "ui-icon-triangle-1-s" } }).click(function() {
-            var menu = $( this ).parent().next().show().position({
-              my: "left top",
-              at: "left bottom",
-              of: this
-            });
-
+            var menu = $( this ).parent().next().show().position({ my: "left top", at: "left bottom", of: this });
             $( document ).one( "click", function() { menu.hide(); });
             return false;
         }).parent().buttonset().next().hide().menu();
-        $( document ).tooltip({ track: true });
 
+        $("[title]").tooltip({ track: true, delay: 2, fade: 250 });
         $("#dialog").dialog({ modal: true, bgiframe: true, width: 'auto', height: 'auto', autoOpen: false, title: 'Info' });
         $("a.confirm").click(function(link)
         {
@@ -406,6 +401,52 @@
           layer.style.display = 'block';
         } else layer.style.display = 'block';
       }
+    },
+
+    // handle Steam layer
+    showSteamBox: function(user, img, text, text2, status)
+    {
+        var class_state;
+        switch(status) {
+            case 1: class_state = 'online'; break; //Online
+            case 2: class_state = 'in-game'; break; //Ingame
+            default: class_state = 'offline'; break; //Offline
+        }
+
+        if(typeof(layer) == 'object')
+        {
+            layer.innerHTML =
+              '<div id="hDiv">' +
+              '  <table class="hperc" cellspacing="0" style="height:100%">' +
+              '    <tr>' +
+              '      <td style="vertical-align:middle">' +
+              '        <div id="infoInnerLayer">' +
+              '        	 <table class="steam_box_bg" border="0" cellspacing="0" cellpadding="0">' +
+              '	          <tr>' +
+              '	            <td>' +
+              '	               <div class="steam_box steam_box_user '+class_state+'">' +
+              '	                 <div class="steam_box_avatar '+class_state+'"> <img src="'+img+'" /></div>' +
+              '	                 <div class="steam_box_content">'+user+'<br />' +
+              '	                 <span class="friendSmallText">'+text+'<br>'+text2+'</span></div>' +
+              '	               </div>' +
+              '	            </td>' +
+              '	          </tr>' +
+              '	        </table>' +
+              '        </div>' +
+              '      </td>' +
+              '    </tr>' +
+              '  </table>' +
+              '</div>';
+
+            //IE Fix
+            if(ie4 && !opera)
+            {
+                layer.innerHTML += '<iframe id="ieFix" frameborder="0" width="' + $('#hDiv')[0].offsetWidth + '" height="' + $('#hDiv')[0].offsetHeight + '"></iframe>';
+                layer.style.display = 'block';
+            }
+            else
+                layer.style.display = 'block';
+        }
     },
 
     hideInfo: function() {

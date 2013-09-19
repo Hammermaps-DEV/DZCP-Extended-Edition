@@ -904,6 +904,9 @@ class convert
     public static final function ToInt($input)
     { return (int)$input; }
 
+    public static final function ToFloat($input)
+    { return floatval($input); }
+
     public static final function UTF8($input)
     { return self::ToString(utf8_encode($input)); }
 

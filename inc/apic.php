@@ -57,23 +57,26 @@ class API_CORE
                         $moduleName = 'addon_'.$addon; $info_array = array();
                         if(xml::openXMLfile($moduleName, 'inc/additional-addons/'.$addon.'/addon_info.xml',true))
                         {
-                            $xml = xml::getXMLvalue($moduleName,'/info');
-                            $info_array['xml_addon_name'] = convert::ToString($xml->addon_name);
-                            $info_array['xml_addon_autor'] = convert::ToString($xml->addon_autor);
-                            $info_array['xml_addon_autor_url'] = convert::ToString($xml->addon_autor_url);
-                            $info_array['xml_addon_autor_mail'] = convert::ToString($xml->addon_autor_mail);
-                            $info_array['xml_addon_version'] = convert::ToString($xml->addon_version);
-                            $info_array['xml_addon_info'] = convert::ToString($xml->addon_info);
-                            $info_array['xml_addon_init_call'] = convert::ToString($xml->addon_init_call);
-                            $info_array['xml_addon_build_id'] = convert::ToString($xml->addon_build_id);
+                            $xml_array = convert::objectToArray(xml::getXMLvalue($moduleName,'/info'));
+                            if(!array_key_exists('addon_name', $xml_array) || !array_key_exists('addon_autor', $xml_array) || !array_key_exists('addon_autor_url', $xml_array) ||
+                               !array_key_exists('addon_autor_mail', $xml_array) || !array_key_exists('addon_version', $xml_array) || !array_key_exists('addon_info', $xml_array) ||
+                               !array_key_exists('addon_init_call', $xml_array))
+                                DebugConsole::insert_warning('API_CORE::init()', 'The addon: "'.$addon.'" has a incomplete addon_info.xml');
+
+                            $info_array['xml_addon_name'] = $xml_array['addon_name'];
+                            $info_array['xml_addon_autor'] = $xml_array['addon_autor'];
+                            $info_array['xml_addon_autor_url'] = $xml_array['addon_autor_url'];
+                            $info_array['xml_addon_autor_mail'] = $xml_array['addon_autor_mail'];
+                            $info_array['xml_addon_version'] = $xml_array['addon_version'];
+                            $info_array['xml_addon_info'] = $xml_array['addon_info'];
+                            $info_array['xml_addon_init_call'] = $xml_array['addon_init_call'];
 
                             //Updater
-                            $addon_xml_info = convert::objectToArray($xml);
-                            $addon_xml_infos['addon_name'] = $addon_xml_info['addon_name'];
-                            $addon_xml_infos['addon_autor'] = $addon_xml_info['addon_autor'];
-                            $addon_xml_infos['addon_version'] = $addon_xml_info['addon_version'];
-                            $addon_xml_infos['addon_build_rev'] = $addon_xml_info['addon_build_rev'];
-                            unset($addon_xml_info);
+                            $addon_xml_infos['addon_name'] = $xml_array['addon_name'];
+                            $addon_xml_infos['addon_autor'] = $xml_array['addon_autor'];
+                            $addon_xml_infos['addon_version'] = $xml_array['addon_version'];
+                            $addon_xml_infos['addon_build_rev'] = $xml_array['addon_build_rev'];
+                            unset($xml_array);
                         }
 
                         $addon_infos['xml'] = $info_array;

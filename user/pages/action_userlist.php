@@ -37,7 +37,7 @@ else
     }
 
     $entrys = cnt(dba::get('users'),$qry);
-    if(!_rows(($qry = db("SELECT id,nick,level,email,hp,xfire,bday,sex,icq,status,position,regdatum FROM ".dba::get('users').$qry))))
+    if(!_rows(($qry = db("SELECT id,nick,level,email,hp,xfire,bday,sex,icq,status,position,regdatum,steamurl FROM ".dba::get('users').$qry))))
         $userliste = show(_no_entrys_yet_all, array("colspan" => "12"));
     else
     {
@@ -62,10 +62,16 @@ else
                 $icq = '<a href="http://www.icq.com/whitepages/about_me.php?uin='.$get['icq'].'" target="_blank">'.show(_icqstatus, array("uin" => $get['icq'])).'</a>';
 
             $xfire = '-';
-            if(!empty($get['xfire']))
+            if(!empty($get['xfire']) && xfire_enable)
             $xfire = '<div id="infoXfire_'.string::decode($get['xfire']).'">
             <div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div>
             <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>';
+
+            $steam = '-';
+            if(!empty($get['steamurl']) && steam_enable)
+            $steam = '<div id="infoSteam_'.string::decode($get['steamurl']).'">
+            <div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div>
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSteam_'.string::decode($get['steamurl']).'","steam","&steamid='.string::decode($get['steamurl']).'");</script></div>';
 
             $userliste .= show($dir."/userliste_show", array("nick" => autor($get['id'],'','',10),
                                                              "level" => getrank($get['id']),
@@ -76,10 +82,12 @@ else
                                                              "delete" => $delete,
                                                              "class" => $class,
                                                              "icq" => $icq,
+                                                             "skype" => '-',
                                                              "icquin" => $get['icq'],
                                                              "onoff" => onlinecheck($get['id']),
                                                              "hp" => $hp,
-                                                             "xfire" => $xfire));
+                                                             "xfire" => $xfire,
+                                                             "steam" => $steam));
         } //while end
     }
 

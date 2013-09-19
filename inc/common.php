@@ -424,6 +424,9 @@ if(!$ajaxThumbgen)
     FTP::set('user',settings('ftp_username'));
     FTP::set('ssl',settings('ftp_ssl'));
 
+    //SteamAPI
+    SteamAPI::set('apikey',settings('steam_api_key'));
+
     //CMS Protect
     cms_protect::detect_login_search_run();
 }
@@ -569,6 +572,76 @@ function update_counter()
         db(($count ? "UPDATE ".dba::get('counter')." SET `visitors` = visitors+1 WHERE today = '".date("j.n.Y")."'" : "INSERT INTO ".dba::get('counter')." SET `visitors` = '1', `today` = '".date("j.n.Y")."'"));
         db("INSERT INTO ".dba::get('c_ips')." SET `ip` = '".VisitorIP()."', `datum`  = '".time()."'");
     }
+}
+
+/**
+ * Gibt die vergangene zeit zwischen $timestamp und $aktuell als lesbaren string zurück.
+ * bsp: 3 Wochen, 4 Tage, 5 Sekunden
+ * @param int $timestamp * der timestamp der ersten zeit-marke.
+ * @param int $aktuell * der timestamp der zweiten zeit-marke. * aktuelle zeit *
+ * @param int $anzahl_einheiten * wie viele einheiten sollen maximal angezeigt werden
+ * @param boolean $zeige_leere_einheiten * sollen einheiten, die den wert 0 haben, angezeigt werden?
+ * @param array $zeige_einheiten * zeige nur angegebene einheiten. jahre werden zb in sekunden umgerechnet
+ * @param string $standard * falls der timestamp 0 oder ungültig ist, gebe diesen string zurück
+ * @return string
+ */
+function get_elapsed_time( $timestamp, $aktuell = null, $anzahl_einheiten = null, $zeige_leere_einheiten = null, $zeige_einheiten = null, $standard = null )
+{
+    if ( $aktuell === null ) $aktuell = time();
+    if ( $anzahl_einheiten === null ) $anzahl_einheiten = 1;
+    if ( $zeige_leere_einheiten === null ) $zeige_leere_einheiten = true;
+    if ( !is_array( $zeige_einheiten ) ) $zeige_einheiten = array();
+    if ( $standard === null ) $standard = "nie";
+    if ( $timestamp == 0 ) return $standard;
+    if ( $timestamp > $aktuell ) $timestamp = $aktuell;
+    if ( $anzahl_einheiten < 1 ) $anzahl_einheiten = 10;
+    $zeit = bcsub( $aktuell, $timestamp );
+    if ( $zeit < 1 ) $zeit = 1; $arr = array();
+    $werte = array( 63115200 => _years, 31557600 => _year.' ', 4838400 => _months, 2419200 => _month.' ',
+            1209600 => _weeks, 604800 => _week.' ', 172800 => _days.' ', 86400 => _day.' ', 7200 => _hours,
+            3600 => _hour.' ', 120 => _minutes, 60 => _minute.' ',  1 => _seconds );
+
+    if ( ( is_array( $zeige_einheiten ) ) and ( count( $zeige_einheiten ) > 0 ) )
+    {
+        $neu = array();
+        foreach ( $werte as $key => $val )
+        {
+            if ( in_array( $val, $zeige_einheiten ) )
+                $neu[$key] = $val;
+        }
+
+        $werte = $neu;
+    }
+
+    foreach ( $werte as $div => $einheit )
+    {
+        if ( $zeit < $div )
+        {
+            if ( count( $arr ) != 0 )
+                $arr[$einheit] = 0;
+
+            continue;
+        }
+
+        $anzahl = bcdiv( $zeit, $div );
+        $zeit -= bcmul( $anzahl, $div );
+        $arr[$einheit] = $anzahl;
+    }
+
+    reset( $arr ); $output = 0; $ret = "";
+    while ( ( count( $arr ) > 0 ) and ( $output < $anzahl_einheiten ) )
+    {
+        $key = key( $arr );
+        $cur = current( $arr );
+        $einheit = ( $cur == 1 ) ? substr( $key, 0, bcsub( strlen( $key ), 1 ) ) : $key;
+        if ( ( $cur != 0 ) or ( $zeige_leere_einheiten == true ) )
+            $ret .= ( empty( $ret ) )
+            ? ($anzahl_einheiten == 1 ? round($cur, 0, PHP_ROUND_HALF_DOWN) : $cur) . " " . $einheit
+            : ", " . ($anzahl_einheiten == 1 ? round($cur, 0, PHP_ROUND_HALF_DOWN) : $cur) . " " . $einheit;
+        $output++;
+        unset( $arr[$key] );
+    }
+    return $ret;
 }
 
 //-> Prueft, wieviele Besucher gerade online sind

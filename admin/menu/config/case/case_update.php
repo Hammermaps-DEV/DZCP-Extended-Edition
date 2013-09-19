@@ -125,6 +125,7 @@ if(isset($_POST))
         if(settings::changed(($key='memcache_host'),($var=string::encode($_POST['memcache_host'])))) settings::set($key,$var);
         if(settings::changed(($key='memcache_port'),($var=convert::ToInt($_POST['memcache_port'])))) settings::set($key,$var);
         if(settings::changed(($key='urls_linked'),($var=string::encode($_POST['urls_linked'])))) settings::set($key,$var);
+        if(settings::changed(($key='steam_api_key'),($var=string::encode($_POST['steam_apikey'])))) settings::set($key,$var);
 
         $show = info(_config_set, "?admin=config", 6);
 }

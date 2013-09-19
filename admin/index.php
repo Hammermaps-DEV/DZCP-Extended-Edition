@@ -43,8 +43,8 @@ else
             $XMLTag = 'admin_'.$dir_admin;
             if(!xml::openXMLfile($XMLTag,"admin/menu/".$dir_admin."/config.xml")) continue;
             $settings = array();
-            $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
-            $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
+            $settings['Typ'] = convert::ToString(xml::getXMLvalue($XMLTag, 'Menu'));
+            $settings['Rights'] = convert::ToString(xml::getXMLvalue($XMLTag, 'Rights'));
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
 
@@ -82,8 +82,8 @@ else
             if(!xml::openXMLfile($XMLTag,'inc/additional-addons/'.$file['dir']."/admin/menu/".$file['file_dir']."/config.xml")) continue;
 
             $settings = array();
-            $settings['Typ'] = ((string)xml::getXMLvalue($XMLTag, 'Menu'));
-            $settings['Rights'] = ((string)xml::getXMLvalue($XMLTag, 'Rights'));
+            $settings['Typ'] = convert::ToString(xml::getXMLvalue($XMLTag, 'Menu'));
+            $settings['Rights'] = convert::ToString(xml::getXMLvalue($XMLTag, 'Rights'));
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
             $settings['file_dir'] = $file['file_dir'];
@@ -194,7 +194,7 @@ else
             unset($settings); $settings = array();
             $settings['Only_Admin'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Admin'));
             $settings['Only_Root'] = xml::bool(xml::getXMLvalue($XMLTag, 'Only_Root'));
-            $permission = permission(((string)xml::getXMLvalue($XMLTag, 'Rights')));
+            $permission = permission(convert::ToString(xml::getXMLvalue($XMLTag, 'Rights')));
             $where_ext = convert::ToString(xml::getXMLvalue($XMLTag, 'Where'));
             $do = (isset($_GET['do']) ? strtolower($_GET['do']) : (isset($_POST['do']) ? strtolower($_POST['do']) : '') );
             $page = (isset($_GET['page']) ? $_GET['page'] : '1');

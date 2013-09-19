@@ -59,6 +59,7 @@ define('_forum_pn_preview', '<img src="../inc/images/forum_pn.gif" alt="" class=
 define('_forum_zitat_preview', '<img src="../inc/images/zitat.gif" alt="" class="icon" style="cursor:pointer" />');
 define('_user_link_preview', '[country] <a class="[class]" href="javascript:void(0)">[nick]</a>');
 define('_xfireicon', '<a target="_blank" href="http://profile.xfire.com/[username]"><img height="20" width="20" src="../inc/images/xfire.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=[img] /></td></tr>\')" onmouseout="DZCP.hideInfo()" /></a>');
+define('_steamicon', '<a target="_blank" href="[profile_url]"><img height="20" width="20" src="../inc/images/steam.png" alt="" class="icon"/ onmouseover="DZCP.showSteamBox(\'[username]\',\'[avatar_url]\',\'[text1]\',\'[text2]\',[status])" onmouseout="DZCP.hideInfo()" /></a>');
 
 ## Added for DZCP 1.4 ##
 define('_gal_newicon', '<a href="?admin=gallery&amp;do=new&amp;id=[id]"><img src="../inc/images/new.gif" alt="" title="[titel]" class="icon" /></a>');
@@ -86,6 +87,8 @@ define('_email_mailto', '<a href="mailto:[email]">[email]</a>');
 define('_emailicon', '<a href="mailto:[email]"><img src="../inc/images/email.gif" alt="" title="[email]" class="icon" /></a>');
 define('_emailicon_non_mailto', '<a href="[email]"><img src="../inc/images/email.gif" alt="" title="" class="icon" /></a>');
 define('_xfireicon_blank', '<img height="20" width="20" src="../inc/images/xfire.png" alt="" class="icon" />');
+define('_steamicon_blank', '<img height="20" width="20" src="../inc/images/steam.png" alt="" class="icon" />');
+define('_skypeicon_blank', '<img height="20" width="20" src="../inc/images/skype.png" alt="" class="icon" />');
 define('_hpicon_blank', '<img src="../inc/images/hp.gif" alt="" class="icon" />');
 define('_topicon', '<img src="../inc/images/top.gif" alt="" class="icon" />');
 define('_icqicon_blank', '<img src="../inc/images/icq.png" alt="" class="icon" />');

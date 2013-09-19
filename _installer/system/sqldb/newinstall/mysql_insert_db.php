@@ -182,6 +182,7 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'urls_linked', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'use_akl', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'wmodus', `value` = '0', `default` = '0', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'steam_api_key', `value` = '', `default` = 'XXXXXXXXXXXXXXXXXXXX', `length` = '100', `type` = 'string';",false,false,true);
 
     //===============================================================
     //-> Teamspeak ==================================================

@@ -51,9 +51,7 @@ if(($add_menu_functions = get_files(basePath.'/inc/menu-functions/',false,true,a
 //-> Show Xfire Status
 function xfire($username='')
 {
-    if(empty($username))
-        return '-';
-
+    if(empty($username) || !xfire_enable) return '-';
     switch(xfire_skin)
     {
         case 'shadow': $skin = 'sh'; break;
@@ -81,6 +79,44 @@ function xfire($username='')
     return show(_xfireicon,array('username' => $username, 'img' => 'http://de.miniprofile.xfire.com/bg/'.$skin.'/type/0/'.$username.'.png'));
 }
 
+//-> Show Steam Status
+function steam($steam_url='')
+{
+    if(empty($steam_url) || !steam_enable) return '-';
+    if(Cache::check('steam_'.$steam_url))
+    {
+        $steam_data = SteamAPI::getUserInfos($steam_url);
+        Cache::set('steam_'.$steam_url, $steam_data, steam_refresh);
+    }
+    else
+        $steam_data = Cache::get('steam_'.$steam_url);
+
+    if(!$steam_data || empty($steam_data)) return '-';
+    if(steam_avatar_cache)
+    {
+        if(Cache::check_binary('steam_pic_'.$steam_url))
+        {
+            if($img_stream = fileExists($steam_data['user']['avatarIcon_url']))
+            {
+                $steam_data['user']['avatarIcon_url'] = 'data:image/png;base64,'.base64_encode($img_stream);
+                Cache::set_binary('steam_pic_'.$steam_url, $img_stream, '', steam_avatar_refresh);
+            }
+        }
+        else
+            $steam_data['user']['avatarIcon_url'] = 'data:image/png;base64,'.base64_encode(Cache::get_binary('steam_pic_'.$steam_url));
+    }
+
+    switch($steam_data['user']['onlineState'])
+    {
+        case 'in-game': $status_set = '2'; $text_1 = _steam_in_game; $text_2 = $steam_data['user']['gameextrainfo']; break;
+        case 'online': $status_set = '1'; $text_1 = _steam_online; $text_2 = ''; break;
+        default: $status_set = '0'; $text_1 = $steam_data['user']['runnedSteamAPI'] ? show(_steam_offline,array('time' => get_elapsed_time($steam_data['user']['lastlogoff'],time(),1))) : _steam_offline_simple; $text_2 = ''; break;
+    }
+
+    return show(_steamicon,array('profile_url' => $steam_data['user']['profile_url'],'username' => $steam_data['user']['nickname'],'avatar_url' => $steam_data['user']['avatarIcon_url'],
+                                 'text1' => $text_1,'text2' => $text_2,'status' => $status_set));
+}
+
 ## SETTINGS ##
 $dir = "sites";
 
@@ -97,6 +133,9 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
             break;
             case 'xfire';
                 die(xfire(string::decode($_GET['username'])));
+            break;
+            case 'steam';
+                die(steam(string::decode($_GET['steamid'])));
             break;
             case 'menu';
                 if(array_key_exists($_GET['hash'], $menu_index))

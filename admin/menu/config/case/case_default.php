@@ -64,6 +64,7 @@ $show = show($dir."/form_config", array( "cache_select"          => Cache::GetCo
                                          "c_eml_akl_regist"      => string::decode(settings::get('eml_akl_register')),
                                          "memcache_host"         => string::decode(settings::get('memcache_host')),
                                          "memcache_port"         => convert::ToInt(settings::get('memcache_port')),
+                                         "steam_apikey"          => string::decode(settings::get('steam_api_key')),
                                          "tmplsel"               => $tmplsel,
                                          "maxwidth"              => convert::ToInt(settings::get('maxwidth')),
                                          "l_servernavi"          => convert::ToInt(settings::get('l_servernavi')),

@@ -236,8 +236,9 @@ else
                         $status = ($get['status'] == 1 || ($get['level'] != 1 && isset($_GET['sq'])) ? _aktiv_icon : _inaktiv_icon);
                         $buddyadd = show(_addbuddyicon, array("id" => $_GET['id']));
                         $edituser = (permission("editusers") ? str_replace("&amp;id=","",show("page/button_edit_single", array("id" => "", "action" => "action=admin&amp;edit=".$view_userID, "title" => _button_title_edit))) : '');
-                        $xfire = (!empty($get['xfire']) ? '<div id="infoXfire_'.string::decode($get['xfire']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>' : '-');
+                        $xfire = (!empty($get['xfire']) && xfire_enable ? '<div id="infoXfire_'.string::decode($get['xfire']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>' : '-');
                         $rlname = (!empty($get['rlname']) ? string::decode($get['rlname']) : '-');
+                        $steam = (!empty($get['steamurl']) && steam_enable ? '<div id="infoSteam_'.string::decode($get['steamurl']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSteam_'.string::decode($get['steamurl']).'","steam","&steamid='.string::decode($get['steamurl']).'");</script></div>' : '-');
 
                         //Zeige Clan Informationen an
                         $clan = "";
@@ -296,6 +297,7 @@ else
                                 "hp" => $hp,
                                 "xfire_name" => string::decode($get['xfire']),
                                 "xfire" => $xfire,
+                                "steam" => $steam,
                                 "buddyadd" => $buddyadd,
                                 "nick" => autor($view_userID),
                                 "rlname" => $rlname,

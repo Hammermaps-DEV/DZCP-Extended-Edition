@@ -74,6 +74,12 @@ define('_extended', 'Erweitert');
 define('_aktion', 'Aktion');
 define('_username', 'Username');
 define('_title_mover', 'Mouseover Title');
+define('_years', 'Jahre');
+define('_year', 'Jahr');
+define('_months', 'Monate');
+define('_month', 'Monat');
+define('_weeks', 'Wochen');
+define('_week', 'Woche');
 define('_days', 'Tage');
 define('_day', 'Tag');
 define('_hours', 'Stunden');
@@ -91,6 +97,7 @@ define('_smtp_sendmail_path', 'Sendmail Path');
 define('_admin_eml_config_head', 'E-Mail Einstellungen');
 define('_admin_eml_config_ext', 'Mail-Erweiterung');
 define('_admin_bezeichnung', 'Bezeichnung');
+define('_members_admin_squad', 'Mitglieder');
 
 //Startpage
 define('_profil_startpage', 'Startseite');
@@ -203,6 +210,15 @@ define('_ipban_error_pip', 'Du kannst keine privaten IP-Adressen sperren!');
 define('_ipban_disable', 'IP-Ban deaktivieren');
 define('_ipban_enable', 'IP-Ban aktivieren');
 define('_ip_empty', 'Keine IP eingegeben!');
+
+//Steam
+define('_steam', 'Steam');
+define('_steam_online', 'Online');
+define('_steam_offline', 'Zuletzt online: vor [time].');
+define('_steam_offline_simple', 'Offline.');
+define('_steam_in_game', 'Im Spiel');
+define('_config_steam_apikey', 'Steam API-Key');
+define('_steam_apikey_info', 'Registrierung eines Steam API-Key: <a href="http://steamcommunity.com/dev/apikey/" target="_blank">steamcommunity.com</a>');
 
 ## Added for DZCP 1.6 Final ##
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');
@@ -652,7 +668,6 @@ define('_admin_editor', 'Admin: Seitenverwaltung');
 define('_kalender_admin_head', 'Kalender - Ereignisse');
 define('_smileys_specialchar', 'Es d&uuml;rfen keine Sonder- oder Leerzeichen im BBCode angegeben sein!');
 define('_award', 'Award');
-define('_month', 'Monat');
 define('_preview', 'Vorschau');
 define('_error_edit_post', 'Du bist nicht dazu berechtigt diesen Eintrag zu bearbeiten!');
 define('_nletter_prev_head', 'Newslettervorschau');
@@ -663,7 +678,6 @@ define('_content', 'Inhalte');
 define('_rootadmin', 'Seitenadmin');
 define('_gb_edit_head', 'G&auml;stebucheintrag bearbeiten');
 define('_gb_edited', 'Der G&auml;stebucheintrag wurde erfolgreich editiert!');
-define('_year', 'Jahr');
 define('_nletter', 'Newsletter');
 define('_subject', 'Betreff');
 define('_server_admin_qport', 'Optional: Queryport');
@@ -1759,7 +1773,6 @@ define('_nav_freitag', 'Fr');
 define('_nav_samstag', 'Sa');
 define('_nav_sonntag', 'So');
 define('_age', 'Alter');
-define('_years', 'Jahre');
 define('_error_empty_age', 'Du musst dein aktuelles Alter angeben!');
 define('_member_admin_intforums', 'interne Forumauthorisierungen');
 define('_access', 'Authorisierung');

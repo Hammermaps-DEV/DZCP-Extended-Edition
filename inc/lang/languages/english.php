@@ -73,6 +73,12 @@ define('_no_entrys', 'No entrys');
 define('_extended', 'Extended');
 define('_username', 'Username');
 define('_aktion', 'Aktion');
+define('_years', 'Years');
+define('_year', 'Year');
+define('_months', 'Months');
+define('_month', 'Month');
+define('_weeks', 'Weeks');
+define('_week', 'Week');
 define('_days', 'Days');
 define('_day', 'Day');
 define('_hours', 'Hours');
@@ -90,6 +96,7 @@ define('_smtp_sendmail_path', 'Sendmail Path');
 define('_admin_eml_config_head', 'E-Mail Settings');
 define('_admin_eml_config_ext', 'Mail-Erweiterung');
 define('_admin_bezeichnung' , 'Description');
+define('_members_admin_squad', 'Members');
 
 //Startpage
 define('_profil_startpage', 'Startseite');
@@ -199,9 +206,16 @@ define('_ipban_search', 'IP Suche');
 define('_ipban_error_pip', 'Du kannst keine privaten IP-Adressen sperren!');
 define("_ip_empty", 'Keine IP eingegeben!');
 
-## ADDED FOR 1.6 Final
-define(_gal_npa, 'No Pictures Added');
+//Steam
+define('_steam', 'Steam');
+define('_steam_online', 'Online');
+define('_steam_offline', 'Zuletzt online: vor [time].');
+define('_steam_offline_simple', 'Offline.');
+define('_steam_in_game', 'Im Spiel');
+define('_config_steam_apikey', 'Steam API-Key');
+define('_steam_apikey_info', 'Registrierung eines Steam API-Key: <a href="http://steamcommunity.com/dev/apikey/" target="_blank">steamcommunity.com</a>');
 
+## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
 define('_search_con_and', 'character by character');
 define('_search_con_andb', 'every word');
@@ -648,7 +662,6 @@ define('_admin_editor' , 'Admin: Site administration');
 define('_kalender_admin_head' , 'Calendar - Events');
 define('_smileys_specialchar' , 'No special chars or empty space can be indicated in the bbcode!');
 define('_award' , 'Award');
-define('_month' , 'Month');
 define('_preview' , 'Preview');
 define('_error_edit_post' , 'You are not allowed to edit this entry!');
 define('_nletter_prev_head' , 'Newsletter preview');
@@ -659,7 +672,6 @@ define('_content' , 'Content');
 define('_rootadmin' , 'Siteadmin');
 define('_gb_edit_head' , 'Edit guestbook entry');
 define('_gb_edited' , 'The guestbook entry was successfully edited!');
-define('_year' , 'Year');
 define('_nletter' , 'Newsletter');
 define('_subject' , 'Subject');
 define('_server_admin_qport' , 'Optionally: queryport');
@@ -1733,7 +1745,6 @@ define('_nav_freitag' , 'Fr');
 define('_nav_samstag' , 'Sa');
 define('_nav_sonntag' , 'Su');
 define('_age' , 'Age');
-define('_years' , 'Years');
 define('_error_empty_age' , 'You have to indicate your actual age!');
 define('_member_admin_intforums' , 'internal board authorisation');
 define('_access' , 'Authorisation');

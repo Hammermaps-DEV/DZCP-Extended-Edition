@@ -10,7 +10,7 @@
 //-> DZCP Settings Start
 #########################################
 
-define('is_debug', true); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
+define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug, Seiten gecached werden können
 define('show_debug_console', true); //Zeigt die Debug Console
 define('save_debug_console', false); //Speichert alle in der Debug Console ausgegebenen Texte in eine Log Datei
@@ -21,6 +21,7 @@ define('buffer_gzip_compress_level', 1); // Level der Kompression 1 - 9 *Optimal
 define('dzcp_version_checker', true); // Version auf DZCP.de abgleichen und benachrichtigen ob eine neue Version zur Verfügung steht
 define('dzcp_version_checker_refresh', (30*60)); // Wie lange soll gewartet werden um einen Versionsabgleich auszuführen
 
+define('xfire_enable', true); // XFire Status anzeigen
 define('xfire_preloader', true); // XFire Profil per AJAX laden
 define('xfire_skin', 'shadow'); // Skin von XFire: shadow,kampf,scifi,fantasy,wow,default
 define('xfire_refresh', (10*60)); // Wann soll das Profilbild aktualisiert werden
@@ -38,6 +39,13 @@ define('trash_mail_url', 'http://www.mogelmail.de/mogelmails.xml'); // Liste der
 
 define('extern_urls_detect', false); //DZCP erkennt selbständig externe URLs und öffnet sie in einen neuen Tab, Vorrausetzung ist das die Domain im Impressum richtig eingetragen wurde.
 define('use_html5_worker', true); //Verwendet für AJAX Requests die neuen HTML5 Web Worker *So fern im Zielbrowser unterstützt* um Seiten und Inhalte Parallel zu laden.
+
+define('steam_enable', true); // Steam Status anzeigen
+define('steam_avatar_cache', true); // Steam Useravatare für schnellen Zugriff speichern
+define('steam_avatar_refresh', (10*60)); // Wann soll das Avatarbild aktualisiert werden
+define('steam_refresh', (5*60)); // Wann soll der Steam Status in der Userliste aktualisiert werden
+define('steam_api_refresh', 30); // Wann sollen die Daten der Steam API aktualisiert werden * Online / Offline / In-Game Status
+define('steam_infos_refresh', (60*60)); // Wann sollen die Profil Daten aktualisiert werden * Steam User-Profil * 1 Mal in der Stunde
 
 define('salt', true); // Salt für die Passwort Codierung, *Der Salt darf nach der Installation nicht mehr geändert werden.
 // Die Datei inc/mysql_salt.php muss gesichert werden *Backup* !
@@ -67,7 +75,7 @@ define('max_protect_cache_time', 60); //Die Zeit die der Index im Cache verbleib
 
 define('use_dzcp_protect', true); //Ob DZCP - Extended Protect verwendet werden soll.
 define('use_protect_block_timer', true); //User blockieren die zu oft in kürzester Zeit versuchen sich anzumelden. "max_protect_time_diff"
-define('use_protect_block_user', true); //User blockieren die versuchen Usernamen zu erraten. "max_protect_users" abhänig von "max_protect_cache_time"
+define('use_protect_block_user', true); //User blockieren die versuchen Usernamen zu erraten. "max_protect_users" abhängig von "max_protect_cache_time"
 
 /*
  * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit.

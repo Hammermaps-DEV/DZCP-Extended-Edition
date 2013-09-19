@@ -98,7 +98,7 @@ else
                     } //while end
                 }
 
-                $get = db("SELECT user,xfire FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
+                $get = db("SELECT user,xfire,steamurl FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
 
                 if($get['xfire'] != convert::ToString(string::encode($_POST['xfire'])))
                 { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
@@ -120,6 +120,7 @@ else
                                                  `hp`               = '".convert::ToString(links($_POST['hp']))."',
                                                  `icq`              = '".convert::ToInt($icq)."',
                                                  `xfire`            = '".string::encode($_POST['xfire'])."',
+                                                 `steamurl`         = '".string::encode($_POST['steam'])."',
                                                  `signatur`         = '".string::encode($_POST['sig'])."',
                                                  `startpage`        = '".convert::ToInt($_POST['startpage'])."',
                                                  `profile_access`   = '".convert::ToInt(isset($_POST['paccess']) ? $_POST['paccess'] : 0)."',
@@ -308,6 +309,7 @@ else
                                                                         "icqnr" => $icq,
                                                                         "sig" => string::decode($get['signatur']),
                                                                         "xfire" => $get['xfire'],
+                                                                        "steam" => $get['steamurl'],
                                                                         "clan" => $clan,
                                                                         "pic" => $pic,
                                                                         "deleteava" => $deleteava,

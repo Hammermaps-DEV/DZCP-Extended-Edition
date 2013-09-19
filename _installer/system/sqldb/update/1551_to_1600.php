@@ -45,6 +45,7 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('navi')."` ADD `title` VARCHAR( 249 ) NOT NULL DEFAULT '' AFTER `name`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `startpage` INT( 5 ) NOT NULL DEFAULT '0' AFTER `rss_key`;",false,false,true);
     db("ALTER TABLE `".dba::get('links')."` CHANGE `text` `blink` VARCHAR( 249 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` CHANGE `steamid` `steamurl` VARCHAR( 60 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
 
     // Setze fehlende Indexes * MySQL Optimierung
     db("ALTER TABLE `".dba::get('squaduser')."` ADD INDEX ( `user` ) ;",false,false,true);
@@ -221,6 +222,7 @@ function install_155x_1600_update()
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'urls_linked', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'use_akl', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'wmodus', `value` = '0', `default` = '0', `length` = '1', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'steam_api_key', `value` = '', `default` = 'XXXXXXXXXXXXXXXXXXXX', `length` = '100', `type` = 'string';",false,false,true);
 
     //Update
     foreach($keys as $key => $var)

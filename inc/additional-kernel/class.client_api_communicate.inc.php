@@ -158,6 +158,7 @@ final class client_api_communicate
 
     private static final function encode()
     {
+        if(!class_exists('client_api_encode')) return false;
         if(!empty(self::$cryptkey))
             client_api_encode::client_encode_cryptkey(self::$cryptkey);
 
@@ -181,6 +182,7 @@ final class client_api_communicate
 
     private static final function decode()
     {
+        if(!class_exists('client_api_decode')) return false;
         if(self::$options['decode_crypt'])
             client_api_decode::client_decode_cryptkey(self::$cryptkey);
 
