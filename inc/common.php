@@ -1364,7 +1364,7 @@ function voteanswer($what, $vid)
 //-> Geburtstag errechnen
 function getAge($bday)
 {
-    if(!empty($bday) || $bday == '..')
+    if(!empty($bday) && $bday != '0.0.' && $bday != '..')
     {
         list($tiday,$iMonth,$iYear) = explode(".",$bday);
         $iCurrentDay = date('j');
