@@ -83,7 +83,7 @@ else
                 $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
 
                 $delete = ""; $edit = ""; $comment = "";
-                if($get['reg'] == userid() || permission("gb"))
+                if((checkme() != 'unlogged' && $get['reg'] == userid()) || permission("gb"))
                 {
                     $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=admin&amp;do=edit&amp;postid=".$i, "title" => _button_title_edit));
                     $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "action=admin&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_entry));

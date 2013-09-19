@@ -14,48 +14,34 @@ else
     switch($do)
     {
         case 'addcomment':
-            $error = '';
-            if(isset($_GET['save']))
+            $get = db("SELECT * FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+            if((checkme() != 'unlogged' && $get['reg'] == userid()) || permission("gb"))
             {
-                if(empty($_POST['eintrag']))
+                $error = '';
+                if(isset($_GET['save']))
                 {
                     if(empty($_POST['eintrag']))
-                        $error = show("errors/errortable", array("error" => _empty_eintrag));
+                    {
+                        if(empty($_POST['eintrag']))
+                            $error = show("errors/errortable", array("error" => _empty_eintrag));
+                    }
+                    else
+                    {
+                        db("INSERT INTO ".dba::get('gb_comments')." SET
+                                `gbe`     = '".$get['id']."',
+                                `datum`    = '".time()."',
+                                `editby`   = '',
+                                `reg`      = '".userid()."',
+                                `comment`  = '".string::encode($_POST['eintrag'])."',
+                                `ip`       = '".visitorIp()."'");
+                        $index = info(_gb_comment_added, "../gb/");
+                    }
                 }
-                else
-                {
-                    db("INSERT INTO ".dba::get('gb_comments')." SET
-                            `gbe`     = '".convert::ToInt($_GET['id'])."',
-                            `datum`    = '".time()."',
-                            `editby`   = '',
-                            `reg`      = '".userid()."',
-                            `comment`  = '".string::encode($_POST['eintrag'])."',
-                            `ip`       = '".visitorIp()."'");
-                    $index = info(_gb_comment_added, "../gb/");
-                }
-            }
 
-            if(empty($index))
-            {
-                $get = db("SELECT * FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
-                $gbhp = ($get['hp'] ? show(_hpicon, array("hp" => $get['hp'])) : '');
-                $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
-
-                if(!$get['reg'])
+                if(empty($index))
                 {
-                    $gbtitel = show(_gb_titel_noreg, array("postid" => "?",
-                                                           "nick" => string::decode($get['nick']),
-                                                           "edit" => "",
-                                                           "delete" => "",
-                                                           "comment" => "",
-                                                           "public" => "",
-                                                           "email" => $gbemail,
-                                                           "datum" => date("d.m.Y", $get['datum']),
-                                                           "zeit" => date("H:i", $get['datum']),
-                                                           "hp" => $gbhp));
-                }
-                else
-                {
+                    $gbhp = ($get['hp'] ? show(_hpicon, array("hp" => $get['hp'])) : '');
+                    $gbemail = ($get['email'] ? show(_emailicon, array("email" => eMailAddr($get['email']))) : '');
                     $gbtitel = show(_gb_titel, array("postid" => "?",
                                                      "nick" => data($get['reg'], "nick"),
                                                      "edit" => "",
@@ -67,12 +53,13 @@ else
                                                      "datum" => date("d.m.Y", $get['datum']),
                                                      "zeit" => date("H:i", $get['datum']),
                                                      "hp" => $gbhp));
+
+                    $entry = show($dir."/gb_show", array("comments" => '', "gbtitel" => $gbtitel, "nachricht" => show(bbcode::parse_html($get['nachricht']),array(),array('gb_addcomment_from' => _gb_addcomment_from)), "editby" => bbcode::parse_html($get['editby']), "ip" => $get['ip']));
+                    $index = show($dir."/gb_addcomment", array("error" => $error, "entry" => $entry, "id" => $_GET['id'], "ed" => ""));
                 }
-
-
-                $entry = show($dir."/gb_show", array("comments" => '', "gbtitel" => $gbtitel, "nachricht" => show(bbcode::parse_html($get['nachricht']),array(),array('gb_addcomment_from' => _gb_addcomment_from)), "editby" => bbcode::parse_html($get['editby']), "ip" => $get['ip']));
-                $index = show($dir."/gb_addcomment", array("error" => $error, "entry" => $entry, "id" => $_GET['id'], "ed" => ""));
             }
+            else
+                $index = error(_error_edit_post);
         break;
         case 'set':
             if(permission('gb'))
