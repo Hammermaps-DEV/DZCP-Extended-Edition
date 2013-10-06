@@ -100,8 +100,16 @@ else
 
                 $get = db("SELECT user,xfire,steamurl FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
 
-                if($get['xfire'] != convert::ToString(string::encode($_POST['xfire'])))
+                // XFire Cleanup
+                if($get['xfire'] != convert::ToString(string::encode(trim($_POST['xfire']))))
                 { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
+
+                // Steam Cleanup
+                if($get['steamurl'] != convert::ToString(string::encode(trim($_POST['steam']))))
+                {
+                    Cache::delete('steam_'.$get['steamurl']); //Delete Steam Cache
+                    Cache::delete_binary('steam_pic_'.$get['steamurl']); //Delete Steam Avatar Cache
+                }
 
                 db("UPDATE ".dba::get('users')." SET	".$newpwd." ".$customfields."
                                                  `country`          = '".convert::ToString($_POST['land'])."',
@@ -119,8 +127,8 @@ else
                                                  `language`         = '".string::encode($_POST['language'])."',
                                                  `hp`               = '".convert::ToString(links($_POST['hp']))."',
                                                  `icq`              = '".convert::ToInt($icq)."',
-                                                 `xfire`            = '".string::encode($_POST['xfire'])."',
-                                                 `steamurl`         = '".string::encode($_POST['steam'])."',
+                                                 `xfire`            = '".string::encode(trim($_POST['xfire']))."',
+                                                 `steamurl`         = '".string::encode(trim($_POST['steam']))."',
                                                  `signatur`         = '".string::encode($_POST['sig'])."',
                                                  `startpage`        = '".convert::ToInt($_POST['startpage'])."',
                                                  `profile_access`   = '".convert::ToInt(isset($_POST['paccess']) ? $_POST['paccess'] : 0)."',
