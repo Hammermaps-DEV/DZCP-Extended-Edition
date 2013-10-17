@@ -429,17 +429,6 @@ if(!$ajaxThumbgen)
 
     //CMS Protect
     cms_protect::detect_login_search_run();
-
-    //Addon DB Cleanup
-    $sql_addons_clean = db("SELECT dir FROM `".dba::get('addons')."`");
-    if(_rows($sql_addons_clean) >= 1)
-    {
-        while ($get_addons_clean = _fetch($sql_addons_clean))
-        {
-            if(!file_exists(basePath."/inc/additional-addons/".$get_addons_clean['dir']."/addon_info.xml"))
-                db("DELETE FROM `".dba::get('addons')."` WHERE `dir` = '".$get_addons_clean['dir']."'" );
-        }
-    }
 }
 
 //-> User bearbeiten, Level Menu

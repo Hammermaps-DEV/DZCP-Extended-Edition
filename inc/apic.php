@@ -127,6 +127,17 @@ class API_CORE
 
                     self::$addon_index[$addon] = $addon_infos; // Runtime Index
                     self::$addon_index_xml[$addon] = $addon_xml_infos;
+
+                    //Addon DB Cleanup
+                    $sql_addons_clean = db("SELECT dir FROM `".dba::get('addons')."`");
+                    if(_rows($sql_addons_clean) >= 1)
+                    {
+                        while ($get_addons_clean = _fetch($sql_addons_clean))
+                        {
+                            if(!file_exists(basePath."/inc/additional-addons/".$get_addons_clean['dir']."/addon_info.xml"))
+                                db("DELETE FROM `".dba::get('addons')."` WHERE `dir` = '".$get_addons_clean['dir']."'" );
+                        }
+                    }
                 }
             }
         }
