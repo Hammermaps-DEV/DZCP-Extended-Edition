@@ -233,49 +233,6 @@ function install_155x_1600_update()
             db("UPDATE `".dba::get('settings')."` SET `value` = '".$var."' WHERE `key` = '".$key."';",false,false,true);
     }
 
-    // Ersetze Permissions Tabelle
-    $qry = db("SELECT * FROM `".dba::get('permissions')."`");
-    if(_rows($qry) >= 1)
-    {
-        $cache_array_sql = array();
-        while($get = _fetch($qry))
-        {
-            $cache_array_sql[] = "INSERT INTO `".dba::get('permissions')."` SET
-            `user` = ".$get['user'].",
-            `pos` = ".$get['pos'].",
-            `intforum` = ".$get['intforum'].",
-            `clankasse` = ".$get['clankasse'].",
-            `clanwars` = ".$get['clanwars'].",
-            `shoutbox` = ".$get['shoutbox'].",
-            `serverliste` = ".$get['serverliste'].",
-            `editusers` = ".$get['editusers'].",
-            `editsquads` = ".$get['editsquads'].",
-            `editserver` = ".$get['editserver'].",
-            `editkalender` = ".$get['editkalender'].",
-            `news` = ".$get['news'].",
-            `gb` = ".$get['gb'].",
-            `forum` = ".$get['forum'].",
-            `votes` = ".$get['votes'].",
-            `gallery` = ".$get['gallery'].",
-            `votesadmin` = ".$get['votesadmin'].",
-            `links` = ".$get['links'].",
-            `downloads` = ".$get['downloads'].",
-            `newsletter` = ".$get['newsletter'].",
-            `intnews` = ".$get['intnews'].",
-            `rankings` = ".$get['rankings'].",
-            `contact` = ".$get['contact'].",
-            `joinus` = ".$get['joinus'].",
-            `awards` = ".$get['awards'].",
-            `artikel` = ".$get['artikel'].",
-            `receivecws` = ".$get['receivecws'].",
-            `editor` = ".$get['editor'].",
-            `glossar` = ".$get['glossar'].",
-            `gs_showpw` = ".$get['gs_showpw'].";";
-        }
-
-        unset($qry,$get);
-    }
-
     // Lösche dzcp_banned Tabelle
     dba::set('banned','banned'); //Tempadd
     db("DROP TABLE `".dba::get('banned')."`",false,false,true);
@@ -379,6 +336,7 @@ function install_155x_1600_update()
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `user` int(11) NOT NULL DEFAULT '0',
       `pos` int(1) NOT NULL DEFAULT '0',
+      `addons` int(1) NOT NULL DEFAULT '0',
       `artikel` int(1) NOT NULL DEFAULT '0',
       `awards` int(1) NOT NULL DEFAULT '0',
       `activateusers` int(1) NOT NULL DEFAULT '0',
@@ -657,6 +615,18 @@ function install_155x_1600_update()
 
     db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
     db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
+
+    //===============================================================
+    //-> Addons =====================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('addons')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('addons')."` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `dir` varchar(200) NOT NULL DEFAULT '',
+    `installed` int(1) NOT NULL DEFAULT '0',
+    `enable` int(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     return true;
 }

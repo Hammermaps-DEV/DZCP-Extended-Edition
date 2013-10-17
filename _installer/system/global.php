@@ -2,8 +2,8 @@
 /* Charset */
 define('_charset', 'iso-8859-1');
 
-define('_true', '<img src="html/img/true.gif" border="0" alt="" vspace="0" align="center"> ');
-define('_false', '<img src="html/img/false.gif" border="0" alt="" vspace="0" align="center"> ');
+define('_true', '<img src="../inc/images/true.gif" border="0" alt="" vspace="0" align="center"> ');
+define('_false', '<img src="../inc/images/false.gif" border="0" alt="" vspace="0" align="center"> ');
 define('version_input', "<tr><td><table class=\"info\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr>
 <td width=\"0\" height=\"0\" valign=\"middle\"><input type=\"radio\" [disabled] [checked] name=\"version\" id=\"version\" value=\"[version_num]\" /> DZCP-[version_num_view]</td></tr></table></td></tr>");
 define('_step', '<td></td><td>[text]</td></tr>');

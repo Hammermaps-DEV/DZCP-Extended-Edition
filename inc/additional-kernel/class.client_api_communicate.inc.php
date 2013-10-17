@@ -24,7 +24,7 @@
 
 #client_api_communicate::send();
 
-final class client_api_communicate
+class client_api_communicate
 {
     private static $stream = null; //Hex + Control
     private static $data_stream = null; //Hex etc.

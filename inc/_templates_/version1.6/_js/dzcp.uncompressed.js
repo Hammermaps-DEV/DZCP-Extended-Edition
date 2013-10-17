@@ -626,6 +626,14 @@
             }
         });
     },
+
+    license_checkbox_check: function(tag) {
+        jQuery( "#" + tag ).button( "option", "disabled", document.getElementById('license_checkbox').checked ? false : true );
+    },
+
+    enable_button: function(tag) {
+        jQuery( "#" + tag ).button( "option", "disabled", false );
+    },
 }
 
 // load global events

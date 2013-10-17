@@ -27,6 +27,18 @@ function install_mysql_create()
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
+    //-> Addons =====================================================
+    //===============================================================
+    db("DROP TABLE IF EXISTS `".dba::get('addons')."`;",false,false,true);
+    db("CREATE TABLE IF NOT EXISTS `".dba::get('addons')."` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `dir` varchar(200) NOT NULL DEFAULT '',
+    `installed` int(1) NOT NULL DEFAULT '0',
+    `enable` int(1) NOT NULL DEFAULT '0',
+    PRIMARY KEY (`id`)
+    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+
+    //===============================================================
     //-> Artikel ====================================================
     //===============================================================
     db("DROP TABLE IF EXISTS `".dba::get('artikel')."`;",false,false,true);

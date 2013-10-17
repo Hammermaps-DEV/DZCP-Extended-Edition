@@ -1967,7 +1967,6 @@ function page($index,$title,$where,$time,$index_templ=false)
         $charset = !defined('_charset') ? 'iso-8859-1' : _charset;
         $lng_meta = language::get_meta();
         $index = empty($index) ? '' : (empty($check_msg) ? '' : $check_msg).'<table class="mainContent" cellspacing="1" style="margin-top:0">'.$index.'</table>';
-        $where = preg_replace_callback("#autor_(.*?)$#",create_function('$id', 'return data("$id[1]","nick");'),$where);
 
         //check if placeholders are given
         $pholder = file_get_contents($designpath."/index.html");

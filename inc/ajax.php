@@ -123,7 +123,7 @@ $dir = "sites";
 ## SECTIONS ##
 header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
 switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
-    case 'menu';
+    case 'menu':
         switch (isset($_GET['mod']) ? $_GET['mod'] : ''):
             case 'server';
                 die('<table class="hperc" cellspacing="0">'.server(convert::ToInt($_GET['serverID'])).'</table>');
@@ -145,12 +145,19 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
         endswitch;
     break;
 
-    case 'thumbgen';
+    case 'thumbgen':
     if(!headers_sent())
         thumbgen($_GET['file'], isset($_GET['width']) ? $_GET['width'] : '', isset($_GET['height']) ? $_GET['height'] : '');
     break;
 
-    case 'old_func';
+    case 'addon_installer':
+        if($_GET['step'] == 'sql')
+            die(addons_installer::run_sql_installer(decryptData(base64_decode($_GET['addon']))));
+        else if($_GET['step'] == 'file')
+            die(addons_installer::run_file_installer(decryptData(base64_decode($_GET['addon']))));
+    break;
+
+    case 'old_func':
         switch (isset($_GET['i']) ? $_GET['i'] : ''):
             case 'kalender';
                 die(kalender($_GET['month'],$_GET['year']));

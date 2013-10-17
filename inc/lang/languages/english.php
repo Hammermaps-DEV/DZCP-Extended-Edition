@@ -216,6 +216,18 @@ define('_steam_in_game', 'Im Spiel');
 define('_config_steam_apikey', 'Steam API-Key');
 define('_steam_apikey_info', 'Registrierung eines Steam API-Key: <a href="http://steamcommunity.com/dev/apikey/" target="_blank">steamcommunity.com</a>');
 
+//Addon MGR
+define('_config_addonsmgr', 'Add-on Manager');
+define('_addonsmgr_addon', 'Add-On');
+define('_addonsmgr_version', 'Version');
+define('_addonsmgr_addons', 'Add-Ons verwalten');
+define('_addonsmgr_addon_wiz', 'Start Add-On Setup');
+define('_addonsmgr_addon_hp', 'To Add-On Homepage');
+define('_addonsmgr_addon_start_stop', 'Add-On Start/Stop');
+define('_addonsmgr_install_required', 'Installation required!');
+define('_addonsmgr_disabled', 'Disabled');
+define('_addonsmgr_running', 'Running');
+
 ## ADDED FOR 1.6 Final
 define('_search_con_or', 'at least one word');
 define('_search_con_and', 'character by character');
@@ -342,7 +354,7 @@ define('_config_double_post' , 'Forum double post');
 define('_config_fotum_vote' , 'Forum-Vote');
 define('_config_fotum_vote_info' , '<center>Here you can specify whether a Forum-Vote also Vote to be displayed.</center>');
 ## ADDED / REDEFINED FOR 1.5
-define('_installdir' , "<tr><td colspan=\"15\" class=\"contentMainFirst\"><br /><center>In case of security reasons, please remove the folder \"<b>/_installer</b>\" from your webserver!</center><br /></td></tr>");
+define('_installdir', "<tr><td colspan=\"15\" class=\"error_text\"><div class=\"error\"><br /><center><b>In case of security reasons, please remove the folder \"<b>/_installer</b>\" from your webserver!</center><br /></div></td></tr>");
 define('_no_ts' , 'no Teamspeak');
 define('_search_sites' , 'Sites');
 define('_search_results' , 'Search Results');

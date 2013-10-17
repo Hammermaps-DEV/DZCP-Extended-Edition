@@ -352,9 +352,9 @@ function is_writable_array($array)
     foreach($array as $file)
     {
         $what = "Ordner:&nbsp;";
-        $exp = explode('.', str_replace('/', '', $file));
-        if(count($exp) >= 2)
-        { if($exp[1] == 'php') $what = "Datei:&nbsp;"; }
+
+        if(is_file('../'.$file))
+            $what = "Datei:&nbsp;";
 
         $_file = preg_replace("#\.\.#Uis", "", '../'.$file);
 

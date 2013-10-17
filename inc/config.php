@@ -153,6 +153,7 @@ if(empty($sql_user) && empty($sql_pass) && empty($sql_db) && !$_SESSION['install
 //-> MySQL-Datenbankangaben
 //          [TAG]                [TABELLE]              [NAME + PREFIX]
 $db_array['artikel']          = 'artikel';             # dzcp_artikel
+$db_array['addons']           = 'addons';              # dzcp_addons
 $db_array['acomments']        = 'acomments';           # dzcp_acomments
 $db_array['awards']           = 'awards';              # dzcp_awards
 $db_array['away']             = 'away';                # dzcp_away

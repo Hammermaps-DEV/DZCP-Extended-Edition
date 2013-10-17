@@ -10,6 +10,7 @@ class API_CORE
 {
     public static $addon_index = array();
     public static $addon_index_xml = array();
+    public static $addon_index_all = array();
     public static $MobileDevice = false;
     public static $MobileClass = '';
     public static $bbcode_index = array();
@@ -60,7 +61,7 @@ class API_CORE
                             $xml_array = convert::objectToArray(xml::getXMLvalue($moduleName,'/info'));
                             if(!array_key_exists('addon_name', $xml_array) || !array_key_exists('addon_autor', $xml_array) || !array_key_exists('addon_autor_url', $xml_array) ||
                                !array_key_exists('addon_autor_mail', $xml_array) || !array_key_exists('addon_version', $xml_array) || !array_key_exists('addon_info', $xml_array) ||
-                               !array_key_exists('addon_init_call', $xml_array))
+                               !array_key_exists('addon_init_call', $xml_array) || !array_key_exists('addon_require_installer', $xml_array) || !array_key_exists('addon_build_rev', $xml_array))
                                 DebugConsole::insert_warning('API_CORE::init()', 'The addon: "'.$addon.'" has a incomplete addon_info.xml');
 
                             $info_array['xml_addon_name'] = $xml_array['addon_name'];
@@ -70,6 +71,8 @@ class API_CORE
                             $info_array['xml_addon_version'] = $xml_array['addon_version'];
                             $info_array['xml_addon_info'] = $xml_array['addon_info'];
                             $info_array['xml_addon_init_call'] = $xml_array['addon_init_call'];
+                            $info_array['xml_addon_installer'] = xml::bool($xml_array['addon_require_installer']); // require installer
+                            $info_array['xml_addon_build_rev'] = $xml_array['addon_build_rev'];
 
                             //Updater
                             $addon_xml_infos['addon_name'] = $xml_array['addon_name'];
@@ -110,7 +113,19 @@ class API_CORE
                     $addon_infos['additional_admin'] = (count($additional_admin) >= 1 && !empty($additional_admin) ? true : false);
                     unset($additional_admin);
 
-                    self::$addon_index[$addon] = $addon_infos;
+                    self::$addon_index_all[$addon] = $addon_infos; //All Index
+
+                    $sql = db("SELECT enable,installed FROM `".dba::get('addons')."` WHERE `dir` = '".string::encode($addon)."' LIMIT 1");
+                    if(!_rows($sql)) { db("INSERT INTO `".dba::get('addons')."` SET `dir` = '".string::encode($addon)."';"); continue; }
+
+                    $get = _fetch($sql);
+                    if(!$get['enable'])
+                    { DebugConsole::insert_info('API_CORE::enable_addons()', 'Addon: "'.$addon_infos['xml']['xml_addon_name'].'" ist deaktiviert'); continue; }
+
+                    if(!$get['installed'] && $addon_infos['xml']['xml_addon_installer'])
+                    { DebugConsole::insert_info('API_CORE::enable_addons()', 'Addon: "'.$addon_infos['xml']['xml_addon_name'].'" setzt eine Installation vorraus'); continue; }
+
+                    self::$addon_index[$addon] = $addon_infos; // Runtime Index
                     self::$addon_index_xml[$addon] = $addon_xml_infos;
                 }
             }
@@ -600,5 +615,433 @@ class API_CORE
 
             return settings::get('addons_'.$keys);
         }
+    }
+}
+
+/* ######################################## Addons Installer ################################################### */
+
+class addons_installer
+{
+    public static $addon_installer_config = array();
+    public static $addon_welcome_text = '';
+    public static $addon_name = '';
+
+    // Soll eine Readme im Installer angezeigt werden
+    public static $installer_use_readme = true; // Readme anzeigen
+    public static $installer_html_readme = true; // Soll statt Text, HTML verwendet werden
+    public static $installer_readme = '';  // Readme Text
+
+    // Soll eine Lizenz im Installer angezeigt werden
+    public static $installer_use_license = true; // Lizenz anzeigen
+    public static $installer_html_license = false; // Soll statt Text, HTML verwendet werden
+    public static $installer_license = ''; // Lizenz Text
+
+    // Soll eine Seite mit Schreibrechten im Installer angezeigt werden
+    public static $installer_use_prepare = true; // Schreibrechte bestimmter Ordner oder Daten prüfen
+    public static $installer_prepare_list = array(); // Array mit Daten/Ordnern die schreibrechte brauchen
+
+    // Sollen alle Installer verwendet werden
+    public static $installer_use_sql_installer = true;
+    public static $installer_use_file_installer = true;
+
+    public static $installer_welcome_text = '';
+    public static $installer_finished_text = '';
+
+    //Private
+    private static $akt_step = '';
+
+    public static final function init()
+    {
+        if(!isset($_GET['addon']) || empty($_GET['addon']) || !modapi_enabled) return false;
+        self::$addon_name = trim($_GET['addon']);
+        if(!array_key_exists(self::$addon_name, API_CORE::$addon_index_all)) return false;
+        $addon_data = API_CORE::$addon_index_all[self::$addon_name];
+        if(!file_exists($addon_data['dir'].'installer.php')) return false;
+        if(!$addon_data['xml']['xml_addon_installer']) return false;
+        if(require_once($addon_data['dir'].'installer.php'))
+        {
+            self::$addon_installer_config = $addon_data['xml'];
+            return true;
+        }
+
+        return false;
+    }
+
+    public static final function installer_output()
+    {
+        global $dir;
+        $dir = $dir.'/installer/'; //Set Template Dir
+        self::$akt_step = isset($_GET['step']) && !empty($_GET['step']) ? $_GET['step'] :'welcome'; //Set default Step
+
+        if(!modapi_enabled) { $dir = "admin"; return ''; }
+        if(method_exists('installer', 'method_startup'))
+            if(!installer::method_startup()) { $dir = "admin"; return ''; }
+
+        switch(self::$akt_step)
+        {
+            case 'readme':
+                $index = show($dir.'readme',array('next' => self::next_link(true),'readme' => self::get_readme_license_text(installer::$installer_readme)));
+            break;
+            case 'license':
+                $index = show($dir.'license',array('addon' => self::$addon_name, 'step' => self::next_link(false,false,true),'next' => self::next_link(false,_installer_next_link),'license' => self::get_readme_license_text(installer::$installer_license)));
+            break;
+            case 'prepare':
+                if(installer::$installer_use_license && !isset($_POST['license_checkbox']) && !isset($_POST['auto']))
+                    header('Location: ../admin/?admin=addonsmgr');
+
+                $set_chmod_ftp = false; $next_link = false; $disabled = '';
+                $prepare_array_script = self::is_writable_array(); $script='';
+
+                if(isset($_POST['auto']))
+                {
+                    foreach(self::writable_array() as $get_file)
+                    { FTP::chmod($get_file['file'],644); }
+                    $prepare_array_script = self::is_writable_array();
+                }
+
+                foreach($prepare_array_script['return'] as $get_check_result)
+                { $script .= $get_check_result; }
+
+                if(!$set_chmod_ftp)
+                {
+                    //Alle Dateien beschreibbar?
+                    if($prepare_array_script['status'])
+                    {
+                        $next_link = true; $disabled = 'disabled="disabled"';
+                        $success_status = self::writemsg(prepare_files_success,false);
+                    }
+                    else
+                    {
+                        if(empty($_SESSION['ftp_host']) || empty($_SESSION['ftp_pfad']) || empty($_SESSION['ftp_user']))
+                            $success_status = self::writemsg(prepare_files_error_non_ftpauto,true);
+                        else
+                            $success_status = self::writemsg(prepare_files_error,true);
+                    }
+                }
+
+                $host = settings('ftp_hostname');
+                $usern = settings('ftp_username');
+                if(empty($host) || empty($usern))
+                    $disabled = 'disabled="disabled"';
+                unset($host,$usern);
+
+                $index = show($dir.'prepare',array('disabled' => $disabled ,'success_status' => $success_status,'script' => $script, 'next' => self::next_link($next_link), 'addon' => self::$addon_name));
+            break;
+            case 'sql':
+                $addon_encrypt = base64_encode(encryptData(self::$addon_name));
+                $url = '../inc/ajax.php?loader=addon_installer&step=sql&addon='.$addon_encrypt;
+                $show = '<div id="installer"><div style="width:550px; 0;text-align:center"><br><br>Bitte warte einen Moment während die SQL-Installation ausgeführt wird<br>
+                    <br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'installer\',\''.$url.'\');</script></div><br><br>';
+                $index = show($dir.'sql',array('next' => self::next_link(false),'prozessbar' => $show));
+
+            break;
+            case 'file':
+                $addon_encrypt = base64_encode(encryptData(self::$addon_name));
+                $url = '../inc/ajax.php?loader=addon_installer&step=file&addon='.$addon_encrypt;
+                $show = '<div id="installer"><div style="width:550px; 0;text-align:center"><br><br>Bitte warte einen Moment während die File-Installation ausgeführt wird<br>
+                    <br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'installer\',\''.$url.'\');</script></div><br><br>';
+                $index = show($dir.'file',array('next' => self::next_link(false),'prozessbar' => $show));
+            break;
+            case 'finished':
+                if(method_exists('installer', 'method_finished_install'))
+                    installer::method_finished_install();
+
+                db_stmt("UPDATE ".dba::get('addons')." SET `installed` = '1', `enable` = '1' WHERE `dir` = ?",array('s', self::$addon_name));
+                $index = show($dir.'finished',array('next' => self::next_link(true,false,false,'Zum '._config_addonsmgr),'finished_text' => empty(self::$installer_finished_text) ? _installer_finished : bbcode::parse_html(self::$installer_finished_text)));
+            break;
+            case 'header':
+                header('Location: ../admin/?admin=addonsmgr');
+            break;
+            default: // welcome
+                $index = show($dir.'welcome',array('next' => self::next_link(true),'welcome_text' => bbcode::parse_html(installer::$installer_welcome_text)));
+            break;
+        }
+
+        return show($dir.'body', array('head' => show(_install_head, array('version' => self::$addon_installer_config['xml_addon_version'], 'addon_name' => self::$addon_installer_config['xml_addon_name'])), 'index' => $index, 'steps' => self::steps()));
+    }
+
+    public static function run_sql_installer($addon)
+    {
+        if(!modapi_enabled) return '';
+        $installer_status = array('error' => false, 'warn' => false, 'msg' => mysql_setup_created, 'nextlink' => true);
+        if(method_exists('installer', 'method_sql_backup'))
+        {
+            $status = installer::method_sql_backup();
+            if(!$status && !is_array($status))
+            {
+                $installer_status['error'] = true;
+                $installer_status['warn'] = false;
+                $installer_status['nextlink'] = false;
+                $installer_status['msg'] = 'Feler';
+            }
+            else if($status && !is_array($status))
+            {
+                $installer_status['error'] = false;
+                $installer_status['warn'] = false;
+                $installer_status['nextlink'] = true;
+            }
+            else if(is_array($status))
+            {
+                $installer_status['nextlink'] = $status['nextlink'];
+                $installer_status['msg'] = $status['msg'];
+
+                switch($status['status'])
+                {
+                    case 'error':
+                        $installer_status['error'] = true;
+                        $installer_status['warn'] = false;
+                    break;
+                    case 'warn':
+                        $installer_status['error'] = false;
+                        $installer_status['warn'] = true;
+                    break;
+                }
+            }
+        }
+
+        if(method_exists('installer', 'method_sql_install'))
+        {
+            $status = installer::method_sql_install();
+            if(!$status && !is_array($status))
+            {
+                $installer_status['error'] = true;
+                $installer_status['warn'] = false;
+                $installer_status['nextlink'] = false;
+                $installer_status['msg'] = 'Feler';
+            }
+            else if($status && !is_array($status))
+            {
+                $installer_status['error'] = false;
+                $installer_status['warn'] = false;
+                $installer_status['nextlink'] = true;
+            }
+            else if(is_array($status))
+            {
+                $installer_status['nextlink'] = $status['nextlink'];
+                if(!empty($installer_status['msg']) && !empty($status['msg'])) $installer_status['msg'] .= '<p>';
+                $installer_status['msg'] .= $status['msg'];
+
+                switch($status['status'])
+                {
+                    case 'error':
+                        $installer_status['error'] = true;
+                        $installer_status['warn'] = false;
+                    break;
+                    case 'warn':
+                        $installer_status['error'] = false;
+                        $installer_status['warn'] = true;
+                    break;
+                }
+            }
+        }
+
+        $index = self::writemsg($installer_status['msg'],$installer_status['error'],$installer_status['warn']);
+
+        if($installer_status['nextlink'])
+            $index .= "<script language=\"JavaScript\" type=\"text/javascript\">DZCP.enable_button('installer_next');</script>";
+
+        unset($installer_status);
+        return $index;
+    }
+
+    public static function run_file_installer($addon)
+    {
+        if(!modapi_enabled) return '';
+        $installer_status = array('error' => false, 'warn' => false, 'msg' => file_setup_created, 'nextlink' => true);
+        if(method_exists('installer', 'method_data_install'))
+        {
+            $status = installer::method_data_install();
+            if(!$status && !is_array($status))
+            {
+                $installer_status['error'] = true;
+                $installer_status['warn'] = false;
+                $installer_status['nextlink'] = false;
+                $installer_status['msg'] = 'Feler';
+            }
+            else if($status && !is_array($status))
+            {
+                $installer_status['error'] = false;
+                $installer_status['warn'] = false;
+                $installer_status['nextlink'] = true;
+            }
+            else if(is_array($status))
+            {
+                $installer_status['nextlink'] = $status['nextlink'];
+                if(!empty($installer_status['msg']) && !empty($status['msg'])) $installer_status['msg'] .= '<p>';
+                $installer_status['msg'] .= $status['msg'];
+
+                switch($status['status'])
+                {
+                    case 'error':
+                        $installer_status['error'] = true;
+                        $installer_status['warn'] = false;
+                    break;
+                    case 'warn':
+                        $installer_status['error'] = false;
+                        $installer_status['warn'] = true;
+                    break;
+                }
+            }
+        }
+
+        $index = self::writemsg($installer_status['msg'],$installer_status['error'],$installer_status['warn']);
+
+        if($installer_status['nextlink'])
+            $index .= "<script language=\"JavaScript\" type=\"text/javascript\">DZCP.enable_button('installer_next');</script>";
+
+        unset($installer_status);
+        return $index;
+    }
+
+    /* ##################################### Private ##################################### */
+
+    private static function next_link($enable=false,$html=false,$next_step_ret=false,$button_text='')
+    {
+        //Step * welcome
+        $next_step = '';
+        if(self::$akt_step == 'welcome' && !self::$installer_use_readme && self::$installer_use_license)
+            $next_step = 'license';
+        else if(self::$akt_step == 'welcome' && !self::$installer_use_readme && !self::$installer_use_license && self::$installer_use_prepare)
+            $next_step = 'prepare';
+        else if(self::$akt_step == 'welcome' && !self::$installer_use_readme && !self::$installer_use_license && !self::$installer_use_prepare && self::$installer_use_sql_installer)
+            $next_step = 'sql';
+        else if(self::$akt_step == 'welcome' && !self::$installer_use_readme && !self::$installer_use_license && !self::$installer_use_prepare && !self::$installer_use_sql_installer && self::$installer_use_file_installer)
+            $next_step = 'file';
+        else if(self::$akt_step == 'welcome' && !self::$installer_use_readme && !self::$installer_use_license && !self::$installer_use_prepare && !self::$installer_use_sql_installer && !self::$installer_use_file_installer)
+            $next_step = 'finished';
+        else if(self::$akt_step == 'welcome' && self::$installer_use_readme)
+            $next_step = 'readme';
+
+        //Step * readme
+        else if(self::$akt_step == 'readme' && self::$installer_use_license)
+            $next_step = 'license';
+        else if(self::$akt_step == 'readme' && !self::$installer_use_license && self::$installer_use_prepare)
+            $next_step = 'prepare';
+        else if(self::$akt_step == 'readme' && !self::$installer_use_license && !self::$installer_use_prepare && self::$installer_use_sql_installer)
+            $next_step = 'sql';
+        else if(self::$akt_step == 'readme' && !self::$installer_use_license && !self::$installer_use_prepare && !self::$installer_use_sql_installer && self::$installer_use_file_installer)
+            $next_step = 'file';
+        else if(self::$akt_step == 'readme' && !self::$installer_use_license && !self::$installer_use_prepare && !self::$installer_use_sql_installer && !self::$installer_use_file_installer)
+            $next_step = 'finished';
+
+        //Step * license
+        else if(self::$akt_step == 'license' && self::$installer_use_prepare)
+            $next_step = 'prepare';
+        else if(self::$akt_step == 'license' && !self::$installer_use_prepare && self::$installer_use_sql_installer)
+            $next_step = 'sql';
+        else if(self::$akt_step == 'license' && !self::$installer_use_prepare && !self::$installer_use_sql_installer && self::$installer_use_file_installer)
+            $next_step = 'file';
+        else if(self::$akt_step == 'license' && !self::$installer_use_prepare && !self::$installer_use_sql_installer && !self::$installer_use_file_installer)
+            $next_step = 'finished';
+
+        //Step * SQL Installer
+        else if(self::$akt_step == 'prepare' && self::$installer_use_sql_installer)
+            $next_step = 'sql';
+        else if(self::$akt_step == 'prepare' && !self::$installer_use_sql_installer && self::$installer_use_file_installer)
+            $next_step = 'file';
+        else if(self::$akt_step == 'prepare' && !self::$installer_use_sql_installer && !self::$installer_use_file_installer)
+            $next_step = 'finished';
+
+        //Step * File Installer
+        else if(self::$akt_step == 'sql' && self::$installer_use_file_installer)
+            $next_step = 'file';
+        else if(self::$akt_step == 'sql' && !self::$installer_use_file_installer)
+            $next_step = 'finished';
+
+        //Step * SQL Installer
+        else if(self::$akt_step == 'file')
+            $next_step = 'finished';
+
+        //Step * SQL Installer
+        else if(self::$akt_step == 'finished')
+            $next_step = 'header';
+
+        if($next_step_ret) return $next_step;
+        return show(!$html || empty($html) ? _installer_next_link : $html, array('value' => empty($button_text) ? _next : $button_text, 'addon' => self::$addon_name, 'step' => $next_step, 'disable' => $enable ? '' : 'disabled'));
+    }
+
+    private static function steps()
+    {
+        $steps_array = array('welcome','readme','license','prepare','sql','file','finished');
+        $steps_html = '';
+        foreach ($steps_array as $step)
+        {
+            if($step == 'readme' && !self::$installer_use_readme) continue;
+            if($step == 'license' && !self::$installer_use_license) continue;
+            if($step == 'prepare' && !self::$installer_use_prepare) continue;
+            if($step == 'sql' && !self::$installer_use_sql_installer) continue;
+            if($step == 'file' && !self::$installer_use_file_installer) continue;
+            if(!defined('_installer_step_'.$step)) { DebugConsole::insert_warning('addons_installer::gen_steps()', 'Constant "_installer_step_'.$step.'" is not defined!'); continue; }
+            $steps_html .= show(_installer_step,array("text" => show(($step == self::$akt_step ? _installer_step_enabled : _installer_step_disabled),array('step' => constant('_installer_step_'.$step)))));
+        }
+
+        return $steps_html;
+    }
+
+    private static function get_readme_license_text()
+    {
+        if((self::$akt_step == 'readme' && self::$installer_html_readme) || (self::$akt_step == 'license' && self::$installer_html_license))
+            return bbcode::parse_html( self::$akt_step == 'readme' ? self::$installer_readme : self::$installer_license);
+
+        return '<textarea  style="width:550px;height:400px; padding:6px; font-weight:bold; overflow:auto;" name="textarea" readonly="readonly">'.
+        ( self::$akt_step == 'readme' ? self::$installer_readme : self::$installer_license).'</textarea>';
+    }
+
+    private static function is_writable_array()
+    {
+        $i=0; $data=array(); $status=true;
+        foreach(self::$installer_prepare_list as $file)
+        {
+            $what = "Ordner:&nbsp;";
+            if(is_file('../'.$file)) $what = "Datei:&nbsp;";
+            $_file = preg_replace("#\.\.#Uis", "", '../'.$file);
+
+            if(is_writable('../'.$file))
+                $data[$i] = "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"90\"><font color='green'>"._installer_true."<b>".$what."</b></font></td><td><font color='green'>".$_file."</font></td></tr></table>";
+            else
+            {
+                $data[$i] = "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"90\"><font color='red'>"._installer_false."<b>".$what."</b></font></td><td><font color='red'>".$_file."</font><br /></td></tr></table>";
+                $status=false;
+            }
+
+            $i++;
+        }
+
+        return array('return' => $data, 'status' => $status);
+    }
+
+    private static function writable_array()
+    {
+        $i=0; $return = array();
+        foreach(self::$installer_prepare_list as $file)
+        {
+            if(!is_writable('../'.$file))
+            {
+                $return[$i]['dir'] = true;
+
+                if(is_file('../'.$file))
+                    $return[$i]['dir'] = false;
+
+                $return[$i]['file'] = $file;
+
+                $i++;
+            }
+        }
+
+        return $return;
+    }
+
+    private static function writemsg($stg='',$error=false, $warn=false)
+    {
+        $dir = 'admin/installer'; //Set Template Dir
+
+        if($error)
+            return show($dir.'/msg/msg_error',array("error" => _error, "msg" => $stg));
+        else if($warn)
+            return show($dir.'/msg/msg_warn',array("warn" => _warn, "msg" => $stg));
+        else
+            return show($dir.'/msg/msg_successful',array("successful" => _successful, "msg" => $stg));
     }
 }

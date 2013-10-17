@@ -120,7 +120,7 @@ textarea,
 
 table.mainContent td, div#brackets, div#infoInnerLayer,
 .tile_box, .navServerPic, .ServerPic, .contentHead,
-.newsImage, .gallerie_pic {
+.newsImage, .gallerie_pic, .emph, .warn, .done, .error, td.navHead.box {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -738,10 +738,14 @@ td.counterSpace {
 /*---------------------------------------------
 Global styles of the content
 ---------------------------------------------*/
-td.contentHead,td.contentMainTop,td.contentMainFirst,td.contentMainSecond,td.contentBottom,td.contentBottomLeft {
+td.contentHead,td.contentMainTop,td.contentMainFirst,td.contentMainSecond,td.contentBottom,td.contentBottomLeft,td.navHead.box {
   height: 16px;
   padding: 3px;
   vertical-align: middle;
+}
+
+td.contentHead.left {
+    text-align: left;
 }
 
 td.contentHead,td.infoTop {
@@ -770,6 +774,7 @@ div#infoInnerLayer,
 td.commentsRight,
 td.navShoutContentFirst,
 td.calDay,td.calToday,
+td.navHead.box,
 .adminBarInner,.adminBarInnerOver,.adminMenuOuter,.adminMenuOuterOver,
 .adminBarOuter,.adminBarOuterOver,.adminMenuInner,.adminMenuInnerOver {
   background-color: #fff;
@@ -847,6 +852,13 @@ td.calDay,td.calToday {
 
 td.calToday {
   border: 1px solid #000;
+}
+
+td.navHead.box {
+  color: #464646;
+  border: 1px solid #c0c0c0;
+  font-size: 10px;
+  font-family: Verdana;
 }
 
 /*---------------------------------------------
@@ -1842,4 +1854,91 @@ img.border {
     background: linear-gradient(to bottom, #706c6b 5%,#4e4d4d 95%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#706c6b', endColorstr='#4e4d4d',GradientType=0 );
     filter: none;
+}
+
+/* Installer */
+.installer_disabled {
+  color: #000000;
+  font-weight: bold;
+  font-style: normal;
+  font-family: Verdana;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.installer_enabled {
+  color: red;
+  font-weight: bold;
+  font-style: normal;
+  font-family: Verdana;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.installer_head {
+  color: #CCC;
+  font-style: normal;
+  font-family: Verdana;
+  font-size: 13px;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.info {
+  background-color: #e9e9e9;
+  color: #464646;
+  border: 1px solid #c0c0c0;
+  font-size: 10px;
+  font-family: Verdana;
+}
+
+td.contentBottom.installer {
+  color: #464646;
+  border: 1px solid #c0c0c0;
+  font-size: 10px;
+  font-family: Verdana;
+  vertical-align: top;
+  padding-top: 8px;
+  padding-left: 10px;
+}
+
+.error {
+  background-color: #f3a2a6;
+  border: 1px solid black;
+}
+
+.error_text {
+  color: black;
+  font-size: 10px;
+  font-family: Verdana;
+}
+
+.warn {
+  background-color: #FFFF00;
+  border: 1px solid black;
+}
+
+.warn_text {
+  color: black;
+  font-size: 10px;
+  font-family: Verdana;
+}
+
+.successful_text {
+  color: black;
+  font-size: 10px;
+  font-family: Verdana;
+}
+
+.done {
+  background-color: #adf3a2;
+  border: 1px solid black;
+}
+
+.emph {
+  background-color: #e9e9e9;
+  color: #000000;
+  border: 1px solid #000000;
+  font-size: 11px;
+  font-family: Verdana;
 }

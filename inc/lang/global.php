@@ -18,7 +18,12 @@ define('_ipban_menu_icon_enable', '<a href="[action]" title="[lang_ipban_disable
 define('_ipban_menu_icon_disable', '<a href="[action]" title="[lang_ipban_enable]" rel="[info]" class="confirm"><img src="../inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
 define('_news_img', '<img src="../inc/images/uploads/news/[img]" alt="" />');
 define('_emailicon_blank', '<img src="../inc/images/email.gif" alt="" class="icon" />');
-
+define('_installer_step', '<tr><td class="contentMainTop"><span class="fontBold">[text]</span></td></tr>');
+define('_installer_step_enabled', '<font class="installer_enabled">&raquo; [step]</font>');
+define('_installer_step_disabled', '<font class="installer_disabled"><li>[step]</li></font>');
+define('_installer_true', '<img src="../inc/images/true.gif" border="0" alt="" vspace="0" align="center"> ');
+define('_installer_false', '<img src="../inc/images/false.gif" border="0" alt="" vspace="0" align="center"> ');
+define('_installer_next_link', '<form action="index.php?installer&addon=[addon]&step=[step]#viewcontent" method="post" id="from"><div align="right"><input id="installer_next" [disable] type="submit" value="[value]" class="button submit" name="send" /></div></form>');
 
 ## Added for DZCP 1.5.2 ##
 define('_dropdown_date_ts', '<select id="t_[nr]" name="t_[nr]" class="dropdown">[day]</select> <select id="m_[nr]" name="m_[nr]" class="dropdown">[month]</select> <select id="j_[nr]" name="j_[nr]" class="dropdown">[year]</select>');

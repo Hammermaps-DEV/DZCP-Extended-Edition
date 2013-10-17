@@ -99,6 +99,9 @@ define('_admin_eml_config_head', 'E-Mail Einstellungen');
 define('_admin_eml_config_ext', 'Mail-Erweiterung');
 define('_admin_bezeichnung', 'Bezeichnung');
 define('_members_admin_squad', 'Mitglieder');
+define('_welcome', 'Willkommen');
+define('_successful', 'Erfolgreich');
+define('_warn', 'Hinweis');
 
 //Startpage
 define('_profil_startpage', 'Startseite');
@@ -220,6 +223,45 @@ define('_steam_offline_simple', 'Offline.');
 define('_steam_in_game', 'Im Spiel');
 define('_config_steam_apikey', 'Steam API-Key');
 define('_steam_apikey_info', 'Registrierung eines Steam API-Key: <a href="http://steamcommunity.com/dev/apikey/" target="_blank">steamcommunity.com</a>');
+
+//Addon MGR
+define('_config_addonsmgr', 'Add-on Manager');
+define('_addonsmgr_addon', 'Add-On');
+define('_addonsmgr_version', 'Version');
+define('_addonsmgr_addons', 'Add-Ons verwalten');
+define('_addonsmgr_addon_wiz', 'Add-On Installer starten');
+define('_addonsmgr_addon_hp', 'Zur Add-On Homepage');
+define('_addonsmgr_addon_start_stop', 'Add-On Start/Stop');
+define('_addonsmgr_install_required', 'Installation nötig!');
+define('_addonsmgr_disabled', 'Deaktiviert');
+define('_addonsmgr_running', 'Laufend');
+
+//Addon Installer
+define('_installer_step_welcome', 'Willkommen');
+define('_installer_step_readme', 'Liesmich');
+define('_installer_step_license', 'License');
+define('_installer_step_prepare', 'Schreibrechte');
+define('_installer_step_sql', 'MySQL Installation');
+define('_installer_step_file', 'Daten Installation');
+define('_installer_step_finished', 'Zusammenfassung');
+define('_install_head', '[addon_name] V[version] - Installation Wizard');
+define('_readme', 'Liesmich');
+define('_license', 'Lizenzbestimmungen');
+define('prepare_files_success', 'Alle notwendigen Dateirechte sind gesetzt. <p> Klicken Sie unten rechts auf Weiter um fortzufahren.');
+define('prepare_no_ftp', 'Ihr Webserver unterst&uuml;tz eine der Funktionen <i>ftp_connect()</i>, <i>ftp_login()</i> oder <i>ftp_site()</i> nicht!
+Diese sind jedoch notwendig um eine automatische Rechtevergabe der Dateien durchzuf&uuml;hren. Bitte aktiviere Sie diese oder setzen Sie manuell mittels
+FTP-Client die notwendigen Rechte und aktualisieren Sie die Seite.');
+define('prepare_no_ftp_connect', 'Der angegeben FTP-Host ist nicht erreichbar!<p>Bitte &uuml;berpr&uuml;fen Sie ihre Eingaben oder setzen die Dateirechte manuell per FTP-Client.');
+define('prepare_no_ftp_login', 'Die angegeben Login-Daten wurden zur&uuml;ckgewiesen!<p>Bitte &uuml;berpr&uuml;fen Sie ihre Eingaben oder setzen die Dateirechte manuell per FTP-Client.');
+define('prepare_files_error', 'Nicht alle notwendigen Dateirechte sind gesetzt, bitte verwenden Sie unsere "Automatische Rechtevergabe" oder setzen Sie manuell mittels FTP-Client die notwendigen Rechte und aktualisieren Sie diese Seite');
+define('prepare_files_error_non_ftpauto', 'Nicht alle notwendigen Dateirechte sind gesetzt, setzen Sie die Rechte manuell mittels FTP-Client und aktualisieren Sie die diese Seite');
+define('mysql_setup_created', 'Die Datenbank Installation für das Addon wurde ausgeführt');
+define('file_setup_created', 'Die Installation der Addon Daten wurde ausfeführt.');
+define('_installer_finished', 'Installation erfolgreich abgeschlossen!');
+
+
+//Cache
+define('_config_cache', 'Performance Cache');
 
 ## Added for DZCP 1.6 Final ##
 define('_search_con_or', 'mind. ein Wort muss vorhanden sein');
@@ -345,7 +387,7 @@ define('_config_fotum_vote_info', '<center>Zeigt die Forum-Votes auch unter Umfr
 
 ## Added for DZCP 1.5 ##
 define('_side_membermap', 'Mitgliederkarte');
-define('_installdir', "<tr><td colspan=\"15\" class=\"contentMainFirst\"><br /><center><b>Achtung! Sicherheitsrisiko!!</b><br><br>Bitte l&ouml;sche zuerst den Ordner <b>'/_installer'</b> von deinem Webspace.</center><br /></td></tr>");
+define('_installdir', "<tr><td colspan=\"15\" class=\"error_text\"><div class=\"error\"><br /><center><b>Achtung! Sicherheitsrisiko!!</b><br><br>Bitte l&ouml;sche zuerst den Ordner <b>'/_installer'</b> von deinem Webspace.</center><br /></div></td></tr>");
 define('_no_ts', 'kein Teamspeak eingetragen');
 define('_search_sites', 'Unterseiten');
 define('_search_results', 'Suchergebnisse');
