@@ -87,8 +87,9 @@ define('runtime_buffer', true);
 /*
  * Bitte vor der Aktivierung der Persistent Connections lesen:
  * http://php.net/manual/de/features.persistent-connections.php
+ * Beschleunigt die DZCP SQL-Abfragen bis zu 30%
  */
-define('runtime_sql_persistconns', false);
+define('runtime_sql_persistconns', false); 
 
 ## Colors Antispam ##
 $backgroundColor  = '#444444';
@@ -199,7 +200,6 @@ $db_array['profile']          = 'profile';             # dzcp_profile
 $db_array['rankings']         = 'rankings';            # dzcp_rankings
 $db_array['rss']              = 'rss_config';          # dzcp_rss_config
 $db_array['server']           = 'server';              # dzcp_server
-$db_array['serverliste']      = 'serverliste';         # dzcp_serverliste
 $db_array['settings']         = 'settings';            # dzcp_settings
 $db_array['slideshow']        = 'slideshow';           # dzcp_slideshow
 $db_array['shout']            = 'shoutbox';            # dzcp_shoutbox

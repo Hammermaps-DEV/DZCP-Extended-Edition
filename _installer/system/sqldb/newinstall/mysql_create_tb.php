@@ -705,7 +705,6 @@ function install_mysql_create()
       `protocol` int(1) NOT NULL DEFAULT '0',
       `rankings` int(1) NOT NULL DEFAULT '0',
       `receivecws` int(1) NOT NULL DEFAULT '0',
-      `serverliste` int(1) NOT NULL DEFAULT '0',
       `slideshow` int(1) NOT NULL DEFAULT '0',
       `smileys` int(1) NOT NULL DEFAULT '0',
       `sponsors` int(1) NOT NULL DEFAULT '0',
@@ -793,24 +792,6 @@ function install_mysql_create()
     `qport` varchar(10) NOT NULL DEFAULT '',
     `custom_icon` varchar(30) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
-    ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
-
-
-    //===============================================================
-    //-> Serverliste ================================================
-    //===============================================================
-    db("DROP TABLE IF EXISTS `".dba::get('serverliste')."`;",false,false,true);
-    db("CREATE TABLE IF NOT EXISTS `".dba::get('serverliste')."` (
-      `id` int(20) NOT NULL AUTO_INCREMENT,
-      `datum` int(11) NOT NULL DEFAULT '0',
-      `clanname` varchar(50) NOT NULL DEFAULT '',
-      `clanurl` varchar(255) NOT NULL,
-      `ip` varchar(50) NOT NULL DEFAULT '',
-      `port` varchar(10) NOT NULL DEFAULT '',
-      `pwd` varchar(10) NOT NULL DEFAULT '',
-      `checked` int(1) NOT NULL DEFAULT '0',
-      `slots` char(2) NOT NULL DEFAULT '',
-      PRIMARY KEY (`id`)
     ) ".get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
@@ -1016,7 +997,7 @@ function install_mysql_create()
       `email` varchar(200) NOT NULL DEFAULT '',
       `icq` varchar(20) NOT NULL DEFAULT '',
       `xfire` varchar(100) NOT NULL DEFAULT '',
-      `steamid` varchar(30) NOT NULL DEFAULT '',
+      `steamurl` varchar(200) NOT NULL DEFAULT '',
       `level` varchar(15) NOT NULL DEFAULT '',
       `rlname` varchar(200) NOT NULL DEFAULT '',
       `city` varchar(200) NOT NULL DEFAULT '',

@@ -8,35 +8,22 @@
 
 if(_adminMenu != 'true') exit();
 
-        if(isset($_GET['page'])) $page = $_GET['page'];
-        else $page = 1;
+if(is_numeric($_GET['squad']))
+    $whereqry = ' WHERE squad_id = '.convert::ToInt($_GET['squad']).' ';
 
-if(is_numeric($_GET['squad']))	{
-$whereqry = ' WHERE squad_id = '.$_GET['squad'].' ';
+$qry = db("SELECT * FROM ".dba::get('cw')." ".$whereqry." ORDER BY datum DESC LIMIT ".(($page - 1) * 10).",10");
+$entrys = cnt(dba::get('cw'));
+$qrys = db("SELECT * FROM ".dba::get('squads')." WHERE status = '1' ORDER BY game ASC");
+
+$squads = show(_cw_edit_select_field_squads, array("name" => _all, "sel" => "", "id" => "?admin=cw"));
+while($gets = _fetch($qrys))
+{
+    $sel = ($gets['id'] == $_GET['squad'] ? ' class="dropdownKat"' : '');
+    $squads .= show(_cw_edit_select_field_squads, array("name" => string::decode($gets['name']), "sel" => $sel, "id" => "?admin=cw&amp;squad=".$gets['id'].""));
 }
 
-        $qry = db("SELECT * FROM ".dba::get('cw')." ".$whereqry."
-ORDER BY datum DESC
-LIMIT ".($page - 1)*$maxadmincw.",".$maxadmincw."");
-        $entrys = cnt(dba::get('cw'));
-         $squads .= show(_cw_edit_select_field_squads, array("name" => _all,
-"sel" => "",
-"id" => "?admin=cw"));
-
-$qrys = db("SELECT * FROM ".dba::get('squads')."
-WHERE status = '1'
-ORDER BY game ASC");
-
-        while($gets = _fetch($qrys))
-        {
-if($gets['id'] == $_GET['squad']) { $sel = ' class="dropdownKat"'; } else { $sel = ""; }
-
-          $squads .= show(_cw_edit_select_field_squads, array("name" => string::decode($gets['name']),
-"sel" => $sel,
-"id" => "?admin=cw&amp;squad=".$gets['id'].""));
-        }
-        while($get = _fetch($qry))
-        {
+while($get = _fetch($qry))
+{
           $top = empty($get['top'])
                ? '<a href="?admin=cw&amp;do=top&amp;set=1&amp;id='.$get['id'].'"><img src="../inc/images/no.gif" alt="" title="'._cw_admin_top_set.'" /></a>'
                : '<a href="?admin=cw&amp;do=top&amp;set=0&amp;id='.$get['id'].'"><img src="../inc/images/yes.gif" alt="" title="'._cw_admin_top_unset.'" /></a>';

@@ -163,5 +163,7 @@ foreach($picformat AS $endun4)
             }
           }
 
+          if(Cache::is_mem()) Cache::delete('nav_n_wars');
+          if(Cache::is_mem()) Cache::delete('nav_l_wars');
           $show = info(_cw_admin_edited, "?admin=cw");
         }

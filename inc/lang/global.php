@@ -177,10 +177,6 @@ define('_awards_admin_add_select_field_squads', '<option value="[id]"> [name]</o
 define('_awards_admin_edit_select_field_squads', '<option value="[id]" [sel]> [name]</option>');
 define('_awards_legende', '<tr><td class="[class]" align="center" width="1%">[img]</td><td class="[class]" colspan="6">[game]</td></tr>');
 
-## Serverliste ##
-define('_slist_clanname_with_url', '<a href="[url]" target="blank">[name]</a>');
-define('_slist_clanname_without_url', '<span class="fontBold">[name]</span>');
-
 ## Kontaktformulare ##
 define('_contact_hp', '<a href="[hp]" target="_blank">[hp]</a>');
 

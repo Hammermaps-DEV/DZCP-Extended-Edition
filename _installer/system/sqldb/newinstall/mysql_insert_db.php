@@ -247,7 +247,6 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_clan', `name` = '_rankings_', `url` = '../rankings/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
 
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_server', `name` = '_server_', `url` = '../server/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_server', `name` = '_serverlist_', `url` = '../serverliste/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_server', `name` = '_ts_', `url` = '../teamspeak/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
 
     db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_misc', `name` = '_galerie_', `url` = '../gallery/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
@@ -334,7 +333,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Rechte =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `startpage` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `serverliste` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1, `slideshow` = 1;",false,false,true);
+    db("INSERT INTO `".dba::get('permissions')."` SET `user` = 1, `pos` = 0, `artikel` = 1, `awards` = 1, `activateusers` = 1, `startpage` = 1, `backup` = 1, `clear` = 1, `config` = 1, `contact` = 1, `clanwars` = 1, `clankasse` = 1, `downloads` = 1, `editkalender` = 1, `editserver` = 1, `editteamspeak` = 1, `editsquads` = 1, `editusers` = 1, `editor` = 1, `forum` = 1, `gallery` = 1, `gb` = 1, `gs_showpw` = 1, `glossar` = 1, `impressum` = 1, `intforum` = 1, `intnews` = 1, `joinus` = 1, `links` = 1, `news` = 1, `newsletter` = 1, `partners` = 1, `profile` = 1, `protocol` = 1, `rankings` = 1, `receivecws` = 1, `smileys` = 1, `sponsors` = 1, `shoutbox` = 1, `support` = 1, `votes` = 1, `votesadmin` = 1, `slideshow` = 1;",false,false,true);
 
     //===============================================================
     //-> Positionen =================================================
@@ -349,11 +348,6 @@ function install_mysql_insert($db_infos)
     //===============================================================
     db("INSERT INTO `".dba::get('server')."` SET `game` = 'ns2', `shown` = 1, `navi` = 1, `name` = 'Hammermaps.de Community Server#1', `ip` = '176.9.114.124', `port` = 1100, `pwd` = '', `qport` = 1101, `custom_icon` = '';",false,false,true);
     db("INSERT INTO `".dba::get('server')."` SET `game` = 'css', `shown` = 1, `navi` = 1, `name` = 'KpyTou css-server #1.NoSteam[RUS][FastAWP][HLstatsX][v1765266]', `ip` = '77.108.242.105', `port` = 27015, `pwd` = '', `qport` = 27015, `custom_icon` = '';",false,false,true);
-
-    //===============================================================
-    //-> Server List ================================================
-    //===============================================================
-    db("INSERT INTO `".dba::get('serverliste')."` SET `datum` = 1298817167, `clanname` = '[-tHu-] teamHanau', `clanurl` = 'http://www.thu-clan.de', `ip` = '82.98.216.10', `port` = '27015', `pwd` = 0, `checked` = 1, `slots` = 17;",false,false,true);
 
     //===============================================================
     //-> Startseite =================================================
