@@ -328,7 +328,7 @@ else
 
                 $where = $where.': '.string::decode($get['titel']);
                 $intern = ($get['intern'] ? _votes_intern : '');
-                $title = string::decode($get['titel']).' - '.$title;
+                $title = string::decode($get['titel']);
                 $index = show($dir."/news_show_full", array("titel" => string::decode($get['titel']),
                                                             "newsimage" => $newsimage,
                                                             "id" => $get['id'],

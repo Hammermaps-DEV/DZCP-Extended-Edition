@@ -76,6 +76,7 @@ else
         else
             $show_sticky .= Cache::get('news_sticky_id_'.$get['id']);
     }
+    unset($get,$qry,$getkat,$c,$comments,$klapp,$links1,$links2,$links3,$links,$newsimage);
 
     //Public News
     if(Cache::check('news_page'))
@@ -93,7 +94,6 @@ else
                 $c = cnt(dba::get('newscomments'), " WHERE news = '".$get['id']."'");
                 $comments = ($c == 1 ? show(_news_comment, array("comments" => "1", "id" => $get['id'])) : show(_news_comments, array("comments" => $c, "id" => $get['id'])));
                 $klapp = ($get['klapptext'] ? show(_news_klapplink, array("klapplink" => string::decode($get['klapplink']), "which" => "expand", "id" => $get['id'])) : '');
-                $viewed = show(_news_viewed, array("viewed" => $get['viewed']));
                 $links1 = (!empty($get['url1']) ? show(_news_link, array("link" => string::decode($get['link1']), "url" => string::decode($get['url1']))) : '');
                 $links2 = (!empty($get['url2']) ? show(_news_link, array("link" => string::decode($get['link2']), "url" => string::decode($get['url2']))) : '');
                 $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => string::decode($get['link3']), "url" => string::decode($get['url3']))) : '');
@@ -128,6 +128,7 @@ else
         }
 
         Cache::set('news_page', $show, $newsconfig['cache_news']);
+        unset($get,$qry,$getkat,$c,$comments,$klapp,$links1,$links2,$links3,$links,$newsimage);
     }
     else
         $show = Cache::get('news_page');
@@ -148,6 +149,9 @@ else
     else
         $kategorien = Cache::get('news_kat');
 
+    unset($qrykat,$getkat,$sel);
+
     //Output
     $index = show($dir."/news", array('show' => $show, 'show_sticky' => $show_sticky, 'nav' => nav(cnt(dba::get('news'),$navWhere),$newsconfig['m_news'],'?kat='.$navKat,false), 'kategorien' => $kategorien));
+    unset($show,$show_sticky,$navWhere,$navKat,$kategorien);
 }
