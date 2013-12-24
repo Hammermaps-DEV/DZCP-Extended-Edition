@@ -51,8 +51,8 @@ else
         $showVoted = '';
         if($get['intern'] && $stimmen_summe && ($get['von'] == userid() || permission('votes')))
         {
-            $showVoted = ' <a href="?action=show&amp;id=' . convert::ToInt($get['id']) .
-            '"><img src="../inc/images/lupe.gif" alt="" title="' . _show_who_voted . '" class="icon" /></a>';
+            $showVoted = ' <a href="?index=votes&amp;action=show&amp;id=' . convert::ToInt($get['id']) .
+            '"><img src="inc/images/lupe.gif" alt="" title="' . _show_who_voted . '" class="icon" /></a>';
         }
 
         if($get['id'] == (isset($_GET['id']) ? $_GET['id'] : 0))

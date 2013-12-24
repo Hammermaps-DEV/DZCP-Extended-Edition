@@ -22,7 +22,7 @@ else
             if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end))
             {
                 $style = 'text-align:center;padding:0';
-                $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.string::decode($get['name']).'" />';
+                $squad = '<img src="inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.string::decode($get['name']).'" />';
                 break;
             }
         }

@@ -90,7 +90,7 @@ class API extends API_CORE
      * @return boolean
      */
     public static function set_dba_sqltb($tag = '', $table = '')
-    { return dba::set($tag, $table); }
+    { return dba::set($tag, 'addons_'.$table); }
 
     /**
      * Setzt einen neuen Verweis einer Tabelle auf einen Tag, *array()
@@ -126,7 +126,7 @@ class API extends API_CORE
      * @return mixed
      */
     public static function replace_dba_sqltb($tag = '', $new_table = '')
-    { return replace($tag, $new_table); }
+    { return dba::replace($tag, 'addons_'.$new_table); }
 
     /**
      * Fügt neue BBCodes mit HTML Ersatz ein. *preg_replace*

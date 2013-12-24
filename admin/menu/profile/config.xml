@@ -4,5 +4,5 @@
 	<Rights>profile</Rights>
 	<Only_Admin>false</Only_Admin>
 	<Only_Root>false</Only_Root>
-	<Where></Where>
+	<Where>_profile_head</Where>
 </settings>

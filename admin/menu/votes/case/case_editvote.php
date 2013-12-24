@@ -5,7 +5,7 @@
  * @author: DZCP Developer Team || Hammermaps.de Developer Team
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
- 
+
 if(_adminMenu != 'true') exit();
 
         $qry = db("SELECT * FROM ".dba::get('vote_results')."
@@ -54,4 +54,4 @@ if(_adminMenu != 'true') exit();
           }
         }
 
-        $show = info(_vote_admin_successful_edited, "?admin=votes");
+        $show = info(_vote_admin_successful_edited, "?index=admin&amp;admin=votes");

@@ -72,8 +72,8 @@ switch ($do)
             while($get = _fetch($qry))
             {
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=slideshow&amp;do=edit", "title" => _button_title_edit));
-                $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=slideshow&amp;do=delete", "title" => _button_title_del, "del" => _slider_admin_del));
+                $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "index=admin&amp;admin=slideshow&amp;do=edit", "title" => _button_title_edit));
+                $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "index=admin&amp;admin=slideshow&amp;do=delete", "title" => _button_title_del, "del" => _slider_admin_del));
                 $entry .= show($dir."/slideshow_show", array("id" => $get['id'], "class" => $class, "bez" => $get['bez'], "edit" => $edit, "del" => $delete));
             }
         }
@@ -142,7 +142,7 @@ if($_GET['do'] == 'add'){
 
         move_uploaded_file($_FILES['bild']['tmp_name'], basePath."/inc/images/uploads/slideshow/".database::get_insert_id().".jpg");
         $tmpname = $_FILES['bild']['tmp_name'];
-        $show = info(_slider_admin_add_done, "?admin=slideshow");
+        $show = info(_slider_admin_add_done, "?index=admin&amp;admin=slideshow");
     }
   }
   elseif($_GET['do'] == 'edit')
@@ -245,12 +245,12 @@ if($_GET['do'] == 'add'){
             move_uploaded_file($tmpname, basePath."/inc/images/uploads/slideshow/".intval($_POST['id']).".jpg");
         }
 
-        $show = info(_slider_admin_edit_done, "?admin=slideshow");
+        $show = info(_slider_admin_edit_done, "?index=admin&amp;admin=slideshow");
     }
 }
 elseif($_GET['do'] == 'delete')
 {
     db("DELETE FROM ".dba::get('slideshow')." WHERE `id` = '".intval($_GET['id'])."'");
     @unlink(basePath."/inc/images/uploads/slideshow/".intval($_GET['id']).".jpg");
-    $show = info(_slider_admin_del_done, "?admin=slideshow");
+    $show = info(_slider_admin_del_done, "?index=admin&amp;admin=slideshow");
 }

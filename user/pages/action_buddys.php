@@ -40,7 +40,7 @@ else
                             `titel`     = '".string::encode(_buddy_title)."',
                             `nachricht` = '".string::encode($msg)."'");
 
-                    $index = info(_add_buddy_successful, "?action=buddys");
+                    $index = info(_add_buddy_successful, "?index=user&amp;action=buddys");
                 }
             break;
             case 'addbuddy':
@@ -63,7 +63,7 @@ else
                             `titel`     = '".string::encode(_buddy_title)."',
                             `nachricht` = '".string::encode($msg)."'");
 
-                    $index = info(_add_buddy_successful, "?action=buddys");
+                    $index = info(_add_buddy_successful, "?index=user&amp;action=buddys");
                 }
             break;
             case 'delete':
@@ -76,7 +76,7 @@ else
                           `titel`     = '".string::encode(_buddy_title)."',
                           `nachricht` = '".string::encode($msg)."'");
 
-                $index = info(_buddys_delete_successful, "../user/?action=buddys");
+                $index = info(_buddys_delete_successful, "?index=user&amp;action=buddys");
             break;
             default: //default page
                 $qry = db("SELECT * FROM ".dba::get('buddys')." WHERE user = ".userid());
@@ -103,7 +103,7 @@ else
                 if(empty($buddys))
                     $buddys = show(_no_entrys_yet_all, array("colspan" => "1"));
 
-                $qry = db("SELECT id,nick FROM ".dba::get('users')." WHERE level != 0 ORDER BY nick"); $users = '';
+                $qry = db("SELECT id,nick FROM ".dba::get('users')." WHERE level != 0 AND id != ".userid()." ORDER BY nick"); $users = '';
                 if(_rows($qry) >= 1)
                 {
                     while($get = _fetch($qry))

@@ -8,7 +8,7 @@
 
 if(_adminMenu != 'true') exit();
 
-$get = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".dba::get('settings'),false,true);
+$get = settings::get_array(array('k_inhaber','k_nr','k_blz','k_bank','iban','bic','k_waehrung','k_vwz'));
 $waehrung = string::decode($get['k_waehrung']);
 $waehrung_list = _select_field_waehrung;
 $waehrung_list = str_replace('<option value="'.$waehrung.'">","<option value="'.$waehrung.'" selected="selected">', $waehrung_list);
@@ -27,8 +27,8 @@ $qryk = db("SELECT id,kat FROM ".dba::get('c_kats')); $color = 1; $show = '';
 while($getk = _fetch($qryk))
 {
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-    $edit = show("page/button_edit_single", array("id" => $getk['id'], "action" => "admin=konto&amp;do=edit", "title" => _button_title_edit));
-    $delete = show("page/button_delete_single", array("id" => $getk['id'], "action" => "admin=konto&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_entry));
+    $edit = show("page/button_edit_single", array("id" => $getk['id'], "action" => "index=admin&amp;admin=konto&amp;do=edit", "title" => _button_title_edit));
+    $delete = show("page/button_delete_single", array("id" => $getk['id'], "action" => "index=admin&amp;admin=konto&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_entry));
     $show .= show($dir."/clankasse_show", array("name" => string::decode($getk['kat']), "class" => $class, "edit" => $edit, "delete" => $delete));
 }
 

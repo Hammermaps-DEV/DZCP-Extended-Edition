@@ -22,7 +22,6 @@ else
             'inc',
             'inc/_cache',
             'inc/_cache/binary',
-            'inc/_cache/tinymce',
             'inc/_logs',
             'inc/images',
             'inc/images/gameicons',

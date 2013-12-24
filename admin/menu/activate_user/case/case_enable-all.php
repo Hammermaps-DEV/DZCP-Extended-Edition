@@ -15,5 +15,5 @@ if(isset($_POST['userid']) && count($_POST['userid']) >= 1)
         db_stmt("UPDATE `".dba::get('users')."` SET `level` = 1, `status` = 1, `actkey` = '' WHERE `id` = ?",array('i', $id));
     }
 
-	$show = info(_actived_all, "?admin=activate_user", 3);
+    $show = info(_actived_all, "?index=admin&amp;admin=activate_user", 3);
 }

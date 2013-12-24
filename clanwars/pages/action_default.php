@@ -70,7 +70,7 @@ else
         {
             $game = squad($getm['icon']);
             $flagge = flag($getm['gcountry']);
-            $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($getm['clantag']." - ".$getm['gegner'], settings('l_clanwars'))), "url" => '?action=details&amp;id='.$getm['id']));
+            $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($getm['clantag']." - ".$getm['gegner'], settings('l_clanwars'))), "url" => '?index=clanwars&amp;action=details&amp;id='.$getm['id']));
             $details = show(_cw_show_details, array("id" => $getm['id']));
             $squad = show(_member_squad_squadlink, array("squad" => string::decode($get['name']), "id" => $get['id'], "shown" => $shown));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

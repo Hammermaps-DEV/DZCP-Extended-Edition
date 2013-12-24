@@ -7,20 +7,28 @@
  */
 
 // Start session if no headers were sent
-if(!headers_sent())
+$session = new session();
+if($session->init())
 {
-    @session_start();
-    if(!isset($_SESSION['PHPSESSID']) || !isset($_COOKIE['PHPSESSID']))
+    if(!array_key_exists('PHPSESSID', $_SESSION) || !array_key_exists('PHPSESSID', $_COOKIE))
     {
-        @session_destroy();
-        @session_start();
         $_SESSION['PHPSESSID'] = true;
         $_COOKIE['PHPSESSID']  = true;
     }
 
-    $_SESSION['installer'] = false;
-    $_SESSION['db_install'] = false;
+    $_SESSION['session_ip'] = $session->visitorIp();
+
+    //-> DZCP-Install default variable
+    if(!array_key_exists('installer', $_SESSION))
+        $_SESSION['installer'] = false;
+
+    if(!array_key_exists('db_install', $_SESSION))
+        $_SESSION['db_install'] = false;
 }
+
+//-> Redirect to Installer
+if(empty($sql_user) && empty($sql_pass) && empty($sql_db) && !$_SESSION['installer'] && file_exists(basePath."/_installer/index.php"))
+    header('Location: ../_installer/index.php');
 
 // functions needed
 function mtime()

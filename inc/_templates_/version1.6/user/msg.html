@@ -31,7 +31,7 @@
 </tr>
 <tr>
   <td colspan="5">
-  <form name="peingang" action="?action=msg&amp;do=delete" method="post" onsubmit="return(DZCP.submitButton('submitIncoming'))">
+  <form name="peingang" action="?index=user&amp;action=msg&amp;do=delete" method="post" onsubmit="return(DZCP.submitButton('submitIncoming'))">
     <table class="mainContent" cellspacing="1">
     [showincoming]
     <tr>
@@ -55,7 +55,7 @@
 </tr>
 <tr>
   <td colspan="5">
-  <form name="pausgang" action="?action=msg&amp;do=deletesended" method="post" onsubmit="return(DZCP.submitButton('submitOutgoing'))">
+  <form name="pausgang" action="?index=user&amp;action=msg&amp;do=deletesended" method="post" onsubmit="return(DZCP.submitButton('submitOutgoing'))">
     <table class="mainContent" cellspacing="1">
     [showsended]
     <tr>
@@ -70,6 +70,7 @@
 <tr>
   <td style="text-align:center">
     <form action="" method="get" onsubmit="return(DZCP.submitButton())">
+      <input type="hidden" name="index" value="user" />
       <input type="hidden" name="action" value="msg" />
       <input type="hidden" name="do" value="new" />
       <input id="contentSubmit" type="submit" class="submit" value="[new]" />

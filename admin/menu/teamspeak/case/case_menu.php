@@ -15,4 +15,4 @@ if(_rows($qry))
 }
 
 db("UPDATE ".dba::get('ts')." SET `show_navi` = '1' WHERE `id` = ".convert::ToInt($_GET['id']).";");
-$show = header("Location: ?admin=teamspeak");
+$show = header("Location: ?index=admin&admin=teamspeak");

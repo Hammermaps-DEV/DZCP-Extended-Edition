@@ -8,14 +8,12 @@
 
 if(_adminMenu != 'true') exit();
 
-db("UPDATE ".dba::get('settings')."
-    SET `k_inhaber`    = '".string::encode($_POST['inhaber'])."',
-        `k_nr`         = '".string::encode($_POST['kontonr'])."',
-        `k_waehrung`   = '".string::encode($_POST['waehrung'])."',
-        `k_bank`       = '".string::encode($_POST['bank'])."',
-        `k_blz`        = '".string::encode($_POST['blz'])."',
-        `k_vwz`        = '".string::encode($_POST['vwz'])."',
-        `iban`         = '".string::encode($_POST['iban'])."',
-        `bic`          = '".string::encode($_POST['bic'])."'
-    WHERE id = 1");
-$show = info(_config_set, "?admin=konto");
+settings::set('k_inhaber',string::encode($_POST['inhaber']));
+settings::set('k_nr',string::encode($_POST['kontonr']));
+settings::set('k_waehrung',string::encode($_POST['waehrung']));
+settings::set('k_bank',string::encode($_POST['bank']));
+settings::set('k_blz',string::encode($_POST['blz']));
+settings::set('k_vwz',string::encode($_POST['vwz']));
+settings::set('iban',string::encode($_POST['iban']));
+settings::set('bic',string::encode($_POST['bic']));
+$show = info(_config_set, "?index=admin&amp;admin=konto");

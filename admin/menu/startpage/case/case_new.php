@@ -18,7 +18,7 @@ if(isset($_POST['name']) && isset($_POST['url']) && isset($_POST['level']))
     else
     {
         db("INSERT INTO `".dba::get('startpage')."` SET `name` = '".string::encode($_POST['name'])."', `url` = '".string::encode($_POST['url'])."', `level` = '".convert::ToInt($_POST['level'])."'");
-        $show = info(_admin_startpage_added, "?admin=startpage");
+        $show = info(_admin_startpage_added, "?index=admin&amp;admin=startpage");
     }
 }
 

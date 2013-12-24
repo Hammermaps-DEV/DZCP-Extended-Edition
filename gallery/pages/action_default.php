@@ -31,7 +31,7 @@ else
                 $filetime = filemtime(basePath."/inc/images/uploads/gallery/".$file.".".$endung);
                 $show .= show($dir."/gallery_show_rewrite", array("link" => string::decode($get['kat']),
                                                                   "images" => $cntpics,
-                                                                  "image" => '../inc/ajax/thumbgen/uploads/gallery/'.$file,
+                                                                  "image" => 'inc/ajax/thumbgen/uploads/gallery/'.$file,
                                                                   "endung"=>$endung,
                                                                   "id" => $get['id'],
                                                                   "time"=>$filetime,
@@ -42,7 +42,7 @@ else
             {
                 $show .= show($dir."/gallery_show", array("link" => string::decode($get['kat']),
                                                           "images" => $cntpics,
-                                                          "image" => '../inc/ajax.php?loader=thumbgen&file=uploads/gallery/'.$file,
+                                                          "image" => 'inc/ajax.php?loader=thumbgen&file=uploads/gallery/'.$file,
                                                           "id" => $get['id'],
                                                           "time"=>$filetime,
                                                           "beschreibung" => bbcode::parse_html($get['beschreibung']),

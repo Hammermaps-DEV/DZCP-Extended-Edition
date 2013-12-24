@@ -18,7 +18,7 @@ else
         $index = show($dir."/upload", array("uploadhead" => _upload_ava_head,
                 "file" => _upload_file,
                 "name" => "file",
-                "action" => "?action=avatar&amp;do=upload",
+                "action" => "?index=upload&amp;action=avatar&amp;do=upload",
                 "upload" => _button_value_upload,
                 "info" => _upload_info,
                 "infos" => $infos));
@@ -49,7 +49,7 @@ else
                 copy($tmpname, basePath."/inc/images/uploads/useravatare/".userid().".".strtolower($endung));
                 @unlink($_FILES['file']['tmp_name']);
 
-                $index = info(_info_upload_success, "../user/?action=editprofile");
+                $index = info(_info_upload_success, "?index=user&amp;action=editprofile");
             }
         } elseif($_GET['do'] == "delete") {
             foreach($picformat as $tmpendung)
@@ -57,7 +57,7 @@ else
                 if(file_exists(basePath."/inc/images/uploads/useravatare/".userid().".".$tmpendung))
                 {
                     @unlink(basePath."/inc/images/uploads/useravatare/".userid().".".$tmpendung);
-                    $index = info(_delete_pic_successful, "../user/?action=editprofile");
+                    $index = info(_delete_pic_successful, "?index=user&amp;action=editprofile");
                 }
             }
         }

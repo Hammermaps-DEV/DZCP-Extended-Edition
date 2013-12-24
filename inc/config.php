@@ -16,7 +16,7 @@ define('show_debug_console', true); //Zeigt die Debug Console
 define('save_debug_console', false); //Speichert alle in der Debug Console ausgegebenen Texte in eine Log Datei
 
 define('buffer_gzip_compress', true); // Seite mit Hilfe der GZIP-Komprimierung übertragen
-define('buffer_gzip_compress_level', 1); // Level der Kompression 1 - 9 *Optimal Level 1
+define('buffer_gzip_compress_level', 2); // Level der Kompression 1 - 9 *Optimal Level 2
 
 define('dzcp_version_checker', true); // Version auf DZCP.de abgleichen und benachrichtigen ob eine neue Version zur Verfügung steht
 define('dzcp_version_checker_refresh', (30*60)); // Wie lange soll gewartet werden um einen Versionsabgleich auszuführen
@@ -47,6 +47,16 @@ define('steam_refresh', (5*60)); // Wann soll der Steam Status in der Userliste 
 define('steam_api_refresh', 30); // Wann sollen die Daten der Steam API aktualisiert werden * Online / Offline / In-Game Status
 define('steam_infos_refresh', (60*60)); // Wann sollen die Profil Daten aktualisiert werden * Steam User-Profil * 1 Mal in der Stunde
 
+//Skype
+define('skype_enable', true);
+define('skype_preloader', true);
+define('skype_refresh', (5*60));
+
+define('xbox_enable', true);
+define('psn_enable', true);
+define('origin_enable', true);
+define('bnet_enable', true);
+
 define('salt', true); // Salt für die Passwort Codierung, *Der Salt darf nach der Installation nicht mehr geändert werden.
 // Die Datei inc/mysql_salt.php muss gesichert werden *Backup* !
 
@@ -57,6 +67,7 @@ define('salt', true); // Salt für die Passwort Codierung, *Der Salt darf nach de
 */
 define('use_imagick', true); // Verwendet die Imagick PHP Erweiterung um Vorschaubilder zu erstellen, wenn vorhanden.
 
+//Diverse Zeiten
 define('count_clicks_expires', (24*60*60)); // Wie Lange die IPs für den Click-Counter gespeichert bleiben.
 define('cookie_expires', (60*60*24*30*12)); // Wie Lange die Cookies des CMS ihre Gültigkeit behalten.
 define('users_online', (15*60)); // Wie Lange ein User untätig sein muss, um als Offline zu gelten.
@@ -64,18 +75,46 @@ define('counter_reload', (24*3600)); // Ab wann der Besucherzähler eine aktualis
 define('rss_cache_public_news', (15*60)); // Wann soll der Public RSS Feed aktualisiert werden.
 define('rss_cache_private_news', (5*60)); // Wann soll der Interne RSS Feed aktualisiert werden.
 define('check_msg_email', (5*60)); // Wann soll überprüft werden, ob ein User eine neue Nachricht hat * E-Mail Senden *
+define('shoutbox_refresh', (10)); // Wann soll die Shoutbox aktualisiert werden *
 
 /*
  * DZCP - Extended Protect
  * Diese Einstellungen regeln wann eine IP automatisch gesperrt wird, um die Sicherheit des CMS und der User zu gewährleisten.
  */
 define('max_protect_users', 5); //Die Maximale Anzahl der Usernamen die während der Zeit des "max_protect_cache_time" verwendet werden dürfen.
-define('max_protect_time_diff', 1); //Die Zeit die vergehen muss, zwischen jedem einzelnen Login versuch.
+define('max_protect_time_diff', 0.5); //Die Zeit die vergehen muss, zwischen jedem einzelnen Login versuch.
 define('max_protect_cache_time', 60); //Die Zeit die der Index im Cache verbleibt.
 
-define('use_dzcp_protect', true); //Ob DZCP - Extended Protect verwendet werden soll.
+define('use_dzcp_protect', true); //Ob DZCP - Extended Protect verwendet werden soll. * DEV *
 define('use_protect_block_timer', true); //User blockieren die zu oft in kürzester Zeit versuchen sich anzumelden. "max_protect_time_diff"
 define('use_protect_block_user', true); //User blockieren die versuchen Usernamen zu erraten. "max_protect_users" abhängig von "max_protect_cache_time"
+
+/* DZCP - Captcha */
+define('captcha_case_sensitive', false); //Unterscheidet Groß und Kleinschreibung beim Captcha
+define('captcha_mathematic', false); //Stellt den Usern einfache Rechenaufgaben anstelle eines Captcha Codes
+
+/* DZCP - Sessions
+* Entscheidet wie die PHP-Sessions gespeichert werden, es kann, PHP Standard, MySQL Datenbank, Memcache oder APC verendet werden.
+* PHP Standard 'php': Funktioniert im Normalfall überall, hat keine weiteren Vorteile, wird in der Standard Konfiguration von PHP auf die Festplatte des Servers geschrieben.
+*
+* MySQL Datenbank 'mysql': Speichert die Sessions in der DZCPEE Eigenen Datenbank.
+* 	Pro: Hohe Performance und Datensicherheit.
+* 	Contra: Zusätzliche Datenbankbelastung.
+*
+* Alternative PHP Cache 'apc': Speichert die Sessions im Server Cache.
+* 	Pro: Sehr hohe Performance und niedrige Datenbankbelastung.
+* 	Contra: Niedrigere Datensicherheit.
+*
+* Memcache 'memcache': Speichert die Sessions auf einem entfernten Memcache Server.
+* 	Pro: Sehr hohe Performance, niedrige Datenbankbelastung und Clustern der Server ist möglich,
+* 	Contra: Niedrigere Datensicherheit, zusätzlicher Netzwerkzugriff, eine extra Serveranwendung ist nötig 'Memcache Server'.
+*/
+define('sessions_backend', 'php'); //php,mysql,memcache,apc
+define('sessions_encode_type', 'sha1');
+define('sessions_encode', true);
+define('sessions_ttl_maxtime', (2*60*60)); //Live-Time 2h
+define('sessions_memcache_host', 'localhost');
+define('sessions_memcache_port', 11211);
 
 /*
  * Speichert bestimmte SQL Abfragen und Datenlisten für etwa 1 Sekunde in der PHP Laufzeit.
@@ -87,15 +126,9 @@ define('runtime_buffer', true);
 /*
  * Bitte vor der Aktivierung der Persistent Connections lesen:
  * http://php.net/manual/de/features.persistent-connections.php
- * Beschleunigt die DZCP SQL-Abfragen bis zu 30%
+ * Beschleunigt die mySQL-Abfragen
  */
-define('runtime_sql_persistconns', false); 
-
-## Colors Antispam ##
-$backgroundColor  = '#444444';
-$textColor        = '#000000';
-$noiseColor       = '#AAAAAA';
-$lineColor        = '#555555';
+define('runtime_sql_persistconns', false);
 
 ## Copyrightlinks ##
 $cp_color = '#d3d3d3'; //Hex Farbcode der Hintergrundfarbe Copyrightlinks am Ende der Homepage
@@ -129,13 +162,6 @@ define('server_show_empty_players', false); //Alle Spieler anzeigen, die deren N
 if(function_exists("date_default_timezone_set") and function_exists("date_default_timezone_get"))
     @date_default_timezone_set(@date_default_timezone_get());
 
-//-> DZCP-Install default variable
-if(!isset($_SESSION['installer']))
-    $_SESSION['installer'] = false;
-
-if(!isset($_SESSION['db_install']))
-    $_SESSION['db_install'] = false;
-
 ## REQUIRES ##
 if(file_exists(basePath."/inc/mysql.php") && file_exists(basePath."/inc/mysql_salt.php"))
 {
@@ -143,13 +169,9 @@ if(file_exists(basePath."/inc/mysql.php") && file_exists(basePath."/inc/mysql_sa
     require_once(basePath."/inc/mysql_salt.php");
 }
 else
-    { $sql_host = ''; $sql_user = ''; $sql_pass = ''; $sql_db = ''; $sql_prefix = ''; $sql_salt = ''; }
+    { $sql_host = ''; $sql_user = ''; $sql_pass = ''; $sql_db = ''; $sql_prefix = ''; $sql_salt = ''; $sql_engine  = '';}
 
-$db_array = array('host' => $sql_host, 'user' => $sql_user, 'pass' => $sql_pass, 'db' => $sql_db, 'prefix' => $sql_prefix);
-
-//-> Redirect to Installer
-if(empty($sql_user) && empty($sql_pass) && empty($sql_db) && !$_SESSION['installer'] && file_exists(basePath."/_installer/index.php"))
-    header('Location: ../_installer/index.php');
+$db_array = array('host' => $sql_host, 'user' => $sql_user, 'pass' => $sql_pass, 'db' => $sql_db, 'prefix' => $sql_prefix, 'engine' => $sql_engine);
 
 //-> MySQL-Datenbankangaben
 //          [TAG]                [TABELLE]              [NAME + PREFIX]
@@ -169,6 +191,9 @@ $db_array['c_who']            = 'counter_whoison';     # dzcp_counter_whoison
 $db_array['cw']               = 'clanwars';            # dzcp_clanwars
 $db_array['cw_comments']      = 'cw_comments';         # dzcp_cw_comments
 $db_array['cw_player']        = 'clanwar_players';     # dzcp_clanwar_players
+$db_array['clicks_ips']       = 'clicks_ips';          # dzcp_clicks_ips
+$db_array['cache']            = 'cache';               # dzcp_cache
+$db_array['captcha']          = 'captcha';             # dzcp_captcha
 $db_array['downloads']        = 'downloads';           # dzcp_downloads
 $db_array['dl_kat']           = 'download_kat';        # dzcp_download_kat
 $db_array['dl_comments']      = 'dlcomments';          # dzcp_dlcomments
@@ -208,6 +233,7 @@ $db_array['squads']           = 'squads';              # dzcp_squads
 $db_array['squaduser']        = 'squaduser';           # dzcp_squaduser
 $db_array['sponsoren']        = 'sponsoren';           # dzcp_sponsoren
 $db_array['startpage']        = 'startpage';           # dzcp_startpage
+$db_array['sessions']         = 'sessions';            # dzcp_sessions
 $db_array['ts']               = 'teamspeak';           # dzcp_teamspeak
 $db_array['users']            = 'users';               # dzcp_users
 $db_array['usergallery']      = 'usergallery';         # dzcp_usergallery
@@ -216,5 +242,3 @@ $db_array['userpos']          = 'userposis';           # dzcp_userposis
 $db_array['userstats']        = 'userstats';           # dzcp_userstats
 $db_array['votes']            = 'votes';               # dzcp_votes
 $db_array['vote_results']     = 'vote_results';        # dzcp_vote_results
-$db_array['clicks_ips']       = 'clicks_ips';          # dzcp_clicks_ips
-$db_array['cache']            = 'cache';               # dzcp_cache

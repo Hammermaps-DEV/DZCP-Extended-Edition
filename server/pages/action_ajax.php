@@ -21,7 +21,8 @@ else
 
         $sID = (!empty($_GET['sID']) && $sID == 0 ? convert::ToInt($_GET['sID']) : $sID);
         $get = db("SELECT * FROM ".dba::get('server')." WHERE `id` = ".$sID,false,true);
-        $cache_hash = md5($get['ip'].':'.$get['port'].'_'.$get['game']);
+        $html5_worker_sync = use_html5_worker ? 'worker_' : '';
+        $cache_hash = md5($html5_worker_sync.$get['ip'].':'.$get['port'].'_'.$get['game']);
         $static_server = ($get['game'] == 'nope');
 
         if(!$static_server)
@@ -53,7 +54,7 @@ else
         if(!empty($server) && $server && $server['game_online']) //Online
         {
             $admin_msg = ''; $playerstats = ''; $custom_teams = false;
-            $image_status = '../inc/images/online.png'; //Server Status
+            $image_status = 'inc/images/online.png'; //Server Status
             $image_secure = ''; $icon_mod = '';
 
             // Use protocol
@@ -96,7 +97,8 @@ else
                 break;
             }
 
-            $image_secure = ($server['game_secure']['enable'] ? '<img src="../inc/images/'.$server['game_secure']['pic'].'.png" alt="" title="'.$server['game_secure']['name'].'" class="icon" />' : '');
+            $image_secure = ($server['game_secure']['enable'] ? '<img src="inc/images/'.$server['game_secure']['pic'].'.png" alt="" title="'.$server['game_secure']['name'].'" class="icon" />' : '');
+            API_EVENTS::server_image_map($server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])),$server['game_name_long'],strtolower(str_ireplace(' ', '_', $server['game_map'])),!empty($server['game_mod']) ? $icon_mod : $icon_basic); //API Events
 
             //Image * Maps
             $image_map = 'no_map.gif'; $pic_found = false; $flash_found = false;
@@ -110,14 +112,11 @@ else
                 }
             }
 
-            //API Events
-            API_EVENTS::server_image_map($server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])));
-
             //Detect Flash * Maps
             if(file_exists(basePath.'/inc/images/maps/'.$server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])).'.swf'))
             {
                 $flash_found = true;
-                $image_map = '../inc/images/maps/'.$server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])).'.swf';
+                $image_map = 'inc/images/maps/'.$server['game_map_pic_dir'].'/'.strtolower(str_ireplace(' ', '_', $server['game_map'])).'.swf';
             }
 
             //Admin MSG
@@ -242,24 +241,24 @@ else
                 $server['game_os'] = false;
 
                 $image_secure = ''; $playerstats = '';
-                $image_status = '../inc/images/offline.png'; //Server Status
+                $image_status = 'inc/images/offline.png'; //Server Status
                 $image_map = 'offline.gif'; //Map Image
-                $game_icon = '../inc/images/gameicons/unknown.gif';
+                $game_icon = 'inc/images/gameicons/unknown.gif';
                 $admin_msg = ''; $klapp_show = false; $flash_found = false;
-                $icon_basic = '../inc/images/gameicons/unknown.gif';
+                $icon_basic = 'inc/images/gameicons/unknown.gif';
             }
 
             if($static_server)
             {
                 $image_map = 'no_map.gif'; //Map Image
-                $image_status = '../inc/images/static.png'; //Server Status
+                $image_status = 'inc/images/static.png'; //Server Status
             }
 
             //Custom Icon
             if(!empty($get['custom_icon']))
             {
                 if(file_exists(basePath.'/inc/images/gameicons/custom/'.$get['custom_icon']))
-                    $icon_basic = '../inc/images/gameicons/custom/'.$get['custom_icon'];
+                    $icon_basic = 'inc/images/gameicons/custom/'.$get['custom_icon'];
             }
 
             $display = "none"; $moreicon = "expand";
@@ -271,7 +270,7 @@ else
             if($flash_found) //Flash Objekt
             {
                 $clsid = GenGuid();
-                $image_map  = '<script type="text/javascript">swfobject.embedSWF("'.$image_map.'", "'.$clsid.'", "160", "120", "9.0.0", "../inc/images/flash/expressInstall.swf");</script>';
+                $image_map  = '<script type="text/javascript">swfobject.embedSWF("'.$image_map.'", "'.$clsid.'", "160", "120", "9.0.0", "inc/images/flash/expressInstall.swf");</script>';
                 $image_map .= '<div id="'.$clsid.'"><a href="http://www.adobe.com/go/getflashplayer"><img src="http://www.adobe.com/images/shared/download_buttons/get_flash_player.gif" alt="Get Adobe Flash player" /></a></div>';
             }
             else
@@ -282,15 +281,15 @@ else
                     $endung = explode(".", $image_map);
                     $endung = strtolower($endung[count($endung)-1]);
                     $map_path = str_replace('.'.$endung,'',$image_map);
-                    $image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax/thumbgen/maps/'.$map_path.'_160_120_'.$filetime.'.'.$endung.'" class="ServerPic" alt="" /></a>';
+                    $image_map = '<a href="inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="inc/ajax/thumbgen/maps/'.$map_path.'_160_120_'.$filetime.'.'.$endung.'" class="ServerPic" alt="" /></a>';
                 }
                 else
-                    $image_map = '<a href="../inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="../inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120&time='.$filetime.'" class="ServerPic" alt="" /></a>';
+                    $image_map = '<a href="inc/images/maps/'.$image_map.'" data-lightbox="maps"><img src="inc/ajax.php?loader=thumbgen&file=maps/'.$image_map.'&width=160&height=120&time='.$filetime.'" class="ServerPic" alt="" /></a>';
             }
 
-            $image_pwd = ($server['game_password'] ? '<img src="../inc/images/closed.png" alt="" alt="" title="Server Password" class="icon" />' : ''); //Server Password
-            $dedicated = ($server['game_dedicated'] ? '<img src="../inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server
-            $os = ($server['game_os'] ? '<img src="../inc/images/'.$server['game_os'].'_os.png" alt="" title="'.($server['game_os'] == 'windows' ? 'Windows' : 'Linux').' Server" class="icon" />' : ''); //Server OS
+            $image_pwd = ($server['game_password'] ? '<img src="inc/images/closed.png" alt="" alt="" title="Server Password" class="icon" />' : ''); //Server Password
+            $dedicated = ($server['game_dedicated'] ? '<img src="inc/images/dedicated.png" alt="" title="Dedicated Server" class="icon" />' : ''); //Dedicated Server
+            $os = ($server['game_os'] ? '<img src="inc/images/'.$server['game_os'].'_os.png" alt="" title="'.($server['game_os'] == 'windows' ? 'Windows' : 'Linux').' Server" class="icon" />' : ''); //Server OS
             $mod = (!empty($server['game_mod_name_long']) ? '<span class="fontBold">Mod:</span> '.$server['game_mod_name_long'].' <img src="'.$icon_mod.'" alt="" class="icon" /><br />' : '');
             $pwds = (!empty($get['pwd']) && permission("gs_showpw") && $server['game_password'] ? show(_server_pwd, array("pwd" => string::decode($get['pwd']))) : '');
             $gtype = (!empty($server['game_type']) ? show(_server_gtype, array("type" => string::decode($server['game_type']))) : '');

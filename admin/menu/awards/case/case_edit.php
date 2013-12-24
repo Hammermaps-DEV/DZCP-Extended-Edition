@@ -30,7 +30,7 @@ if($_POST)
                            `prize`  = '".string::encode($prize)."'
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-    $show = info(_awards_admin_edited, "?admin=awards");
+    $show = info(_awards_admin_edited, "?index=admin&amp;admin=awards");
 }
 
 if(empty($show))

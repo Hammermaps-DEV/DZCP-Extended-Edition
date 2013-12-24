@@ -13,4 +13,4 @@ if(_adminMenu != 'true')
     exit();
 
 db("DELETE FROM ".dba::get('artikel')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(_artikel_deleted, "?admin=artikel");
+$show = info(_artikel_deleted, "?index=admin&amp;admin=artikel");

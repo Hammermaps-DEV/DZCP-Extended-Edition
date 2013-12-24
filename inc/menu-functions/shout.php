@@ -6,16 +6,19 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-function shout($ajax = 0)
+function shout($ajax = false)
 {
+    if($ajax && !Cache::check('shoutbox'))
+       return Cache::get('shoutbox');
+
     $shoutconfig = settings(array('l_shoutnick','l_shouttext','shout_max_zeichen','m_shout'));
-    $qry = db("SELECT * FROM ".dba::get('shout')." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
+    $qry = db("SELECT id,datum,nick,email,text,ip FROM ".dba::get('shout')." ORDER BY id DESC LIMIT ".$shoutconfig['m_shout']."");
 
     $i = 1; $color = 1; $show = "";
     while ($get = _fetch($qry))
     {
         $class = ($color % 2) ? "navShoutContentFirst" : "navShoutContentSecond"; $color++;
-        $delete = (permission("shoutbox") ? '<a href="../shout/?action=admin&amp;do=delete&amp;id='.$get['id'].'" rel="'._confirm_del_shout.'" class="confirm"><img src="../inc/images/delete_small.gif" title="'._button_title_del.'" alt="'._button_title_del.'" /></a>' : '');
+        $delete = (permission("shoutbox") ? '<a href="?index=shout&amp;action=admin&amp;do=delete&amp;id='.$get['id'].'" rel="'._confirm_del_shout.'" class="confirm"><img src="inc/images/delete_small.gif" title="'._button_title_del.'" alt="'._button_title_del.'" /></a>' : '');
         $is_num = preg_match("#\d#", $get['email']);
 
         if($is_num && !check_email($get['email']))
@@ -31,38 +34,45 @@ function shout($ajax = 0)
         $i++;
     }
 
-    $sec = ''; $only4reg = ''; $dis = ''; $dis1 = ''; $form = '';
-    if(settings('reg_shout') == 1 && checkme() == 'unlogged')
+    if($ajax)
     {
-        $dis = ' style="text-align:center" disabled="disabled"';
-        $dis1 = ' style="color:#888" disabled="disabled"';
-        $only4reg = _shout_must_reg;
+        Cache::set('shoutbox', $show, 30);
+        return $show;
     }
     else
     {
-        if(checkme() == "unlogged")
+        $sec = ''; $only4reg = ''; $dis = ''; $dis1 = ''; $form = '';
+        if(settings('reg_shout') == 1 && checkme() == 'unlogged')
         {
-            $form = show("menu/shout_form", array("dis" => $dis));
-            $sec = show("menu/shout_antispam", array("dis" => $dis));
+            $dis = ' style="text-align:center" disabled="disabled"';
+            $dis1 = ' style="color:#888" disabled="disabled"';
+            $only4reg = _shout_must_reg;
         }
         else
-            $form = autor(userid(), "navShout",'','',$shoutconfig['l_shoutnick']);
+        {
+            if(checkme() == "unlogged")
+            {
+                $form = show("menu/shout_form", array("dis" => $dis));
+                $sec = show("menu/shout_antispam", array("dis" => $dis));
+            }
+            else
+                $form = autor(userid(), "navShout",'','',$shoutconfig['l_shoutnick']);
+        }
+
+        // 0 Zeichen, disable
+        if(!$shoutconfig['shout_max_zeichen'])
+        {
+            $dis = ' style="text-align:center;" disabled="disabled"';
+            $dis1 = ' style="color:#888" disabled="disabled"';
+        }
+
+        $add = show("menu/shout_add", array("form" => $form,
+                                            "dis1" => $dis1,
+                                            "dis" => $dis,
+                                            "only4reg" => $only4reg,
+                                            "security" => $sec,
+                                            "zeichen" => $shoutconfig['shout_max_zeichen']));
+
+        return '<table class="navContent" cellspacing="0">'.show("menu/shout", array("shout" => $show, "add" => $add)).'</table>';
     }
-
-    // 0 Zeichen, disable
-    if(!$shoutconfig['shout_max_zeichen'])
-    {
-        $dis = ' style="text-align:center;" disabled="disabled"';
-        $dis1 = ' style="color:#888" disabled="disabled"';
-    }
-
-    $add = show("menu/shout_add", array("form" => $form,
-                                        "dis1" => $dis1,
-                                        "dis" => $dis,
-                                        "only4reg" => $only4reg,
-                                        "security" => $sec,
-                                        "zeichen" => $shoutconfig['shout_max_zeichen']));
-
-    $shout = show("menu/shout", array("shout" => $show, "add" => $add));
-    return empty($ajax) ? '<table class="navContent" cellspacing="0">'.$shout.'</table>' : $show;
 }

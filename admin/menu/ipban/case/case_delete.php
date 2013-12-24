@@ -9,4 +9,4 @@
 if(_adminMenu != 'true') exit();
 
 db("DELETE FROM ".dba::get('ipban')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(_ipban_admin_deleted, "?admin=ipban");
+$show = info(_ipban_admin_deleted, "?index=admin&amp;admin=ipban");

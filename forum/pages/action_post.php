@@ -57,7 +57,7 @@ else
             {
                 $toCheck = empty($_POST['eintrag']);
             } else {
-                $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !$securimage->check($_POST['secure']);
             }
 
             if($toCheck)
@@ -67,7 +67,7 @@ else
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
                     $form = show("page/editor_regged", array("nick" => autor()));
                 } else {
-                    if(($_POST['secure'] != $_SESSION['sec_'.$dir]) && !userid()) $error = _error_invalid_regcode;
+                    if(!$securimage->check($_POST['secure']) && !userid()) $error = captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode;
                     elseif(empty($_POST['nick'])) $error = _empty_nick;
                     elseif(empty($_POST['email'])) $error = _empty_email;
                     elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
@@ -126,7 +126,7 @@ else
                         $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$getp['sid']);
 
                         if($entrys == "0") $pagenr = "1";
-                        else $pagenr = ceil($entrys/$maxfposts);
+                        else $pagenr = ceil($entrys/settings('m_fposts'));
 
                         $subj = show(string::decode(settings('eml_fabo_pedit_subj')), array("titel" => $title));
 
@@ -148,7 +148,7 @@ else
                 $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".$getp['sid']);
 
                 if($entrys == "0") $pagenr = "1";
-                else $pagenr = ceil($entrys/$maxfposts);
+                else $pagenr = ceil($entrys/settings('m_fposts'));
 
                 $lpost = show(_forum_add_lastpost, array("id" => $entrys+1,
                         "tid" => $getp['sid'],
@@ -274,7 +274,7 @@ else
                                 "class" => 'class="commentsRight"',
                                 "email" => $email,
                                 "titel" => $titel,
-                                "p" => ($i+($page-1)*$maxfposts),
+                                "p" => ($i+($page-1)*settings('m_fposts')),
                                 "ip" => $posted_ip,
                                 "edited" => $getl['edited'],
                                 "posts" => $userposts,
@@ -350,7 +350,7 @@ else
                                 "email" => $email,
                                 "titel" => $titel,
                                 "ip" => $posted_ip,
-                                "p" => ($i+($page-1)*$maxfposts),
+                                "p" => ($i+($page-1)*settings('m_fposts')),
                                 "edited" => $gett['edited'],
                                 "posts" => $userposts,
                                 "date" => _posted_by.date("d.m.y H:i", $gett['t_date'])._uhr,
@@ -417,7 +417,7 @@ else
                     exit;
 
                 if(userid() != 0) $toCheck = empty($_POST['eintrag']);
-                else $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                else $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || !$securimage->check($_POST['secure']);
 
                 if($toCheck)
                 {
@@ -426,7 +426,7 @@ else
                         if(empty($_POST['eintrag'])) $error = _empty_eintrag;
                         $form = show("page/editor_regged", array("nick" => autor()));
                     } else {
-                        if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
+                        if(!$securimage->check($_POST['secure'])) $error = captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode;
                         elseif(empty($_POST['nick'])) $error = _empty_nick;
                         elseif(empty($_POST['email'])) $error = _empty_email;
                         elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
@@ -512,7 +512,7 @@ else
                                 "class" => $ftxt['class'],
                                 "email" => $email,
                                 "ip" => $posted_ip,
-                                "p" => ($i+($page-1)*$maxfposts),
+                                "p" => ($i+($page-1)*settings('m_fposts')),
                                 "edited" => $getl['edited'],
                                 "posts" => $userposts,
                                 "signatur" => $sig,
@@ -585,7 +585,7 @@ else
                                 "hp" => $hp,
                                 "email" => $email,
                                 "edit" => "",
-                                "p" => ($i+($page-1)*$maxfposts),
+                                "p" => ($i+($page-1)*settings('m_fposts')),
                                 "delete" => "",
                                 "edited" => $gett['edited'],
                                 "posts" => $userposts,
@@ -719,7 +719,7 @@ else
                             $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".convert::ToInt($_GET['id']));
 
                             if($entrys == "0") $pagenr = "1";
-                            else $pagenr = ceil($entrys/$maxfposts);
+                            else $pagenr = ceil($entrys/settings('m_fposts'));
 
                             $subj = show(string::decode(settings('eml_fabo_npost_subj')), array("titel" => $title));
 
@@ -742,7 +742,7 @@ else
                     $entrys = cnt(dba::get('f_posts'), " WHERE `sid` = ".convert::ToInt($_GET['id']));
 
                     if($entrys == "0") $pagenr = "1";
-                    else $pagenr = ceil($entrys/$maxfposts);
+                    else $pagenr = ceil($entrys/settings('m_fposts'));
 
                     $lpost = show(_forum_add_lastpost, array("id" => $entrys+1,
                             "tid" => $_GET['id'],
@@ -776,7 +776,7 @@ else
                       SET `first` = '1'
                       WHERE kid = '".$get['kid']."'");
             } else {
-                $pagenr = ceil($entrys/$maxfposts);
+                $pagenr = ceil($entrys/settings('m_fposts'));
             }
 
             $lpost = show(_forum_add_lastpost, array("id" => $entrys+1,

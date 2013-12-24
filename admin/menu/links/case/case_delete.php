@@ -9,4 +9,4 @@
 if(_adminMenu != 'true') exit();
 
 db("DELETE FROM ".dba::get($_GET['type'])." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(_link_deleted, "?admin=links");
+$show = info(_link_deleted, "?index=admin&amp;admin=links");

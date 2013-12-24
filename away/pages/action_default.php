@@ -12,17 +12,13 @@ if (_version < '1.0')
 else
 {
     $where = $where.' - '._away_list;
-    if(checkme() == "unlogged" || checkme() < 2)
+    if(!checkme() || checkme() < 2)
     {
         $index = error(_error_wrong_permissions);
     } else {
 
-        if(isset($_GET['page'])) $page = $_GET['page'];
-        else $page = 1;
         $entrys = cnt(dba::get('away'));
-        $qry = db("SELECT * FROM ".dba::get('away')."
-               ORDER BY id DESC
-               LIMIT ".($page - 1)*($maxaway=settings('m_away')).",".$maxaway."");
+        $qry = db("SELECT * FROM ".dba::get('away')." ORDER BY id DESC LIMIT ".($page - 1)*($maxaway=settings('m_away')).",".$maxaway."");
 
         $show = '';
         while($get = _fetch($qry))
@@ -36,7 +32,7 @@ else
             if(userid() == $get['userid'] || checkme() == "4")
             {
                 $value = show("page/button_edit_single", array("id" => $get['id'],
-                        "action" => "action=edit",
+                        "action" => "index=away&amp;action=edit",
                         "title" => _button_title_edit));
             } else {
                 $value = "&nbsp;";
@@ -45,12 +41,12 @@ else
             if($get['end'] < time()) $value = "&nbsp;";
 
             checkme() == 4 ? $delete = show("page/button_delete_single", array("id" => $get['id'],
-                    "action" => "action=del",
+                    "action" => "index=away&amp;action=del",
                     "title" => _button_title_del,
                     "del" => _confirm_del_entry)) : $delete = "&nbsp;";
 
             $info = show($dir."/button_info", array("id" => $get['id'],
-                    "action" => "action=info",
+                    "action" => "index=away&amp;action=info",
                     "title" =>"Info"));
 
             $show .= show($dir."/away_show", array("class"=>$class,

@@ -74,7 +74,7 @@ else
                     if(checkme() == 4 || $view_userID == userid())
                     {
                         db("DELETE FROM ".dba::get('usergb')." WHERE user = '".convert::ToInt($view_userID)."' AND id = '".convert::ToInt($_GET['gbid'])."'");
-                        $index = info(_gb_delete_successful, "?action=user&amp;id=".$view_userID."&show=gb");
+                        $index = info(_gb_delete_successful, "?index=user&amp;action=user&amp;id=".$view_userID."&show=gb");
                     }
                     else
                         $index = error(_error_wrong_permissions);
@@ -150,8 +150,8 @@ else
                                 $edit = ''; $delete = '';
                                 if(permission('editusers') || $view_userID == userid())
                                 {
-                                    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=user&amp;show=gb&amp;do=edit&amp;gbid=".$getgb['id'], "title" => _button_title_edit));
-                                    $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "action=user&amp;show=gb&amp;do=delete&amp;gbid=".$getgb['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
+                                    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=user&action=user&amp;show=gb&amp;do=edit&amp;gbid=".$getgb['id'], "title" => _button_title_edit));
+                                    $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "index=user&action=user&amp;show=gb&amp;do=delete&amp;gbid=".$getgb['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                                 }
 
                                 if(!$getgb['reg'])
@@ -219,7 +219,7 @@ else
                                                                   "eintraghead" => _eintrag));
                         }
 
-                        $seiten = nav($entrys,$maxusergb,"?action=user&amp;id=".$_GET['id']."&show=gb");
+                        $seiten = nav($entrys,$maxusergb,"?index=user&action=user&amp;id=".$_GET['id']."&show=gb");
                         $show = show($dir."/profil_gb",array("gbhead" => _membergb, "show" => $membergb, "seiten" => $seiten, "add" => $add));
                     break;
 
@@ -232,10 +232,15 @@ else
                         $icqnr = (!empty($get['icq']) ? string::decode($get['icq']) : '');
                         $status = ($get['status'] == 1 || ($get['level'] != 1 && isset($_GET['sq'])) ? _aktiv_icon : _inaktiv_icon);
                         $buddyadd = show(_addbuddyicon, array("id" => $_GET['id']));
-                        $edituser = (permission("editusers") ? str_replace("&amp;id=","",show("page/button_edit_single", array("id" => "", "action" => "action=admin&amp;edit=".$view_userID, "title" => _button_title_edit))) : '');
-                        $xfire = (!empty($get['xfire']) && xfire_enable ? '<div id="infoXfire_'.string::decode($get['xfire']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>' : '-');
+                        $edituser = (permission("editusers") ? str_replace("&amp;id=","",show("page/button_edit_single", array("id" => "", "action" => "index=user&action=admin&amp;edit=".$view_userID, "title" => _button_title_edit))) : '');
+                        $xfire = (!empty($get['xfire']) && xfire_enable ? '<div id="infoXfire_'.string::decode($get['xfire']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.string::decode($get['xfire']).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>' : '-');
                         $rlname = (!empty($get['rlname']) ? string::decode($get['rlname']) : '-');
-                        $steam = (!empty($get['steamurl']) && steam_enable ? '<div id="infoSteam_'.string::decode($get['steamurl']).'"><div style="width:100%;text-align:center"><img src="../inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSteam_'.string::decode($get['steamurl']).'","steam","&steamid='.string::decode($get['steamurl']).'");</script></div>' : '-');
+                        $steam = (!empty($get['steamurl']) && steam_enable ? '<div id="infoSteam_'.string::decode($get['steamurl']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSteam_'.string::decode($get['steamurl']).'","steam","&steamid='.string::decode($get['steamurl']).'");</script></div>' : '-');
+                        $skype = (!empty($get['skype']) && skype_enable ? '<div id="infoSkype_'.string::decode($get['skype']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSkype_'.string::decode($get['skype']).'","skype","&username='.string::decode($get['skype']).'");</script></div>' : '-');
+                        $xbox = (!empty($get['xbox']) && xbox_enable ? '<div id="infoXbox_'.string::decode($get['xbox']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXbox_'.string::decode($get['xbox']).'","xbox","&xboxid='.string::decode($get['xbox']).'");</script></div>' : '-');
+                        $psn = (!empty($get['psn']) && psn_enable ? '<div id="infoPSN_'.string::decode($get['psn']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoPSN_'.string::decode($get['psn']).'","psn","&psnid='.string::decode($get['psn']).'");</script></div>' : '-');
+                        $origin = (!empty($get['origin']) && origin_enable ? '<div id="infoOrigin_'.string::decode($get['origin']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoOrigin_'.string::decode($get['origin']).'","origin","&originid='.string::decode($get['origin']).'");</script></div>' : '-');
+                        $bnet = (!empty($get['bnet']) && bnet_enable ? '<div id="infoBnet_'.string::decode($get['bnet']).'"><div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div><script language="javascript" type="text/javascript">DZCP.initDynLoader("infoBnet_'.string::decode($get['bnet']).'","bnet","&bnetid='.string::decode($get['bnet']).'");</script></div>' : '-');
 
                         //Zeige Clan Informationen an
                         $clan = "";
@@ -300,6 +305,11 @@ else
                                 "sex" => $sex,
                                 "icq" => $icq,
                                 "icqnr" => $icqnr,
+                                "skype" => $skype,
+                                "xbox" => $xbox,
+                                "psn" => $psn,
+                                "origin" => $origin,
+                                "bnet" => $bnet,
                                 "pn" => $pn,
                                 "edituser" => $edituser,
                                 "onoff" => onlinecheck($view_userID),

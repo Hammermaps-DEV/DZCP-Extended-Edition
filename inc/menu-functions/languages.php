@@ -13,8 +13,8 @@ function languages()
     {
         $file = str_replace('.php','',$file);
         $upFile = strtoupper(substr($file,0,1)).substr($file,1);
-        if(file_exists('../inc/lang/languages/'.$file.'.gif'))
-            $lang .= '<a href="?set_language='.$file.'"><img src="../inc/lang/languages/'.$file.'.gif" alt="'.$upFile.'" title="'.$upFile.'" class="icon" /></a> ';
+        if(file_exists('inc/lang/languages/'.$file.'.gif'))
+            $lang .= '<a href="?set_language='.$file.'"><img src="inc/lang/languages/'.$file.'.gif" alt="'.$upFile.'" title="'.$upFile.'" class="icon" /></a> ';
     }
 
     return $lang;

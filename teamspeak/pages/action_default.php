@@ -33,9 +33,9 @@ else
                     $show_id = 0;
                     if(isset($_GET['show'])) $show_id = convert::ToInt($_GET['show']);
                     else if($get['default_server'] != 0) $show_id = $get['id'];
-                    $url = '../teamspeak/?action=ajax&show='.$show_id.'&sID='.$get['id'];
+                    $url = '../?index=teamspeak&action=ajax&show='.$show_id.'&sID='.$get['id'];
                     $index .= '<tr><td class="contentMainTop">
-                    <div id="PageTeamspeak_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                    <div id="PageTeamspeak_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
                     <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'PageTeamspeak_'.$get['id'].'\',\''.$url.'\');</script></div></td></tr>';
                 }
             }

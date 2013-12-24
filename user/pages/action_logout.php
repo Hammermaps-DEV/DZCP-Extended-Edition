@@ -23,5 +23,5 @@ else
     logout(); //Find in BBCode
 
     ## Zur News Seite weiterleiten ##
-    header("Location: ../news/");
+    header("Location: ?index=news");
 }

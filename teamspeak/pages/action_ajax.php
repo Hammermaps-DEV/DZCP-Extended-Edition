@@ -42,14 +42,15 @@ else
                 return '<tr><td class="contentMainTop"><br /><center>'._no_connect_to_ts.'</center><br /></td></tr>';
         }
 
-        $cache_hash = md5($host.':'.$port);
+        $html5_worker_sync = use_html5_worker ? 'worker_' : '';
+        $cache_hash = md5($html5_worker_sync.$host.':'.$port);
         if(Cache::check('teamspeak_'.$cache_hash))
         {
             GameQ::addServers(array(array('id' => 'ts3' ,'type' => 'teamspeak3', 'host' => $host.':'.$port, 'query_port' => $get['query_port'])));
             GameQ::setOption('timeout', 6);
             $results = GameQ::requestData();
 
-            if(!empty($results) && $results)
+            if(!empty($results) && $results && !use_html5_worker)
                 Cache::set('teamspeak_'.$cache_hash,$results,settings('cache_teamspeak'));
         }
         else
@@ -76,12 +77,12 @@ else
                     $player_status_icon = $player['client_output_muted'] ? "client_snd_muted.png" : $player_status_icon;
                     $player_status_icon = !$player['client_input_hardware'] ? "client_mic_disabled.png" : $player_status_icon;
                     $player_status_icon = $player['client_input_muted'] ? "client_mic_muted.png" : $player_status_icon;
-                    $priority_speaker = $player['client_is_priority_speaker'] ? '<img src="../inc/images/tsviewer/client_priority.png" alt="" class="tsicon" />' : '';
+                    $priority_speaker = $player['client_is_priority_speaker'] ? '<img src="inc/images/tsviewer/client_priority.png" alt="" class="tsicon" />' : '';
                     $player['client_nickname'] = (mb_strlen(html_entity_decode($player['client_nickname'])) > 20 ? cut($player['client_nickname'],20,true) : $player['client_nickname'] );
                     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
                     $channel = array_search_channel('cid', $player['cid'], $results['ts3']['channels']);
-                    $userstats .= show($dir."/userstats", array("player" => '<img src="../inc/images/tsviewer/'.$player_status_icon.'" alt="" class="tsicon" />&nbsp;'.TS3Renderer::rep($player['client_nickname']),
+                    $userstats .= show($dir."/userstats", array("player" => '<img src="inc/images/tsviewer/'.$player_status_icon.'" alt="" class="tsicon" />&nbsp;'.TS3Renderer::rep($player['client_nickname']),
                                                                 "player_icons" => $priority_speaker.TS3Renderer::user_groups_icons($player),
                                                                 "channel" => '<img src="'.TS3Renderer::channel_icon($channel).'" alt="" class="tsicon" /> '.TS3Renderer::channel_name($channel,true,'',1,true),
                                                                 "class" => $class,

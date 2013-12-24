@@ -48,7 +48,7 @@ if(_adminMenu != 'true') exit();
 
                if($_POST['navi'] != "lazy")
                     {
-                        $qry = db("SELECT * FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+                        $qry = db("SELECT * FROM ".dba::get('navi')." WHERE url = '?index=squads&amp;action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
                 $get = _fetch($qry);
                         if(_rows($qry))
                     {
@@ -66,7 +66,7 @@ if(_adminMenu != 'true') exit();
                                                     SET `pos`       = '".convert::ToInt($pos)."',
                                                             `kat`       = '".string::encode($kat)."',
                                                             `name`      = '".string::encode($_POST['squad'])."',
-                                                            `url`       = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'
+                                                            `url`       = '?index=squads&amp;action=shows&amp;id=".convert::ToInt($_GET['id'])."'
                                                     WHERE id = '".convert::ToInt($get['id'])."'");
                         } else {
                             if($_POST['navi'] == "1" || "2") $signnav = ">= ";
@@ -81,13 +81,13 @@ if(_adminMenu != 'true') exit();
                                     SET `pos`       = '".convert::ToInt($pos)."',
                                             `kat`       = '".string::encode($kat)."',
                                             `name`      = '".string::encode($_POST['squad'])."',
-                                            `url`       = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."',
+                                            `url`       = '?index=squads&amp;action=shows&amp;id=".convert::ToInt($_GET['id'])."',
                                             `shown`     = '1',
                                             `type`      = '2'");
                         }
                     } else {
-                        $qry = db("SELECT * FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
-                        if(_rows($qry))	db("DELETE FROM ".dba::get('navi')." WHERE url = '../squads/?action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+                        $qry = db("SELECT * FROM ".dba::get('navi')." WHERE url = '?index=squads&amp;action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
+                        if(_rows($qry))	db("DELETE FROM ".dba::get('navi')." WHERE url = '?index=squads&amp;action=shows&amp;id=".convert::ToInt($_GET['id'])."'");
                     }
 
           $tmp = $_FILES['banner']['tmp_name'];
@@ -136,5 +136,5 @@ if(_adminMenu != 'true') exit();
             }
           }
 
-          $show = info(_admin_squad_edit_successful, "?admin=squads");
+          $show = info(_admin_squad_edit_successful, "?index=admin&amp;admin=squads");
         }

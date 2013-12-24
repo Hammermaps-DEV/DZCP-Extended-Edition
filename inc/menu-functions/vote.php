@@ -16,10 +16,11 @@ function vote($ajax = false)
         $results = ""; $votebutton = ""; $stimmen = "";
         while ($getv = _fetch($qryv))
         {
+            $ipcheck = !count_clicks('vote',$get['id'],0,false);
             $stimmen = sum(dba::get('vote_results'), " WHERE vid = '".$get['id']."'", "stimmen");
             if($stimmen != 0)
             {
-                if(ipcheck("vid_".$get['id']) || cookie::get('vid_'.$get['id']) != false || $get['closed'] == 1)
+                if($ipcheck || cookie::get('vid_'.$get['id']) != false || $get['closed'])
                 {
                     $percent = round($getv['stimmen']/$stimmen*100,1);
                     $rawpercent = round($getv['stimmen']/$stimmen*100,0);

@@ -46,7 +46,7 @@ else
                     FTP::move($ftp_pfad);
                     $dirs = FTP::nlist();
 
-                    $check_list = array('/admin','/antispam.php','/artikel','/awards','/away','/banner','/clankasse','/clanwars','/contact','/downloads','/forum','/gallery','/gb','/glossar','/impressum','/inc','/index.php','/kalender','/links','/linkus','/membermap','/news','/online','/rankings','/rss.php','/search','/server','/shout','/sites','/sponsors','/squads','/stats','/teamspeak','/upload','/user','/votes','/_installer');
+                    $check_list = array('/admin','/artikel','/awards','/away','/banner','/clankasse','/clanwars','/contact','/downloads','/forum','/gallery','/gb','/glossar','/impressum','/inc','/index.php','/kalender','/links','/linkus','/membermap','/news','/online','/rankings','/rss.php','/search','/server','/shout','/sites','/sponsors','/squads','/stats','/teamspeak','/upload','/user','/votes','/_installer');
                     foreach ($check_list as $list)
                     { $list_new[] = str_replace('//', '/', $ftp_pfad.$list); }
                     $check_list = $list_new;

@@ -41,7 +41,7 @@ if(_adminMenu != 'true') exit();
             ';
           }
           $thiskat = $getnav['kat'];
-          $sel[$i] = ($getnav['url'] == '../squads/?action=shows&amp;id='.convert::ToInt($_GET['id'])) ? 'selected="selected"' : '';
+          $sel[$i] = ($getnav['url'] == '?index=squads&amp;action=shows&amp;id='.convert::ToInt($_GET['id'])) ? 'selected="selected"' : '';
 
           $navigation .= empty($getnav['name']) ? '' : '<option value="'.string::decode($getnav['placeholder']).'-'.($getnav['pos']+1).'" '.$sel[$i].'>'._nach.' -> '.navi_name(string::decode($getnav['name'])).'</option>';
 
@@ -61,7 +61,7 @@ if(_adminMenu != 'true') exit();
         {
           if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end))
           {
-            $image = '<img src="../inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end.'" width="200" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=../inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
+            $image = '<img src="inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'.'.$end.'" width="200" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=inc/images/squads/'.convert::ToInt($_GET['id']).'.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
             break;
           }
         }
@@ -70,7 +70,7 @@ if(_adminMenu != 'true') exit();
         {
           if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end))
           {
-            $logoimage = '<img src="../inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.'" height="60" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=../inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
+            $logoimage = '<img src="inc/images/uploads/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.'" height="60" alt="" onmouseover="DZCP.showInfo(\'<tr><td><img src=inc/images/squads/'.convert::ToInt($_GET['id']).'_logo.'.$end.' alt= /></tr></td>\')" onmouseout="DZCP.hideInfo()" /><br />';
             break;
           }
         }

@@ -13,7 +13,6 @@ else if(!isset($_GET['id']) || empty($_GET['id']) || !db("SELECT id FROM ".dba::
     $index = error(_id_dont_exist);
 else
 {
-    $flood_artikelcom = settings('f_artikelcom');
     $check = db("SELECT public FROM ".dba::get('artikel')." WHERE id = ".$artikel_id,false,true);
     if(!permission("artikel") && !$check['public'])
         $index = error(_error_wrong_permissions);
@@ -38,7 +37,7 @@ else
                                 if(userid() != 0)
                                     $toCheck = empty($_POST['comment']);
                                 else
-                                    $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                                    $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || !$securimage->check($_POST['secure']);
 
                                 if($toCheck)
                                 {
@@ -49,8 +48,8 @@ else
                                     }
                                     else
                                     {
-                                        if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir]))
-                                            $error = show("errors/errortable", array("error" => _error_invalid_regcode));
+                                        if(!$securimage->check($_POST['secure']))
+                                            $error = show("errors/errortable", array("error" => captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode));
                                         else if(empty($_POST['nick']))
                                             $error = show("errors/errortable", array("error" => _empty_nick));
                                         else if(empty($_POST['email']))
@@ -77,11 +76,11 @@ else
                                            `ip`       = '".visitorIp()."'");
 
                                     wire_ipcheck("artid(".$artikel_id.")");
-                                    $index = info(_comment_added, "?action=show&amp;id=".$artikel_id."");
+                                    $index = info(_comment_added, "?index=artikel&amp;action=show&amp;id=".$artikel_id."");
                                 }
                             }
                             else
-                                $index = error(show(_error_flood_post, array("sek" => $flood_artikelcom)));
+                                $index = error(show(_error_flood_post, array("sek" => settings('f_artikelcom'))));
                         }
                     }
                     else
@@ -104,8 +103,9 @@ else
                                 "hphead" => _hp,
                                 "form" => $form,
                                 "preview" => _preview,
-                                "prevurl" => '../artikel/?action=compreview&amp;do=edit&amp;id='.$artikel_id.'&amp;cid='.$_GET['cid'],
-                                "action" => '?action=show&amp;do=editcom&amp;id='.$artikel_id.'&amp;cid='.$_GET['cid'],
+                                "sid" => mkpwd(4),
+                                "prevurl" => '?index=artikel&action=compreview&do=edit&id='.$artikel_id.'&cid='.$_GET['cid'],
+                                "action" => '?index=artikel&amp;action=show&amp;do=editcom&amp;id='.$artikel_id.'&amp;cid='.$_GET['cid'],
                                 "ip" => _iplog_info,
                                 "id" => $artikel_id,
                                 "what" => _button_value_edit,
@@ -130,7 +130,7 @@ else
                                `editby`   = '".addslashes($editedby)."'
                            WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
-                        $index = info(_comment_edited, "?action=show&amp;id=".$artikel_id."");
+                        $index = info(_comment_edited, "?index=artikel&amp;action=show&amp;id=".$artikel_id."");
                     }
                     else
                         $index = error(_error_edit_post);
@@ -140,7 +140,7 @@ else
                     if($get['reg'] == userid() || permission('artikel'))
                     {
                         db("DELETE FROM ".dba::get('acomments')." WHERE id = '".convert::ToInt($_GET['cid'])."'");
-                        $index = info(_comment_deleted, "?action=show&amp;id=".$artikel_id."");
+                        $index = info(_comment_deleted, "?index=artikel&amp;action=show&amp;id=".$artikel_id."");
                     }
                     else
                         $index = error(_error_wrong_permissions);
@@ -162,7 +162,7 @@ else
             $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_artikel_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
             $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".convert::ToInt($get['kat'])."'",false,true);
-            $artikelimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
+            $artikelimage = 'inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
             if($get['custom_image'])
             {
                 foreach($picformat AS $end)
@@ -172,7 +172,7 @@ else
                 }
 
                 if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
-                    $artikelimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+                    $artikelimage = 'inc/images/uploads/news/'.$get['id'].'.'.$end;
             }
 
             if($get['comments'])
@@ -186,8 +186,8 @@ else
                     $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";
                     if((checkme() != 'unlogged' && $getc['reg'] == userid()) || permission("artikel"))
                     {
-                        $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=show&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
-                        $delete = show("page/button_delete_single", array("id" => $artikel_id, "action" => "action=show&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
+                        $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=artikel&amp;action=show&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
+                        $delete = show("page/button_delete_single", array("id" => $artikel_id, "action" => "index=artikel&amp;action=show&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                     }
 
                     if(!$getc['reg'])
@@ -230,7 +230,7 @@ else
                         $form = show("page/editor_notregged", array("postemail" => "", "posthp" => "", "postnick" => ""));
 
                     $add = '';
-                    if(!ipcheck("artid(".$artikel_id.")", $flood_artikelcom))
+                    if(!ipcheck("artid(".$artikel_id.")", settings('f_artikelcom')))
                     {
                         $add = show("page/comments_add", array( "titel" => _artikel_comments_write_head,
                                                                 "form" => $form,
@@ -239,8 +239,9 @@ else
                                                                 "preview" => _preview,
                                                                 "sec" => $dir,
                                                                 "security" => _register_confirm,
-                                                                "action" => '?action=show&amp;do=add&amp;id='.$artikel_id,
-                                                                "prevurl" => '../artikel/?action=compreview&id='.$artikel_id,
+                                                                "sid" => mkpwd(4),
+                                                                "action" => '?index=artikel&amp;action=show&amp;do=add&amp;id='.$artikel_id,
+                                                                "prevurl" => '?index=artikel&action=compreview&id='.$artikel_id,
                                                                 "postemail" => (isset($_POST['email']) && !empty($error) ? $_POST['email'] : ''),
                                                                 "posthp" => (isset($_POST['hp']) && !empty($error) ? $_POST['hp'] : ''),
                                                                 "postnick" => (isset($_POST['nick']) && !empty($error) ? string::decode($_POST['nick']) : ''),
@@ -249,7 +250,7 @@ else
                     }
                 }
 
-                $seiten = nav($entrys,$maxcomments,"?action=show&amp;id=".$artikel_id."");
+                $seiten = nav($entrys,$maxcomments,"?index=artikel&amp;action=show&amp;id=".$artikel_id."");
                 $showmore = show($dir."/comments",array("head" => _comments_head, "show" => $comments, "seiten" => $seiten, "icq" => "", "add" => $add));
             }
             else

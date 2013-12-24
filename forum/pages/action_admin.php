@@ -15,7 +15,7 @@ else
     {
         if($_GET['do'] == "mod")
         {
-            if(isset($_POST['delete']))
+            if(getArgs('delete',false))
             {
                 $qryv = db("SELECT * FROM ".dba::get('f_threads')."
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -55,45 +55,54 @@ else
                     WHERE sid = '" . $tmpSid . "'");
                 $delabo = db("DELETE FROM ".dba::get('f_abo')."
                       WHERE fid = '".convert::ToInt($_GET['id'])."'");
-                $index = info(_forum_admin_thread_deleted, "../forum/");
-            } else {
-                if($_POST['closed'] == "0")
+                $index = info(_forum_admin_thread_deleted, "?index=forum");
+            } else
+            {
+                if(!getArgs('closed',false))
                 {
-                    $open = db("UPDATE ".dba::get('f_threads')."
+                    db("UPDATE ".dba::get('f_threads')."
                       SET `closed` = '0'
                       WHERE id = '".convert::ToInt($_GET['id'])."'");
-                } elseif($_POST['closed'] == "1") {
-                    $close = db("UPDATE ".dba::get('f_threads')."
+                }
+                else if(getArgs('closed',true))
+                {
+                    db("UPDATE ".dba::get('f_threads')."
                        SET `closed` = '1'
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
                 }
 
-                if(isset($_POST['sticky']))
+                if(getArgs('sticky',false))
                 {
-                    $sticky = db("UPDATE ".dba::get('f_threads')."
+                    db("UPDATE ".dba::get('f_threads')."
                         SET `sticky` = '1'
                         WHERE id = '".convert::ToInt($_GET['id'])."'");
-                } else {
-                    $sticky = db("UPDATE ".dba::get('f_threads')."
+                }
+                else
+                {
+                    db("UPDATE ".dba::get('f_threads')."
                         SET `sticky` = '0'
                         WHERE id = '".convert::ToInt($_GET['id'])."'");
                 }
 
-                if(isset($_POST['global']))
+                if(getArgs('global',false))
                 {
-                    $sticky = db("UPDATE ".dba::get('f_threads')."
+                    db("UPDATE ".dba::get('f_threads')."
                         SET `global` = '1'
                         WHERE id = '".convert::ToInt($_GET['id'])."'");
-                } else {
-                    $sticky = db("UPDATE ".dba::get('f_threads')."
+                }
+                else
+                {
+                    db("UPDATE ".dba::get('f_threads')."
                         SET `global` = '0'
                         WHERE id = '".convert::ToInt($_GET['id'])."'");
                 }
 
-                if($_POST['move'] == "lazy")
+                if(getArgs('move',false) == "lazy")
                 {
-                    $index = info(_forum_admin_modded, "?action=showthread&amp;id=".$_GET['id']."");
-                } else {
+                    $index = info(_forum_admin_modded, "?index=forum&amp;action=showthread&amp;id=".$_GET['id']."");
+                }
+                else
+                {
                     $move = db("UPDATE ".dba::get('f_threads')."
                       SET `kid` = '".$_POST['move']."'
                       WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -110,11 +119,11 @@ else
                     $getm = _fetch($qrym);
 
                     $i_move = show(_forum_admin_do_move, array("kat" => string::decode($getm['kattopic'])));
-                    $index = info($i_move, "?action=showthread&amp;id=".$_GET['id']."");
+                    $index = info($i_move, "?index=forum&amp;action=showthread&amp;id=".$_GET['id']."");
                 }
             }
         }
-    } else {
-        $index = error(_error_wrong_permissions);
     }
+    else
+        $index = error(_error_wrong_permissions);
 }

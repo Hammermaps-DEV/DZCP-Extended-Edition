@@ -97,6 +97,9 @@ class client_api_communicate
     public static function set_api_url($host='',$port=80)
     { self::$apihost = $host.':'.$port; }
 
+    public static function get_api_url()
+    { return self::$apihost; }
+
     public static function set_api_cryptkey($cryptkey='')
     { self::$cryptkey = $cryptkey; }
 

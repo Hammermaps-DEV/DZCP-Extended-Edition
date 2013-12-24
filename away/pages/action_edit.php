@@ -84,7 +84,7 @@ else
                         `lastedit`= '".addslashes($editedby)."'
                         WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-                $index = info(_away_successful_edit, "../away/");
+                $index = info(_away_successful_edit, "?index=away");
             }
         }
     }

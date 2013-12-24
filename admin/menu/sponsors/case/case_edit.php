@@ -213,7 +213,7 @@ if(_adminMenu != 'true')
                     db("UPDATE ".dba::get('sponsoren')." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
           }
 
-          $show = info(_sponsor_added, "?admin=sponsors");
+          $show = info(_sponsor_added, "?index=admin&amp;admin=sponsors");
         }
       } elseif($_GET['do'] == "edit") {
 
@@ -269,7 +269,7 @@ if(_adminMenu != 'true')
     {
       if(file_exists(basePath.'/banner/sponsors/site_'.$get['id'].'.'.$end))
             {
-                $sitepic = '<img src="../banner/sponsors/site_'.$get['id'].'.'.$end.'" alt="" width="50%" />';
+                $sitepic = '<img src="banner/sponsors/site_'.$get['id'].'.'.$end.'" alt="" />';
           break;
             }
     }
@@ -278,7 +278,7 @@ if(_adminMenu != 'true')
     {
             if(file_exists(basePath.'/banner/sponsors/banner_'.$get['id'].'.'.$end))
             {
-                $bannerpic = '<img src="../banner/sponsors/banner_'.$get['id'].'.'.$end.'" alt="" width="50%" />';
+                $bannerpic = '<img src="banner/sponsors/banner_'.$get['id'].'.'.$end.'" alt="" />';
                 break;
             }
     }
@@ -287,7 +287,7 @@ if(_adminMenu != 'true')
     {
             if(file_exists(basePath.'/banner/sponsors/box_'.$get['id'].'.'.$end))
             {
-                $boxpic = '<img src="../banner/sponsors/box_'.$get['id'].'.'.$end.'" alt="" width="50%" />';
+                $boxpic = '<img src="banner/sponsors/box_'.$get['id'].'.'.$end.'" alt="" />';
                 break;
             }
     }
@@ -386,7 +386,7 @@ if(_adminMenu != 'true')
             {
                 if(file_exists(basePath.'/banner/sponsors/site_'.$get['id'].'.'.$end))
                 {
-                    $sitepic = '<img src="../banner/sponsors/site_'.$get['id'].'.'.$end.'" alt="" width="50%" />';
+                    $sitepic = '<img src="banner/sponsors/site_'.$get['id'].'.'.$end.'" alt="" />';
                     break;
                 }
             }
@@ -395,7 +395,7 @@ if(_adminMenu != 'true')
             {
                 if(file_exists(basePath.'/banner/sponsors/banner_'.$get['id'].'.'.$end))
                 {
-                    $bannerpic = '<img src="../banner/sponsors/banner_'.$get['id'].'.'.$end.'" alt="" width="50%" />';
+                    $bannerpic = '<img src="banner/sponsors/banner_'.$get['id'].'.'.$end.'" alt="" />';
                     break;
                 }
             }
@@ -404,7 +404,7 @@ if(_adminMenu != 'true')
             {
                 if(file_exists(basePath.'/banner/sponsors/box_'.$get['id'].'.'.$end))
                 {
-                    $boxpic = '<img src="../banner/sponsors/box_'.$get['id'].'.'.$end.'" alt="" width="50%" />';
+                    $boxpic = '<img src="banner/sponsors/box_'.$get['id'].'.'.$end.'" alt="" />';
                     break;
                 }
             }
@@ -550,23 +550,23 @@ if(_adminMenu != 'true')
                     db("UPDATE ".dba::get('sponsoren')." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
           }
 
-          $show = info(_sponsor_edited, "?admin=sponsors");
+          $show = info(_sponsor_edited, "?index=admin&amp;admin=sponsors");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".dba::get('sponsoren')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_sponsor_deleted, "?admin=sponsors");
+        $show = info(_sponsor_deleted, "?index=admin&amp;admin=sponsors");
       } else {
         $qry = db("SELECT * FROM ".dba::get('sponsoren')."
                    ORDER BY pos");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=sponsors&amp;do=edit",
+                                                        "action" => "index=admin&admin=sponsors&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=sponsors&amp;do=delete",
+                                                            "action" => "index=admin&admin=sponsors&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_link));
 

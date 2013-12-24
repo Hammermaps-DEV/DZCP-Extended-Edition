@@ -117,12 +117,44 @@ function steam($steam_url='')
                                  'text1' => $text_1,'text2' => $text_2,'status' => $status_set));
 }
 
+//-> Show Xfire Status
+function skype($username='')
+{
+    if(empty($username) || !skype_enable) return '-';
+
+    if(skype_preloader)
+    {
+        if(Cache::check_binary('skype_'.$username))
+        {
+            if(!$img_skype = fileExists(Skype::get_status($username,true,true,'smallicon')))
+                return show(_skypeicon,array('username' => $username, 'img' => Skype::get_status($username,true,true,'smallicon')));
+
+            Cache::set_binary('skype_'.$username, $img_skype, '', skype_refresh);
+            return show(_skypeicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_skype)));
+        }
+        else
+            return show(_skypeicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary('skype_'.$username))));
+    }
+
+    return show(_skypeicon,array('username' => $username, 'img' => Skype::get_status($username,true,true,'smallicon')));
+}
+
 ## SETTINGS ##
 $dir = "sites";
 
 ## SECTIONS ##
 header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
-switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
+
+//Hack for Audio Securimage
+$mod = isset($_GET['loader']) ? $_GET['loader'] : 'old_func';
+$mod_exp = @explode('@', $mod);
+if(count($mod_exp) >= 2 && $mod_exp[0] == 'securimage_audio')
+{
+    $audio_namespace = $mod_exp[1];
+    $mod = $mod_exp[0];
+}
+
+switch($mod):
     case 'menu':
         switch (isset($_GET['mod']) ? $_GET['mod'] : ''):
             case 'server';
@@ -137,10 +169,30 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
             case 'steam';
                 die(steam(string::decode($_GET['steamid'])));
             break;
+            case 'skype';
+                die(skype(string::decode($_GET['username'])));
+            break;
+            /* TODO */
+            case 'xbox';
+                die('-');
+            break;
+            case 'psn';
+                die('-');
+            break;
+            case 'origin';
+                die('-');
+            break;
+            case 'bnet';
+                die('-');
+            break;
+            /* TODO */
             case 'menu';
                 if(array_key_exists($_GET['hash'], $menu_index))
                     if(function_exists($menu_index[$_GET['hash']]))
                         die(call_user_func($menu_index[$_GET['hash']]));
+            break;
+            case 'shoutbox':
+                die('<table class="hperc" cellspacing="1">'.shout(true).'</table>');
             break;
         endswitch;
     break;
@@ -150,11 +202,39 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
         thumbgen($_GET['file'], isset($_GET['width']) ? $_GET['width'] : '', isset($_GET['height']) ? $_GET['height'] : '');
     break;
 
+    case 'securimage':
+        if(!headers_sent())
+        {
+            $securimage->background_directory = basePath.'/inc/images/securimage/background/';
+            $securimage->code_length  = rand(4, 6);
+            $securimage->image_height = isset($_GET['height']) ? convert::ToInt($_GET['height']) : 40;
+            $securimage->image_width  = isset($_GET['width']) ? convert::ToInt($_GET['width']) : 200;
+            $securimage->perturbation = .75;
+            $securimage->text_color   = new Securimage_Color("#CA0000");
+            $securimage->num_lines    = isset($_GET['lines']) ? convert::ToInt($_GET['lines']) : 2;
+            $securimage->namespace    = isset($_GET['namespace']) ? $_GET['namespace'] : 'default';
+            if(isset($_GET['length'])) $securimage->code_length = convert::ToInt($_GET['length']);
+            die($securimage->show());
+        }
+    break;
+
+    case 'securimage_audio':
+        if(!headers_sent())
+        {
+            if(file_exists(basePath.'/inc/additional-kernel/securimage/audio/'.language::get_language_tag().'/0.wav'))
+                $securimage->audio_path = basePath.'/inc/additional-kernel/securimage/audio/'.language::get_language_tag().'/';
+
+            $securimage->namespace = isset($audio_namespace) ? $audio_namespace : 'default';
+            die($securimage->outputAudioFile());
+        }
+    break;
+
     case 'addon_installer':
+        header("Content-Type: text/html; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
         if($_GET['step'] == 'sql')
-            die(addons_installer::run_sql_installer(decryptData(base64_decode($_GET['addon']))));
+            die(addons_installer::run_sql_installer(base64_decode($_GET['addon'])));
         else if($_GET['step'] == 'file')
-            die(addons_installer::run_file_installer(decryptData(base64_decode($_GET['addon']))));
+            die(addons_installer::run_file_installer(base64_decode($_GET['addon'])));
     break;
 
     case 'old_func':
@@ -164,9 +244,6 @@ switch(isset($_GET['loader']) ? $_GET['loader'] : 'old_func'):
             break;
             case 'teams';
                 die(team($_GET['tID']));
-            break;
-            case 'shoutbox';
-                die('<table class="hperc" cellspacing="1">'.shout(1).'</table>');
             break;
         endswitch;
     break;

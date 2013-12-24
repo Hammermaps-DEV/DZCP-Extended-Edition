@@ -17,7 +17,7 @@ if(isset($_GET['startup']) && !empty($_GET['startup']))
     else if(!$get['enable'] && API_CORE::$addon_index_all[$get['dir']]['xml']['xml_addon_installer'] && $get['installed'])
     { db("UPDATE `".dba::get('addons')."` SET `enable` = '1' WHERE `id` = ".convert::ToInt($_GET['startup']).";"); }
     else { db("UPDATE `".dba::get('addons')."` SET `enable` = '0' WHERE `id` = ".convert::ToInt($_GET['startup']).";"); }
-    header('Location: ../admin/?admin=addonsmgr#viewcontent'); //Reload
+    header('Location: ?index=admin&admin=addonsmgr#viewcontent'); //Reload
 }
 
 $show_list = '';
@@ -35,8 +35,8 @@ foreach (API_CORE::$addon_index_all as $addon_dir => $addon)
     else
         $info_msg = '<font color="red">'._addonsmgr_disabled.'</font>';
 
-    $installer = $addon['xml']['xml_addon_installer'] && !$get['installed'] ? '<a href="?installer&addon='.$addon_dir.'#viewcontent"><img title="'._addonsmgr_addon_wiz.'" src="../inc/images/installer.png" width="16" height="16" border="0" /></a>' : '<img src="../inc/images/installer_disabled.png" width="16" height="16" border="0" />';
-    $autor_url = !empty($addon['xml']['xml_addon_autor_url']) ? '<a href="'.$addon['xml']['xml_addon_autor_url'].'" target="_blank"><img title="'._addonsmgr_addon_hp.'" src="../inc/images/hp.gif" alt="" width="16" height="16" border="0" /></a>' : '<img src="../inc/images/hp_disabled.png" alt="" width="16" height="16" border="0" />';
+    $installer = $addon['xml']['xml_addon_installer'] && !$get['installed'] ? '<a href="?index=admin&amp;installer&addon='.$addon_dir.'#viewcontent"><img title="'._addonsmgr_addon_wiz.'" src="inc/images/installer.png" width="16" height="16" border="0" /></a>' : '<img src="inc/images/installer_disabled.png" width="16" height="16" border="0" />';
+    $autor_url = !empty($addon['xml']['xml_addon_autor_url']) ? '<a href="'.$addon['xml']['xml_addon_autor_url'].'" target="_blank"><img title="'._addonsmgr_addon_hp.'" src="inc/images/hp.gif" alt="" width="16" height="16" border="0" /></a>' : '<img src="inc/images/hp_disabled.png" alt="" width="16" height="16" border="0" />';
     $show_list .= show($dir."/addons_mgr_show",array('name' => bbcode::parse_html($addon['xml']['xml_addon_name']),
                                                      'autor' => bbcode::parse_html($addon['xml']['xml_addon_autor']),
                                                      'autor_mail' => $addon['xml']['xml_addon_autor_mail'],

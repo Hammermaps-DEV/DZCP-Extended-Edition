@@ -191,7 +191,7 @@ if(_adminMenu != 'true')
                     }
                 }
 
-          $show = info(_news_sended, "?admin=newsadmin");
+          $show = info(_news_sended, "?index=admin&amp;admin=newsadmin");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".dba::get('news')."
@@ -254,7 +254,7 @@ if(_adminMenu != 'true')
 
                 if(file_exists(basePath.'/inc/images/uploads/news/'.$_GET['id'].'.jpg')){
                     $newsimage = img_size('news/'.$_GET['id'].'.jpg')."<br /><br />";
-                    $delnewspic = '<a href="?admin=newsadmin&do=delnewspic&id='.$_GET['id'].'">'._newspic_del.'</a><br /><br />';
+                    $delnewspic = '<a href="?index=admin&amp;admin=newsadmin&do=delnewspic&id='.$_GET['id'].'">'._newspic_del.'</a><br /><br />';
                 }else{
                     $newsimage = "";
                     $delnewspic = "";
@@ -342,7 +342,7 @@ if(_adminMenu != 'true')
                          `sticky`     = '".convert::ToInt($stickytime)."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
         }
-        $show = info(_news_edited, "?admin=newsadmin");
+        $show = info(_news_edited, "?index=admin&amp;admin=newsadmin");
       } elseif($_GET['do'] == 'public') {
         if($_GET['what'] == 'set')
         {
@@ -364,7 +364,7 @@ if(_adminMenu != 'true')
                    WHERE news = '".convert::ToInt($_GET['id'])."'");
         @unlink(basePath."/inc/images/uploads/news/".intval($_GET['id']).".jpg");
 
-        $show = info(_news_deleted, "?admin=newsadmin");
+        $show = info(_news_deleted, "?index=admin&amp;admin=newsadmin");
       } else {
         if(isset($_GET['page'])) $page = $_GET['page'];
         else $page = 1;
@@ -374,10 +374,10 @@ if(_adminMenu != 'true')
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=newsadmin&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=newsadmin&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=newsadmin&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=newsadmin&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_news));
           $titel = show(_news_show_link, array("titel" => string::decode(cut($get['titel'],settings('l_newsadmin'))),
@@ -391,8 +391,8 @@ if(_adminMenu != 'true')
           else $sticky = _news_sticky;
 
           $public = ($get['public'] == 1)
-               ? '<a href="?admin=newsadmin&amp;do=public&amp;id='.$get['id'].'&amp;what=unset"><img src="../inc/images/public.gif" alt="" title="'._non_public.'" /></a>'
-               : '<a href="?admin=newsadmin&amp;do=public&amp;id='.$get['id'].'&amp;what=set"><img src="../inc/images/nonpublic.gif" alt="" title="'._public.'" /></a>';
+               ? '<a href="?index=admin&amp;admin=newsadmin&amp;do=public&amp;id='.$get['id'].'&amp;what=unset"><img src="inc/images/public.gif" alt="" title="'._non_public.'" /></a>'
+               : '<a href="?index=admin&amp;admin=newsadmin&amp;do=public&amp;id='.$get['id'].'&amp;what=set"><img src="inc/images/nonpublic.gif" alt="" title="'._public.'" /></a>';
           if(empty($get['datum'])) $datum = _no_public;
           else $datum = date("d.m.y H:i", $get['datum'])._uhr;
 
@@ -406,7 +406,7 @@ if(_adminMenu != 'true')
                                                    "edit" => $edit,
                                                    "delete" => $delete));
         }
-        $nav = nav($entrys,$maxadminnews,"?admin=newsadmin");
+        $nav = nav($entrys,$maxadminnews,"?index=admin&amp;admin=newsadmin");
         $show = show($dir."/admin_news", array("head" => _news_admin_head,
                                                "nav" => $nav,
                                                "autor" => _autor,

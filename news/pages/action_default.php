@@ -44,7 +44,7 @@ else
             $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => string::decode($get['link3']), "url" => string::decode($get['url3']))) : '');
             $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-            $newsimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
+            $newsimage = 'inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
             if($get['custom_image'])
             {
                 foreach($picformat AS $end)
@@ -54,7 +54,7 @@ else
                 }
 
                 if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
-                    $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+                    $newsimage = 'inc/images/uploads/news/'.$get['id'].'.'.$end;
             }
 
             $sticky_news = show($dir."/news_show", array("titel" => string::decode($get['titel']),
@@ -99,7 +99,7 @@ else
                 $links3 = (!empty($get['url3']) ? show(_news_link, array("link" => string::decode($get['link3']), "url" => string::decode($get['url3']))) : '');
                 $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-                $newsimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
+                $newsimage = 'inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
                 if($get['custom_image'])
                 {
                     foreach($picformat AS $end)
@@ -109,7 +109,7 @@ else
                     }
 
                     if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
-                        $newsimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+                        $newsimage = 'inc/images/uploads/news/'.$get['id'].'.'.$end;
                 }
 
                 $show .= show($dir."/news_show", array("titel" => string::decode($get['titel']),

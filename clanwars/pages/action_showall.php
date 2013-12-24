@@ -32,7 +32,7 @@ else
             $img = squad($get['icon']);
             $flagge = flag($get['gcountry']);
             $gegner = show(_cw_details_gegner, array("gegner" => string::decode(cut($get['clantag']." - ".$get['gegner'], settings('l_clanwars'))),
-                    "url" => '?action=details&amp;id='.$get['id']));
+                    "url" => '?index=clanwars&amp;action=details&amp;id='.$get['id']));
 
             $details = show(_cw_show_details, array("id" => $get['id']));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -131,7 +131,7 @@ else
         $show = show($dir."/clanwars_no_show", array("clanwars_no_show" => _clanwars_no_show));
     }
 
-    $nav = nav($entrys,settings('m_clanwars'),"?action=showall&amp;id=".$_GET['id']."");
+    $nav = nav($entrys,settings('m_clanwars'),"?index=clanwars&amp;action=showall&amp;id=".$_GET['id']."");
     $show = show($dir."/clanwars", array("head" => _cw_head_clanwars,
             "game" => _cw_head_game,
             "datum" => _cw_head_datum,

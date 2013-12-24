@@ -21,7 +21,7 @@ else
         $show = ''; $color = 1;
         while($get = _fetch($qry))
         {
-            $squad = '<a href="../squads/?showsquad='.$get['squad'].'">'.string::decode($get['name']).'</a>';
+            $squad = '<a href="?index=squads&amp;showsquad='.$get['squad'].'">'.string::decode($get['name']).'</a>';
             $league = '<a href="'.$get['url'].'" target="_blank">'.$get['league'].'</a>';
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $show .= show($dir."/rankings_show", array("class" => $class, "squad" => $squad, "league" => $league, "old" => $get['lastranking'], "place" => $get['rank']));

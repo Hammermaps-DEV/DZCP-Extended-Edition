@@ -227,47 +227,47 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Navigation =================================================
     //===============================================================
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1,  `kat` = 'nav_main', `name` = '_news_', `url` = '../news/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2,  `kat` = 'nav_main', `name` = '_newsarchiv_', `url` = '../news/?action=archiv', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3,  `kat` = 'nav_main', `name` = '_artikel_', `url` = '../artikel/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4,  `kat` = 'nav_main', `name` = '_forum_', `url` = '../forum/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5,  `kat` = 'nav_main', `name` = '_gb_', `url` = '../gb/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 6,  `kat` = 'nav_main', `name` = '_kalender_', `url` = '../kalender/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 7,  `kat` = 'nav_main', `name` = '_votes_', `url` = '../votes/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 8,  `kat` = 'nav_main', `name` = '_links_', `url` = '../links/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 9,  `kat` = 'nav_main', `name` = '_sponsoren_', `url` = '../sponsors/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 10, `kat` = 'nav_main', `name` = '_downloads_', `url` = '../downloads/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 11, `kat` = 'nav_main', `name` = '_userlist_', `url` = '../user/?action=userlist', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 12, `kat` = 'nav_main', `name` = '_glossar_', `url` = '../glossar/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1,  `kat` = 'nav_main', `name` = '_news_', `url` = '?index=news', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2,  `kat` = 'nav_main', `name` = '_newsarchiv_', `url` = '?index=news&action=archiv', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3,  `kat` = 'nav_main', `name` = '_artikel_', `url` = '?index=artikel', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4,  `kat` = 'nav_main', `name` = '_forum_', `url` = '?index=forum', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5,  `kat` = 'nav_main', `name` = '_gb_', `url` = '?index=gb', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 6,  `kat` = 'nav_main', `name` = '_kalender_', `url` = '?index=kalender', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 7,  `kat` = 'nav_main', `name` = '_votes_', `url` = '?index=votes', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 8,  `kat` = 'nav_main', `name` = '_links_', `url` = '?index=links', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 9,  `kat` = 'nav_main', `name` = '_sponsoren_', `url` = '?index=sponsors', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 10, `kat` = 'nav_main', `name` = '_downloads_', `url` = '?index=downloads', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 11, `kat` = 'nav_main', `name` = '_userlist_', `url` = '?index=user&action=userlist', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 12, `kat` = 'nav_main', `name` = '_glossar_', `url` = '?index=glossar', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
 
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_clan', `name` = '_squads_', `url` = '../squads/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_clan', `name` = '_membermap_', `url` = '../membermap/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_clan', `name` = '_cw_', `url` = '../clanwars/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4, `kat` = 'nav_clan', `name` = '_awards_', `url` = '../awards/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_clan', `name` = '_rankings_', `url` = '../rankings/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_clan', `name` = '_squads_', `url` = '?index=squads', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_clan', `name` = '_membermap_', `url` = '?index=membermap', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_clan', `name` = '_cw_', `url` = '?index=clanwars', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4, `kat` = 'nav_clan', `name` = '_awards_', `url` = '?index=awards', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_clan', `name` = '_rankings_', `url` = '?index=rankings', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
 
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_server', `name` = '_server_', `url` = '../server/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_server', `name` = '_ts_', `url` = '../teamspeak/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_server', `name` = '_server_', `url` = '?index=server', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_server', `name` = '_ts_', `url` = '?index=teamspeak', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
 
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_misc', `name` = '_galerie_', `url` = '../gallery/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_misc', `name` = '_kontakt_', `url` = '../contact/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_misc', `name` = '_joinus_', `url` = '../contact/?action=joinus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4, `kat` = 'nav_misc', `name` = '_fightus_', `url` = '../contact/?action=fightus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_misc', `name` = '_linkus_', `url` = '../linkus/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 6, `kat` = 'nav_misc', `name` = '_stats_', `url` = '../stats/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 7, `kat` = 'nav_misc', `name` = '_impressum_', `url` = '../impressum/', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_misc', `name` = '_galerie_', `url` = '?index=gallery', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_misc', `name` = '_kontakt_', `url` = '?index=contact', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_misc', `name` = '_joinus_', `url` = '?index=contact&action=joinus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4, `kat` = 'nav_misc', `name` = '_fightus_', `url` = '?index=contact&action=fightus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_misc', `name` = '_linkus_', `url` = '?index=linkus', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 6, `kat` = 'nav_misc', `name` = '_stats_', `url` = '?index=stats', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 7, `kat` = 'nav_misc', `name` = '_impressum_', `url` = '?index=impressum', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
 
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_user', `name` = '_lobby_', `url` = '../user/?action=userlobby', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_user', `name` = '_nachrichten_', `url` = '../user/?action=msg', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_user', `name` = '_buddys_', `url` = '../user/?action=buddys', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4, `kat` = 'nav_user', `name` = '_edit_profile_', `url` = '../user/?action=editprofile', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_user', `name` = '_logout_', `url` = '../user/?action=logout', `type` = 1, `internal` = 0, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_user', `name` = '_lobby_', `url` = '?index=user&action=userlobby', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 2, `kat` = 'nav_user', `name` = '_nachrichten_', `url` = '?index=user&action=msg', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 3, `kat` = 'nav_user', `name` = '_buddys_', `url` = '?index=user&action=buddys', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 4, `kat` = 'nav_user', `name` = '_edit_profile_', `url` = '?index=user&action=editprofile', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 5, `kat` = 'nav_user', `name` = '_logout_', `url` = '?index=user&action=logout', `type` = 1, `internal` = 0, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
 
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_member', `name` = '_clankasse_', `url` = '../clankasse/', `type` = 1, `internal` = 1, `wichtig` = 0, `extended_perm` = 'clankasse';",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_member', `name` = '_clankasse_', `url` = '?index=clankasse', `type` = 1, `internal` = 1, `wichtig` = 0, `extended_perm` = 'clankasse';",false,false,true);
 
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_main', `name` = '_news_send_', `url` = '../news/?action=send', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_trial', `name` = '_awaycal_', `url` = '../away/', `type` = 2, `internal` = 1, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
-    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_admin', `name` = '_admin_', `url` = '../admin/', `type` = 1, `internal` = 1, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_main', `name` = '_news_send_', `url` = '?index=news&action=send', `type` = 1, `internal` = 0, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_trial', `name` = '_awaycal_', `url` = '?index=away', `type` = 2, `internal` = 1, `wichtig` = 0, `extended_perm` = NULL;",false,false,true);
+    db("INSERT INTO ".dba::get('navi')." SET `pos` = 1, `kat` = 'nav_admin', `name` = '_admin_', `url` = '?index=admin', `type` = 1, `internal` = 1, `wichtig` = 1, `extended_perm` = NULL;",false,false,true);
 
     //===============================================================
     //-> News =======================================================

@@ -13,6 +13,7 @@ define('show_gameserver_debug', false);
 define('show_teamspeak_debug', false);
 define('show_api_communicate_debug', false);
 define('show_cms_protect_debug', false);
+define('show_sessions_debug', false);
 
 define('debug_all_sql_querys', false);
 

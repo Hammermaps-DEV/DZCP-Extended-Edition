@@ -11,21 +11,21 @@ if(_adminMenu != 'true') exit();
 $qry = db("SELECT * FROM ".dba::get('downloads')." ORDER BY id");
 while($get = _fetch($qry))
 {
-	$edit = show("page/button_edit_single", array("id" => $get['id'],
-	                                              "action" => "admin=dladmin&amp;do=edit",
-	                                              "title" => _button_title_edit));
-	$delete = show("page/button_delete_single", array("id" => $get['id'],
-	                                                  "action" => "admin=dladmin&amp;do=delete",
-	                                                  "title" => _button_title_del,
-	                                                  "del" => _confirm_del_dl));
+    $edit = show("page/button_edit_single", array("id" => $get['id'],
+                                                  "action" => "index=admin&amp;admin=dladmin&amp;do=edit",
+                                                  "title" => _button_title_edit));
+    $delete = show("page/button_delete_single", array("id" => $get['id'],
+                                                      "action" => "index=admin&amp;admin=dladmin&amp;do=delete",
+                                                      "title" => _button_title_del,
+                                                      "del" => _confirm_del_dl));
 
-	$class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-	$show_ .= show($dir."/downloads_show", array("id" => $get['id'],
-	                                             "dl" => string::decode($get['download']),
-	                                             "class" => $class,
-	                                             "edit" => $edit,
-	                                             "delete" => $delete
-	                                             ));
+    $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+    $show_ .= show($dir."/downloads_show", array("id" => $get['id'],
+                                                 "dl" => string::decode($get['download']),
+                                                 "class" => $class,
+                                                 "edit" => $edit,
+                                                 "delete" => $delete
+                                                 ));
 }
 
 $show = show($dir."/downloads", array("head" => _dl,

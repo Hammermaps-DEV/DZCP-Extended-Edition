@@ -60,7 +60,7 @@ if(_adminMenu != 'true')
                          SET `writtenmsg` = writtenmsg+1
                          WHERE user = ".userid());
 
-              $show = info(_msg_reg_answer_done, "?admin=nletter");
+              $show = info(_msg_reg_answer_done, "?index=admin&amp;admin=nletter");
 
         } elseif($_POST['to'] == "member") {
           $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
@@ -75,7 +75,7 @@ if(_adminMenu != 'true')
                         SET `writtenmsg` = writtenmsg+1
                         WHERE user = ".userid());
 
-              $show = info(_msg_member_answer_done, "?admin=nletter");
+              $show = info(_msg_member_answer_done, "?index=admin&amp;admin=nletter");
         } elseif($_POST['to'] == "leader") {
           $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
                   $subject = string::decode(settings('eml_nletter_subj'));
@@ -94,7 +94,7 @@ if(_adminMenu != 'true')
                           SET `writtenmsg` = writtenmsg+1
                           WHERE user = ".userid());
 
-              $show = info(_msg_member_answer_done, "?admin=nletter");
+              $show = info(_msg_member_answer_done, "?index=admin&amp;admin=nletter");
         } else {
           $message = show(string::decode(settings('eml_nletter')), array("text" => bbcode::nletter($_POST['eintrag'])));
                   $subject = string::decode(settings('eml_nletter_subj'));
@@ -111,7 +111,7 @@ if(_adminMenu != 'true')
                           SET `writtenmsg` = writtenmsg+1
                           WHERE user = ".userid());
 
-              $show = info(_msg_squad_answer_done, "?admin=nletter");
+              $show = info(_msg_squad_answer_done, "?index=admin&amp;admin=nletter");
         }
       }
     } else {
@@ -119,9 +119,7 @@ if(_adminMenu != 'true')
          ORDER BY name");
           while($get = _fetch($qry))
           {
-              $squads .= show(_to_squads, array("id" => $get['id'],
-                                                "sel" => "",
-                                                   "name" => string::decode($get['name'])));
+              $squads .= show(_to_squads, array("id" => $get['id'], "sel" => "", "name" => string::decode($get['name'])));
           }
 
       $show = show($dir."/nletter", array("von" => userid(),

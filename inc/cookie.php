@@ -19,7 +19,8 @@ final class cookie
     */
     public final static function init($cname, $cexpires=false, $cdir="/", $csite="")
     {
-        if(isset($_COOKIE['PHPSESSID']) && isset($_SESSION['PHPSESSID']))
+        global $mysql_salt;
+        if(array_key_exists('PHPSESSID', $_SESSION) && array_key_exists('PHPSESSID', $_COOKIE))
         {
             self::$cname=$cname;
             self::$expires = ($cexpires ? $cexpires : (time()+cookie_expires));
@@ -35,7 +36,8 @@ final class cookie
     */
     public final static function extract($cname="")
     {
-        if(isset($_COOKIE['PHPSESSID']) && isset($_SESSION['PHPSESSID']))
+        global $mysql_salt;
+        if(array_key_exists('PHPSESSID', $_SESSION) && array_key_exists('PHPSESSID', $_COOKIE))
         {
             $cname=(empty($cname) ? self::$cname : $cname);
             if(!empty($_COOKIE[$cname]))
@@ -61,7 +63,8 @@ final class cookie
     */
     public final static function get($var)
     {
-        if(isset($_COOKIE['PHPSESSID']) && isset($_SESSION['PHPSESSID']))
+        global $mysql_salt;
+        if(array_key_exists('PHPSESSID', $_SESSION) && array_key_exists('PHPSESSID', $_COOKIE))
         {
             if(!isset(self::$val) || empty(self::$val))
                 return false;
@@ -80,7 +83,8 @@ final class cookie
     */
     public final static function put($var, $value)
     {
-        if(isset($_COOKIE['PHPSESSID']) && isset($_SESSION['PHPSESSID']))
+        global $mysql_salt;
+        if(array_key_exists('PHPSESSID', $_SESSION) && array_key_exists('PHPSESSID', $_COOKIE))
         {
             self::$val[$var]=convert::UTF8($value);
             $_COOKIE[$var]=self::$val[$var];
@@ -99,7 +103,8 @@ final class cookie
     */
     public final static function save()
     {
-        if(isset($_COOKIE['PHPSESSID']) && isset($_SESSION['PHPSESSID']))
+        global $mysql_salt;
+        if(array_key_exists('PHPSESSID', $_SESSION) && array_key_exists('PHPSESSID', $_COOKIE))
         {
             $cookie_val = (empty(self::$val) ? '' : serialize(self::$val));
             if(strlen($cookie_val)>4*1024)

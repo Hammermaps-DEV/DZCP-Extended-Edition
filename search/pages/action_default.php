@@ -313,7 +313,7 @@ else
     $class = ($color % 2) ? "contentMainFirst" : "contentMainSecond"; $color++;
         $shownews .= show($dir."/search_show", array("class" => $class,
     "type" => 'news',
-    "href" => '../news/index.php?action=show&amp;id='.$get['id'],
+    "href" => '?index=news&amp;action=show&amp;id='.$get['id'],
             "titel" => string::decode($get['titel'])
                     ));
     }
@@ -327,7 +327,7 @@ else
     {
         $class = ($color % 2) ? "contentMainFirst" : "contentMainSecond"; $color++;
                     $showartikel .= show($dir."/search_show", array(
-                            "href" => '../artikel/index.php?action=show&amp;id='.$get['id'],
+                            "href" => '?index=artikel&amp;action=show&amp;id='.$get['id'],
                             "class" => $class,
                             "type" => 'artikel',
                             "titel" => string::decode($get['titel'])
@@ -377,7 +377,7 @@ else
         {
         $class = ($color % 2) ? "contentMainFirst" : "contentMainSecond"; $color++;
         $showcw .= show($dir."/search_show", array(
-                    "href" => '../clanwars/?action=details&id='.$get['id'],
+                    "href" => '?index=clanwars&amp;action=details&id='.$get['id'],
                     "class" => $class,
                             "type" => 'clanwar',
         "titel" => string::decode($get['gegner'])." (".string::decode($get['clantag']).") vs. ".string::decode($get['name'])
@@ -408,7 +408,7 @@ else
                             {
                             $class = ($color % 2) ? "contentMainFirst" : "contentMainSecond"; $color++;
                             $showev .= show($dir."/search_show", array(
-                            "href" => '../kalender/?action=show&time='.$get['datum'],
+                            "href" => '?index=kalender&amp;action=show&time='.$get['datum'],
                                     "class" => $class,
                                     "type" => 'kalender',
                                     "titel" => string::decode($get['title'])." (".date('d.m.Y', $get['datum']).")"
@@ -440,7 +440,7 @@ else
     if($_GET['searchplugin'] == true)
     {
     $onclick = 'onclick="more(1)" style="cursor:pointer"';
-    $img = '<img id="img1" src="../inc/images/expand.gif" alt="" />';
+    $img = '<img id="img1" src="inc/images/expand.gif" alt="" />';
         $style = 'style="display:none"';
 
         if($_GET['si_board'] == true) $si_board = "checked=\"checked\"";

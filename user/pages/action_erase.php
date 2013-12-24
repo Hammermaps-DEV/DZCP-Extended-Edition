@@ -16,5 +16,5 @@ else
     ################
     $_SESSION['lastvisit'] = data(userid(), "time");
     db("UPDATE ".dba::get('userstats')." SET `lastvisit` = '".convert::ToInt($_SESSION['lastvisit'])."' WHERE user = '".userid()."'");
-    header("Location: ?action=userlobby");
+    header("Location: ?index=user&action=userlobby");
 }

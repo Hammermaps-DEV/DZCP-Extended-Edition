@@ -98,5 +98,5 @@ else
     if($_POST['box'] == '1')
         sponsoren_uploader('xdata',$id);
 
-    $show = info(_sponsor_added, "?admin=sponsors");
+    $show = info(_sponsor_added, "?index=admin&amp;admin=sponsors");
 }

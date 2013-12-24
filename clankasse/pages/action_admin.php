@@ -67,13 +67,13 @@ else
                        `pm`           = '".convert::ToInt($_POST['pm'])."',
                        `betrag`       = '".string::encode($betrag)."'");
 
-                $index = info(_clankasse_saved, "../clankasse/");
+                $index = info(_clankasse_saved, "?index=clankasse");
             }
         } elseif ($_GET['do'] == "delete" && $_GET['id']) {
             $qry = db("DELETE FROM ".dba::get('clankasse')."
                  WHERE id = ".convert::ToInt($_GET['id']));
 
-            $index = info(_clankasse_deleted, "../clankasse/");
+            $index = info(_clankasse_deleted, "?index=clankasse");
         } elseif ($_GET['do'] == "update" && $_POST['id']) {
             if(!$_POST['datum'])
             {
@@ -90,7 +90,7 @@ else
                          `betrag`       = '".string::encode($_POST['betrag'])."'
                      WHERE id = ".convert::ToInt($_POST['id']));
 
-                $index = info(_clankasse_edited, "../clankasse/");
+                $index = info(_clankasse_edited, "?index=clankasse");
             }
         } elseif ($_GET['do'] == "edit") {
             $qry = db("SELECT * FROM ".dba::get('clankasse')."
@@ -155,7 +155,7 @@ else
                        `betrag`       = '".string::encode($betrag)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-                $index = info(_clankasse_edited, "../clankasse/");
+                $index = info(_clankasse_edited, "?index=clankasse");
             }
         } elseif($_GET['do'] == "paycheck") {
             $qry = db("SELECT payed FROM ".dba::get('c_payed')."
@@ -196,7 +196,7 @@ else
                       SET `user`  = '".convert::ToInt($_GET['id'])."',
                           `payed` = '".convert::ToInt($datum)."'");
             }
-            $index = info(_info_clankass_status_edited, "../clankasse/");
+            $index = info(_info_clankass_status_edited, "?index=clankasse");
         }
     } else {
         $index = error(_error_wrong_permissions);

@@ -16,10 +16,10 @@ $qry = db("DELETE FROM ".dba::get('f_posts')." WHERE kid = '".convert::ToInt($ge
 $qry = db("DELETE FROM ".dba::get('f_skats')."  WHERE sid = '".convert::ToInt($_GET['id'])."'");
 
 if(file_exists(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".jpg"))
-	@unlink(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".jpg");
+    @unlink(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".jpg");
 elseif(file_exists(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".png"))
-	@unlink(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".png");
+    @unlink(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".png");
 elseif(file_exists(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".gif"))
-	@unlink(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".gif");
+    @unlink(basePath."/inc/images/uploads/forum/mainkat/".convert::ToInt($_GET['id']).".gif");
 
-$show = info(_config_forum_kat_deleted, "?admin=forum");
+$show = info(_config_forum_kat_deleted, "?index=admin&amp;admin=forum");

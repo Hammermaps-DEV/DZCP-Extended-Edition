@@ -41,7 +41,7 @@ else
                     copy($tmpname, basePath."/banner/partners/".$_FILES['file']['name']."");
                     @unlink($_FILES['file']['tmp_name']);
 
-                    $index = info(_info_upload_success, "../admin/?admin=partners&amp;do=add");
+                    $index = info(_info_upload_success, "?index=admin&amp;admin=partners&amp;do=add");
                 }
             }
         }

@@ -29,9 +29,9 @@ else
                 else
                 {
                     $showid=(isset($_GET['showID']) ? '&showID='.$_GET['showID'] : '');
-                    $url = '../server/?action=ajax&sID='.$get['id'].$showid;
+                    $url = '../?index=server&action=ajax&sID='.$get['id'].$showid;
                     $index .= '<tr><td class="contentMainTop">
-                    <div id="PageServer_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                    <div id="PageServer_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
                     <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'PageServer_'.$get['id'].'\',\''.$url.'\');</script></div></tr>';
                 }
             }
@@ -45,9 +45,9 @@ else
             else
             {
                 $showid=(isset($_GET['showID']) ? '&showID='.$_GET['showID'] : '');
-                $url = '../server/?action=ajax&sID='.$get['id'].$showid;
+                $url = '../?index=server&action=ajax&sID='.$get['id'].$showid;
                 $index .= '<tr><td class="contentMainTop">
-                <div id="PageServer_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                <div id="PageServer_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
                 <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'PageServer_'.$get['id'].'\',\''.$url.'\');</script></div></tr>';
             }
         }
@@ -60,9 +60,9 @@ else
             else
             {
                 $showid=(isset($_GET['showID']) ? '&showID='.$_GET['showID'] : '');
-                $url = '../server/?action=ajax&sID='.$get['id'].$showid;
+                $url = '../?index=server&action=ajax&sID='.$get['id'].$showid;
                 $index .= '<tr><td class="contentMainTop">
-                <div id="PageServer_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                <div id="PageServer_'.$get['id'].'"><div style="width:100%; 0;text-align:center"><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
                 <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'PageServer_'.$get['id'].'\',\''.$url.'\');</script></div></tr>';
             }
         }

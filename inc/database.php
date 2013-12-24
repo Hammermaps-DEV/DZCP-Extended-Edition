@@ -56,7 +56,9 @@ function db_stmt($query,$params=array(),$rows=false,$fetch=false,$log=false)
  * @return integer
  **/
 function _rows($mysqli_result)
-{ return database::rows($mysqli_result != null && !empty($mysqli_result) ? $mysqli_result : null); }
+{
+    return database::rows($mysqli_result != null && !empty($mysqli_result) ? $mysqli_result : null);
+}
 
 /**
  * Liefert einen Datensatz als assoziatives Array
@@ -64,7 +66,9 @@ function _rows($mysqli_result)
  * @return array
  **/
 function _fetch($mysqli_result=null)
-{ return database::fetch(false,$mysqli_result != null && !empty($mysqli_result) ? $mysqli_result : null); }
+{
+    return database::fetch(false,$mysqli_result != null && !empty($mysqli_result) ? $mysqli_result : null);
+}
 
 /**
  * Funktion um diverse Dinge aus Tabellen auszaehlen zu lassen
@@ -191,7 +195,7 @@ class database
 
         if(!self::$runned)
         {
-            DebugConsole::insert_initialize('database::init()', 'DZCP Database-Core');
+            DebugConsole::insert_initialize('database::init()', 'DZCP Database - Core');
             self::$runned = true;
         }
 
@@ -261,6 +265,7 @@ class database
     {
         if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
         {
+            echo $sql_query.'<p>';
             if($log || debug_all_sql_querys) DebugConsole::wire_log('debug', 9, 'SQL_Query', $sql_query);
             if(!(self::$sql_query = mysqli_query(self::$mysqli, $sql_query)))
                 DebugConsole::sql_error_handler($sql_query);
@@ -290,6 +295,7 @@ class database
              *  s 	corresponding variable has type string
              *  b 	corresponding variable is a blob and will be sent in packets
              */
+
             call_user_func_array(array(self::$stmt, 'bind_param'), self::refValues($params));
             mysqli_stmt_execute(self::$stmt);
 
@@ -597,7 +603,6 @@ class remote_database extends database
             die("</b></body></html>");
         }
     }
-
 }
 
 ############# DBA #############
@@ -610,6 +615,12 @@ class dba
         global $db_array;
         foreach ($db_array as $dba_key => $dba_val)
         {
+            if($dba_key == 'engine')
+            {
+                self::$dba[$dba_key] = self::get_db_engine($dba_val);
+                continue;
+            }
+
             if($dba_key == 'host' || $dba_key == 'user' || $dba_key == 'pass' || $dba_key == 'db' || $dba_key == 'prefix')
                 continue;
 
@@ -665,6 +676,37 @@ class dba
         self::$dba[$tag] = $db_array['prefix'].$new_table; // Add prefix
         return true;
     }
+
+    /**
+     * Welche Datenbank Engine verwedet wird
+     *
+     * @return string or int
+     */
+    public static function get_db_engine($db_engine=0,$reverse=false)
+    {
+        if(!$reverse)
+        {
+            switch ($db_engine)
+            {
+                case 1: return 'ENGINE=MyISAM'; //MySQL MyISAM
+                case 2: return 'ENGINE=InnoDB'; //MySQL InnoDB
+                case 3: return 'ENGINE=ndbcluster'; //MySQL NDB Cluster
+                case 4: return 'ENGINE=Aria'; //MariaDB Aria
+                default: return ''; //Server Default
+            }
+        }
+        else
+        {
+            switch ($db_engine)
+            {
+                case 'MyISAM': return 1; //MySQL MyISAM
+                case 'InnoDB': return 2; //MySQL InnoDB
+                case 'ndbcluster': return 3; //MySQL NDB Cluster
+                case 'Aria': return 4; //MariaDB Aria
+                default: return 0; //Server Default
+            }
+        }
+    }
 }
 
 dba::init(); //Run DBA
@@ -679,10 +721,10 @@ class settings
      * @param string $what
      * @return string|int|boolean
      */
-    public static function get($what='')
+    public final static function get($what='')
     {
         $what = strtolower($what);
-        if(array_key_exists($what, self::$index))
+        if(self::is_exists($what))
         {
             $data = self::$index[$what];
             return $data['value'];
@@ -698,7 +740,7 @@ class settings
      * @param string $what
      * @return array|boolean
      */
-    public static function get_array($what=array())
+    public final static function get_array($what=array())
     {
         if(!is_array($what) || !count($what) || empty($what))
             return false;
@@ -724,10 +766,10 @@ class settings
      * @param string $what
      * @return mixed|boolean
      */
-    public static function get_default($what='')
+    public final static function get_default($what='')
     {
         $what = strtolower($what);
-        if(array_key_exists($what, self::$index))
+        if(self::is_exists($what))
         {
             $data = self::$index[$what];
             return $data['default'];
@@ -744,16 +786,19 @@ class settings
      * @param string $var
      * @return boolean
      */
-    public static function set($what='',$var='')
+    public final static function set($what='',$var='')
     {
         $what = strtolower($what);
-        if(array_key_exists($what, self::$index))
+        if(self::is_exists($what))
         {
-            $data = self::$index[$what];
-            $data['value'] = ($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var);
-            self::$index[$what] = $data;
-            DebugConsole::insert_successful('settings::set()', 'Set "'.$what.'" to "'.$var.'"');
-            return db("UPDATE `".dba::get('settings')."` SET `value` = '".($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var)."' WHERE `key` = '".$what."';") ? true : false;
+            if(self::changed($what,$var))
+            {
+                $data = self::$index[$what];
+                $data['value'] = ($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var);
+                self::$index[$what] = $data;
+                DebugConsole::insert_successful('settings::set()', 'Set "'.$what.'" to "'.$var.'"');
+                return db("UPDATE `".dba::get('settings')."` SET `value` = '".($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var)."' WHERE `key` = '".$what."';") ? true : false;
+            }
         }
 
         return false;
@@ -765,10 +810,10 @@ class settings
      * @param string $var
      * @return boolean
      */
-    public static function changed($what='',$var='')
+    public final static function changed($what='',$var='')
     {
         $what = strtolower($what);
-        if(array_key_exists($what, self::$index))
+        if(self::is_exists($what))
         {
             $data = self::$index[$what];
             return ($data['value'] == $var ? false : true);
@@ -782,17 +827,18 @@ class settings
      * @param string $what
      * @return boolean
      */
-    public static function is_exists($what='')
+    public final static function is_exists($what='')
     { return (array_key_exists(strtolower($what), self::$index)); }
 
     /**
      * Laden der Einstellungen aus der Datenbank
      */
-    public static final function load()
+    public final static function load()
     {
         if(!$_SESSION['installer'] && !$_SESSION['db_install']) //For Installer
         {
             $sql = db("SELECT * FROM `".dba::get('settings')."`");
+            DebugConsole::insert_initialize('settings::load()', 'Settings - Core');
             while ($get = _fetch($sql))
             {
                 $setting = array();
@@ -800,8 +846,7 @@ class settings
                 : cut($get['type'] == 'int' ? ((int)$get['value']) : ((string)$get['value']),((int)$get['length']),false);
                 $setting['default'] = $get['type'] == 'int' ? ((int)$get['default']) : ((string)$get['default']);
                 $setting['length'] = ((int)$get['length']);
-                self::$index[$get['key']] = $setting;
-                unset($setting);
+                self::$index[$get['key']] = $setting; unset($setting);
             }
         }
     }
@@ -815,7 +860,7 @@ class settings
      * @param boolean $int
      * @return boolean
      */
-    public static function add($what='',$var='',$default='',$length='',$int=false)
+    public final static function add($what='',$var='',$default='',$length='',$int=false)
     {
         $what = strtolower($what);
         if(!self::is_exists($what))
@@ -845,7 +890,7 @@ class settings
      * @param string $what
      * @return boolean
      */
-    public static function remove($what='')
+    public final static function remove($what='')
     {
         $what = strtolower($what);
         if(self::is_exists($what))

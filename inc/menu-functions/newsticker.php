@@ -24,7 +24,7 @@ function newsticker()
                     $info = 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['titel'])).'\', \''._datum.';'._autor.';'._news_admin_kat.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.fabo_autor($get['autor']).';'.jsconvert(string::decode($getkat['kategorie'])).';'.cnt(dba::get('newscomments'),"WHERE news = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"';
                 }
 
-                $news .= '<a href="../news/?action=show&amp;id='.$get['id'].'" '.$info.'>'.string::decode($get['titel']).'</a> | ';
+                $news .= '<a href="?index=news&amp;action=show&amp;id='.$get['id'].'" '.$info.'>'.string::decode($get['titel']).'</a> | ';
             }
 
             if(Cache::is_mem() && $menu_xml['xml'] && $menu_xml['config']['update'] != '0') //Only Memory Cache

@@ -7,10 +7,12 @@ include(basePath."/inc/config.php");
 include(basePath."/inc/common.php");
 ## SECTIONS ##
 
+die('TODO');
+
 $settings = db("SELECT * FROM ".dba::get('settings'),false,true);
     $uip 		= $settings['ts_ip'];
-    $tPort 	= $settings['ts_sport'];
-    $port 	= $settings['ts_port'];
+    $tPort 	    = $settings['ts_sport'];
+    $port 	    = $settings['ts_port'];
     $version 	= $settings['ts_version'];
 
     if($_POST) {
@@ -54,7 +56,7 @@ $settings = db("SELECT * FROM ".dba::get('settings'),false,true);
 <html>
 <head>
     <title>Teamspeak Login</title>
-  <link rel="stylesheet" type="text/css" href="../inc/_templates_/<?php echo $tmpdir?>/_css/stylesheet.css">
+  <link rel="stylesheet" type="text/css" href="inc/_templates_/<?php echo $tmpdir?>/_css/stylesheet.css">
 </head>
 <?php
 if($_POST) {

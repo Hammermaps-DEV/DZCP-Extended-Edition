@@ -9,4 +9,4 @@
 if(_adminMenu != 'true') exit();
 
 db_stmt("UPDATE `".dba::get('users')."` SET `level` = 1, `status` = 1, `actkey` = '' WHERE `id` = ?",array('i', $_GET['id']));
-$show = info(_actived, "?admin=activate_user", 2);
+$show = info(_actived, "?index=admin&amp;admin=activate_user", 2);

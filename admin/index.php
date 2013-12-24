@@ -6,16 +6,20 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-## OUTPUT BUFFER START ##
-include("../inc/buffer.php");
+if(!defined('IS_DZCP'))
+{
+    include("../inc/buffer.php");
+    include(basePath."/inc/debugger.php");
+    include(basePath."/inc/config.php");
+    include(basePath."/inc/common.php");
+    header('Location: ../'.startpage('admin',1));
+}
 
 ## INCLUDES ##
-include(basePath."/inc/debugger.php");
-include(basePath."/inc/config.php");
-include(basePath."/inc/common.php");
 include(basePath."/admin/helper.php");
 
 ## SETTINGS ##
+bbcode::use_glossar(false);
 $where = _site_config;
 $dir = "admin";
 $show = "";
@@ -247,14 +251,4 @@ else
     }
 }
 
-## SETTINGS ##
-$time_end = generatetime();
-$time = round($time_end - $time_start,4);
-$title = $pagetitle." - ".$where."";
-page($index, $title, $where ,$time);
-
-if($cache_cleanup)
-    Cache::clean();
-
-## OUTPUT BUFFER END ##
-gz_output();
+if($cache_cleanup) Cache::clean();

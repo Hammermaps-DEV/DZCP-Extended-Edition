@@ -2,7 +2,7 @@
 #########################
 ## OUTPUT BUFFER START ##
 #########################
-require_once("../../../../inc/buffer.php");
+require_once("../../../inc/buffer.php");
 
 ## INCLUDES ##
 require_once(basePath."/inc/debugger.php");

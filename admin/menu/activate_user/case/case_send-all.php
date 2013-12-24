@@ -23,5 +23,5 @@ if(isset($_POST['userid']) && count($_POST['userid']) >= 1)
         $emails .= (!$i ? $get['email'] : ', '.$get['email']); $i++;
     }
 
-    $show = info(show(_admin_akl_resend,array('email' => $emails)), "?admin=activate_user", 8);
+    $show = info(show(_admin_akl_resend,array('email' => $emails)), "?index=admin&amp;admin=activate_user", 8);
 }

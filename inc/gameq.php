@@ -35,7 +35,7 @@
  */
 final class GameQ
 {
-    const VERSION = '2.0.1.1';
+    const VERSION = '2.0.1.2';
     protected static $options = array('debug' => FALSE, 'timeout' => 3, 'filters' => array(), 'stream_timeout' => 400000, 'write_wait' => 500);
     protected static $debug = false;
     protected static $timeout = 3;
@@ -53,6 +53,7 @@ final class GameQ
             if(file_exists(basePath.'/inc/gameq/'.$core.'.php'))
                 include_once(basePath.'/inc/gameq/'.$core.'.php');
         }
+        unset($cores,$core);
 
         $filters = get_files(basePath.'/inc/gameq/filters/',false,true,array('php'));
         foreach($filters as $filter)
@@ -60,6 +61,7 @@ final class GameQ
             if(file_exists(basePath.'/inc/gameq/filters/'.$filter.'.php'))
                 include_once(basePath.'/inc/gameq/filters/'.$filter.'.php');
         }
+        unset($filters,$filter);
 
         $protocols = get_files(basePath.'/inc/gameq/protocols/',false,true,array('php'));
         foreach($protocols as $protocol)
@@ -67,6 +69,7 @@ final class GameQ
             if(file_exists(basePath.'/inc/gameq/protocols/'.$protocol.'.php'))
                 include_once(basePath.'/inc/gameq/protocols/'.$protocol.'.php');
         }
+        unset($protocols,$protocol);
     }
 
     /**
@@ -651,13 +654,13 @@ final class GameQ
     public static function search_game_icon($icon='')
     {
         global $picformat;
-        $image = '../inc/images/gameicons/unknown.gif'; $found = false;
+        $image = 'inc/images/gameicons/unknown.gif'; $found = false;
         foreach($picformat AS $end)
         {
             if(file_exists(basePath.'/inc/images/gameicons/'.$icon.'.'.$end))
             {
                 $found = true;
-                $image = '../inc/images/gameicons/'.$icon.'.'.$end;
+                $image = 'inc/images/gameicons/'.$icon.'.'.$end;
                 break;
             }
         }

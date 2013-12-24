@@ -11,14 +11,13 @@ if(_adminMenu != 'true') exit();
 $qry = db("SELECT * FROM ".dba::get('dl_kat')." ORDER BY name"); $color = 1;
 while($get = _fetch($qry))
 {
-    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=dlkat&amp;do=edit", "title" => _button_title_edit));
+    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=dlkat&amp;do=edit", "title" => _button_title_edit));
     $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                      "action" => "admin=dlkat&amp;do=delete",
+                                                      "action" => "index=admin&amp;admin=dlkat&amp;do=delete",
                                                       "title" => _button_title_del,
                                                       "del" => _confirm_del_kat));
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-    $show .= show($dir."/dlkats_show", array("gameicon" => $gameicon,
-                                             "edit" => $edit,
+    $show .= show($dir."/dlkats_show", array("edit" => $edit,
                                              "name" => string::decode($get['name']),
                                              "class" => $class,
                                              "delete" => $delete));

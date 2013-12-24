@@ -20,7 +20,7 @@ else
         $index = show($dir."/upload", array("uploadhead" => _upload_icons_head,
                 "file" => _upload_file,
                 "name" => "file",
-                "action" => "?action=upload",
+                "action" => "?index=upload&amp;action=upload",
                 "upload" => _button_value_upload,
                 "info" => _upload_info,
                 "infos" => $infos));

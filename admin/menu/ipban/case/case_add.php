@@ -23,5 +23,5 @@ else
     $data_array['confidence'] = ''; $data_array['frequency'] = ''; $data_array['lastseen'] = '';
     $data_array['banned_msg'] = $info;
     db("INSERT INTO ".dba::get('ipban')." SET `time` = '".time()."', `ip` = '".$_POST['ip']."', `data` = '".bin2hex(array_to_string($data_array))."', `typ` = 3;");
-    $show = info(_ipban_admin_added, "?admin=ipban");
+    $show = info(_ipban_admin_added, "?index=admin&amp;admin=ipban");
 }

@@ -18,5 +18,5 @@ if(isset($_POST['userid']) && count($_POST['userid']) >= 1)
         db_stmt("DELETE FROM `".dba::get('rss')."` WHERE `userid` = ?",array('i', $id));
     }
 
-    $show = info(_users_deleted, "?admin=activate_user", 4);
+    $show = info(_users_deleted, "?index=admin&amp;admin=activate_user", 4);
 }

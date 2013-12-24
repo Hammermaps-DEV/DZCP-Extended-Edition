@@ -12,11 +12,10 @@ if (_version < '1.0')
 else
 {
     if(checkme() == "unlogged" || checkme() < "2")
-    {
         $index = error(_error_wrong_permissions);
-    } else {
-        $qry = db("DELETE FROM ".dba::get('away')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-
-        $index = info(_away_successful_del, "../away/");
+    else
+    {
+        db("DELETE FROM ".dba::get('away')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+        $index = info(_away_successful_del, "?index=away");
     }
 }

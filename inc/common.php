@@ -28,6 +28,7 @@ $ajaxJob = (!isset($ajaxJob) ? false : $ajaxJob);
 $ajaxThumbgen = (!isset($ajaxThumbgen) ? false : $ajaxThumbgen);
 
 ## INCLUDES/REQUIRES ##
+require_once(basePath.'/inc/sessions.php');
 require_once(basePath.'/inc/secure.php');
 require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/database.php');
@@ -41,6 +42,9 @@ if(!$ajaxThumbgen)
 
 require_once(basePath.'/inc/kernel.php');
 
+if (is_php('5.4.0'))
+    @ini_set('magic_quotes_runtime', false);
+
 if(!$ajaxThumbgen)
     require_once(basePath."/inc/cookie.php");
 
@@ -48,8 +52,9 @@ require_once(basePath."/inc/cache.php");
 
 if(!$ajaxThumbgen)
 {
-    require_once(basePath."/inc/protect.php");
+    require_once(basePath.'/inc/protect.php');
     require_once(basePath.'/inc/gameq.php');
+    require_once(basePath.'/inc/additional-kernel/securimage/securimage.php');
 }
 
 define('IS_DZCP', true);
@@ -73,9 +78,10 @@ unset($settings);
 if(!$ajaxThumbgen) { cookie::init($prev.'dzcp'); }
 
 ## Einzelne Definitionen ##
-$subfolder = basename(dirname(dirname($_SERVER['PHP_SELF']).'../'));
+$subfolder = basename(dirname(dirname($_SERVER['PHP_SELF'])));
 $httphost = $_SERVER['HTTP_HOST'].(empty($subfolder) ? '' : '/'.$subfolder);
 $pagetitle = (empty($pagetitle) ? $clanname : $pagetitle);
+$securimage = false; //Securimage
 
 //-> Cache
 Cache::loadClasses();
@@ -87,6 +93,7 @@ if(!$ajaxThumbgen)
 {
     xml::load(); //XML Loader
     cms_protect::load(); //CMS Protect
+    $securimage = new Securimage(); //Securimage
     spl_autoload_register(array('GameQ', 'auto_load'));
 }
 
@@ -185,9 +192,9 @@ if(!$ajaxThumbgen && !isBot())
 if(!$ajaxThumbgen)
 {
     //-> Change Language
-    if(isset($_GET['set_language']) && !empty($_GET['set_language']) && file_exists(basePath."/inc/lang/languages/".$_GET['set_language'].".php"))
+    if(getArgs('set_language',false,'get') && file_exists(basePath."/inc/lang/languages/".getArgs('set_language','deutsch','get').".php"))
     {
-        language::run_language($_GET['set_language']);
+        language::run_language(getArgs('set_language','deutsch','get'));
         header("Location: ".$_SERVER['HTTP_REFERER']);
     }
     else
@@ -312,8 +319,7 @@ function logout()
 function userid()
 {
     if(empty($_SESSION['id']) || empty($_SESSION['pwd'])) return 0;
-    $hash = md5("SELECT id FROM ".dba::get('users')." WHERE id = ".$_SESSION['id']." AND pwd = ".$_SESSION['pwd']);
-
+    $hash = md5("userid_".$_SESSION['id']."_".$_SESSION['pwd']);
     if(Cache::is_mem())
     {
         //MEM
@@ -402,7 +408,7 @@ if(!$ajaxThumbgen)
     else
         $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
 
-    $designpath = '../inc/_templates_/'.$tmpdir;
+    $designpath = 'inc/_templates_/'.$tmpdir;
     $addon_dir = ''; // Addon dir
 
     //-> Languagefiles einlesen *Run
@@ -740,21 +746,21 @@ function check_msg()
 function cw_result($punkte, $gpunkte)
 {
     if($punkte > $gpunkte)
-        return '<span class="CwWon">'.$punkte.':'.$gpunkte.'</span> <img src="../inc/images/won.gif" alt="" class="icon" />';
+        return '<span class="CwWon">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/won.gif" alt="" class="icon" />';
     else if($punkte < $gpunkte)
-        return '<span class="CwLost">'.$punkte.':'.$gpunkte.'</span> <img src="../inc/images/lost.gif" alt="" class="icon" />';
+        return '<span class="CwLost">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/lost.gif" alt="" class="icon" />';
     else
-        return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span> <img src="../inc/images/draw.gif" alt="" class="icon" />';
+        return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/draw.gif" alt="" class="icon" />';
 }
 
 function cw_result_pic($punkte, $gpunkte)
 {
     if($punkte > $gpunkte)
-        return '<img src="../inc/images/won.gif" alt="" class="icon" />';
+        return '<img src="inc/images/won.gif" alt="" class="icon" />';
     else if($punkte < $gpunkte)
-        return '<img src="../inc/images/lost.gif" alt="" class="icon" />';
+        return '<img src="inc/images/lost.gif" alt="" class="icon" />';
     else
-        return '<img src="../inc/images/draw.gif" alt="" class="icon" />';
+        return '<img src="inc/images/draw.gif" alt="" class="icon" />';
 }
 
 //-> Funktion um bei Clanwars Endergebnisse auszuwerten ohne bild
@@ -789,23 +795,23 @@ function flag($code,$tinymce=false)
         foreach($picformat AS $end)
         {
             if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
-                return'<img src="../../../../inc/images/flaggen/'.$code.'.'.$end.'" alt="" style="vertical-align:middle" />';
+                return'<img src="../../../inc/images/flaggen/'.$code.'.'.$end.'" alt="" style="vertical-align:middle" />';
         }
 
-        return '<img src="../../../../inc/images/flaggen/nocountry.gif" alt="" style="vertical-align:middle" />';
+        return '<img src="../../../inc/images/flaggen/nocountry.gif" alt="" style="vertical-align:middle" />';
     }
     else
     {
         if(empty($code))
-            return '<img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
+            return '<img src="inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
 
         foreach($picformat AS $end)
         {
             if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
-                return '<img src="../inc/images/flaggen/'.$code.'.'.$end.'" alt="" class="icon" />';
+                return '<img src="inc/images/flaggen/'.$code.'.'.$end.'" alt="" class="icon" />';
         }
 
-        return '<img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
+        return '<img src="inc/images/flaggen/nocountry.gif" alt="" class="icon" />';
     }
 }
 
@@ -826,15 +832,15 @@ function rawflag($code,$tinymce=false)
     else
     {
         if(empty($code))
-            return '<img src=../inc/images/flaggen/nocountry.gif alt= class=icon />';
+            return '<img src=inc/images/flaggen/nocountry.gif alt= class=icon />';
 
         foreach($picformat AS $end)
         {
             if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
-                return '<img src=../inc/images/flaggen/'.$code.'.'.$end.' alt= class=icon />';
+                return '<img src=inc/images/flaggen/'.$code.'.'.$end.' alt= class=icon />';
         }
 
-        return '<img src=../inc/images/flaggen/nocountry.gif alt= class=icon />';
+        return '<img src=inc/images/flaggen/nocountry.gif alt= class=icon />';
     }
 }
 
@@ -855,9 +861,9 @@ function squad($code)
     global $picformat;
 
     if(file_exists(basePath.'/inc/images/gameicons/custom/'.$code))
-        return '<img src="../inc/images/gameicons/custom/'.$code.'" alt="" class="icon" />';
+        return '<img src="inc/images/gameicons/custom/'.$code.'" alt="" class="icon" />';
 
-    return '<img src="../inc/images/gameicons/nogame.gif" alt="" class="icon" />';
+    return '<img src="inc/images/gameicons/nogame.gif" alt="" class="icon" />';
 }
 
 //-> Funktion um URLs einem http:// zuzuweisen
@@ -956,7 +962,7 @@ function img_size($img,$width=0,$height=0)
 {
     $width = ($width != 0 ? '&width='.$width : '');
     $height = ($height != 0 ? '&height='.$height : '');
-    return "<a href=\"../inc/images/uploads/".$img."\" data-lightbox=\"l_".convert::ToInt($img)."\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$img.$width.$height."\" alt=\"\" /></a>";
+    return "<a href=\"inc/images/uploads/".$img."\" data-lightbox=\"l_".convert::ToInt($img)."\"><img src=\"inc/ajax.php?loader=thumbgen&file=uploads/".$img.$width.$height."\" alt=\"\" /></a>";
 }
 
 //-> Blaetterfunktion
@@ -971,7 +977,7 @@ function nav($entrys, $perpage, $urlpart, $icon=true)
         return '';
 
     if($icon)
-        $icon = '<img src="../inc/images/multipage.png" alt="" class="icon" /> <span class="fontSites">'._seiten.'</span>';
+        $icon = '<img src="inc/images/multipage.png" alt="" class="icon" /> <span class="fontSites">'._seiten.'</span>';
 
     if(!$page || $page < 1)
         $page = 2;
@@ -1203,6 +1209,9 @@ function fintern($id)
  **/
 function data($tid, $what)
 {
+    if(!$tid && userid() != 0)
+        $tid = userid();
+
     if(empty($tid) || empty($what))
         return false;
 
@@ -1466,11 +1475,11 @@ function set_lastvisit()
 function onlinecheck($tid)
 {
     if(db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."' AND time+'".users_online."'>'".time()."' AND online = 1",true))
-        return '<img src="../inc/images/online.png" alt="" class="icon" />';
+        return '<img src="inc/images/online.png" alt="" class="icon" />';
     else if(db("SELECT id FROM ".dba::get('users')." WHERE id = '".convert::ToInt($tid)."' AND `actkey` IS NOT NULL AND level = 0",true))
-        return '<img src="../inc/images/static.png" alt="" class="icon" />';
+        return '<img src="inc/images/static.png" alt="" class="icon" />';
     else
-        return '<img src="../inc/images/offline.png" alt="" class="icon" />';
+        return '<img src="inc/images/offline.png" alt="" class="icon" />';
 }
 
 //-> Setzt bei einem Tag >10 eine 0 vorran (Kalender)
@@ -1528,10 +1537,10 @@ function hoveruserpic($userid, $width=170,$height=210)
     foreach($picformat as $endung)
     {
         if(file_exists(basePath."/inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung))
-        { $pic = "../inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung."', '".$width."', '".$height.""; break; }
+        { $pic = "inc/images/uploads/userpics/".convert::ToInt($userid).".".$endung."', '".$width."', '".$height.""; break; }
     }
 
-    return(empty($pic) ? "../inc/images/nopic.gif', '".$width."', '".$height."" : $pic);
+    return(empty($pic) ? "inc/images/nopic.gif', '".$width."', '".$height."" : $pic);
 }
 
 #################
@@ -1681,19 +1690,24 @@ function getBoardPermissions($checkID = 0, $pos = 0)
 }
 
 //-> Startseite für User abrufen
-function startpage()
+function startpage($page='',$level=false)
 {
-    if(cookie::get('id') != false && cookie::get('pkey') != false && !($startpageID = data(userid(), 'startpage')))
-        return 'user/?action=userlobby';
+    if(empty($page) && cookie::get('id') != false && cookie::get('pkey') != false && !($startpageID = data(userid(), 'startpage')))
+        return '?index=user&action=userlobby';
+
+    if(!empty($page) && !$level)
+        return '?index='.$page;
+
+    if(!empty($page) && $level && checkme() >= $level)
+        return '?index='.$page;
 
     $sql = db("SELECT url,level FROM `".dba::get('startpage')."` WHERE `id` = ".$startpageID." LIMIT 1");
-
     if(!_rows($sql))
-        return checkme() >= 1 ? 'user/?action=userlobby' : 'news/';
+        return checkme() >= 1 ? '?index=user&action=userlobby' : '?index=news';
 
     $get = _fetch($sql);
-    $page = $get['level'] <= checkme() ? string::decode($get['url']) : 'user/?action=userlobby';
-    return (!empty($page) ? $page : 'news/');
+    $page = $get['level'] <= checkme() ? string::decode($get['url']) : '?index=user&action=userlobby';
+    return (!empty($page) ? $page : '?index=news');
 }
 
 // Prüft ob die Seite in der Navigation als Intern eingestellt ist.
@@ -1727,9 +1741,9 @@ function check_internal_url()
 // Prüft die ausgelagerten Seiten für Zugriff
 function include_action($page_dir='',$default='default')
 {
-    $do = convert::ToString((isset($_GET['do']) && !empty($_GET['do']) ? htmlentities(strtolower($_GET['do'])) : (isset($_POST['do']) && !empty($_POST['do']) ? htmlentities(strtolower($_POST['do'])) : '')));
-    $page = convert::ToInt((isset($_GET['page']) ? $_GET['page'] : (isset($_POST['page']) ? $_POST['page'] : 1)));
-    $action = convert::ToString(isset($_GET['action']) && !empty($_GET['action']) ? htmlentities(strtolower($_GET['action'])) : (isset($_POST['action']) && !empty($_POST['action']) ? htmlentities(strtolower($_POST['action'])) : strtolower($default)));
+    $do = convert::ToString((getArgs('do',false,'get') ? htmlentities(strtolower(getArgs('do','','get'))) : htmlentities(strtolower(getArgs('do','','post')))));
+    $page = convert::ToInt((getArgs('page',false,'get') ? getArgs('page','1','get') : getArgs('page','1','post')));
+    $action = convert::ToString(getArgs('action',false,'get') ? htmlentities(strtolower(getArgs('action',$default,'get'))) : htmlentities(strtolower(getArgs('action',$default,'post'))));
     if(check_internal_url())
         return array('include' => false, 'page' => $page, 'do' => $do, 'dir' => '', 'msg' => error(_error_have_to_be_logged));
     else if(($modul_file=API_CORE::load_additional_page($page_dir,$action)) && !empty($modul_file['file']))
@@ -1909,7 +1923,7 @@ function page($index,$title,$where,$time,$index_templ=false)
     if(checkme() == 'banned')
     {
         logout();
-        header("Location: ../user/?action=login");
+        header("Location: ?index=user&action=login");
     }
 
     //Send E-Mail
@@ -1917,7 +1931,7 @@ function page($index,$title,$where,$time,$index_templ=false)
 
     // JS-Dateine einbinden
     javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no, 'maxW' => settings('maxwidth'), 'lng' => (language::get_language()=='deutsch') ? 'de':'en', 'domain' => settings('i_domain'),
-    'extern' => convert::BoolToInt(extern_urls_detect), 'worker' => convert::BoolToInt(use_html5_worker), 'tmpdir' => '../inc/_templates_/'.$tmpdir));
+    'extern' => convert::BoolToInt(extern_urls_detect), 'worker' => convert::BoolToInt(use_html5_worker), 'tmpdir' => 'inc/_templates_/'.$tmpdir, 'shout_securimage' => convert::BoolToInt(!settings('reg_shout') && checkme() == 'unlogged'), 'shout_refresh' => shoutbox_refresh));
     $java_vars = "<script language=\"javascript\" type=\"text/javascript\">var json_from_php = '".javascript::encode()."';</script>";
     $login = ''; $check_msg = ''; $ukrss = '';
 
@@ -1951,7 +1965,7 @@ function page($index,$title,$where,$time,$index_templ=false)
             foreach($tmps as $tmp)
             {
                 $selt = ($tmpdir == $tmp ? 'selected="selected"' : '');
-                $tmpldir .= show(_select_field, array("value" => "../user/?action=switch&amp;set=".$tmp,  "what" => $tmp,  "sel" => $selt));
+                $tmpldir .= show(_select_field, array("value" => "?index=user&amp;action=switch&amp;set=".$tmp,  "what" => $tmp,  "sel" => $selt));
             }
 
             Cache::set('template_menu',$tmpldir,5);
@@ -2021,7 +2035,7 @@ function page($index,$title,$where,$time,$index_templ=false)
                             (!$MenuConfig['Only_Root'] && $MenuConfig['Only_Admin'] &&  checkme() == 4) ||
                             ($MenuConfig['Only_Root'] && checkme() == 4 && userid() == convert::ToInt($rootAdmin)))
                             {
-                                $icon_html = '<img src="../inc/images/'.$MenuConfig['AjaxLoad_Img'].'" alt="" />';
+                                $icon_html = '<img src="inc/images/'.$MenuConfig['AjaxLoad_Img'].'" alt="" />';
                                 $menu_index_hash = md5_file(basePath.'/inc/menu-functions/'.$phold.'.php');
                                 $Ajax_img = ($MenuConfig['AjaxLoad_Img_Use'] ? "<div style=\"".$MenuConfig['div_width']." ".$MenuConfig['div_height']." padding:10px;text-align:center;\">".$icon_html."</div>" : "");
                                 $arr[$phold] = "<div style=\"".$MenuConfig['div_width']." ".$MenuConfig['div_height']."\" id=\"menu_".$phold."\">".$Ajax_img."<script language=\"javascript\" type=\"text/javascript\">DZCP.initDynLoader('menu_".$phold."','menu','&hash=".$menu_index_hash."');</script></div>";

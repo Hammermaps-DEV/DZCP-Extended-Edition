@@ -49,7 +49,7 @@ else
                        `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                        `pic`          = '".string::encode($_FILES['file']['name'])."'");
 
-                $index = info(_info_upload_success, "../user/?action=editprofile&show=gallery");
+                $index = info(_info_upload_success, "?index=user&amp;action=editprofile&show=gallery");
             }
         } elseif($_GET['do'] == "edit") {
             $qry = db("SELECT * FROM ".dba::get('usergallery')."
@@ -104,7 +104,7 @@ else
                  WHERE id = '".convert::ToInt($_POST['id'])."'
                  AND `user` = '".userid()."'");
 
-            $index = info(_edit_gallery_done, "../user/?action=editprofile&show=gallery");
+            $index = info(_edit_gallery_done, "?index=user&amp;action=editprofile&show=gallery");
         }
     } else {
         $index = error(_error_wrong_permissions);

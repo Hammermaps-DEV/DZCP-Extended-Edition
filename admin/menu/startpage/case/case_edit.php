@@ -18,7 +18,7 @@ if(isset($_POST['name']) && isset($_POST['url']) && isset($_POST['level']))
     else
     {
         db("UPDATE `".dba::get('startpage')."` SET `name` = '".string::encode($_POST['name'])."', `url` = '".string::encode($_POST['url'])."', `level` = '".convert::ToInt($_POST['level'])."' WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_admin_startpage_editd, "?admin=startpage");
+        $show = info(_admin_startpage_editd, "?index=admin&amp;admin=startpage");
     }
 }
 

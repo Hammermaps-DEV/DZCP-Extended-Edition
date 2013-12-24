@@ -20,17 +20,17 @@ else
                AND member = '".userid()."'");
         if(_rows($qry))
         {
-            $upd = db("UPDATE ".dba::get('cw_player')."
+            db("UPDATE ".dba::get('cw_player')."
                  SET `status` = '".convert::ToInt($_POST['status'])."'
                  WHERE cwid = '".convert::ToInt($_GET['id'])."'
                  AND member = '".userid()."'");
         } else {
-            $ins = db("INSERT INTO ".dba::get('cw_player')."
+            db("INSERT INTO ".dba::get('cw_player')."
                  SET `cwid`   = '".convert::ToInt($_GET['id'])."',
                      `member` = '".userid()."',
                      `status` = '".convert::ToInt($_POST['status'])."'");
         }
 
-        $index = info(_cw_status_set, "?action=details&amp;id=".$_GET['id']."");
+        $index = info(_cw_status_set, "?index=clanwars&amp;action=details&amp;id=".$_GET['id']."");
     }
 }

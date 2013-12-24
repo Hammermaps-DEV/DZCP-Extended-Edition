@@ -71,7 +71,7 @@ switch ($do)
                           `internal`  = '".convert::ToInt($_POST['internal'])."',
                           `type`      = '2',
                           `wichtig`   = '".convert::ToInt($_POST['wichtig'])."'");
-            $show = info(_navi_added,"?admin=navi");
+            $show = info(_navi_added,"?index=admin&amp;admin=navi");
         }
     break;
 
@@ -79,7 +79,7 @@ switch ($do)
         $get = db("SELECT * FROM ".dba::get('navi')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
         db("DELETE FROM ".dba::get('sites')." WHERE id = '".convert::ToInt($get['editor'])."'");
         db("DELETE FROM ".dba::get('navi')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_navi_deleted, "?admin=navi");
+        $show = info(_navi_deleted, "?index=admin&amp;admin=navi");
     break;
 
     case 'edit':
@@ -157,7 +157,7 @@ switch ($do)
                         `wichtig`   = '".convert::ToInt($_POST['wichtig'])."'
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_navi_edited,"?admin=navi");
+        $show = info(_navi_edited,"?index=admin&amp;admin=navi");
     break;
 
     case 'menu':
@@ -165,7 +165,7 @@ switch ($do)
                     SET `shown`     = '".convert::ToInt($_GET['set'])."'
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        header("Location: ?admin=navi");
+        header("Location: ?index=admin&admin=navi");
     break;
 
     case 'intern':
@@ -173,7 +173,7 @@ switch ($do)
                     SET `intern` = '".convert::ToInt($_GET['set'])."'
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        header("Location: ?admin=navi");
+        header("Location: ?index=admin&admin=navi");
     break;
 
     case 'editlink':
@@ -207,12 +207,12 @@ switch ($do)
                 `level`       = '".convert::ToInt($_POST['level'])."'
             WHERE `id` = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_menukat_updated, '?admin=navi');
+        $show = info(_menukat_updated, '?index=admin&amp;admin=navi');
     break;
 
     case 'deletekat':
         db("DELETE FROM ".dba::get('navi_kats')." WHERE `id` = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_menukat_deleted, '?admin=navi');
+        $show = info(_menukat_deleted, '?index=admin&amp;admin=navi');
     break;
 
     case 'addkat':
@@ -239,7 +239,7 @@ switch ($do)
 
     case 'insertkat':
         db("INSERT INTO ".dba::get('navi_kats')." SET `name` = '".string::encode($_POST['name'])."', `placeholder` = 'nav_".string::encode($_POST['placeholder'])."', `level` = '".convert::ToInt($_POST['intern'])."'");
-        $show = info(_menukat_inserted, '?admin=navi');
+        $show = info(_menukat_inserted, '?index=admin&amp;admin=navi');
     break;
 
     default:
@@ -253,15 +253,15 @@ switch ($do)
             {
                 if(!$get['type'])
                 {
-                    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=navi&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_navi));
+                    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=navi&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_navi));
                     $edit = "&nbsp;";
                     $type = _navi_space;
                 }
                 else
                 {
                     $type = string::decode($get['name']);
-                    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=navi&amp;do=edit", "title" => _button_title_edit));
-                    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=navi&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_navi));
+                    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=navi&amp;do=edit", "title" => _button_title_edit));
+                    $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=navi&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_navi));
                 }
 
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
@@ -285,8 +285,8 @@ switch ($do)
             $color = 1;
             while($get = _fetch($qry))
             {
-                $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=navi&amp;do=editkat", "title" => _button_title_edit));
-                $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=navi&amp;do=deletekat", "title" => _button_title_del, "del" => _confirm_del_menu));
+                $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=navi&amp;do=editkat", "title" => _button_title_edit));
+                $delete = show("page/button_delete_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=navi&amp;do=deletekat", "title" => _button_title_del, "del" => _confirm_del_menu));
 
                 //Admin Link / No delete or edit
                 if($get['placeholder'] == 'nav_admin')

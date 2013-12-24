@@ -25,7 +25,6 @@ else
         //Get Userinfos
         $lastvisit = userstats(userid(), 'lastvisit');
         $lastvisit = empty($lastvisit) ? "0" : $lastvisit;
-        $maxfposts = settings('m_fposts');
 
         ##################################
         ## Neue Foreneintraege anzeigen ##
@@ -53,11 +52,11 @@ else
                                         $post = '';
                                     break;
                                     case 1:
-                                        $pagenr = ceil($lp/$maxfposts);
+                                        $pagenr = ceil($lp/settings('m_fposts'));
                                         $post = _new_post_1;
                                     break;
                                     default:
-                                        $pagenr = ceil($lp/$maxfposts);
+                                        $pagenr = ceil($lp/settings('m_fposts'));
                                         $post = _new_post_2;
                                     break;
                                 }
@@ -86,8 +85,6 @@ else
             } //while end
         }
 
-        unset($getkat,$qrykat,$qrytopic,$gettopic,$intern,$wichtig,$post,$pagenr,$lp,$forumposts_show,$count); //Unset unused vars
-
         ############################
         ## Neue Clanwars anzeigen ##
         ############################
@@ -102,9 +99,10 @@ else
                     $cws .= show(_user_new_cw, array("datum" => date("d.m. H:i", $getcw['datum'])._uhr, "id" => $getcw['id'], "icon" => $getcw['icon'], "gegner" => string::decode($getcw['clantag']))); //Output
                 }
             } //while end
-        }
 
-        unset($getcw,$qrycw); //Unset unused vars
+            if(!empty($cws))
+                $cws = '<table class="hperc" cellspacing="1">'.$cws.'</table>';
+        }
 
         #####################################
         ## Neue Registrierte User anzeigen ##
@@ -124,8 +122,6 @@ else
             }
         }
 
-        unset($qryu,$getu,$check,$cnt,$eintrag,$i); //Unset unused vars
-
         ###########################################
         ## Neue Eintruage im Guastebuch anzeigen ##
         ###########################################
@@ -144,8 +140,6 @@ else
             }
         }
 
-        unset($activ,$qrygb,$getgb,$cntgb,$check,$eintrag,$i); //Unset unused vars
-
         ################################################
         ## Neue Eintruage im User Guastebuch anzeigen ##
         ################################################
@@ -163,20 +157,19 @@ else
             }
         }
 
-        unset($qrymember,$getmember,$check,$eintrag,$i); //Unset unused vars
-
         #######################################
         ## Neue Private Nachrichten anzeigen ##
         #######################################
-        $getmsg = db("SELECT id,an,datum FROM ".dba::get('msg')." WHERE an = '".userid()."' AND readed = 0 AND see_u = 0 ORDER BY datum DESC",false,true);
-        if(($check = cnt(dba::get('msg'), " WHERE an = '".userid()."' AND readed = 0 AND see_u = 0")) == 1)
-            $mymsg = show(_lobby_mymessage, array("cnt" => '1')); //Output
-        else if($check >= 2)
-            $mymsg = show(_lobby_mymessages, array("cnt" => $check)); //Output
-        else
-            $mymsg = show(_no_lobby_mymessages); //Output
-
-        unset($getmsg,$check,$cnt); //Unset unused vars
+        $mymsg = show(_no_lobby_mymessages); //Output
+        $sqlmsg = db("SELECT id,an,datum FROM ".dba::get('msg')." WHERE an = '".userid()."' AND readed = 0 AND see_u = 0 ORDER BY datum DESC");
+        if(_rows($sqlmsg) >= 1)
+        {
+            $getmsg = _fetch($sqlmsg);
+            if(($check = cnt(dba::get('msg'), " WHERE an = '".userid()."' AND readed = 0 AND see_u = 0")) == 1)
+                $mymsg = show(_lobby_mymessage, array("cnt" => '1')); //Output
+            else if($check >= 2)
+                $mymsg = show(_lobby_mymessages, array("cnt" => $check)); //Output
+        }
 
         ########################
         ## Neue News anzeigen ##
@@ -194,8 +187,6 @@ else
             } //while end
         }
 
-        unset($qrynews,$getnews); //Unset unused vars
-
         #################################
         ## Neue News comments anzeigen ##
         #################################
@@ -204,37 +195,41 @@ else
         {
             while($getcheckn = _fetch($qrycheckn))
             {
-                $getnewsc = db("SELECT news,datum FROM ".dba::get('newscomments')." WHERE news = '".$getcheckn['id']."' ORDER BY datum DESC",false,true);
-                if(check_is_new($getnewsc['datum']))
-                  {
-                    $can_erase = true;
-                    $eintrag = (($check = cnt(dba::get('newscomments'), " WHERE datum > ".$lastvisit." AND news = '".$getnewsc['news']."'")) == 1 ? _lobby_new_newsc_1 : _lobby_new_newsc_2);
-                    $newsc .= show(_user_new_newsc, array("cnt" => $check, "id" => $getnewsc['news'], "news" => string::decode($getcheckn['titel']), "eintrag" => $eintrag)); //Output
+                $sqlnewsc = db("SELECT news,datum FROM ".dba::get('newscomments')." WHERE news = '".$getcheckn['id']."' ORDER BY datum DESC");
+                if(_rows($sqlnewsc) >= 1)
+                {
+                    $getnewsc = _fetch($sqlnewsc);
+                    if(check_is_new($getnewsc['datum']))
+                    {
+                        $can_erase = true;
+                        $eintrag = (($check = cnt(dba::get('newscomments'), " WHERE datum > ".$lastvisit." AND news = '".$getnewsc['news']."'")) == 1 ? _lobby_new_newsc_1 : _lobby_new_newsc_2);
+                        $newsc .= show(_user_new_newsc, array("cnt" => $check, "id" => $getnewsc['news'], "news" => string::decode($getcheckn['titel']), "eintrag" => $eintrag)); //Output
+                    }
                 }
             } //while end
         }
-
-        unset($qrycheckn,$getcheckn,$getnewsc,$check,$eintrag); //Unset unused vars
 
         #####################################
         ## Neue Download comments anzeigen ##
         #####################################
-        $qrycheckn = db("SELECT id,download FROM ".dba::get('downloads')." WHERE comments = 1"); $downloadc = '';
+        $qrycheckn = db("SELECT id,download FROM ".dba::get('downloads')." WHERE `comments` = 1"); $downloadc = '';
         if(_rows($qrycheckn) >= 1)
         {
             while($getcheckn = _fetch($qrycheckn))
             {
-                $getdownloadc = db("SELECT download,datum FROM ".dba::get('dl_comments')." WHERE download = '".$getcheckn['id']."' ORDER BY datum DESC",false,true);
-                if(check_is_new($getdownloadc['datum']))
+                $sqldownloadc = db("SELECT download,datum FROM ".dba::get('dl_comments')." WHERE `download` = '".$getcheckn['id']."' ORDER BY datum DESC");
+                if(_rows($sqldownloadc) >= 1)
                 {
-                    $can_erase = true;
-                    $eintrag = (($check = cnt(dba::get('dl_comments'), " WHERE datum > ".$lastvisit." AND download = '".$getdownloadc['download']."'")) == 1 ? _lobby_dl_comments_1 : _lobby_dl_comments_2);
-                    $downloadc .= show(_user_new_dlc, array("cnt" => $check, "id" => $getcheckn['id'], "download" => string::decode($getcheckn['download']), "eintrag" => $eintrag)); //Output
+                    $getdownloadc = _fetch($sqldownloadc);
+                    if(check_is_new($getdownloadc['datum']))
+                    {
+                        $can_erase = true;
+                        $eintrag = (($check = cnt(dba::get('dl_comments'), " WHERE datum > ".$lastvisit." AND download = '".$getdownloadc['download']."'")) == 1 ? _lobby_dl_comments_1 : _lobby_dl_comments_2);
+                        $downloadc .= show(_user_new_dlc, array("cnt" => $check, "id" => $getcheckn['id'], "download" => string::decode($getcheckn['download']), "eintrag" => $eintrag)); //Output
+                    }
                 }
             } //while end
         }
-
-        unset($qrycheckn,$getcheckn,$getdownloadc,$check,$eintrag); //Unset unused vars
 
         #####################################
         ## Neue Clanwars comments anzeigen ##
@@ -244,17 +239,19 @@ else
         {
             while($getcheckcw = _fetch($qrycheckcw))
             {
-                $getcwc = db("SELECT id,cw,datum FROM ".dba::get('cw_comments')." WHERE cw = '".$getcheckcw['id']."' ORDER BY datum DESC",false,true);
-                if(check_is_new($getcwc['datum']))
+                $sqlcwc = db("SELECT id,cw,datum FROM ".dba::get('cw_comments')." WHERE cw = '".$getcheckcw['id']."' ORDER BY datum DESC");
+                if(_rows($sqlcwc) >= 1)
                 {
-                    $can_erase = true;
-                    $eintrag = (($check = cnt(dba::get('cw_comments'), " WHERE datum > ".$lastvisit." AND cw = '".$getcwc['cw']."'")) == 1 ? _lobby_new_cwc_1 : _lobby_new_cwc_2);
-                    $cwcom .= show(_user_new_clanwar, array("cnt" => $check, "id" => $getcwc['cw'], "eintrag" => $eintrag)); //Output
+                    $getcwc = _fetch($sqlcwc);
+                    if(check_is_new($getcwc['datum']))
+                    {
+                        $can_erase = true;
+                        $eintrag = (($check = cnt(dba::get('cw_comments'), " WHERE datum > ".$lastvisit." AND cw = '".$getcwc['cw']."'")) == 1 ? _lobby_new_cwc_1 : _lobby_new_cwc_2);
+                        $cwcom .= show(_user_new_clanwar, array("cnt" => $check, "id" => $getcwc['cw'], "eintrag" => $eintrag)); //Output
+                    }
                 }
             } //while end
         }
-
-        unset($qrycheckcw,$getcheckcw,$getcwc,$check,$eintrag); //Unset unused vars
 
         #########################
         ## Neue Votes anzeigen ##
@@ -270,8 +267,6 @@ else
                 $newv = show(_user_new_votes, array("cnt" => $check, "eintrag" => $eintrag)); //Output
             }
         }
-
-        unset($qrynewv,$getnewv,$eintrag,$check); //Unset unused vars
 
         ##############################
         ## Kalender Events anzeigen ##
@@ -289,8 +284,6 @@ else
             }
         }
 
-        unset($qrykal,$getkal); //Unset unused vars
-
         ##########################
         ## Neue Awards anzeigen ##
         ##########################
@@ -306,8 +299,6 @@ else
             }
         }
 
-        unset($qryaw,$getaw,$eintrag,$check); //Unset unused vars
-
         ############################
         ## Neue Rankings anzeigen ##
         ############################
@@ -322,8 +313,6 @@ else
                 $rankings = show(_user_new_rankings, array("cnt" => $check, "eintrag" => $eintrag)); //Output
             }
         }
-
-        unset($qryra,$getra,$eintrag,$check); //Unset unused vars
 
         ###########################
         ## Neue Artikel anzeigen ##
@@ -342,8 +331,6 @@ else
             } //while end
         }
 
-        unset($qryart,$getart,$eintrag,$check); //Unset unused vars
-
         ####################################
         ## Neue Artikel Comments anzeigen ##
         ####################################
@@ -352,17 +339,19 @@ else
         {
             while($getchecka = _fetch($qrychecka))
             {
-                $getartc = db("SELECT id,artikel,datum FROM ".dba::get('acomments')." WHERE artikel = '".$getchecka['id']."' ORDER BY datum DESC",false,true);
-                if(check_is_new($getartc['datum']))
+                $sqlartc = db("SELECT id,artikel,datum FROM ".dba::get('acomments')." WHERE artikel = '".$getchecka['id']."' ORDER BY datum DESC");
+                if(_rows($sqlartc) >= 1)
                 {
-                    $can_erase = true;
-                    $eintrag = (($check = cnt(dba::get('acomments'), " WHERE datum > ".$lastvisit." AND artikel = '".$getartc['artikel']."'")) == 1 ? _lobby_new_artc_1 : _lobby_new_artc_2);
-                    $artc .= show(_user_new_artc, array("cnt" => $check, "id" => $getartc['artikel'], "eintrag" => $eintrag)); //Output
+                    $getartc = _fetch($sqlartc);
+                    if(check_is_new($getartc['datum']))
+                    {
+                        $can_erase = true;
+                        $eintrag = (($check = cnt(dba::get('acomments'), " WHERE datum > ".$lastvisit." AND artikel = '".$getartc['artikel']."'")) == 1 ? _lobby_new_artc_1 : _lobby_new_artc_2);
+                        $artc .= show(_user_new_artc, array("cnt" => $check, "id" => $getartc['artikel'], "eintrag" => $eintrag)); //Output
+                    }
                 }
             } //while end
         }
-
-        unset($qrychecka,$getchecka,$eintrag,$check); //Unset unused vars
 
         #########################################
         ## Neue Bilder in der Gallery anzeigen ##
@@ -377,11 +366,9 @@ else
             {
                 $can_erase = true;
                 $eintrag = ($i == 1 ? _new_gal_1 : _new_gal_2);
-                $gal = show(_user_new_gallery, array("cnt" => $i, "action" => ($i == 1 ? "?action=show&amp;id=".$getgal['id'] : ''), "eintrag" => $eintrag)); //Output
+                $gal = show(_user_new_gallery, array("cnt" => $i, "action" => ($i == 1 ? "action=show&amp;id=".$getgal['id'] : ''), "eintrag" => $eintrag)); //Output
             }
         }
-
-        unset($qrygal,$getgal,$eintrag,$i); //Unset unused vars
 
         #########################
         ## Neue Aways anzeigen ##
@@ -403,8 +390,6 @@ else
             if($show_awayn)
                 $away_new = show(_user_away, array("naway" => _lobby_away_new, "away" => $awayn)); //Output
         }
-
-        unset($qryawayn,$getchklevel,$getawayn,$awayn,$show_awayn); //Unset unused vars
 
         #########################
         ## Alle Aways anzeigen ##
@@ -428,8 +413,6 @@ else
                 $away_now = show(_user_away_currently, array("ncaway" => _lobby_away, "caway" => $awaya)); //Output
         }
 
-        unset($qryawaya,$show_awaya,$getawaya,$wieder,$awaya); //Unset unused vars
-
         ################################
         ## Neue Forum Topics anzeigen ##
         ################################
@@ -446,7 +429,7 @@ else
                     $intern = ($getft['intern'] ? '<span class="fontWichtig">'._internal.':</span> ' : '');
                     $wichtig = ($getft['sticky'] ? '<span class="fontWichtig">'._sticky.':</span> ' : '');
                     $ftopics .= show($dir."/userlobby_forum", array("id" => $getft['id'],
-                                                                    "pagenr" => (($pagenr = ceil($lp/$maxfposts)) == 0 ? 1 : $pagenr),
+                                                                    "pagenr" => (($pagenr = ceil($lp/settings('m_fposts'))) == 0 ? 1 : $pagenr),
                                                                     "p" => $lp +1,
                                                                     "intern" => $intern,
                                                                     "wichtig" => $wichtig,
@@ -457,8 +440,6 @@ else
                 }
             } //while end
         }
-
-        unset($qryft,$getft,$lp,$getp,$text,$intern,$wichtig); //Unset unused vars
 
         //Side Output
         $index = show($dir."/userlobby", array("erase" => ($can_erase ? _user_new_erase : ''),

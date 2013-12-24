@@ -37,16 +37,16 @@ else
     if($_POST['bericht']) $bericht = bbcode::parse_html($_POST['bericht']);
     else $bericht = "&nbsp;";
 
-    if(!empty($_POST['s1']))     $screen1 = '<img src="../inc/images/admin/cwscreen.jpg" alt="" />';
+    if(!empty($_POST['s1']))     $screen1 = '<img src="inc/images/admin/cwscreen.jpg" alt="" />';
     else $screen1 = "";
 
-    if(!empty($_POST['s2']))     $screen2 = '<img src="../inc/images/admin/cwscreen.jpg" alt="" />';
+    if(!empty($_POST['s2']))     $screen2 = '<img src="inc/images/admin/cwscreen.jpg" alt="" />';
     else $screen2 = "";
 
-    if(!empty($_POST['s3']))     $screen3 = '<img src="../inc/images/admin/cwscreen.jpg" alt="" />';
+    if(!empty($_POST['s3']))     $screen3 = '<img src="inc/images/admin/cwscreen.jpg" alt="" />';
     else $screen3 = "";
 
-    if(!empty($_POST['s4']))     $screen4 = '<img src="../inc/images/admin/cwscreen.jpg" alt="" />';
+    if(!empty($_POST['s4']))     $screen4 = '<img src="inc/images/admin/cwscreen.jpg" alt="" />';
     else $screen4 = "";
 
     if(!empty($screen1) || !empty($screen2) || !empty($screen3) || !empty($screen4))

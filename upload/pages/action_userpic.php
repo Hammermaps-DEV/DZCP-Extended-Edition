@@ -49,7 +49,7 @@ else
                 copy($tmpname, basePath."/inc/images/uploads/userpics/".userid().".".strtolower($endung)."");
                 @unlink($_FILES['file']['tmp_name']);
 
-                $index = info(_info_upload_success, "../user/?action=editprofile");
+                $index = info(_info_upload_success, "?index=user&amp;action=editprofile");
             }
         } elseif($_GET['do'] == "deletepic") {
             foreach($picformat as $tmpendung)
@@ -57,7 +57,7 @@ else
                 if(file_exists(basePath."/inc/images/uploads/userpics/".userid().".".$tmpendung))
                 {
                     @unlink(basePath."/inc/images/uploads/userpics/".userid().".".$tmpendung);
-                    $index = info(_delete_pic_successful, "../user/?action=editprofile");
+                    $index = info(_delete_pic_successful, "?index=user&amp;action=editprofile");
                 }
             }
         }

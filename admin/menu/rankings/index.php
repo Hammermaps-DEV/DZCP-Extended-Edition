@@ -43,7 +43,7 @@ if(_adminMenu != 'true')
                          `rank`     = '".convert::ToInt($_POST['rank'])."',
                          `postdate` = '".time()."'");
 
-          $show = info(_ranking_added, "?admin=rankings");
+          $show = info(_ranking_added, "?index=admin&amp;admin=rankings");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".dba::get('rankings')."
@@ -87,13 +87,13 @@ if(_adminMenu != 'true')
                          `postdate`     = '".time()."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          $show = info(_ranking_edited, "?admin=rankings");
+          $show = info(_ranking_edited, "?index=admin&amp;admin=rankings");
         }
       } elseif($_GET['do'] == "delete") {
         $del = db("DELETE FROM ".dba::get('rankings')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_ranking_deleted, "?admin=rankings");
+        $show = info(_ranking_deleted, "?index=user&amp;admin=rankings");
       } else {
       $qry = db("SELECT s1.*,s2.name,s2.id AS sqid FROM ".dba::get('rankings')." AS s1
                  LEFT JOIN ".dba::get('squads')." AS s2
@@ -102,10 +102,10 @@ if(_adminMenu != 'true')
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=rankings&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=rankings&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=rankings&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=rankings&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_ranking));
 

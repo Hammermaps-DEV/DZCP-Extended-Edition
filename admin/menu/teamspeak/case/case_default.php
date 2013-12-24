@@ -10,8 +10,8 @@ if(_adminMenu != 'true') exit();
 $qry = db("SELECT * FROM ".dba::get('ts')." ORDER BY id"); $color = 1;
 while($get = _fetch($qry))
 {
-    $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "admin=teamspeak&amp;do=edit","title" => _button_title_edit));
-    $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "admin=teamspeak&amp;do=delete","title" => _button_title_del,"del" => _confirm_del_server));
+    $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "index=admin&amp;admin=teamspeak&amp;do=edit","title" => _button_title_edit));
+    $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "index=admin&amp;admin=teamspeak&amp;do=delete","title" => _button_title_del,"del" => _confirm_del_server));
 
     $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
     $menu = (!$get['show_navi'] ? show(_teamspeak_menu_icon_yes, array("id" => $get['id'])) : show(_teamspeak_menu_icon_no, array("id" => $get['id'])));

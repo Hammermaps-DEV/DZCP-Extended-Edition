@@ -42,7 +42,7 @@ if(isset($_POST['ip']))
         $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : string::encode($_POST['ip']));
         $port = ($ip_port != false && is_array($ip_port) ? $ip_port['port'] : convert::ToInt($_POST['port']));
         Cache::delete('teamspeak_'.md5($host.':'.$port));
-        $show = info(_config_ts_updated,"?admin=teamspeak");
+        $show = info(_config_ts_updated,"?index=admin&amp;admin=teamspeak");
     }
 }
 

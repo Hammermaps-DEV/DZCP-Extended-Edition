@@ -59,7 +59,7 @@ $where = $where.' - '._away_new;
                                                 "jahr" => dropdown("year",$_POST['jahr'])));
 
         $index = show($dir."/form_away", array("head" => _away_new_head,
-                                                "action" => "new&amp;do=set",
+                                               "action" => "new&amp;do=set",
                                                "error" => $error,
                                                "reason" => _away_reason,
                                                "from" => _from,
@@ -84,7 +84,7 @@ $where = $where.' - '._away_new;
                             `date`= '".time()."'");
 
 
-               $index = info(_away_successful_added, "../away/");
+               $index = info(_away_successful_added, "?index=away");
               }
              }
   }

@@ -28,22 +28,22 @@ else
                 {
                     db("UPDATE ".dba::get('userstats')." SET akl=akl+1 WHERE user = ".$get['id']);
                     db("UPDATE `".dba::get('users')."` SET `actkey` = '".($guid=GenGuid())."' WHERE `id` = ".$get['id']);
-                    $akl_link = 'http://'.$httphost.'/user/?action=akl&do=activate&key='.$guid;
-                    $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
+                    $akl_link = 'http://'.$httphost.'/?index=user&amp;action=akl&do=activate&key='.$guid;
+                    $akl_link_page = 'http://'.$httphost.'/?index=user&amp;action=akl&do=activate';
                     mailmgr::AddContent(string::decode(settings('eml_akl_register_subj')), show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
                     mailmgr::AddAddress($get['email']);
-                    $index = info(show(_reg_akl_sended,array('email' => string::decode($get['email']))), "../user/?action=login");
+                    $index = info(show(_reg_akl_sended,array('email' => string::decode($get['email']))), "?index=user&amp;action=login");
                 }
                 else if(!$get['level'] && empty($get['actkey']))
-                    $index = info(_reg_akl_locked, "../news/index.php");
+                    $index = info(_reg_akl_locked, "?index=news");
                 else
                 {
                     db("UPDATE `".dba::get('users')."` SET `actkey` = '' WHERE `id` = ".$get['id']);
-                    $index = info(_reg_akl_activated, "../news/index.php");
+                    $index = info(_reg_akl_activated, "?index=news");
                 }
             }
             else
-                $index = info(_reg_akl_email_nf, "../news/index.php");
+                $index = info(_reg_akl_email_nf, "?index=news");
         break;
 
         case 'activate':
@@ -54,10 +54,10 @@ else
                 {
                     $get = _fetch($qry);
                     db("UPDATE `".dba::get('users')."` SET `level` = 1, `status` = 1, `actkey` = '' WHERE `id` = ".$get['id']);
-                    $index = info(_reg_akl_valid, "../user/?action=login");
+                    $index = info(_reg_akl_valid, "?index=user&amp;action=login");
                 }
                 else
-                    $index = info(_reg_akl_invalid, "../news/index.php");
+                    $index = info(_reg_akl_invalid, "?index=news");
             }
             else
                 $index = show($dir."/activate_code", array("value" => _button_value_activate));

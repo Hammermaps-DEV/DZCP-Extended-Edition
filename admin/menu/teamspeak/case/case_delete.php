@@ -13,4 +13,4 @@ $host = ($ip_port != false && is_array($ip_port) ? $ip_port['ip'] : $get['host_i
 $port = ($ip_port != false && is_array($ip_port) ? $ip_port['port'] : $get['server_port']);
 Cache::delete('teamspeak_'.md5($host.':'.$port));
 db("DELETE FROM ".dba::get('ts')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(show(_server_admin_deleted,array('host'=>$host.':'.$port)), "?admin=teamspeak");
+$show = info(show(_server_admin_deleted,array('host'=>$host.':'.$port)), "?index=admin&amp;admin=teamspeak");

@@ -70,7 +70,7 @@ else
 
         }
 
-        $nav = nav($entrys,$maxawards,"?action=showall&amp;id=".$get['id']."");
+        $nav = nav($entrys,$maxawards,"?index=awards&amp;action=showall&amp;id=".$get['id']."");
         $showawards = show($dir."/awards_show_all", array("squad" => _awards_head_squad,
                 "date" => _awards_head_date,
                 "place" => _awards_head_place,

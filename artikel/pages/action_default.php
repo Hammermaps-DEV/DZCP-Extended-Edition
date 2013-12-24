@@ -19,7 +19,7 @@ else
         $color = 1; $show = '';
         while($get = _fetch($qry))
         {
-            $titel = '<a style="display:block" href="?action=show&amp;id='.$get['id'].'">'.$get['titel'].'</a>';
+            $titel = '<a style="display:block" href="?index=artikel&amp;action=show&amp;id='.$get['id'].'">'.$get['titel'].'</a>';
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $show .= show($dir."/artikel_show", array("titel" => $titel, "class" => $class, "datum" => date("d.m.Y", $get['datum']), "autor" => autor($get['autor'])));
         } //while end

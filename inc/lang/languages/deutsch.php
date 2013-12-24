@@ -47,7 +47,7 @@ define('_sec_format_second', 'Sekunde|n');
 define('_sec_format_lower_second', '< 1 Sekunde');
 define('_id_dont_exist_dl', 'Der Download mit der ID: [id] existiert nicht');
 define('_download_comments_write_head', 'Neuen Download Kommentar schreiben');
-define('_user_new_dlc', '&nbsp;&nbsp;<a href="../downloads/?action=download&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[download]</span></a><br />');
+define('_user_new_dlc', '&nbsp;&nbsp;<a href="?index=downloads&amp;action=download&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[download]</span></a><br />');
 define('_dl_comments', 'Download-Kommentare');
 define('_lobby_dlc', 'Download-Kommentare');
 define('_lobby_dl_comments_1', 'neuer Downloadkommentar');
@@ -58,11 +58,11 @@ define('_profile_access_error', 'Dieses Profil ist nur Mitgliedern zug&auml;ngli
 define('_gb_addcomment_from', 'Kommentar von');
 define('_gb_addcomment_edit', 'G&auml;stebuch-Kommentar bearbeiten');
 define('_gb_addcomment_new', 'Neuen G&auml;stebuch-Kommentar schreiben');
-define('_gb_comment_edited', 'Der G&auml;stebuch-Kommentar wurde erfolgreich editiert!');
+define('_gb_comment_edited', 'Der G&auml;stebuch-Kommentar wurde erfolgreich bearbeitet!');
 define('_pass_security', 'Passwort-Sicherheit');
 define('_pwd_repeat', 'Passwort wiederholen');
 define('_config_c_gallery', 'Galerie');
-define('_profil_edit_rss_link', '<a href="?action=editprofile&amp;show=rss">User RSS-Feed bearbeiten</a>');
+define('_profil_edit_rss_link', '<a href="?index=user&amp;action=editprofile&amp;show=rss">User RSS-Feed bearbeiten</a>');
 define('_server_gtype', '<span class="fontBold">Type:</span> [type]<br />');
 define('_server_bots', '<span class="fontBold">Bots:</span> [bots]<br />');
 define('_error_trash_mail', 'Bitte keine Trashmail verwenden!');
@@ -102,6 +102,7 @@ define('_members_admin_squad', 'Mitglieder');
 define('_welcome', 'Willkommen');
 define('_successful', 'Erfolgreich');
 define('_warn', 'Hinweis');
+define('_newskats_katbild_akt', 'Aktuelles Katbild');
 
 //Startpage
 define('_profil_startpage', 'Startseite');
@@ -115,7 +116,7 @@ define('_admin_startpage_add_head', 'Neue Startseite anlegen');
 define('_admin_startpage_edit', 'Startseite bearbeiten');
 define('_admin_startpage_added', 'Startseite wurde erfogreich eingetragen');
 define('_admin_startpage_deleted', 'Startseite wurde erfogreich gel&ouml;scht');
-define('_admin_startpage_editd', 'Startseite wurde erfogreich editiert');
+define('_admin_startpage_editd', 'Startseite wurde erfogreich bearbeitet');
 define('_admin_startpage_no_name', 'Du hast keinen Namen eingegeben');
 define('_admin_startpage_no_url', 'Du hast keine URL eingegeben');
 define('_admin_startpage_add', 'Neue Startseite hinzuf&uuml;gen');
@@ -123,7 +124,7 @@ define('_admin_startpage_add', 'Neue Startseite hinzuf&uuml;gen');
 //Activate User
 define('_config_activate_user', 'User aktivieren');
 define('_profil_admin_locked', 'Account ist nicht aktiviert');
-define('_profil_locked', 'Der Account ist noch nicht aktiviert, <a href="../user/?action=akl&do=send" target="_self">&lt; Aktivierungs-Mail senden &gt;</a>');
+define('_profil_locked', 'Der Account ist noch nicht aktiviert, <a href="?index=user&action=akl&do=send" target="_self">&lt; Aktivierungs-Mail senden &gt;</a>');
 define('_profil_closed', 'Der Account ist gesperrt');
 define('_admin_akl_regist_subj', 'Betreff: Registrierungs Aktivierungs-eMail');
 define('_admin_akl_regist', 'Registrierungs Aktivierungs-eMail Template');
@@ -150,6 +151,7 @@ define('_button_activate_user', 'User aktivieren');
 define('_button_del_user', 'User l&ouml;schen');
 define('_users_deleted', 'User gel&ouml;scht');
 define('_actived_all', 'User Accounts wurden aktiviert');
+define('_delete_text', 'L&ouml;schen');
 
 //Nav Empty
 define('_navi_nnwars_entrys', '<center>Keine Wars geplant</center>');
@@ -174,13 +176,13 @@ define('_ts_settings_default_server', 'Standard Server');
 define('_ts_settings_default_server_desc', 'Diesen Server als Standard eintragen, der aktuelle Standard Server wird mit dem neuen &uuml;berschrieben.');
 define('_teamspeak_legendemenu', 'Server ist im Menu eingetragen? (auf das Icon klicken um den Status zu &auml;ndern)');
 define('_teamspeak_default_legendemenu', 'Server als Standard eingetragen? (auf das Icon klicken um den Status zu &auml;ndern)');
-define('_config_ts_updated', 'Der Teamspeak Server wurde erfogreich editiert');
+define('_config_ts_updated', 'Der Teamspeak Server wurde erfogreich bearbeitet');
 define('_config_ts_added', 'Der Teamspeak Server wurde erfogreich eingetragen');
 define('_no_ts_page', 'Es ist kein Teamspeak 3 Server eingetragen');
 
 //RSS
 define('_profil_rss', 'Pers&ouml;nliche RSS-Feed Einstellungen');
-define('_info_edit_rss_done', 'Du hast deinen Pers&ouml;nlichen RSS-Feed erfolgreich editiert!');
+define('_info_edit_rss_done', 'Du hast deinen Pers&ouml;nlichen RSS-Feed erfolgreich bearbeitet!');
 define('_rss_public_news', 'Public News im RSS-Feed anzeigen');
 define('_rss_public_news_max', 'Anzahl der Public News');
 define('_rss_intern_news', 'Interne News im RSS-Feed anzeigen');
@@ -201,7 +203,7 @@ define('_ipban_admin_deleted', 'Der IP Ban wurde erfolgreich gel&ouml;scht!');
 define('_ipban_new_head', 'Neuen IP Ban hinzuf&uuml;gen');
 define('_ipban_admin_added', 'Der neue IP Bann wurde erfolgreich hinzugef&uuml;gt!');
 define('_ipban_edit_head', 'IP Ban bearbeiten');
-define('_ipban_admin_edited', 'IP Ban wurde erfolgreich editiert!');
+define('_ipban_admin_edited', 'IP Ban wurde erfolgreich bearbeitet!');
 define('_ipban_dis', 'Grund / Beschreibung');
 define('_ipban_add_new', 'Neuer Eintrag');
 define('_ipban_assuredness', 'Zuverl&auml;ssigkeit');
@@ -259,7 +261,6 @@ define('mysql_setup_created', 'Die Datenbank Installation für das Addon wurde au
 define('file_setup_created', 'Die Installation der Addon Daten wurde ausfeführt.');
 define('_installer_finished', 'Installation erfolgreich abgeschlossen!');
 
-
 //Cache
 define('_config_cache', 'Performance Cache');
 
@@ -276,6 +277,12 @@ define('_include_action_error','<tr><td class="contentHead" align="center" colsp
 define('_news_userimage', 'Eigenes Newsbild');
 define('_newspic_del', 'Newsbild l&ouml;schen?');
 define('_newspic_deleted', 'Newsbild erfolgreich gel&ouml;scht');
+
+define('_skype', 'Skype');
+define('_xbox', 'Xbox Live');
+define('_psn', 'PlayStation Network');
+define('_origin', 'Origin');
+define('_bnet', 'Battle.net');
 
 define('_template_navi_main', 'Hauptnavigation');
 define('_template_navi_clan', 'Clannavigation');
@@ -363,7 +370,7 @@ define('_menu_kats_head', 'Menu Kategorien');
 define('_menu_add_kat', 'Neue Menu Kategorie hinzuf&uuml;gen');
 define('_confirm_del_menu', 'Soll die Kategorie wirklich gel&ouml;scht werden?');
 define('_menu_edit_kat', 'Menu Kategorie bearbeiten');
-define('_menukat_updated', 'Die Menu Kategorie wurde erfolgreich editiert!');
+define('_menukat_updated', 'Die Menu Kategorie wurde erfolgreich bearbeitet!');
 define('_menukat_inserted', 'Die Menu Kategorie wurde erfolgreich hinzugef&uuml;gt!');
 define('_menukat_deleted', 'Die Menu Kategorie wurde erfolgreich gel&ouml;scht!');
 define('_menu_visible', 'sichtbar f&uuml;r Status');
@@ -448,7 +455,7 @@ define('_config_sponsors', 'Sponsoren');
 define('_sponsors_admin_head', 'Sponsoren');
 define('_sponsors_admin_add', 'Sponsor hinzuf&uuml;gen');
 define('_sponsor_added', 'Sponsor erfolgreich hinzugef&uuml;gt!');
-define('_sponsor_edited', 'Sponsor erfolgreich editiert!');
+define('_sponsor_edited', 'Sponsor erfolgreich bearbeitet!');
 define('_sponsor_deleted', 'Sponsor erfolgreich gel&ouml;scht!');
 define('_sponsor_name', 'Sponsor');
 define('_sponsors_admin_name', 'Name');
@@ -496,8 +503,8 @@ define('_lobby_away', 'Derzeit abwesend');
 define('_lobby_away_new', 'Abwesenheitsmeldung');
 define('_user_away', '<tr><td class="contentMainTop" width="25%" valign="top"><span class="fontBold">[naway]:</span></td><td class="contentMainFirst" width="75%">[away]</td></tr>');
 define('_user_away_currently', '<tr><td class="contentMainTop" width="25%" valign="top"><span class="fontBold">[ncaway]:</span></td><td class="contentMainFirst" width="75%">[caway]</td></tr>');
-define('_user_away_new', '[user] - <b>Grund:</b> <a href="../away/?action=info&id=[id]">[what]</a><br />&nbsp;&nbsp;Abwesend vom [ab] bis [wieder]<br />');
-define('_user_away_now', '[user] - <b>Grund:</b> <a href="../away/?action=info&id=[id]">[what]</a><br />&nbsp;&nbsp;noch bis [wieder] abwesend<br />');
+define('_user_away_new', '[user] - <b>Grund:</b> <a href="?index=away&amp;action=info&id=[id]">[what]</a><br />&nbsp;&nbsp;Abwesend vom [ab] bis [wieder]<br />');
+define('_user_away_now', '[user] - <b>Grund:</b> <a href="?index=away&amp;action=info&id=[id]">[what]</a><br />&nbsp;&nbsp;noch bis [wieder] abwesend<br />');
 define('_away_today', 'einschlie&szlig;lich <b>Heute</b>');
 define('_public', 'ver&ouml;ffentlichen');
 define('_non_public', 'nicht ver&ouml;ffentlichen');
@@ -525,6 +532,7 @@ define('_msg_sendnews_user', '
 <tr>
   <td align="center" class="contentMainTop">
     <form action="" method="get" onsubmit="sendMe()">
+      <input type="hidden" name="index" value="news" />
       <input type="hidden" name="action" value="msg" />
       <input type="hidden" name="do" value="sendnewsdone" />
       <input type="hidden" name="id" value="[id]" />
@@ -548,11 +556,11 @@ define('_profil_pnmail', 'Email bei neuen Nachrichten');
 define('_admin_pn_subj', 'Betreff: PN-Email');
 define('_admin_pn', 'PN-Email Template');
 define('_admin_fabo_npost_subj', 'Betreff: ForenAbo Neuer Post');
-define('_admin_fabo_pedit_subj', 'Betreff: ForenAbo Post editiert');
-define('_admin_fabo_tedit_subj', 'Betreff: ForenAbo Thread editiert');
+define('_admin_fabo_pedit_subj', 'Betreff: ForenAbo Post bearbeitet');
+define('_admin_fabo_tedit_subj', 'Betreff: ForenAbo Thread bearbeitet');
 define('_admin_fabo_npost', 'ForenAbo Neuer Post Template');
-define('_admin_fabo_pedit', 'ForenAbo Post editiert Template');
-define('_admin_fabo_tedit', 'ForenAbo Thread editiert Template');
+define('_admin_fabo_pedit', 'ForenAbo Post bearbeitet Template');
+define('_admin_fabo_tedit', 'ForenAbo Thread bearbeitet Template');
 define('_foum_fabo_checkbox', 'Diesen Thread abonnieren und per E-Mail &uuml;ber neue Posts benachrichtigt werden?');
 define('_forum_fabo_do', 'E-Mail Benachrichtigung erfolgreich ge&auml;ndert!');
 define('_user_link_fabo', '[nick]');
@@ -572,6 +580,7 @@ define('_config_protocol', 'Adminprotokoll');
 define('_partnerbuttons_textlink', 'Textlink');
 define('_config_forum_subkats_add', '
     <form action="" method="get" onsubmit="DZCP.submitButton()">
+      <input type="hidden" name="index" value="forum" />
       <input type="hidden" name="admin" value="forum" />
       <input type="hidden" name="do" value="newsubkat" />
       <input type="hidden" name="id" value="[id]" />
@@ -580,6 +589,7 @@ define('_config_forum_subkats_add', '
 ');
 define('_msg_answer', '
     <form action="" method="get" onsubmit="DZCP.submitButton()">
+      <input type="hidden" name="index" value="user" />
       <input type="hidden" name="action" value="msg" />
       <input type="hidden" name="do" value="answer" />
       <input type="hidden" name="id" value="[id]" />
@@ -587,11 +597,13 @@ define('_msg_answer', '
     </form>');
 define('_user_new_erase', '<form method="get" action="" onsubmit="DZCP.submitButton()"><input type="hidden" name="action" value="erase" /><input id="contentSubmit" type="submit" name="submit" class="submit" value="tempor&auml;re Neuerungen l&ouml;schen" /></form>');
 define('_profile_add', '<form action="" method="get" onsubmit="return(DZCP.submitButton())">
+      <input type="hidden" name="index" value="user" />
       <input type="hidden" name="admin" value="profile" />
       <input type="hidden" name="do" value="add" />
       <input id="contentSubmit" type="submit" class="submit" value="Neues Profilfeld hinzuf&uuml;gen" />
     </form>');
 define('_clankasse_new', '<form action="" method="get" onsubmit="return(DZCP.submitButton())">
+      <input type="hidden" name="index" value="clankasse" />
       <input type="hidden" name="action" value="admin" />
       <input type="hidden" name="do" value="new" />
       <input id="contentSubmit" type="submit" class="submit" value="Neuen Beitrag hinzuf&uuml;gen" />
@@ -614,8 +626,8 @@ define('_download_last_date', 'Zuletzt heruntergeladen');
 define('_ulist_normal', 'Rang &amp; Level');
 
 ## Added for DZCP 1.4.1 ##
-define('_lobby_mymessages', '<a href="../user/?action=msg">Du hast <span class="fontWichtig">[cnt]</span> neue Nachrichten!</a>');
-define('_lobby_mymessage', '<a href="../user/?action=msg">Du hast <span class="fontWichtig">1</span> neue Nachricht!</a>');
+define('_lobby_mymessages', '<a href="?index=user&amp;action=msg">Du hast <span class="fontWichtig">[cnt]</span> neue Nachrichten!</a>');
+define('_lobby_mymessage', '<a href="?index=user&amp;action=msg">Du hast <span class="fontWichtig">1</span> neue Nachricht!</a>');
 
 ## Added for DZCP 1.4 ##
 define('_protocol_action', 'Aktion');
@@ -641,7 +653,7 @@ define('_kontakt', 'Kontakt');
 define('_nachrichten', 'Nachrichten');
 define('_edit_profile', 'Profil bearbeiten');
 define('_clankasse', 'Clankasse');
-define('_user_new_newsc', '&nbsp;&nbsp;<a href="../news/?action=show&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[news]</span></a><br />');
+define('_user_new_newsc', '&nbsp;&nbsp;<a href="?index=news&amp;action=show&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag] in <span class="fontWichtig">[news]</span></a><br />');
 define('_config_c_teamrow', 'Men&uuml;: Teams');
 define('_config_c_teamrow_info', '(Member pro Zeile)');
 define('_config_c_lartikel', 'Men&uuml;: Last Artikel');
@@ -661,7 +673,7 @@ define('_sticky', 'Wichtig');
 define('_lobby_new_cwc_1', 'neuer Clanwarkommentar');
 define('_lobby_new_cwc_2', 'neue Clanwarkommentare');
 define('_admin_glossar_added', 'Der Begriff wurde erfolgreich eingetragen!');
-define('_admin_glossar_edited', 'Der Begriff wurde erfolgreich editiert!');
+define('_admin_glossar_edited', 'Der Begriff wurde erfolgreich bearbeitet!');
 define('_admin_glossar_deleted', 'Der Begriff wurde erfolgreich gel&ouml;scht!');
 define('_admin_error_glossar_desc', 'Du musst eine Erkl&auml;rung zu dem angegbenen Begriff angeben!');
 define('_admin_error_glossar_word', 'Du musst einen Begriff angeben!');
@@ -697,12 +709,12 @@ define('_wrote', 'schrieb');
 define('_voted_head', 'Bereits an der Umfrage teilgenommen');
 define('_show_who_voted', 'Zeige User, die bereits abgestimmt haben');
 define('_no_live_status', 'Keine Liveabfrage');
-define('_comment_edited', 'Der Kommentar wurde erfolgreich editiert!');
+define('_comment_edited', 'Der Kommentar wurde erfolgreich bearbeitet!');
 define('_comments_edit', 'Kommentar bearbeiten');
 define('_forum_post_where_preview', '<a href="javascript:void(0)">[mainkat]</a> <span class="fontBold">Forum:</span> <a href="javascript:void(0)">[wherekat]</a> <span class="fontBold">Thread:</span> <a href="javascript:void(0)">[wherepost]</a>');
-define('_aktiv_icon', '<img src="../inc/images/active.gif" alt="" class="icon" />');
-define('_inaktiv_icon', '<img src="../inc/images/inactive.gif" alt="" class="icon" />');
-define('_pn_write_forum', '<a href="../user/?action=msg&amp;do=pn&amp;id=[id]"><img src="../inc/images/forum_pn.gif" alt="" title="[nick] eine Nachricht schreiben" class="icon" /></a>');
+define('_aktiv_icon', '<img src="inc/images/active.gif" alt="" class="icon" />');
+define('_inaktiv_icon', '<img src="inc/images/inactive.gif" alt="" class="icon" />');
+define('_pn_write_forum', '<a href="?index=user&amp;action=msg&amp;do=pn&amp;id=[id]"><img src="inc/images/forum_pn.gif" alt="" title="[nick] eine Nachricht schreiben" class="icon" /></a>');
 define('_uhr', '&nbsp;Uhr');
 define('_admin_editor', 'Admin: Seitenverwaltung');
 define('_kalender_admin_head', 'Kalender - Ereignisse');
@@ -717,7 +729,7 @@ define('_only_for_admins', ' (f&uuml;r Admins sichtbar)');
 define('_content', 'Inhalte');
 define('_rootadmin', 'Seitenadmin');
 define('_gb_edit_head', 'G&auml;stebucheintrag bearbeiten');
-define('_gb_edited', 'Der G&auml;stebucheintrag wurde erfolgreich editiert!');
+define('_gb_edited', 'Der G&auml;stebucheintrag wurde erfolgreich bearbeitet!');
 define('_nletter', 'Newsletter');
 define('_subject', 'Betreff');
 define('_server_admin_qport', 'Optional: Queryport');
@@ -810,10 +822,10 @@ define('_config_kalender', 'Kalender');
 define('_config_einst', 'Einstellungen');
 define('_profil_sig', 'Foren Signatur');
 define('_akt_version', 'DZCP Version');
-define('_forum_searchlink', '- <a href="../search/">Forensuche</a> -');
+define('_forum_searchlink', '- <a href="?index=search">Forensuche</a> -');
 define('_msg_deleted', 'Die Nachricht wurde erfolgreich gel&ouml;scht!');
 define('_info_reg_valid', 'Du hast dich erfolgreich registriert!<br />Deine Zugangsdaten wurden dir an deine E-Mail Adresse "[email]" versandt');
-define('_edited_by', '<br /><br /><i>zuletzt editiert von [autor] am [time]</i>');
+define('_edited_by', '<br /><br /><i>zuletzt bearbeitet von [autor] am [time]</i>');
 define('_linkus_empty_text', 'Du musst eine Banner-URL angeben!');
 define('_gb_titel', '<span class="fontBold">#[postid]</span> von [nick] [email] [hp] am [datum] um [zeit][lang_uhr] [edit] [delete] [comment] [public]');
 define('_gb_titel_noreg', '<span class="fontBold">#[postid]</span> von <span class="fontBold">[nick]</span> [email] [hp] am [datum] um [zeit][lang_uhr]  [edit] [delete] [comment] [public]');
@@ -823,14 +835,15 @@ define('_member_admin_votesadmin', 'Admin: Umfragen');
 define('_msg_global_all', 'alle Mitglieder');
 define('_smileys_info', 'Du kannst alle neuen Smileys auch per FTP in den Ordner <span class="fontItalic">./inc/images/smileys/</span> hochladen! Dabei ist der Dateiname gleich dem des BBCodes. z.B. dzcp.gif = :dzcp:');
 define('_pos_empty_kat', 'Du musst eine Rangbezeichnung angeben!');
-define('_forum_lastpost', '<a href="?action=showthread&amp;id=[tid]&amp;page=[page]#p[id]"><img src="../inc/images/forum_lpost.gif" alt="" title="Zum letzten Eintrag" class="icon" /></a>');
-define('_forum_addpost', '<a href="?action=post&amp;do=add&amp;kid=[kid]&amp;id=[id]"><img src="../inc/images/forum_reply.gif" alt="" title="Neuer Eintrag" class="icon" /></a>');
-define('_pn_write', '<a href="../user/?action=msg&amp;do=pn&amp;id=[id]"><img src="../inc/images/pn.gif" alt="" title="[nick] eine Nachricht schreiben" class="icon" /></a>');
-define('_forum_new_thread', '<a href="?action=thread&amp;do=add&amp;kid=[id]"><img src="../inc/images/forum_new.gif" alt="" title="Neuen Thread erstellen" class="icon" /></a>');
+define('_forum_lastpost', '<a href="?index=forum&amp;action=showthread&amp;id=[tid]&amp;page=[page]#p[id]"><img src="inc/images/forum_lpost.gif" alt="" title="Zum letzten Eintrag" class="icon" /></a>');
+define('_forum_addpost', '<a href="?index=forum&amp;action=post&amp;do=add&amp;kid=[kid]&amp;id=[id]"><img src="inc/images/forum_reply.gif" alt="" title="Neuer Eintrag" class="icon" /></a>');
+define('_pn_write', '<a href="?index=user&amp;action=msg&amp;do=pn&amp;id=[id]"><img src="inc/images/pn.gif" alt="" title="[nick] eine Nachricht schreiben" class="icon" /></a>');
+define('_forum_new_thread', '<a href="?index=forum&amp;action=thread&amp;do=add&amp;kid=[id]"><img src="inc/images/forum_new.gif" alt="" title="Neuen Thread erstellen" class="icon" /></a>');
 define('_anm_head', 'Anmerkung');
 define('_anm_info', 'Es werden nur editierbare Dateien angezeigt!');
-define('_error_invalid_regcode', 'Der eingegebene Sicherheitsscode stimmt nicht mit der in der Grafik angezeigten Zeichenfolge &uuml;berein!');
-define('_welcome_guest', ' <img src="../inc/images/flaggen/nocountry.gif" alt="" class="icon" /> <a class="welcome" href="../user/?action=register">Gast</a>');
+define('_error_invalid_regcode', 'Der eingegebene Sicherheitscode stimmt nicht mit der in der Grafik angezeigten Zeichenfolge &uuml;berein!');
+define('_error_invalid_regcode_mathematic', 'Das Rechenergebnis vom Sicherheitscode ist nicht richtig!');
+define('_welcome_guest', ' <img src="inc/images/flaggen/nocountry.gif" alt="" class="icon" /> <a class="welcome" href="?index=user&amp;action=register">Gast</a>');
 define('_online_head', 'User online');
 define('_online_whereami', 'Bereich');
 define('_back', '<a href="javascript: history.go(-1)" class="files">zur&uuml;ck</a>');
@@ -845,7 +858,6 @@ Jeder berechtigte Admin hat darauf hin diese Nachricht empfangen!<br /><br />
 <span class="fontBold"><span class="fontUnder">Clandaten:</span></span><br />
 <span class="fontBold">Clanname:</span> [clan]<br />
 <span class="fontBold">Homepage:</span> [hp]<br />
-<span class="fontBold">Game:</span> [game]<br />
 <span class="fontBold">XonX:</span> [us] vs. [to]<br />
 <span class="fontBold">Unsere Map:</span> [map]<br />
 <span class="fontBold">Datum:</span> [date]<br /><span class="fontUnder">
@@ -1081,7 +1093,7 @@ define('_country_list', '
 
 ## Globale Userränge ##
 define('_status_banned', 'gesperrt');
-define('_status_unregged', 'unregistriert');
+define('_status_unregged', 'Gast');
 define('_status_user', 'User');
 define('_status_trial', 'Trial');
 define('_status_member', 'Member');
@@ -1113,7 +1125,7 @@ define('_linkus_text', 'Bannerlink');
 define('_linkus_empty_beschreibung', 'Du musst einen Title-Tag angeben!');
 define('_linkus_empty_link', 'Du musst eine Link-URL angeben!');
 define('_linkus_added', 'Das LinkUs wurde erfolgreich hinzugef&uuml;gt!');
-define('_linkus_edited', 'Das LinkUs wurde erfolgreich editiert!');
+define('_linkus_edited', 'Das LinkUs wurde erfolgreich bearbeitet!');
 define('_linkus_deleted', 'Das LinkUs wurde erfolgreich gel&ouml;scht!');
 define('_linkus', 'LinkUs');
 
@@ -1121,9 +1133,9 @@ define('_linkus', 'LinkUs');
 define('_news_kommentar', 'Kommentar');
 define('_news_kommentare', 'Kommentare');
 define('_news_viewed', '[<span class="fontItalic">[viewed] Hits</span>]');
-define('_news_archiv', '<a href="?action=archiv">Archiv</a>');
-define('_news_comment', '<a href="?action=show&amp;id=[id]">[comments] Kommentar</a>');
-define('_news_comments', '<a href="?action=show&amp;id=[id]">[comments] Kommentare</a>');
+define('_news_archiv', '<a href="?index=news&amp;action=archiv">Archiv</a>');
+define('_news_comment', '<a href="?index=news&amp;action=show&amp;id=[id]">[comments] Kommentar</a>');
+define('_news_comments', '<a href="?index=news&amp;action=show&amp;id=[id]">[comments] Kommentare</a>');
 define('_news_comments_write_head', 'Neuen Newskommentar schreiben');
 define('_news_archiv_sort', 'Sortieren nach');
 define('_news_archiv_head', 'Newsarchiv');
@@ -1137,27 +1149,27 @@ define('_forum_head', 'Forum');
 define('_forum_topic', 'Topic');
 define('_forum_subtopic', 'Untertitel');
 define('_forum_lpost', 'Letzter Beitrag');
-define('_forum_threads', 'Threads');
+define('_forum_threads', 'Themen');
 define('_forum_thread', 'Thread');
 define('_forum_posts', 'Beitr&auml;ge');
-define('_forum_cnt_threads', '<span class="fontBold">Anzahl der Threads:</span> [threads]');
+define('_forum_cnt_threads', '<span class="fontBold">Anzahl der Themen:</span> [threads]');
 define('_forum_cnt_posts', '<span class="fontBold">Anzahl der Posts:</span> [posts]');
 define('_forum_admin_head', 'Admin');
 define('_forum_admin_addsticky', 'als <span class="fontWichtig">wichtig</span> markieren?');
 define('_forum_katname_intern', '<span class="fontWichtig">Intern:</span> [katname]');
 define('_forum_sticky', '<span class="fontWichtig">Wichtig:</span>');
-define('_forum_subkat_where', '<a href="../forum/">[mainkat]</a> <span class="fontBold">Forum:</span> <a href="?action=show&amp;id=[id]">[where]</a>');
+define('_forum_subkat_where', '<a href="?index=forum">[mainkat]</a> <span class="fontBold">Forum:</span> <a href="?action=show&amp;id=[id]">[where]</a>');
 define('_forum_head_skat_search', 'In dieser Kategorie suchen');
-define('_forum_head_threads', 'Threads');
+define('_forum_head_threads', 'Themen');
 define('_forum_replys', 'Antworten');
-define('_forum_thread_lpost', 'von [nick]<br />am [date]');
+define('_forum_thread_lpost', 'Von [nick]<br /><font class="smallFont">( [date] )</font>');
 define('_forum_new_thread_head', 'Neuen Thread erstellen');
 define('_empty_topic', 'Du musst ein Topic angeben!');
 define('_forum_newthread_successful', 'Der Thread wurde erfolgreich ins Forum eingetragen!');
 define('_forum_new_post_head', 'Neuen Forenpost eintragen');
 define('_forum_newpost_successful', 'Der Post wurde erfolgreich ins Forum eingetragen!');
 define('_posted_by', '<span class="fontBold">&raquo;</span> ');
-define('_forum_post_where', '<a href="../forum/">[mainkat]</a> <span class="fontBold">Forum:</span> <a href="?action=show&amp;id=[kid]">[wherekat]</a> <span class="fontBold">Thread:</span> <a href="?action=showthread&amp;id=[tid]">[wherepost]</a>');
+define('_forum_post_where', '<a href="?index=forum">[mainkat]</a> <span class="fontBold">Forum:</span> <a href="?index=forum&amp;action=show&amp;id=[kid]">[wherekat]</a> <span class="fontBold">Thread:</span> <a href="?action=showthread&amp;id=[tid]">[wherepost]</a>');
 define('_forum_lpostlink', 'Letzter Post');
 define('_forum_user_posts', '<span class="fontBold">Posts:</span> [posts]');
 define('_sig', '<br /><br /><hr />');
@@ -1165,8 +1177,8 @@ define('_error_forum_closed', 'Dieser Thread ist geschlossen!');
 define('_forum_search_head', 'Forensuche');
 define('_forum_edit_post_head', 'Forenpost bearbeiten');
 define('_forum_edit_thread_head', 'Thread bearbeiten');
-define('_forum_editthread_successful', 'Der Thread wurde erfolgreich editiert!');
-define('_forum_editpost_successful', 'Der Eintrag wurde erfolgreich editiert!');
+define('_forum_editthread_successful', 'Der Thread wurde erfolgreich bearbeitet!');
+define('_forum_editpost_successful', 'Der Eintrag wurde erfolgreich bearbeitet!');
 define('_forum_delpost_successful', 'Der Eintrag wurde erfolgreich gel&ouml;scht!');
 define('_forum_admin_open', 'Thread ist ge&ouml;ffnet');
 define('_forum_admin_delete', 'Thread l&ouml;schen?');
@@ -1184,6 +1196,8 @@ define('_forum_search_results', 'Suchergebnisse');
 define('_forum_online_head', 'Im Forum online:');
 define('_forum_nobody_is_online', 'Zur Zeit ist kein User im Forum online!');
 define('_forum_nobody_is_online2', 'Zur Zeit ist kein User außer dir im Forum online!');
+define('_forum_hits', 'Zugriffe');
+define('_forum_thread_beginner_autor', '<font class="smallFont">[nick]<br>» [date]</font>');
 
 ## Gästebuch ##
 define('_gb_delete_successful', 'Der Eintrag wurde erfolgreich gel&ouml;scht!');
@@ -1219,7 +1233,7 @@ define('_kalender_error_no_time', 'Du musst ein Datum und eine Zeit angeben!');
 define('_kalender_error_no_title', 'Du musst einen Titel angeben!');
 define('_kalender_error_no_event', 'Du musst das Ereignis beschreiben!');
 define('_kalender_successful_added', 'Das Ereignis wurde erfolgreich eingetragen!');
-define('_kalender_successful_edited', 'Das Ereignis wurde erfolgreich editiert!');
+define('_kalender_successful_edited', 'Das Ereignis wurde erfolgreich bearbeitet!');
 define('_kalender_deleted', 'Das Ereignis wurde erfolgreich gel&ouml;scht!');
 
 ## Umfragen ##
@@ -1243,7 +1257,7 @@ define('_vote_admin_successful_menu', 'Die Umfrage ist nun im Men&uuml; eingetra
 define('_vote_admin_menu_isintern', 'Du kannst keine interne Umfrage ins Men&uuml; setzen!');
 define('_vote_legendemenu', 'Umfrage im Men&uuml;?<br />(Icon klicken um die Umfrage ein- oder auszutragen)');
 define('_votes_admin_edit_head', 'Umfrage bearbeiten');
-define('_vote_admin_successful_edited', 'Die Umfrage wurde erfolgreich editiert!');
+define('_vote_admin_successful_edited', 'Die Umfrage wurde erfolgreich bearbeitet!');
 define('_vote_admin_successful_menu1', 'Die Umfrage wurde erfolgreich aus dem Men&uuml; ausgetragen!');
 define('_error_voted_again', 'Du hast bereits an dieser Umfrage teilgenommen!');
 
@@ -1260,7 +1274,7 @@ define('_links_text', 'Banneradresse');
 define('_links_empty_beschreibung', 'Du musst eine Linkbeschreibung angeben!');
 define('_links_empty_link', 'Du musst eine Linkadresse angeben!');
 define('_link_added', 'Der Link wurde erfolgreich hinzugef&uuml;gt!');
-define('_link_edited', 'Der Link wurde erfolgreich editiert!');
+define('_link_edited', 'Der Link wurde erfolgreich bearbeitet!');
 define('_link_deleted', 'Der Link wurde erfolgreich gel&ouml;scht!');
 define('_sponsor_head', 'Sponsoren');
 
@@ -1279,7 +1293,7 @@ define('_downloads_empty_download', 'Du musst einen Downloadnamen angeben!');
 define('_downloads_empty_url', 'Du musst eine Datei angeben!');
 define('_downloads_empty_beschreibung', 'Du musst eine Beschreibung angeben!');
 define('_downloads_added', 'Der Download wurde erfolreich hinzugef&uuml;gt!');
-define('_downloads_edited', 'Der Download wurde erfolgreich editiert!');
+define('_downloads_edited', 'Der Download wurde erfolgreich bearbeitet!');
 define('_downloads_deleted', 'Der Download wurde erfolgreich gel&ouml;scht!');
 define('_dl_info', 'Download Informationen');
 define('_dl_file', 'Datei');
@@ -1331,7 +1345,7 @@ define('_cw_admin_empty_gegner', 'Du musst den Namen des Gegners angeben!');
 define('_cw_admin_empty_clantag', 'Du musst das Clank&uuml;rzel des Gegners angeben!');
 define('_cw_admin_deleted', 'Der Clanwar wurde erfolgreich gel&ouml;scht!');
 define('_cw_admin_added', 'Der Clanwar wurde erfolgreich hinzugef&uuml;gt!');
-define('_cw_admin_edited', 'Der Clanwar wurde erfolgreich editiert!');
+define('_cw_admin_edited', 'Der Clanwar wurde erfolgreich bearbeitet!');
 define('_cw_admin_head_squads', 'Angaben zum Team');
 define('_cw_admin_head_country', 'Land');
 define('_cw_head_statstik', 'Statistik');
@@ -1359,7 +1373,7 @@ define('_cw_nothing', '<option value="lazy" class="" class="dropdownKat">--- nic
 define('_cw_screens', 'Screenshots');
 define('_cw_new', 'Neuer');
 define('_clanwars_no_show', 'Noch keine Clanwars vorhanden!');
-define('_cw_show_all', '<tr><td class="contentMainFirst" colspan="8" align="center"><a href="../clanwars/?action=showall&amp;id=[id]">Alle Wars dieses Teams anzeigen</a></td></tr>');
+define('_cw_show_all', '<tr><td class="contentMainFirst" colspan="8" align="center"><a href="?index=clanwars&amp;action=showall&amp;id=[id]">Alle Wars dieses Teams anzeigen</a></td></tr>');
 
 ## Awards ##
 define('_awards_head', 'Awards');
@@ -1370,7 +1384,7 @@ define('_awards_head_prize', 'Preis');
 define('_awards_head_event', 'Event-Name');
 define('_awards_head_link', 'Event-Link');
 define('_awards_no_show', 'Leider noch keine Awards vorhanden!');
-define('_list_all_link', '<tr><td colspan ="7" class="contentMainTop" align="center"><a href="../awards/?action=showall&amp;id=[id]">Alle Awards dieses Teams anzeigen</td></tr>');
+define('_list_all_link', '<tr><td colspan ="7" class="contentMainTop" align="center"><a href="?index=awards&amp;action=showall&amp;id=[id]">Alle Awards dieses Teams anzeigen</td></tr>');
 define('_head_stats', 'Statistik');
 define('_awards_stats', '<center>Wir haben insgesamt <span class="fontBold">[anz] Awards</span> geholt!</center>');
 define('_awards_stats_1', '<span class="fontBold">[anz]x</span> Platz Nr.1');
@@ -1381,7 +1395,7 @@ define('_awards_empty_event', 'Du musst ein Event Namen angeben!');
 define('_awards_admin_head_add', 'Neuen Award hinzuf&uuml;gen');
 define('_awards_admin_added', 'Der Award wurde erfolgreich hinzugef&uuml;gt!');
 define('_awards_admin_head_edit', 'Award bearbeiten');
-define('_awards_admin_edited', 'Der Award wurde erfolgreich editiert!');
+define('_awards_admin_edited', 'Der Award wurde erfolgreich bearbeitet!');
 define('_awards_admin_deleted', 'Der Award wurde erfolgreich gel&ouml;scht!');
 define('_awards_head_legende', 'Legende');
 
@@ -1392,7 +1406,7 @@ define('_error_empty_rank', 'Du musst einen Platz angeben!');
 
 ## Server ##
 define('_banned_reason', 'Grund');
-define('_error_banned_edited', 'Der gebannte User wurde erfolgreich editiert!');
+define('_error_banned_edited', 'Der gebannte User wurde erfolgreich bearbeitet!');
 define('_server_head', 'Server');
 define('_server_name', 'Servername');
 define('_server_pwd', '<span class="fontBold">Passwort:</span> [pwd]');
@@ -1432,7 +1446,7 @@ define('_gallery_added', 'Die Galerie wurde erfolgreich erstellt!');
 define('_error_gallery', 'Du musst eine Galeriebezeichnung angeben!');
 define('_gallery_image', 'Bild');
 define('_gallery_deleted', 'Die Galerie wurde erfolgreich gel&ouml;scht!');
-define('_gallery_edited', 'Die Galerie wurde erfolgreich editiert!');
+define('_gallery_edited', 'Die Galerie wurde erfolgreich bearbeitet!');
 define('_gallery_admin_edit', 'Galerie bearbeiten');
 define('_gallery_pic_deleted', 'Das Bild wurde erfolgreich gel&ouml;scht!');
 define('_gallery_new', 'Die Bilder wurden erfolgreich zur Galerie hinzugef&uuml;gt!');
@@ -1553,9 +1567,9 @@ define('_male', 'm&auml;nnlich');
 define('_female', 'weiblich');
 define('_profil_ppic', 'Profilfoto');
 define('_profil_userstats', 'Userstats');
-define('_profil_navi_profil', '<a href="?action=user&amp;id=[id]">Profil</a>');
-define('_profil_navi_gb', '<a href="?action=user&amp;id=[id]&amp;show=gb">G&auml;stebuch</a>');
-define('_profil_navi_gallery', '<a href="?action=user&amp;id=[id]&amp;show=gallery">Galerie</a>');
+define('_profil_navi_profil', '<a href="?index=user&amp;action=user&amp;id=[id]">Profil</a>');
+define('_profil_navi_gb', '<a href="?index=user&amp;action=user&amp;id=[id]&amp;show=gb">G&auml;stebuch</a>');
+define('_profil_navi_gallery', '<a href="?index=user&amp;action=user&amp;id=[id]&amp;show=gallery">Galerie</a>');
 define('_profil_profilhits', 'Profilhits');
 define('_profil_forenposts', 'Forenposts');
 define('_profil_votes', 'teilgenommene Votes');
@@ -1565,20 +1579,20 @@ define('_profil_registered', 'Registrierungsdatum');
 define('_profil_last_visit', 'Letzter Pagebesuch');
 define('_profil_pagehits', 'Pagehits');
 define('_profil_cws', 'teilgenommene CW`s');
-define('_profil_edit_pic', '<a href="../upload/?action=userpic">hochladen</a>');
-define('_profil_delete_pic', '<a href="../upload/?action=userpic&amp;do=deletepic">l&ouml;schen</a>');
-define('_profil_edit_ava', '<a href="../upload/?action=avatar">hochladen</a>');
-define('_profil_delete_ava', '<a href="../upload/?action=avatar&amp;do=delete">l&ouml;schen</a>');
+define('_profil_edit_pic', '<a href="?index=upload&amp;action=userpic">hochladen</a>');
+define('_profil_delete_pic', '<a href="?index=upload&amp;action=userpic&amp;do=deletepic">l&ouml;schen</a>');
+define('_profil_edit_ava', '<a href="?index=upload&amp;action=avatar">hochladen</a>');
+define('_profil_delete_ava', '<a href="?index=upload&amp;action=avatar&amp;do=delete">l&ouml;schen</a>');
 define('_pedit_aktiv', '<option value="1" selected="selected">aktiv</option><option value="0">inaktiv</option>');
 define('_pedit_inaktiv', '<option value="1">aktiv</option><option value="0" selected="selected">inaktiv</option>');
 define('_pedit_male', '<option value="0">keine Angabe</option><option value="1" selected="selected">m&auml;nnlich</option><option value="2">weiblich</option>');
 define('_pedit_female', '<option value="0">keine Angabe</option><option value="1">m&auml;nnlich</option><option value="2" selected="selected">weiblich</option>');
 define('_pedit_sex_ka', '<option value="0">keine Angabe</option><option value="1">m&auml;nnlich</option><option value="2">weiblich</option>');
-define('_info_edit_profile_done', 'Du hast dein Profil erfolgreich editiert!');
+define('_info_edit_profile_done', 'Du hast dein Profil erfolgreich bearbeitet!');
 define('_delete_pic_successful', 'Dein Bild wurde erfolgreich gel&ouml;scht!');
 define('_no_pic_available', 'Es wurde kein Bild von dir gefunden!');
-define('_profil_edit_profil_link', '<a href="?action=editprofile">Profil bearbeiten</a>');
-define('_profil_edit_gallery_link', '<a href="?action=editprofile&amp;show=gallery">Usergalerie bearbeiten</a>');
+define('_profil_edit_profil_link', '<a href="?index=user&amp;action=editprofile">Profil bearbeiten</a>');
+define('_profil_edit_gallery_link', '<a href="?index=user&amp;action=editprofile&amp;show=gallery">Usergalerie bearbeiten</a>');
 define('_profil_avatar', 'Avatar');
 define('_lostpwd_failed', 'Loginname und E-Mailadresse stimmen nicht &uuml;berein!');
 define('_lostpwd_valid', 'Es wurde soeben ein neues Passwort generiert und an deine Emailadresse gesendet!');
@@ -1625,11 +1639,11 @@ define('_ulist_age', 'Alter');
 define('_ulist_sex', 'Geschlecht');
 define('_ulist_country', 'Nationalit&auml;t');
 define('_ulist_sort', 'Sortieren nach:');
-define('_usergb_eintragen', '<a href="?action=usergb&amp;id=[id]">Eintragen</a>');
+define('_usergb_eintragen', '<a href="?index=user&amp;action=usergb&amp;id=[id]">Eintragen</a>');
 define('_usergb_entry_successful', 'Dein Eintrag ins Profilg&auml;stebuch war erfolgreich!');
 define('_gallery_pic', 'Picture');
 define('_gallery_beschr', 'Beschreibung');
-define('_gallery_edit_new', '<a href="../upload/?action=usergallery">Neues Bild hinzuf&uuml;gen</a>');
+define('_gallery_edit_new', '<a href="?index=upload&amp;action=usergallery">Neues Bild hinzuf&uuml;gen</a>');
 define('_info_edit_gallery_done', 'Du hast den Datensatz erfolgreich gel&ouml;scht!');
 define('_admin_user_edithead', 'Admin: User bearbeiten');
 define('_admin_user_clanhead', 'Authorisierungen');
@@ -1654,11 +1668,11 @@ define('_error_edit_myself', 'Du kannst dich nicht selber bearbeiten!');
 define('_error_edit_admin', 'Du darfst keine Admins bearbeiten!');
 define('_admin_level_banned', 'Account sperren');
 define('_admin_user_identitat', 'Identit&auml;t');
-define('_admin_user_get_identitat', '<a href="?action=admin&amp;do=identy&amp;id=[id]">annehmen</a>');
+define('_admin_user_get_identitat', '<a href="?index=user&amp;action=admin&amp;do=identy&amp;id=[id]">annehmen</a>');
 define('_identy_admin', 'Du kannst nicht die Identit&auml;t von einem Admin annehmen!');
 define('_admin_squad_del', '<option value="delsq">- User aus dem Team l&ouml;schen -</option>');
 define('_admin_squad_nosquad', '<option class="dropdownKat" value="lazy">- User ist in keinem Team -</option>');
-define('_admin_user_edited', 'Der User wurde erfolgreich editiert!');
+define('_admin_user_edited', 'Der User wurde erfolgreich bearbeitet!');
 define('_userlobby', 'Userlobby');
 define('_lobby_new', 'Neuerungen seit dem letzten Pagebesuch');
 define('_lobby_new_erased', 'Die tempor&auml;ren Neuerungen wurden erfolgreich gel&ouml;scht!');
@@ -1687,7 +1701,7 @@ define('_lobby_votes', 'Umfragen');
 define('_new_vote_1', 'neue Umfrage');
 define('_new_vote_2', 'neue Umfragen');
 define('_lobby_cw', 'Clanwars');
-define('_user_new_cw', '<tr><td style="width:22px;text-align:center"><img src="../inc/images/gameicons/[icon]" class="icon" alt="" /></td><td style="vertical-align:middle"><a href="../clanwars/?action=details&amp;id=[id]">Clanwar am <span class="fontWichtig">[datum]</span> gegen <span class="fontWichtig">[gegner]</span></a></td></tr>');
+define('_user_new_cw', '<tr><td style="width:22px;text-align:center"><img src="inc/images/gameicons/[icon]" class="icon" alt="" /></td><td style="vertical-align:middle"><a href="?index=clanwars&amp;action=details&amp;id=[id]">Clanwar am <span class="fontWichtig">[datum]</span> gegen <span class="fontWichtig">[gegner]</span></a></td></tr>');
 define('_user_delete_verify', '
 <tr>
   <td class="contentHead"><span class="fontBold">User l&ouml;schen</span></td>
@@ -1696,14 +1710,14 @@ define('_user_delete_verify', '
   <td class="contentMainFirst" align="center">
     Bist du dir sicher das du den User [user] l&ouml;schen willst?<br />
     <span class="fontUnder">Alle</span> Aktivit&auml;ten dieses Users auf dieser Seite werden damit gel&ouml;scht!<br /><br />
-    <a href="?action=admin&amp;do=delete&verify=yes&amp;id=[id]">Ja, l&ouml;schen!</a>
+    <a href="?index=user&amp;action=admin&amp;do=delete&verify=yes&amp;id=[id]">Ja, l&ouml;schen!</a>
   </td>
 </tr>');
 define('_user_deleted', 'Der User wurde erfolgreich gel&ouml;scht!');
 define('_admin_user_shoutbox', 'Admin: Shoutbox');
 define('_admin_user_awards', 'Admin: Awards');
-define('_userlobby_kal_today', 'N&auml;chster Event ist <a href="../kalender/?action=show&time=[time]"><span class="fontWichtig">heute</span></a>');
-define('_userlobby_kal_not_today', 'N&auml;chstes Event ist am <a href="../kalender/?action=show&time=[time]"><span class="fontUnder">[date]</span></a>');
+define('_userlobby_kal_today', 'N&auml;chster Event ist <a href="?index=kalender&amp;action=show&time=[time]"><span class="fontWichtig">heute</span></a>');
+define('_userlobby_kal_not_today', 'N&auml;chstes Event ist am <a href="?index=kalender&amp;action=show&time=[time]"><span class="fontUnder">[date]</span></a>');
 define('_profil_country', 'Land');
 define('_lobby_awards', 'Awards');
 define('_new_awards_1', 'neuer Award');
@@ -1779,7 +1793,7 @@ define('_and', 'und');
 define('_lobby_artikelc', 'Artikelkommentare');
 define('_lobby_new_art_1', 'neuer Artikel');
 define('_lobby_new_art_2', 'neue Artikel');
-define('_user_new_art', '&nbsp;&nbsp;<a href="../artikel/"><span class="fontWichtig">[cnt]</span> [eintrag]</span><br />');
+define('_user_new_art', '&nbsp;&nbsp;<a href="?index=artikel"><span class="fontWichtig">[cnt]</span> [eintrag]</span><br />');
 define('_lobby_new_artc_1', 'neuer Artikelkommentar');
 define('_lobby_new_artc_2', 'neue Artikelkommentare');
 define('_page', '<span class="fontBold">[num]</span>  ');
@@ -1809,7 +1823,7 @@ define('_error_empty_age', 'Du musst dein aktuelles Alter angeben!');
 define('_member_admin_intforums', 'interne Forumauthorisierungen');
 define('_access', 'Authorisierung');
 define('_error_no_access', 'Du hast nicht die n&ouml;tigen Rechte um diesen Bereich betreten zu d&uuml;rfen!');
-define('_artikel_show_link', '<a href="../artikel/?action=show&amp;id=[id]">[titel]</a>');
+define('_artikel_show_link', '<a href="?index=artikel&amp;action=show&amp;id=[id]">[titel]</a>');
 define('_ulist_bday', 'Geburtstag');
 define('_ulist_last_login', 'Letzter Login');
 
@@ -1877,24 +1891,24 @@ define('_config_forum_intern', 'Intern');
 define('_config_forum_kat_added', 'Die Kategorie wurde erfolgreich hinzugef&uuml;gt!');
 define('_config_forum_kat_deleted', 'Die Kategorie wurde erfolgreich gel&ouml;scht!');
 define('_config_forum_kat_head_edit', 'Kategorie bearbeiten');
-define('_config_forum_kat_edited', 'Die Kategorie wurde erfolgreich editiert!');
+define('_config_forum_kat_edited', 'Die Kategorie wurde erfolgreich bearbeitet!');
 define('_config_forum_add_skat', 'Neue Unterkategorie hinzuf&uuml;gen');
 define('_config_forum_skatname', 'Unterkategoriebezeichnung');
 define('_config_forum_empty_skat', 'Du musst eine Unterkategoriebezeichnung angeben!');
 define('_config_forum_skat_added', 'Die Unterkategorie wurde erfolgreich hinzugef&uuml;gt!');
 define('_config_forum_stopic', 'Untertitel');
-define('_config_forum_skat_edited', 'Die Unterkategorie wurde erfolreich editiert!');
+define('_config_forum_skat_edited', 'Die Unterkategorie wurde erfolreich bearbeitet!');
 define('_config_forum_edit_skat', 'Unterkategorie bearbeiten');
 define('_config_forum_skat_deleted', 'Die Unterkategorie wurde erfolgreich gel&ouml;scht!');
 define('_config_newskats_kat', 'Kategorie');
 define('_config_newskats_head', 'News-/Artikelkategorien');
 define('_config_newskats_katbild', 'Katbild');
-define('_config_newskats_add', '<a href="?admin=news&amp;do=add">Neue Kategorie hinzuf&uuml;gen</a>');
+define('_config_newskats_add', '<a href="?index=admin&amp;admin=news&amp;do=add">Neue Kategorie hinzuf&uuml;gen</a>');
 define('_config_newskat_deleted', 'Die Kategorie wurde erfolgreich gel&ouml;scht!');
 define('_config_newskats_add_head', 'Neue Kategorie hinzuf&uuml;gen');
 define('_config_newskats_added', 'Die Kategorie wurde erfolgreich hinzugef&uuml;gt!');
 define('_config_newskats_edit_head', 'Kategorie bearbeiten');
-define('_config_newskats_edited', 'Die Kategorie wurde erfolgreich editiert!');
+define('_config_newskats_edited', 'Die Kategorie wurde erfolgreich bearbeitet!');
 define('_config_impressum_head', 'Impressum');
 define('_config_impressum_domains', 'Domains');
 define('_config_impressum_autor', 'Autor der Seite');
@@ -1905,7 +1919,7 @@ define('_backup_info_head', 'Anmerkung');
 define('_backup_info', 'Der Backupvorgang kann je nach Gr&ouml;&szlig;e der Datenbank mehrere Minuten in Anspruch nehmen.');
 define('_backup_link', 'neues Backup anlegen!');
 define('_news_admin_head', 'Newsbereich');
-define('_admin_news_add', '<a href="?admin=newsadmin&amp;do=add">News hinzuf&uuml;gen</a>');
+define('_admin_news_add', '<a href="?index=admin&amp;admin=newsadmin&amp;do=add">News hinzuf&uuml;gen</a>');
 define('_admin_news_head', 'News hinzuf&uuml;gen');
 define('_news_admin_kat', 'Kategorie');
 define('_news_admin_klapptitel', 'Klapptexttitel');
@@ -1913,29 +1927,29 @@ define('_news_admin_more', 'More');
 define('_empty_news', 'Du musst eine News eintragen!');
 define('_news_sended', 'Die News wurde erfolgreich eingetragen!');
 define('_admin_news_edit_head', 'News bearbeiten');
-define('_news_edited', 'Die News wurde erfolgreich editiert!');
+define('_news_edited', 'Die News wurde erfolgreich bearbeitet!');
 define('_news_deleted', 'Die News wurde erfolgreich gel&ouml;scht!');
 define('_member_admin_header', 'Teambereich');
 define('_member_admin_squad', 'Team');
 define('_member_admin_game', 'Spiel');
 define('_member_admin_icon', 'Icon');
-define('_member_admin_add', '<a href="?admin=squads&amp;do=add">Team hinzuf&uuml;gen</a>');
+define('_member_admin_add', '<a href="?index=admin&amp;admin=squads&amp;do=add">Team hinzuf&uuml;gen</a>');
 define('_admin_squad_deleted', 'Das Team wurde erfolgreich gel&ouml;scht!');
 define('_member_admin_add_header', 'Team hinzuf&uuml;gen');
 define('_admin_squad_no_squad', 'Du musst einen Teamnamen angeben!');
 define('_admin_squad_no_game', 'Du musst ein Spiel angeben, welches dieses Team spielt!');
 define('_admin_squad_add_successful', 'Das Team wurde erfolgreich hinzugef&uuml;gt!');
-define('_admin_squad_edit_successful', 'Das Team wurde erfolgreich editiert!');
+define('_admin_squad_edit_successful', 'Das Team wurde erfolgreich bearbeitet!');
 define('_member_admin_edit_header', 'Team bearbeiten');
-define('_error_server_edit', 'Der Server wurde erfolgreich editiert!');
+define('_error_server_edit', 'Der Server wurde erfolgreich bearbeitet!');
 define('_error_empty_clanname', 'Du musst euren Clannamen angeben!');
 define('_error_server_accept', 'Die ausgew&auml;hlten Server wurden erfolgreich freigeschaltet!');
 define('_error_server_dont_accept', 'Die ausgew&auml;hlten Server wurden erfolgreich aus der Liste genommen!');
 define('_server_admin_head', 'Server');
-define('_server_add_new', '<a href="?admin=server&amp;do=new">Neuen Server hinzuf&uuml;gen</a>');
+define('_server_add_new', '<a href="?index=admin&amp;admin=server&amp;do=new">Neuen Server hinzuf&uuml;gen</a>');
 define('_admin_server_edit', 'Server bearbeiten');
 define('_empty_ip', 'Du musst eine IP angeben!');
-define('_server_admin_edited', 'Der Server wurde erfolgreich editiert!');
+define('_server_admin_edited', 'Der Server wurde erfolgreich bearbeitet!');
 define('_server_admin_deleted', 'Der Server "[host]" wurde erfolgreich gel&ouml;scht!');
 define('_admin_server_new', 'Neuen Server hinzuf&uuml;gen');
 define('_server_admin_added', 'Der Server wurde erfolgreich hinzugef&uuml;gt!');
@@ -1945,14 +1959,14 @@ define('_config_server_mapname', 'Mapname');
 define('_config_server_maps_head', 'Servermaps');
 define('_admin_dlkat', 'Downloadkategorien');
 define('_admin_download_kat', 'Bezeichnung');
-define('_dl_add_new', '<a href="?admin=dl&amp;do=new">Neue Kategorie hinzuf&uuml;gen</a>');
+define('_dl_add_new', '<a href="?index=admin&amp;admin=dl&amp;do=new">Neue Kategorie hinzuf&uuml;gen</a>');
 define('_dl_new_head', 'Neue Downloadkategorie hinzuf&uuml;gen');
 define('_dl_dlkat', 'Kategorie');
 define('_dl_empty_kat', 'Du musst eine Kategoriebezeichnung angeben!');
 define('_dl_admin_added', 'Die Downloadkategorie wurde erfolgreich hinzugef&uuml;gt!');
 define('_dl_admin_deleted', 'Die Downloadkategorie wurde erfolgreich gel&ouml;scht!');
 define('_dl_edit_head', 'Downloadkategorie bearbeiten');
-define('_dl_admin_edited', 'Die Downloadkategorie wurde erfolgreich editiert!');
+define('_dl_admin_edited', 'Die Downloadkategorie wurde erfolgreich bearbeitet!');
 define('_config_global_head', 'Konfiguration');
 define('_config_c_limits', 'Seitenaufteilungen (LIMITS)');
 define('_config_c_limits_what', 'Hier kannst du die Eintr&auml;ge einstellen, die pro Bereich maximal angezeigt werden');
@@ -1992,17 +2006,17 @@ define('_config_c_gallerypics', 'User: Usergalerie');
 define('_config_c_upicsize_what', 'erlaubte Gr&ouml;&szlig;e der Bilder in KB (Newsbilder, Userprofilbilder usw.)');
 define('_config_c_regcode', 'Reg: Sicherheitscode');
 define('_config_c_regcode_what', 'Fragt bei der Registrierung einen Sicherheitscode ab');
-define('_pos_add_new', '<a href="?admin=positions&amp;do=new">Neuen Rang hinzuf&uuml;gen</a>');
+define('_pos_add_new', '<a href="?index=admin&amp;admin=positions&amp;do=new">Neuen Rang hinzuf&uuml;gen</a>');
 define('_pos_new_head', 'Neuen Rang hinzuf&uuml;gen');
 define('_pos_edit_head', 'Rang bearbeiten');
-define('_pos_admin_edited', 'Der Rang wurde erfolgreich editiert!');
+define('_pos_admin_edited', 'Der Rang wurde erfolgreich bearbeitet!');
 define('_pos_admin_deleted', 'Der Rang wurde erfolgreich gel&ouml;scht!');
 define('_pos_admin_added', 'Der Rang wurde erfolgreich hinzugef&uuml;gt!');
 define('_clankasse_new_head', 'Neue Ein-/Auszahlungsbezeichnung hinzuf&uuml;gen');
 define('_clankasse_edit_head', 'Ein-/Auszahlungsbezeichnung bearbeiten');
 define('_clankasse_empty_kat', 'Du musst eine Ein-/Auszahlungsbezeichnung angeben!');
 define('_clankasse_kat_added', 'Die Ein-/Auszahlungsbezeichnung wurde erfolgreich hinzugef&uuml;gt!');
-define('_clankasse_kat_edited', 'Die Ein-/Auszahlungsbezeichnung wurde erfolgreich editiert!');
+define('_clankasse_kat_edited', 'Die Ein-/Auszahlungsbezeichnung wurde erfolgreich bearbeitet!');
 define('_clankasse_kat_deleted', 'Die Ein-/Auszahlungsbezeichnung wurde erfolgreich gel&ouml;scht!');
 define('_config_c_gallery_user', 'User Galerie');
 define('_config_info_gallery', 'Anzahl der Bilder die maximal in einer Reihe gezeigt werden');
@@ -2021,7 +2035,7 @@ define('_navi_type', 'Art');
 define('_navi_wichtig', 'Markieren');
 define('_navi_space', '<b>Leerzeile</b>');
 define('_navi_head', 'Navigationsverwaltung');
-define('_navi_add', '<a href="?admin=navi&amp;do=add">Neuen Link hinzuf&uuml;gen</a>');
+define('_navi_add', '<a href="?index=admin&amp;admin=navi&amp;do=add">Neuen Link hinzuf&uuml;gen</a>');
 define('_navi_add_head', 'Neuen Link hinzuf&uuml;gen');
 define('_navi_edit_head', 'Link bearbeiten');
 define('_navi_url_to', 'Weiterleiten nach');
@@ -2032,10 +2046,10 @@ define('_navi_no_url', 'Du musst ein Weiterleitungsziel angeben!');
 define('_navi_no_pos', 'Du musst die Position f&uuml;r den Link festlegen!');
 define('_navi_added', 'Der Link wurde erfolgreich angelegt!');
 define('_navi_deleted', 'Der Link wurde erfolgreich gel&ouml;scht!');
-define('_navi_edited', 'Der Link wurde erfolgreich editiert!');
+define('_navi_edited', 'Der Link wurde erfolgreich bearbeitet!');
 define('_editor_head', 'Seiten erstellen/verwalten');
 define('_editor_name', 'Seitenbezeichnung');
-define('_editor_add', '<a href="?admin=editor&amp;do=add">Neue Seite erstellen</a>');
+define('_editor_add', '<a href="?index=admin&amp;admin=editor&amp;do=add">Neue Seite erstellen</a>');
 define('_editor_add_head', 'Neue Seite hinzuf&uuml;gen');
 define('_inhalt', 'Inhalt');
 define('_editor_allow_html', 'HTML erlauben?');
@@ -2044,14 +2058,14 @@ define('_site_added', 'Die Seite wurde erfolgreich eingetragen!');
 define('_editor_linkname', 'Link-Name');
 define('_editor_deleted', 'Die Seite wurde erfolgreich gel&ouml;scht!');
 define('_editor_edit_head', 'Seite bearbeiten');
-define('_site_edited', 'Die Seite wurde erfolgreich editiert!');
+define('_site_edited', 'Die Seite wurde erfolgreich bearbeitet!');
 define('_partners_head', 'Partnerbuttons');
 define('_partners_button', 'Button');
 define('_partners_add_head', 'Neuen Partnerbutton hinzuf&uuml;gen');
 define('_partners_edit_head', 'Partnerbutton bearbeiten');
 define('_partners_select_icons', '<option value="[icon]" [sel]>[icon]</option>');
 define('_partners_added', 'Der Partnerbutton wurde erfolgreich hinzugef&uuml;gt!');
-define('_partners_edited', 'Der Partnerbutton wurde erfolgreich editiert!');
+define('_partners_edited', 'Der Partnerbutton wurde erfolgreich bearbeitet!');
 define('_partners_deleted', 'Der Partnerbutton wurde erfolgreich gel&ouml;scht!');
 define('_clear_head', 'Datenbank aufr&auml;umen');
 define('_clear_news', 'Newseintr&auml;ge mit einbeziehen?');
@@ -2069,7 +2083,7 @@ define('_smileys_error_file', 'Du musst ein Smiley angeben!');
 define('_smileys_error_bbcode', 'Du musst ein BB-Code angeben!');
 define('_smileys_error_type', 'Es sind nur GIF-Dateien erlaubt!');
 define('_smileys_added', 'Das Smiley wurde erfolgreich hinzugef&uuml;gt!');
-define('_smileys_edited', 'Das Smiley wurde erfolgreich editiert!');
+define('_smileys_edited', 'Das Smiley wurde erfolgreich bearbeitet!');
 define('_smileys_edited_not_exist', 'Dieses Smiley existiert nicht!');
 define('_smileys_deleted', 'Das Smiley wurde erfolgreich gel&ouml;scht!');
 define('_smileys_delete_error', 'Das Smiley konnte nicht gel&ouml;scht werden!');
@@ -2079,11 +2093,11 @@ define('_smileys_bbcode', 'BBCode');
 define('_smileys_head_add', 'Neuen Smiley hinzuf&uuml;gen');
 define('_smileys_head_edit', 'Smiley bearbeiten');
 define('_head_waehrung', 'W&auml;hrung');
-define('_admin_artikel_add', '<a href="?admin=artikel&amp;do=add">Artikel hinzuf&uuml;gen</a>');
+define('_admin_artikel_add', '<a href="?index=admin&amp;admin=artikel&amp;do=add">Artikel hinzuf&uuml;gen</a>');
 define('_artikel_add', 'Artikel hinzuf&uuml;gen');
 define('_artikel_added', 'Der Artikel wurde erfolgreich hinzugef&uuml;gt');
 define('_artikel_edit', 'Artikel bearbeiten');
-define('_artikel_edited', 'Der Artikel wurde erfolgreich editiert!');
+define('_artikel_edited', 'Der Artikel wurde erfolgreich bearbeitet!');
 define('_artikel_deleted', 'Der Artikel wurde erfolgreich gel&ouml;scht!');
 define('_empty_artikel_title', 'Du musst einen Titel angeben!');
 define('_empty_artikel', 'Du musst einen Artikel angeben!');
@@ -2101,7 +2115,7 @@ define('_config_lreg', 'Men&uuml;: Last reg. User');
 define('_config_mailfrom', 'E-Mail Absender');
 define('_config_mailfrom_info', 'Diese Emailadresse wird bei versendeten Emails wie Newsletter, Registrierung, etc als Absender angezeigt!');
 define('_profile_del_confirm', 'Achtung, es gehen alle Usereingaben f&uuml;r dieses Feld verloren. Willst du es wirklich l&ouml;schen?');
-define('_profile_del_confirm_link', '<a href="?admin=profile&amp;do=delete&amp;id=[id]&confirm=yes">Feld l&ouml;schen</a> - <a href="javascript:history.go(-1)">Zur&uuml;ck</a>');
+define('_profile_del_confirm_link', '<a href="?index=admin&amp;admin=profile&amp;do=delete&amp;id=[id]&confirm=yes">Feld l&ouml;schen</a> - <a href="javascript:history.go(-1)">Zur&uuml;ck</a>');
 define('_profile_about', '&Uuml;ber mich');
 define('_profile_clan', 'Clan');
 define('_profile_contact', 'Kontakt');
@@ -2133,13 +2147,13 @@ define('_profile_add_head', 'Profilfeld hinzuf&uuml;gen');
 define('_profile_added', 'Das Profilfeld wurde erfolgreich hinzugef&uuml;gt!');
 define('_profil_no_name', 'Du musst einen Feldnamen angeben!');
 define('_profil_deleted', 'Das Profilfeld wurde erfolgreich gel&ouml;scht!');
-define('_profile_edited', 'Das Profilfeld wurde erfolgreich editiert!');
+define('_profile_edited', 'Das Profilfeld wurde erfolgreich bearbeitet!');
 
 ## Clankasse ##
 define('_clankasse_saved', 'Der Beitrag wurde erfolgreich zur Clankasse hinzugef&uuml;gt!');
 define('_clankasse_deleted', 'Der Beitrag wurde erfolgreich aus der Clankasse gel&ouml;scht!');
 define('_error_clankasse_empty_datum', 'Du musst ein Datum angeben!');
-define('_clankasse_edited', 'Der Betrag wurde erfolgreich editiert!');
+define('_clankasse_edited', 'Der Betrag wurde erfolgreich bearbeitet!');
 define('_error_clankasse_empty_transaktion', 'Du musst eine Beschreibung der Transaktion angeben!');
 define('_error_clankasse_empty_betrag', 'Du musst einen Betrag angeben!');
 define('_clankasse_ctransaktion', 'Was');
@@ -2152,10 +2166,10 @@ define('_clankasse_bank', 'Bank');
 define('_clankasse_head', 'Clankasse');
 define('_clankasse_cakt', 'aktueller Kontostand');
 define('_clankasse_admin_minus', 'Minus');
-define('_clankasse_plus', '<span class="fontGreen">[betrag] [w]</span>');
-define('_clankasse_minus', '<span class="fontRed">- [betrag] [w]</span>');
-define('_clankasse_summe_plus', '<span class="fontGreen">[summe] [w]</span>');
-define('_clankasse_summe_minus', '<span class="fontRed">[summe] [w]</span>');
+define('_clankasse_plus', '<span class="fontGreen">[betrag] &euro;</span>');
+define('_clankasse_minus', '<span class="fontRed">- [betrag] &euro;</span>');
+define('_clankasse_summe_plus', '<span class="fontGreen">[summe] &euro;</span>');
+define('_clankasse_summe_minus', '<span class="fontRed">[summe] &euro;</span>');
 define('_clankasse_trans', '[transaktion] von/an [member]');
 define('_clankasse_head_edit', 'Beitrag bearbeiten');
 define('_clankasse_head_new', 'Neuen Beitrag hinzuf&uuml;gen');
@@ -2290,7 +2304,7 @@ define('_hp', 'Homepage');
 define('_icq', 'ICQ-Nr.');
 define('_member', 'Member');
 define('_user', 'User');
-define('_gast', 'unregistriert');
+define('_gast', 'Gast');
 define('_nothing', '<option value="lazy" class="dropdownKat">- nichts &auml;ndern -</option>');
 define('_pn', 'Nachricht');
 define('_nick', 'Nick');
@@ -2328,7 +2342,7 @@ define('_site_joinus', 'JoinUs - Kontaktformular');
 define('_site_fightus', 'FightUs - Kontaktformular');
 define('_joinus', 'JoinUs');
 define('_fightus', 'FightUs');
-define('_site_msg_new', 'Du hast neue Nachrichten!<br />Klicke <a href="../user/?action=msg">hier</a> um ins Nachrichtenmenu zu gelangen!');
+define('_site_msg_new', 'Du hast neue Nachrichten!<br />Klicke <a href="?index=user&amp;action=msg">hier</a> um ins Nachrichtenmenu zu gelangen!');
 define('_site_kalender', 'Kalender');
 define('_login_permanent', ' Autologin');
 define('_msg_del', 'markierte l&ouml;schen');
@@ -2355,7 +2369,7 @@ define('_rankings_admin_place', 'Platz');
 define('_rankings_squad', 'Team');
 define('_rankings_teamlink', 'Teamlink');
 define('_ranking_added', 'Das Ranking wurde erfolgreich hinzugef&uuml;gt!');
-define('_ranking_edited', 'Das Ranking wurde erfolgreich editiert!');
+define('_ranking_edited', 'Das Ranking wurde erfolgreich bearbeitet!');
 define('_ranking_deleted', 'Das Ranking wurde erfolgreich gel&ouml;scht!');
 define('_rankings_add_head', 'Neues Ranking hinzuf&uuml;gen');
 define('_navi_info', 'Alle in "_" eingebetteten Linknamen (wie _admin_) sind Platzhalter, die f&uuml;r die jeweiligen &Uuml;bersetzungen ben&ouml;tigt werden!');

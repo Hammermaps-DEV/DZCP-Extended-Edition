@@ -31,5 +31,5 @@ else
                    `pwd`        = '".string::encode($_POST['pwd'])."'
                WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-    $show = info(_server_admin_edited, "?admin=server");
+    $show = info(_server_admin_edited, "?index=admin&amp;admin=server");
 }

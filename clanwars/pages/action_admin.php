@@ -11,5 +11,5 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    if($_GET['do'] == 'edit') header("Location: ../admin/?admin=cw&do=edit&id=".$_GET['id']);
+    if($_GET['do'] == 'edit') header("Location: ?index=admin&admin=cw&do=edit&id=".$_GET['id']);
 }

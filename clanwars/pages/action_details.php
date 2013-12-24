@@ -17,15 +17,15 @@ else
             if(_rows(db("SELECT `id` FROM ".dba::get('cw')." WHERE `id` = '".convert::ToInt($_GET['id'])."'")) != 0)
             {
                 if(settings("reg_cwcomments") == "1" && checkme() == "unlogged")
-                {
                     $index = error(_error_have_to_be_logged);
-                } else {
+                else
+                {
                     if(!ipcheck("cwid(".$_GET['id'].")", settings('f_cwcom')))
                     {
                         if(userid() != 0)
                             $toCheck = empty($_POST['comment']);
                         else
-                            $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                            $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || !$securimage->check($_POST['secure']);
 
                         if($toCheck)
                         {
@@ -33,8 +33,10 @@ else
                             {
                                 if(empty($_POST['comment'])) $error = _empty_eintrag;
                                 $form = show("page/editor_regged", array("nick" => autor()));
-                            } else {
-                                if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
+                            }
+                            else
+                            {
+                                if(!$securimage->check($_POST['secure'])) $error = captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode;
                                 elseif(empty($_POST['nick'])) $error = _empty_nick;
                                 elseif(empty($_POST['email'])) $error = _empty_email;
                                 elseif(!check_email($_POST['email'])) $error = _error_invalid_email;
@@ -44,27 +46,24 @@ else
                             }
 
                             $error = show("errors/errortable", array("error" => $error));
-                            $index = show("page/comments_add", array("titel" => _cw_comments_add,
-                                    "nickhead" => _nick,
-                                    "emailhead" => _email,
-                                    "hphead" => _hp,
-                                    "ip" => _iplog_info,
-                                    "security" => _register_confirm,
-                                    "what" => _button_value_add,
-                                    "sec" => $dir,
+                            $index = show("page/comments_add", array( "titel" => _cw_comments_add,
                                     "form" => $form,
+                                    "what" => _button_value_edit,
+                                    "ip" => '',
                                     "preview" => _preview,
-                                    "action" => '?action=details&amp;do=add&amp;id='.$_GET['id'],
-                                    "prevurl" => '../clanwars/?action=compreview&id='.$_GET['id'],
-                                    "id" => $_GET['id'],
-                                    "show" => "",
+                                    "sec" => $dir,
+                                    "security" => _register_confirm,
+                                    "sid" => mkpwd(4),
+                                    "action" => '?index=clanwars&amp;action=details&amp;do=add&amp;id='.$_GET['id'],
+                                    "prevurl" => '?index=clanwars&action=compreview&id='.$_GET['id'],
                                     "postemail" => $_POST['email'],
                                     "posthp" => links($_POST['hp']),
                                     "postnick" => string::decode($_POST['nick']),
                                     "posteintrag" => string::decode($_POST['comment']),
-                                    "error" => $error,
-                                    "eintraghead" => _eintrag));
-                        } else {
+                                    "error" => $error));
+                        }
+                        else
+                        {
                             $qry = db("INSERT INTO ".dba::get('cw_comments')."
                                              SET `cw`       = '".convert::ToInt($_GET['id'])."',
                                                      `datum`    = '".time()."',
@@ -77,44 +76,34 @@ else
 
 
                             wire_ipcheck("cwid(".$_GET['id'].")");
-
-                            $index = info(_comment_added, "?action=details&amp;id=".$_GET['id']."");
+                            $index = info(_comment_added, "?index=clanwars&amp;action=details&amp;id=".$_GET['id']."");
                         }
-                    } else {
-                        $index = error(show(_error_flood_post, array("sek" => settings('f_cwcom'))));
                     }
+                    else
+                        $index = error(show(_error_flood_post, array("sek" => settings('f_cwcom'))));
                 }
-            } else{
-                $index = error(_id_dont_exist);
             }
+            else
+                $index = error(_id_dont_exist);
         break;
 
         case 'delete':
-            $qry = db("SELECT reg FROM ".dba::get('cw_comments')."
-               WHERE id = '".convert::ToInt($_GET['cid'])."'");
-            $get = _fetch($qry);
-
+            $get = db("SELECT reg FROM ".dba::get('cw_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
             if($get['reg'] == userid() || permission('clanwars'))
             {
-                $qry = db("DELETE FROM ".dba::get('cw_comments')."
-                 WHERE id = '".convert::ToInt($_GET['cid'])."'");
-
-                $index = info(_comment_deleted, "?action=details&amp;id=".convert::ToInt($_GET['id'])."");
-            } else {
-                $index = error(_error_wrong_permissions);
+                db("DELETE FROM ".dba::get('cw_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'");
+                $index = info(_comment_deleted, "?index=clanwars&amp;action=details&amp;id=".convert::ToInt($_GET['id'])."");
             }
+            else
+                $index = error(_error_wrong_permissions);
         break;
 
         case 'editcom':
-            $qry = db("SELECT * FROM ".dba::get('cw_comments')."
-               WHERE id = '".convert::ToInt($_GET['cid'])."'");
-            $get = _fetch($qry);
-
+            $get = db("SELECT * FROM ".dba::get('cw_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'",false,true);
             if($get['reg'] == userid() || permission('clanwars'))
             {
-                $editedby = show(_edited_by, array("autor" => autor(),
-                        "time" => date("d.m.Y H:i", time())._uhr));
-                $qry = db("UPDATE ".dba::get('cw_comments')."
+                $editedby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
+                db("UPDATE ".dba::get('cw_comments')."
                    SET `nick`     = '".string::encode($_POST['nick'])."',
                        `email`    = '".string::encode($_POST['email'])."',
                        `hp`       = '".links($_POST['hp'])."',
@@ -122,10 +111,10 @@ else
                        `editby`   = '".addslashes($editedby)."'
                    WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
-                $index = info(_comment_edited, "?action=details&amp;id=".$_GET['id']."");
-            } else {
-                $index = error(_error_edit_post);
+                $index = info(_comment_edited, "?index=clanwars&amp;action=details&amp;id=".$_GET['id']."");
             }
+            else
+                $index = error(_error_edit_post);
         break;
 
         case 'edit':
@@ -136,8 +125,9 @@ else
                 $index = show("page/comments_add", array("titel" => _comments_edit,
                         "sec" => $dir,
                         "form" => $form,
-                        "prevurl" => '../clanwars/?action=compreview&do=edit&id='.$_GET['id'].'&amp;cid='.$_GET['cid'],
-                        "action" => '?action=details&amp;do=editcom&amp;id='.$_GET['id'].'&amp;cid='.$_GET['cid'],
+                        "sid" => mkpwd(4),
+                        "prevurl" => '?index=clanwars&action=compreview&do=edit&id='.$_GET['id'].'&cid='.$_GET['cid'],
+                        "action" => '?index=clanwars&amp;action=details&amp;do=editcom&amp;id='.$_GET['id'].'&amp;cid='.$_GET['cid'],
                         "id" => $_GET['id'],
                         "what" => _button_value_edit,
                         "show" => "",
@@ -185,7 +175,7 @@ else
                     $cntPlayers = cnt(dba::get('cw_player'), " WHERE cwid = '".convert::ToInt($_GET['id'])."' AND member = '".userid()."'", "cwid");
                     $value = ($cntPlayers ? _button_value_edit : _button_value_add);
                     $players = show($dir."/players", array("show_players" => $show_players,
-                            "admin" => (permission('clanwars') ? '<input id="contentSubmitAdmin" type="button" value="'._cw_reset_button.'" class="submit" onclick="DZCP.submitButton(\'contentSubmitAdmin\');DZCP.goTo(\'?action=resetplayers&amp;id='.convert::ToInt($_GET['id']).'\')" />' : ''),
+                            "admin" => (permission('clanwars') ? '<input id="contentSubmitAdmin" type="button" value="'._cw_reset_button.'" class="submit" onclick="DZCP.submitButton(\'contentSubmitAdmin\');DZCP.goTo(\'?index=clanwars&amp;action=resetplayers&amp;id='.convert::ToInt($_GET['id']).'\')" />' : ''),
                             "sely" => (empty($sely) && empty($seln) && empty($selm) ? 'checked="checked"' : $sely),
                             "seln" => $seln,
                             "selm" => $selm,
@@ -202,7 +192,7 @@ else
             $gegner = show(_cw_details_gegner_blank, array("gegner" => string::decode($get['clantag']." - ".$get['gegner']), "url" => !empty($get['url']) ? string::decode($get['url']) : "#"));
             $server = show(_cw_details_server, array("servername" => string::decode($get['servername']), "serverip" => string::decode($get['serverip'])));
             $result = ($get['punkte'] == "0" && $get['gpunkte'] == "0" ? _cw_no_results : cw_result_details($get['punkte'], $get['gpunkte']));
-            $editcw = permission("clanwars") ? show("page/button_edit_single", array("id" => $get['id'], "action" => "action=admin&amp;do=edit", "title" => _button_title_edit)) : '';
+            $editcw = permission("clanwars") ? show("page/button_edit_single", array("id" => $get['id'], "action" => "index=clanwars&amp;action=admin&amp;do=edit", "title" => _button_title_edit)) : '';
             $bericht = ($get['bericht'] ? bbcode::parse_html($get['bericht']) : "&nbsp;");
             $screens = cw_screenshots(convert::ToInt($_GET['id']));
             $qryc = db("SELECT * FROM ".dba::get('cw_comments')." WHERE cw = ".convert::ToInt($_GET['id'])." ORDER BY datum DESC LIMIT ".($page - 1)*($maxcwcomments=settings('m_cwcomments')).",".$maxcwcomments."");
@@ -215,8 +205,8 @@ else
                 $edit = ""; $delete = "";
                 if((checkme() != 'unlogged' && $getc['reg'] == userid()) || permission("clanwars"))
                 {
-                    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=details&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
-                    $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "action=details&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
+                    $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=clanwars&amp;action=details&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
+                    $delete = show("page/button_delete_single", array("id" => $_GET['id'], "action" => "index=clanwars&amp;action=details&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                 }
 
                 if(!$getc['reg'])
@@ -259,9 +249,9 @@ else
                     $add = show("page/comments_add", array("titel" => _cw_comments_add,
                             "sec" => $dir,
                             "show" => "none",
-
-                            "action" => '?action=details&amp;do=add&amp;id='.$_GET['id'],
-                            "prevurl" => '../clanwars/?action=compreview&id='.$_GET['id'],
+                            "sid" => mkpwd(4),
+                            "action" => '?index=clanwars&amp;action=details&amp;do=add&amp;id='.$_GET['id'],
+                            "prevurl" => '?index=clanwars&saction=compreview&id='.$_GET['id'],
                             "id" => $_GET['id'],
                             "what" => _button_value_add,
                             "form" => $form,
@@ -271,7 +261,7 @@ else
                 }
             }
 
-            $seiten = nav($entrys,$maxcwcomments,"?action=details&amp;id=".$_GET['id']."");
+            $seiten = nav($entrys,$maxcwcomments,"?index=clanwars&amp;action=details&amp;id=".$_GET['id']."");
             $comments = show($dir."/comments",array("show" => $comments, "seiten" => $seiten, "add" => $add));
 
             $logo_squad = '_defaultlogo.jpg'; $logo_gegner = '_defaultlogo.jpg';
@@ -290,44 +280,44 @@ else
             $info ='';
             #$info = 'onmouseover="DZCP.showInfo(\'\', \'\', \'\', \''.hovermappic($get['maps'],$get['game']).'\')" onmouseout="DZCP.hideInfo()"'; //TODO: Mappics
             $index = show($dir."/details", array("head" => _cw_head_details,
-            "result_head" => _cw_head_results,
-            "lineup_head" => _cw_head_lineup,
-            "admin_head" => _cw_head_admin,
-            "gametype_head" => _cw_head_gametype,
-            "squad_head" => _cw_head_squad,
-            "flagge" => $flagge,
-            "info" => $info,
-            "br1" => ($logos ? '<!--' : ''),
-            "br2" => ($logos ? '-->' : ''),
-            "logo_squad" => $logo_squad,
-            "logo_gegner" => $logo_gegner,
-            "squad" => $show,
-            "squad_name" => string::decode($get['name']),
-            "gametype" => empty($get['gametype']) ? '-' : string::decode($get['gametype']),
-            "lineup" => preg_replace("#\,#","<br />",string::decode($get['lineup'])),
-            "glineup" => preg_replace("#\,#","<br />",string::decode($get['glineup'])),
-            "match_admins" => empty($get['matchadmins']) ? '-' : string::decode($get['matchadmins']),
-            "datum" => _datum,
-            "gegner" => _cw_head_gegner,
-            "xonx" => _cw_head_xonx,
-            "liga" => _cw_head_liga,
-            "maps" => _cw_maps,
-            "server" => _server,
-            "result" => _cw_head_result,
-            "players" => $players,
-            "edit" => $editcw,
-            "comments" => $comments,
-            "bericht" => _cw_bericht,
-            "serverpwd" => $serverpwd,
-            "cw_datum" => date("d.m.Y H:i", $get['datum'])._uhr,
-            "cw_gegner" => $gegner,
-            "cw_xonx" => empty($get['xonx']) ? '-' : string::decode($get['xonx']),
-            "cw_liga" => empty($get['liga']) ? '-' : string::decode($get['liga']),
-            "cw_maps" => empty($get['maps']) ? '-' : string::decode($get['maps']),
-            "cw_server" => $server,
-            "cw_result" => $result,
-            "cw_bericht" => $bericht,
-            "screenshots" => $screens));
+                                                 "result_head" => _cw_head_results,
+                                                 "lineup_head" => _cw_head_lineup,
+                                                 "admin_head" => _cw_head_admin,
+                                                 "gametype_head" => _cw_head_gametype,
+                                                 "squad_head" => _cw_head_squad,
+                                                 "flagge" => $flagge,
+                                                 "info" => $info,
+                                                 "br1" => ($logos ? '<!--' : ''),
+                                                 "br2" => ($logos ? '-->' : ''),
+                                                 "logo_squad" => $logo_squad,
+                                                 "logo_gegner" => $logo_gegner,
+                                                 "squad" => $show,
+                                                 "squad_name" => string::decode($get['name']),
+                                                 "gametype" => empty($get['gametype']) ? '-' : string::decode($get['gametype']),
+                                                 "lineup" => preg_replace("#\,#","<br />",string::decode($get['lineup'])),
+                                                 "glineup" => preg_replace("#\,#","<br />",string::decode($get['glineup'])),
+                                                 "match_admins" => empty($get['matchadmins']) ? '-' : string::decode($get['matchadmins']),
+                                                 "datum" => _datum,
+                                                 "gegner" => _cw_head_gegner,
+                                                 "xonx" => _cw_head_xonx,
+                                                 "liga" => _cw_head_liga,
+                                                 "maps" => _cw_maps,
+                                                 "server" => _server,
+                                                 "result" => _cw_head_result,
+                                                 "players" => $players,
+                                                 "edit" => $editcw,
+                                                 "comments" => $comments,
+                                                 "bericht" => _cw_bericht,
+                                                 "serverpwd" => $serverpwd,
+                                                 "cw_datum" => date("d.m.Y H:i", $get['datum'])._uhr,
+                                                 "cw_gegner" => $gegner,
+                                                 "cw_xonx" => empty($get['xonx']) ? '-' : string::decode($get['xonx']),
+                                                 "cw_liga" => empty($get['liga']) ? '-' : string::decode($get['liga']),
+                                                 "cw_maps" => empty($get['maps']) ? '-' : string::decode($get['maps']),
+                                                 "cw_server" => $server,
+                                                 "cw_result" => $result,
+                                                 "cw_bericht" => $bericht,
+                                                 "screenshots" => $screens));
         break;
     }
 }

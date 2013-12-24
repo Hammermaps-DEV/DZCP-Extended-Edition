@@ -28,7 +28,7 @@ if(isset($_POST['link']))
                                                    `banner` = ".(isset($_POST['banner']) ? convert::ToInt($_POST['banner']) : '0').",
                                                    `beschreibung` = '".string::encode($_POST['beschreibung'])."'");
 
-        $show = info(_link_added, "?admin=links");
+        $show = info(_link_added, "?index=admin&amp;admin=links");
     }
 }
 

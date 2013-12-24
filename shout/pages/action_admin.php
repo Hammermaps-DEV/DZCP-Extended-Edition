@@ -18,6 +18,7 @@ else
         if(isset($_GET['do']) ? ($_GET['do'] == "delete") : false)
         {
             db("DELETE FROM ".dba::get('shout')." WHERE id = '".convert::ToInt($_GET['id'])."'");
+            Cache::delete('shoutbox');
             header("Location: ".$_SERVER['HTTP_REFERER'].'#shoutbox');
         }
     }

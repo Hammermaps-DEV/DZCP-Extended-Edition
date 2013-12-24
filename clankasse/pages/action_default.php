@@ -26,12 +26,12 @@ else
             $betrag = str_replace(".",",",$betrag);
 
             if($get['pm'] == "0")
-                $pm = show(_clankasse_plus, array("betrag" => $betrag,"w" => $w));
+                $pm = show(_clankasse_plus, array("betrag" => $betrag));
             else
-                $pm = show(_clankasse_minus, array("betrag" => $betrag,"w" => $w));
+                $pm = show(_clankasse_minus, array("betrag" => $betrag));
 
-            $edit = show("page/button_edit_single", array("id" => $get['id'], "title" => _button_title_edit, "action" => "action=admin&amp;do=edit"));
-            $delete = show("page/button_delete_single", array("id" => $get['id'], "title" => _button_title_delete, "action" => "action=admin&amp;do=delete", "del" => _confirm_del_entry));
+            $edit = show("page/button_edit_single", array("id" => $get['id'], "title" => _button_title_edit, "action" => "index=clankasse&amp;action=admin&amp;do=edit"));
+            $delete = show("page/button_delete_single", array("id" => $get['id'], "title" => _button_title_delete, "action" => "index=clankasse&amp;action=admin&amp;do=delete", "del" => _confirm_del_entry));
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
             $show .= show($dir."/clankasse_show", array("betrag" => $pm,
                     "id" => $get['id'],
@@ -51,9 +51,9 @@ else
         $ges = str_replace(".",",",$ges);
 
         if($getp['gesamt'] < $getc['gesamt'])
-            $gesamt = show(_clankasse_summe_minus, array("summe" => $ges, "w" => $w));
+            $gesamt = show(_clankasse_summe_minus, array("summe" => $ges));
         else
-            $gesamt = show(_clankasse_summe_plus, array("summe" => $ges, "w" => $w));
+            $gesamt = show(_clankasse_summe_plus, array("summe" => $ges));
 
         $new = ($has_permission ? _clankasse_new : '');
 
@@ -89,8 +89,8 @@ else
         }
 
         unset($getp,$getc);
-        $get = db("SELECT k_inhaber,k_nr,k_blz,k_bank,iban,bic,k_waehrung,k_vwz FROM ".dba::get('settings'),false,true);
-        $seiten = nav($entrys,$maxclankasse,"?action=nav");
+        $get = settings(array("k_inhaber","k_nr","k_blz","k_bank","iban","bic","k_waehrung","k_vwz"));
+        $seiten = nav($entrys,$maxclankasse,"?index=clankasse&amp;action=nav");
         $index = show($dir."/clankasse", array("show" => $show,
                 "showstatus" => $showstatus,
                 "clankasse_head" => _clankasse_head,

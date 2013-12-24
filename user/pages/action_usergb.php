@@ -23,7 +23,7 @@ else
                 if(userid() != 0)
                     $toCheck = empty($_POST['eintrag']);
                 else
-                    $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                    $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || !$securimage->check($_POST['secure']);
 
                 if($toCheck)
                 {
@@ -36,8 +36,8 @@ else
                     }
                     else
                     {
-                        if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir]))
-                            $error = _error_invalid_regcode;
+                        if(!$securimage->check($_POST['secure']))
+                            $error = captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode;
                         else if(empty($_POST['nick']))
                             $error = _empty_nick;
                         else if(empty($_POST['email']))
@@ -92,7 +92,7 @@ else
                     }
 
                     wire_ipcheck("mgbid(".$_GET['id'].")");
-                    $index = info(_usergb_entry_successful, "?action=user&amp;id=".$_GET['id']."&show=gb");
+                    $index = info(_usergb_entry_successful, "?index=user&amp;action=user&amp;id=".$_GET['id']."&show=gb");
                 }
             break;
             default:
@@ -101,7 +101,7 @@ else
                     $addme = (!$_POST['reg'] ? "`nick` = '".string::encode($_POST['nick'])."', `email` = '".string::encode($_POST['email'])."', `hp` = '".links($_POST['hp'])."'," : '');
                     $editedby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
                     db("UPDATE ".dba::get('usergb')." SET ".$addme." `nachricht` = '".convert::ToString(string::encode($_POST['eintrag']))."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".convert::ToString(addslashes($editedby))."' WHERE id = '".convert::ToInt($_GET['gbid'])."'");
-                    $index = info(_gb_edited, "?action=user&show=gb&id=".$_GET['id']);
+                    $index = info(_gb_edited, "?index=user&amp;action=user&show=gb&id=".$_GET['id']);
                 }
                 else
                     $index = error(_error_edit_post);

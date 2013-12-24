@@ -9,4 +9,4 @@
 if(_adminMenu != 'true') exit();
 
 db("DELETE FROM ".dba::get('c_kats')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(_clankasse_kat_deleted, "?admin=konto");
+$show = info(_clankasse_kat_deleted, "?index=admin&amp;admin=konto");

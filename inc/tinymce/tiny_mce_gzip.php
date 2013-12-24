@@ -1,48 +1,40 @@
 <?php
 /**
- * tiny_mce_gzip.php
- *
  * Copyright 2010, Moxiecode Systems AB
  * Released under LGPL License.
  *
  * License: http://tinymce.moxiecode.com/license
  * Contributing: http://tinymce.moxiecode.com/contributing
+ *
+ *
  */
+
+#########################
+## OUTPUT BUFFER START ##
+#########################
+include("../../inc/buffer.php");
+$ajaxJob = true;
+
+## INCLUDES ##
+include(basePath."/inc/debugger.php");
+include(basePath."/inc/config.php");
+include(basePath."/inc/common.php");
 
 // Handle incoming request if it's a script call
-if (TinyMCE_Compressor::getParam("js")) {
-    // Default settings
-    $tinyMCECompressor = new TinyMCE_Compressor(array("cache_dir" => realpath(dirname(__FILE__) . "/../_cache/tinymce")));
-
-    // Handle request, compress and stream to client
-    $tinyMCECompressor->handleRequest();
+if (TinyMCE_Compressor::getParam("js"))
+{
+    $tinyMCECompressor = new TinyMCE_Compressor();
+    echo $tinyMCECompressor->handleRequest();
 }
 
-/**
- * This class combines and compresses the TinyMCE core, plugins, themes and
- * language packs into one disk cached gzipped request. It improves the loading speed of TinyMCE dramatically but
- * still provides dynamic initialization.
- *
- * Example of direct usage:
- * require_once("../jscripts/tiny_mce/tiny_mce_gzip.php");
- *
- * // Renders script tag with compressed scripts
- * TinyMCE_Compressor::renderTag(array(
- *    "url" => "../jscripts/tiny_mce/tiny_mce_gzip.php",
- *    "plugins" => "pagebreak,style",
- *    "themes" => "advanced",
- *    "languages" => "en"
- * ));
- */
-class TinyMCE_Compressor {
+class TinyMCE_Compressor
+{
     private $files, $settings;
     private static $defaultSettings = array(
-        "plugins"    => "",
-        "themes"     => "",
-        "languages"  => "",
-        "disk_cache" => true,
+        "plugins"    => "contextmenu,dzcp,advimage,paste,table,fullscreen,inlinepopups,spellchecker,searchreplace,insertdatetime,ajaxfilemanager",
+        "themes"     => "advanced",
+        "languages"  => "en",
         "expires"    => "30d",
-        "cache_dir"  => "",
         "compress"   => true,
         "suffix"     => "",
         "files"      => "",
@@ -54,11 +46,10 @@ class TinyMCE_Compressor {
      *
      * @param Array $settings Name/value array with non-default settings for the compressor instance.
      */
-    public function __construct($settings = array()) {
+    public function __construct($settings = array())
+    {
+        $settings["languages"] = (language::get_language()=='deutsch' ? 'de':'en');
         $this->settings = array_merge(self::$defaultSettings, $settings);
-
-        if (empty($this->settings["cache_dir"]))
-            $this->settings["cache_dir"] = dirname(__FILE__);
     }
 
     /**
@@ -66,16 +57,17 @@ class TinyMCE_Compressor {
      *
      * @param String $path Path to the file to include in the compressed package/output.
      */
-    public function &addFile($file) {
+    public function &addFile($file)
+    {
         $this->files .= ($this->files ? "," : "") . $file;
-
         return $this;
     }
 
     /**
      * Handles the incoming HTTP request and sends back a compressed script depending on settings and client support.
      */
-    public function handleRequest() {
+    public function handleRequest()
+    {
         $files = array();
         $supportsGzip = false;
         $expiresOffset = $this->parseTime($this->settings["expires"]);
@@ -162,9 +154,6 @@ class TinyMCE_Compressor {
 
         $supportsGzip = $this->settings['compress'] && !empty($encoding) && !$zlibOn && function_exists('gzencode');
 
-        // Set cache file name
-        $cacheFile = $this->settings["cache_dir"] . "/" . $hash . ($supportsGzip ? ".bin" : ".js");
-
          // Set headers
         header("Content-type: text/javascript");
         header("Vary: Accept-Encoding");  // Handle proxies
@@ -175,10 +164,8 @@ class TinyMCE_Compressor {
             header("Content-Encoding: " . $encoding);
 
         // Use cached file
-        if ($this->settings['disk_cache'] && file_exists($cacheFile)) {
-            readfile($cacheFile);
-            return;
-        }
+        if(!Cache::check_binary('tinymce_'.$this->settings['languages']))
+            return Cache::get_binary('tinymce_'.$this->settings['languages']);
 
         // Set base URL for where tinymce is loaded from
         $buffer = "var tinyMCEPreInit={base:'" . dirname($_SERVER["SCRIPT_NAME"]) . "',suffix:''};";
@@ -200,11 +187,10 @@ class TinyMCE_Compressor {
             $buffer = gzencode($buffer, 9, FORCE_GZIP);
 
         // Write cached file
-        if ($this->settings["disk_cache"])
-            @file_put_contents($cacheFile, $buffer);
+        Cache::set_binary('tinymce_'.$this->settings['languages'],$buffer,false,60);
 
         // Stream contents to client
-        echo $buffer;
+        return $buffer;
     }
 
     /**
@@ -233,10 +219,6 @@ class TinyMCE_Compressor {
         // Add languages
         if (isset($settings["languages"]))
             $scriptSrc .= "&languages=" . (is_array($settings["languages"]) ? implode(',', $settings["languages"]) : $settings["languages"]);
-
-        // Add disk_cache
-        if (isset($settings["disk_cache"]))
-            $scriptSrc .= "&diskcache=" . ($settings["disk_cache"] === true ? "true" : "false");
 
         // Add any explicitly specified files if the default settings have been overriden by the tag ones
         /*

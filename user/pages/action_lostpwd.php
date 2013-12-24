@@ -47,7 +47,7 @@ else
                     mailmgr::AddAddress($_POST['email']);
 
                     ## Infobox anzeigen ##
-                    $index = info(_lostpwd_valid, "../user/?action=login");
+                    $index = info(_lostpwd_valid, "?index=user&amp;action=login");
                 }
                 else
                 {
@@ -58,7 +58,7 @@ else
                         wire_ipcheck("trypwd(".$get['id'].")");
                     }
 
-                    $index = ($_POST['secure'] != $_SESSION['sec_lostpwd'] || empty($_SESSION['sec_lostpwd']) ? error(_error_invalid_regcode) : error(_lostpwd_failed));
+                    $index = ($_POST['secure'] != $_SESSION['sec_lostpwd'] || empty($_SESSION['sec_lostpwd']) ? error(captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode) : error(_lostpwd_failed));
                 }
             }
             else

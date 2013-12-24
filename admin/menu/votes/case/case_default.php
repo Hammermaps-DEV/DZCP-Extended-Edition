@@ -5,7 +5,7 @@
  * @author: DZCP Developer Team || Hammermaps.de Developer Team
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
- 
+
 if(_adminMenu != 'true') exit();
 
         $qry = db("SELECT * FROM ".dba::get('votes')."
@@ -14,10 +14,10 @@ if(_adminMenu != 'true') exit();
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=votes&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=votes&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=votes&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=votes&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_vote));
           if($get['menu'] == "1") $icon = "yes";

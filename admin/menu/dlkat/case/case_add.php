@@ -10,10 +10,10 @@ if(_adminMenu != 'true') exit();
 
 if(empty($_POST['kat']))
 {
-	$show = error(_dl_empty_kat);
+    $show = error(_dl_empty_kat);
 } else {
-	$qry = db("INSERT INTO ".dba::get('dl_kat')."
+    $qry = db("INSERT INTO ".dba::get('dl_kat')."
                      SET `name` = '".string::encode($_POST['kat'])."'");
 
-	$show = info(_dl_admin_added, "?admin=dlkat");
+    $show = info(_dl_admin_added, "?index=admin&amp;admin=dlkat");
 }

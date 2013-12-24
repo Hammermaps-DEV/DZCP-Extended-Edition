@@ -40,7 +40,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             }
         }
 
-        $show = info(_gallery_added, "?admin=gallery");
+        $show = info(_gallery_added, "?index=admin&amp;admin=gallery");
     break;
     case 'delgal':
         $files = get_files(basePath."/inc/images/uploads/gallery/",false,true);
@@ -58,7 +58,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
         }
 
         db("DELETE FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_gallery_deleted, "?admin=gallery");
+        $show = info(_gallery_deleted, "?index=admin&amp;admin=gallery");
     break;
     case 'delete':
         $pic = $_GET['pic'];
@@ -71,7 +71,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
                 unlink(basePath."/inc/images/uploads/gallery/".$pic);
 
             preg_match("#(.*)_(.*?).(gif|GIF|JPG|jpg|JPEG|jpeg|png)#",$pic,$pid);
-            $show = info(_gallery_pic_deleted, "../gallery/?action=show&amp;id=".$pid[1]."", 2);
+            $show = info(_gallery_pic_deleted, "?index=gallery&action=show&amp;id=".$pid[1]."", 2);
         }
     break;
     case 'edit':
@@ -80,7 +80,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
     break;
     case 'editgallery':
         db("UPDATE ".dba::get('gallery')." SET `kat` = '".string::encode($_POST['gallery'])."', `beschreibung` = '".string::encode($_POST['beschreibung'])."' WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_gallery_edited, "?admin=gallery");
+        $show = info(_gallery_edited, "?index=admin&amp;admin=gallery");
     break;
     case 'new':
         $get = db("SELECT * FROM ".dba::get('gallery')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true); $option = '';
@@ -116,7 +116,7 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             }
         }
 
-        $show = info(_gallery_new, "?admin=gallery");
+        $show = info(_gallery_new, "?index=admin&amp;admin=gallery");
     break;
     case 'addnew':
         $option = '';
@@ -131,8 +131,8 @@ switch (isset($_GET['do']) ? $_GET['do'] : 'default')
             $files = get_files(basePath."/inc/images/uploads/gallery/",false,true,$picformat,"#".$get['id']."_(.*?).(gif|GIF|JPG|jpg|JPEG|jpeg|png)#");
             $cnt = convert::ToString($files ? count($files) : 0); unset($files);
 
-            $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "admin=gallery&amp;do=edit", "title" => _button_title_edit));
-            $del = show("page/button_delete_single", array("id" => $get['id'], "action" => "admin=gallery&amp;do=delgal", "title" => _button_title_del, "del" => _confirm_del_gallery));
+            $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=gallery&amp;do=edit", "title" => _button_title_edit));
+            $del = show("page/button_delete_single", array("id" => $get['id'], "action" => "index=admin&amp;admin=gallery&amp;do=delgal", "title" => _button_title_del, "del" => _confirm_del_gallery));
             $new = show(_gal_newicon, array("id" => $get['id'], "titel" => _button_value_newgal));
             $cntpics = ($cnt == 1 ? _gallery_image : _gallery_images);
             $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;

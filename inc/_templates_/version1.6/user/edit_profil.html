@@ -1,6 +1,6 @@
 <tr>
 <td>
-<form id="editprofil" name="editprofil" action="../user/?action=editprofile&amp;do=edit" method="post" onsubmit="return(DZCP.submitButton())">
+<form id="editprofil" name="editprofil" action="?index=user&amp;action=editprofile&amp;do=edit" method="post" onsubmit="return(DZCP.submitButton())">
 <input id="gmaps_koord" name="gmaps_koord" type="hidden" value="[gmaps_koord]" />
 <table class="hperc" cellspacing="1">
 <tr>
@@ -63,7 +63,7 @@
 </tr>
 <tr>
   <td class="contentMainTop"><span class="fontBold">[lang_pass_security]:</span></td>
-  <td class="contentMainFirst" align="center"><div id="Words"><table><tr><td><table><tr><td height=4 width=150 ><img src="../inc/images/lvl0.jpg" width="200" height="18" /></td></tr></table></td><td></td></tr></table></div></td>
+  <td class="contentMainFirst" align="center"><div id="Words"><table><tr><td><table><tr><td height=4 width=150 ><img src="inc/images/lvl0.jpg" width="200" height="18" /></td></tr></table></td><td></td></tr></table></div></td>
 </tr>
 <tr>
   <td class="contentMainTop"><span class="fontBold">[lang_profil_nletter]:</span></td>
@@ -170,9 +170,49 @@
   </td>
 </tr>
 <tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_skype]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="text" name="skype" value="[skype]" class="inputField_dis_profil"
+    onfocus="this.className='inputField_en_profil'"
+    onblur="this.className='inputField_dis_profil'" />
+  </td>
+</tr>
+<tr>
   <td class="contentMainTop"><span class="fontBold">[lang_xfire]:</span></td>
   <td class="contentMainFirst" align="center">
     <input type="text" name="xfire" value="[xfire]" class="inputField_dis_profil"
+    onfocus="this.className='inputField_en_profil';"
+    onblur="this.className='inputField_dis_profil';" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_xbox]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="text" name="xbox" value="[xbox]" class="inputField_dis_profil"
+    onfocus="this.className='inputField_en_profil';"
+    onblur="this.className='inputField_dis_profil';" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_psn]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="text" name="psn" value="[psn]" class="inputField_dis_profil"
+    onfocus="this.className='inputField_en_profil';"
+    onblur="this.className='inputField_dis_profil';" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_origin]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="text" name="origin" value="[origin]" class="inputField_dis_profil"
+    onfocus="this.className='inputField_en_profil';"
+    onblur="this.className='inputField_dis_profil';" />
+  </td>
+</tr>
+<tr>
+  <td class="contentMainTop"><span class="fontBold">[lang_bnet]:</span></td>
+  <td class="contentMainFirst" align="center">
+    <input type="text" name="bnet" value="[bnet]" class="inputField_dis_profil"
     onfocus="this.className='inputField_en_profil';"
     onblur="this.className='inputField_dis_profil';" />
   </td>

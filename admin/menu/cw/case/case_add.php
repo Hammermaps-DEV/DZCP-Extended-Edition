@@ -122,5 +122,5 @@ if($img4[0])
 
           if(Cache::is_mem()) Cache::delete('nav_n_wars');
           if(Cache::is_mem()) Cache::delete('nav_l_wars');
-          $show = info(_cw_admin_added, "?admin=cw");
+          $show = info(_cw_admin_added, "?index=admin&amp;admin=cw");
         }

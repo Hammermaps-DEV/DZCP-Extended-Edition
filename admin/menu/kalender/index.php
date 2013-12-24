@@ -42,7 +42,7 @@ if(_adminMenu != 'true')
         if(Cache::is_mem())
             Cache::delete('nav_eventbox');
 
-        $show = info(_kalender_successful_added,"?admin=kalender");
+        $show = info(_kalender_successful_added,"?index=admin&amp;admin=kalender");
       }
     } elseif($_GET['do'] == "edit") {
       $qry = db("SELECT * FROM ".dba::get('events')."
@@ -84,7 +84,7 @@ if(_adminMenu != 'true')
         if(Cache::is_mem())
             Cache::delete('nav_eventbox');
 
-        $show = info(_kalender_successful_edited,"?admin=kalender");
+        $show = info(_kalender_successful_edited,"?index=admin&amp;admin=kalender");
       }
     } elseif($_GET['do'] == "delete") {
       db("DELETE FROM ".dba::get('events')." WHERE id = '".convert::ToInt($_GET['id'])."'");
@@ -93,17 +93,17 @@ if(_adminMenu != 'true')
       if(Cache::is_mem())
           Cache::delete('nav_eventbox');
 
-      $show = info(_kalender_deleted,"?admin=kalender");
+      $show = info(_kalender_deleted,"?index=admin&amp;admin=kalender");
     } else {
       $qry = db("SELECT * FROM ".dba::get('events')."
                  ORDER BY datum DESC");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=kalender&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=kalender&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=kalender&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=kalender&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_kalender));
 

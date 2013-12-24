@@ -34,7 +34,7 @@ if(isset($_GET['do']) && $_GET['do'] == "clear")
             }
         }
 
-        $show = info(_clear_deleted, "../admin/");
+        $show = info(_clear_deleted, "?index=admin");
     }
 }
 else

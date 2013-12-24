@@ -7,7 +7,7 @@ function insertEmotion(file_name) {
   tinyMCE.execCommand('mceBeginUndoLevel');
 
   tinyMCEPopup.execCommand('mceInsertContent', false, dom.createHTML('img', {
-		src : '../inc/images/smileys/' + file_name,
+		src : 'inc/images/smileys/' + file_name,
 		alt : file_name,
 		border : 0
 	}));
@@ -21,7 +21,7 @@ function insertFlag(file_name) {
   tinyMCE.execCommand('mceBeginUndoLevel');
   
   tinyMCEPopup.execCommand('mceInsertContent', false, dom.createHTML('img', {
-		src : '../inc/images/flaggen/' + file_name,
+		src : 'inc/images/flaggen/' + file_name,
 		alt : file_name,
 		border : 0
 	}));

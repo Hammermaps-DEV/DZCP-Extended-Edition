@@ -61,7 +61,7 @@ class TS3Renderer
 
         $style = ' style="text-indent:12px;"';
         $server_full = (self::$data['virtualserver_maxclients'] <= self::$data['virtualserver_clientsonline'] ? true : false); //Server Voll
-        $out = '<div class="tstree_left"'.$style.'><img src="../inc/images/tsviewer/'.($server_full ? 'server_full' : 'server_open').'.png" alt="" class="tsicon" /> <span class="fontBold">'.self::$data['virtualserver_name'].'</span></div>'."\n";
+        $out = '<div class="tstree_left"'.$style.'><img src="inc/images/tsviewer/'.($server_full ? 'server_full' : 'server_open').'.png" alt="" class="tsicon" /> <span class="fontBold">'.self::$data['virtualserver_name'].'</span></div>'."\n";
         $out .= '<div class="tstree_right">'.self::icon(self::$data['virtualserver_icon_id']).'</div>'."\n";
         $out .= '<div class="tstree_clear"></div>'."\n";
         foreach($channels as $channel)
@@ -75,7 +75,7 @@ class TS3Renderer
                 $moreshow = ''; $style = ' style="text-indent:12px;"'; $div_first = ''; $div_sec = '';
                 if(!empty($players) || !empty($subchannel))
                 {
-                    $moreshow = "<img id=\"img_".($template ? 'page_' : 'box_')."cid".$channel['cid']."\" src=\"../inc/images/toggle_normal.png\" alt=\"\" class=\"tsicons\" onclick=\"DZCP.fadetoggle('".($template ? 'page_' : 'box_')."cid".$channel['cid']."')\" />";
+                    $moreshow = "<img id=\"img_".($template ? 'page_' : 'box_')."cid".$channel['cid']."\" src=\"inc/images/toggle_normal.png\" alt=\"\" class=\"tsicons\" onclick=\"DZCP.fadetoggle('".($template ? 'page_' : 'box_')."cid".$channel['cid']."')\" />";
                     $style = '';
                     $div_first = "<div id=\"more_".($template ? 'page_' : 'box_')."cid".$channel['cid']."\">\n";
                     $div_sec = "</div>";
@@ -120,7 +120,7 @@ class TS3Renderer
                     $moreshow = ''; $style = 12; $div_first = ''; $div_sec = '';
                     if(!empty($players) || !empty($subchannel))
                     {
-                        $moreshow = "<img id=\"img_".($tpl ? 'page_' : 'box_')."cid".$sub_channel['cid']."\" src=\"../inc/images/toggle_normal.png\" alt=\"\" class=\"tsicons\" onclick=\"DZCP.fadetoggle('".($tpl ? 'page_' : 'box_')."cid".$sub_channel['cid']."')\" />";
+                        $moreshow = "<img id=\"img_".($tpl ? 'page_' : 'box_')."cid".$sub_channel['cid']."\" src=\"inc/images/toggle_normal.png\" alt=\"\" class=\"tsicons\" onclick=\"DZCP.fadetoggle('".($tpl ? 'page_' : 'box_')."cid".$sub_channel['cid']."')\" />";
                         $style = 0;
                         $div_first = "<div id=\"more_".($tpl ? 'page_' : 'box_')."cid".$sub_channel['cid']."\">\n";
                         $div_sec = "</div>";
@@ -128,7 +128,7 @@ class TS3Renderer
 
                     $left = $i*20+$style;
                     $join_ts = $joints."/".$sub_channel['channel_name'];
-                    $out .= '<div class="tstree_left" style="text-indent:'.$left.'px;">'.$moreshow.'<img src="../inc/images/tsviewer/trenner.gif" alt="" class="tsicon" />'.
+                    $out .= '<div class="tstree_left" style="text-indent:'.$left.'px;">'.$moreshow.'<img src="inc/images/tsviewer/trenner.gif" alt="" class="tsicon" />'.
                             '<img src="'.self::channel_icon($sub_channel).'" alt="" class="tsicon" />'.self::channel_name($sub_channel,$tpl,$join_ts,$ebene).'</div>'."\n";
 
                     if($tpl) $out .= "<div class=\"tstree_right\">".self::renderFlags($sub_channel).self::icon($sub_channel['channel_icon_id'])."</div>\n";
@@ -158,7 +158,7 @@ class TS3Renderer
         if($channel["channel_flag_default"] == 1) $flags[] = 'channel_flag_default.png';
         if($channel["channel_needed_talk_power"] > 0) $flags[] = 'channel_flag_moderated.png';
         if($channel["channel_flag_password"] == 1) $flags[] = 'channel_flag_password.png';
-        foreach ($flags as $flag) $out .= '<img src="../inc/images/tsviewer/' . $flag . '" alt="" class="icon" />';
+        foreach ($flags as $flag) $out .= '<img src="inc/images/tsviewer/' . $flag . '" alt="" class="icon" />';
         return $out;
     }
 
@@ -173,7 +173,7 @@ class TS3Renderer
     public static function channel_name($channel=array(),$tpl=false,$joints='',$ebene=1,$cut=false)
     {
         if($cut) $channel['channel_name'] = (mb_strlen($channel['channel_name']) > (30 - ($ebene * 2)) ? cut($channel['channel_name'],(30 - ($ebene * 2)),true) : $channel['channel_name'] );
-        return '<a href="javascript:DZCP.popup(\'../teamspeak/login.php?ts3&amp;cName='.rawurlencode($joints).'\', \'600\', \'100\')"
+        return '<a href="javascript:DZCP.popup(\'teamspeak/login.php?ts3&amp;cName='.rawurlencode($joints).'\', \'600\', \'100\')"
         class="navTeamspeak" style="font-weight:bold;white-space:nowrap" title="'.$channel['channel_name'].'">'.self::rep($channel['channel_name']).'</a>'."\n";
     }
 
@@ -189,7 +189,7 @@ class TS3Renderer
         if($channel["channel_maxclients"] > -1 && ($channel["total_clients"] >= $channel["channel_maxclients"])) $icon = "channel_full.png";
         else if($channel["channel_maxfamilyclients"] > -1 && ($channel["total_clients_family"] >= $channel["channel_maxfamilyclients"])) $icon = "channel_full.png";
         else if($channel["channel_flag_password"] == 1) $icon = "channel_pass.png";
-        return "../inc/images/tsviewer/".$icon;
+        return "inc/images/tsviewer/".$icon;
     }
 
     /**
@@ -233,8 +233,8 @@ class TS3Renderer
             $player_status_icon = $player['client_output_muted'] ? "client_snd_muted.png" : $player_status_icon;
             $player_status_icon = !$player['client_input_hardware'] ? "client_mic_disabled.png" : $player_status_icon;
             $player_status_icon = $player['client_input_muted'] ? "client_mic_muted.png" : $player_status_icon;
-            $priority_speaker = $player['client_is_priority_speaker'] ? '<img src="../inc/images/tsviewer/client_priority.png" alt="" class="tsicon" />' : '';
-            $out = '<div style="text-indent:'.convert::ToString((!$i ? '0' : $i*20+12)).'px;float:left; width:80%;"><img src="../inc/images/tsviewer/trenner.gif" alt="" class="tsicon" /><img src="../inc/images/tsviewer/'.$player_status_icon.'" alt="" class="tsicon" /> '.$player['client_nickname'].'</div>'."\n";
+            $priority_speaker = $player['client_is_priority_speaker'] ? '<img src="inc/images/tsviewer/client_priority.png" alt="" class="tsicon" />' : '';
+            $out = '<div style="text-indent:'.convert::ToString((!$i ? '0' : $i*20+12)).'px;float:left; width:80%;"><img src="inc/images/tsviewer/trenner.gif" alt="" class="tsicon" /><img src="inc/images/tsviewer/'.$player_status_icon.'" alt="" class="tsicon" /> '.$player['client_nickname'].'</div>'."\n";
             if($template) $out .= '<div style="float:right; width:20%; text-align:right;">'.$priority_speaker.self::user_groups_icons($player).'</div>'."\n";
             $out .= '<div style="clear:both;"></div>'."\n";
         }
@@ -276,13 +276,13 @@ class TS3Renderer
             $out .= self::icon($player['client_icon_id']);
 
         // User Flagge
-        $country = "../inc/images/flaggen/nocountry.gif";
+        $country = "inc/images/flaggen/nocountry.gif";
         if(!empty($player['client_country']))
         {
             foreach($picformat AS $end)
             {
                 if(file_exists(basePath.'/inc/images/flaggen/'.strtolower($player['client_country']).'.'.$end))
-                { $country = '../inc/images/flaggen/'.strtolower($player['client_country']).'.'.$end; break; }
+                { $country = 'inc/images/flaggen/'.strtolower($player['client_country']).'.'.$end; break; }
             }
         }
 
@@ -304,7 +304,7 @@ class TS3Renderer
         if($id < 0) $id = $id+4294967296;
 
         if(in_array($id, array('100','200','300','400','500','600')))
-            $image = "../inc/images/tsviewer/group_icon_".$id.".png";
+            $image = "inc/images/tsviewer/group_icon_".$id.".png";
         else if(self::$AllowDownloadIcons)
         {
             if(Cache::check_binary('ts_icon_'.$id) && !in_array($id, self::$nf_pic_ids))
@@ -355,7 +355,7 @@ class TS3Renderer
         $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Server Version:</span></td></tr>\n";
 
         if(array_key_exists('virtualserver_platform', self::$data))
-            $os = '<img src="../inc/images/'.(self::$data['virtualserver_platform'] == 'Linux' ? 'linux' : 'windows').'_os.png" alt="" title="Server OS" class="icon" />'; //Server OS
+            $os = '<img src="inc/images/'.(self::$data['virtualserver_platform'] == 'Linux' ? 'linux' : 'windows').'_os.png" alt="" title="Server OS" class="icon" />'; //Server OS
 
         $out .= array_key_exists('virtualserver_version', self::$data) && array_key_exists('virtualserver_platform', self::$data) ? "<tr><td class=\"contentMainFirst\">".$os." ".self::$data['virtualserver_version']."<br /><br /></td></tr>\n" : '<tr><td class="contentMainFirst">-</td></tr>';
         $out .= "<tr><td class=\"contentMainSecond\"><span class=\"fontBold\">Server Uptime:</span></td></tr>\n";
@@ -509,70 +509,44 @@ class TS3Renderer
      */
     public static function tsdns($dns)
     {
-        $hash = md5('ts3dns_'.$dns);
-        if(Cache::is_mem())
+        if(Cache::check('ts3_dns_'.$dns))
         {
-            //MEM
-            if(Cache::check($hash))
-            {
-                $tsdns = self::get_tsdns($dns);
-                if(is_array($tsdns))
-                    Cache::set($hash,array_to_string($tsdns),5);
+            if(!ping_port($dns,41144,1))
+                return false;
 
-                return $tsdns;
+            if(show_teamspeak_debug && show_debug_console)
+                DebugConsole::insert_initialize('TS3Renderer::tsdns()', 'Connect to TS3 - DNS Server on "'.$dns.':41144"');
+
+            if($fp = @fsockopen($dns, 41144, $errnum, $errstr, 2))
+            {
+                if(show_teamspeak_debug && show_debug_console)
+                    DebugConsole::insert_info('TS3Renderer::tsdns()', 'Connected TS3 - DNS Server "'.$dns.':41144"');
+
+                fputs($fp, $dns); $content = '';
+                while (!feof($fp)) { $content .= fgets($fp, 1024); }
+                @fclose($fp);
             }
             else
-                return string_to_array(Cache::get($hash));
-        }
-        else
-        {
-            //RTBuffer
-            if(RTBuffer::check($hash))
             {
-                $tsdns = self::get_tsdns($dns);
-                if(is_array($tsdns))
-                    RTBuffer::set($hash,$tsdns,5);
+                if(show_teamspeak_debug && show_debug_console)
+                    DebugConsole::insert_error('TS3Renderer::tsdns()', 'Connected to TS3 - DNS Server "'.$dns.':41144" failed');
 
-                return $tsdns;
+                return false;
             }
-            else
-                return RTBuffer::get($hash);
-        }
-    }
 
-    private static function get_tsdns($dns)
-    {
-        if(!ping_port($dns,41144,1))
-            return false;
+            if(!empty($content) && $content != false)
+            {
+                if(show_teamspeak_debug && show_debug_console)
+                    DebugConsole::insert_successful('TS3Renderer::tsdns()', 'Name resolution from DNS:"'.$dns.'" to IP:"'.$content.'"');
 
-        if(show_teamspeak_debug && show_debug_console)
-            DebugConsole::insert_initialize('TS3Renderer::tsdns()', 'Connect to TS3 - DNS Server on "'.$dns.':41144"');
-
-        if($fp = @fsockopen($dns, 41144, $errnum, $errstr, 2))
-        {
-            if(show_teamspeak_debug && show_debug_console)
-                DebugConsole::insert_info('TS3Renderer::tsdns()', 'Connected TS3 - DNS Server "'.$dns.':41144"');
-
-            fputs($fp, $dns); $content = '';
-            while (!feof($fp)) { $content .= fgets($fp, 1024); }
-            @fclose($fp);
+                $epl = explode(':', $content);
+                $data = array('ip' => $epl[0], 'port' => $epl[1]);
+                Cache::set('ts3_dns_'.$dns,$data,1800);
+                return $data;
+            }
         }
         else
-        {
-            if(show_teamspeak_debug && show_debug_console)
-                DebugConsole::insert_error('TS3Renderer::tsdns()', 'Connected to TS3 - DNS Server "'.$dns.':41144" failed');
-
-            return false;
-        }
-
-        if(!empty($content) && $content != false)
-        {
-            if(show_teamspeak_debug && show_debug_console)
-                DebugConsole::insert_successful('TS3Renderer::tsdns()', 'Name resolution from DNS:"'.$dns.'" to IP:"'.$content.'"');
-
-            $epl = explode(':', $content);
-            return array('ip' => $epl[0], 'port' => $epl[1]);
-        }
+            return Cache::get('ts3_dns_'.$dns);
 
         return false;
     }

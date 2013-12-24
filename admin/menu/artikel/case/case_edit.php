@@ -10,16 +10,16 @@ if(_adminMenu != 'true') exit();
 
 if($_POST)
 {
-	if(empty($_POST['titel']) || empty($_POST['artikel']))
-	{
-		if(empty($_POST['titel']))
-			$error = show("errors/errortable", array("error" => _empty_artikel_title));
-		else if(empty($_POST['artikel']))
-			$error = show("errors/errortable", array("error" => _empty_artikel));
-	}
-	else
-	{
-		db("UPDATE ".dba::get('artikel')."
+    if(empty($_POST['titel']) || empty($_POST['artikel']))
+    {
+        if(empty($_POST['titel']))
+            $error = show("errors/errortable", array("error" => _empty_artikel_title));
+        else if(empty($_POST['artikel']))
+            $error = show("errors/errortable", array("error" => _empty_artikel));
+    }
+    else
+    {
+        db("UPDATE ".dba::get('artikel')."
                     SET `kat`    = '".convert::ToInt($_POST['kat'])."',
                         `titel`  = '".string::encode($_POST['titel'])."',
                         `text`   = '".string::encode($_POST['artikel'])."',
@@ -32,23 +32,23 @@ if($_POST)
                         `url3`   = '".links($_POST['url3'])."'
                     WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-		$show = info(_artikel_edited, "?admin=artikel");
-	}
+        $show = info(_artikel_edited, "?index=admin&amp;admin=artikel");
+    }
 }
 
 if(empty($show))
 {
-	$get = db("SELECT * FROM ".dba::get('artikel')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
-	$qryk = db("SELECT * FROM ".dba::get('newskat').""); $kat = '';
-	while($getk = _fetch($qryk))
-	{
-		$sel = ((isset($_POST['kat']) ? $_POST['kat'] : $get['kat']) == $getk['id'] ? 'selected="selected"' : '');
-		$kat .= show(_select_field, array("value" => $getk['id'], "sel" => $sel, "what" => string::decode($getk['kategorie'])));
-	}
+    $get = db("SELECT * FROM ".dba::get('artikel')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+    $qryk = db("SELECT * FROM ".dba::get('newskat').""); $kat = '';
+    while($getk = _fetch($qryk))
+    {
+        $sel = ((isset($_POST['kat']) ? $_POST['kat'] : $get['kat']) == $getk['id'] ? 'selected="selected"' : '');
+        $kat .= show(_select_field, array("value" => $getk['id'], "sel" => $sel, "what" => string::decode($getk['kategorie'])));
+    }
 
-	$do = show(_artikel_edit_link, array("id" => $_GET['id']));
-	$selr_ac = ($get['comments'] ? 'selected="selected"' : '');
-	$show = show($dir."/artikel_form", array("head" => _artikel_edit,
+    $do = show(_artikel_edit_link, array("id" => $_GET['id']));
+    $selr_ac = ($get['comments'] ? 'selected="selected"' : '');
+    $show = show($dir."/artikel_form", array("head" => _artikel_edit,
                                              "autor" => autor(),
                                              "kat" => $kat,
                                              "do" => $do,

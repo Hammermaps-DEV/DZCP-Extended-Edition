@@ -20,7 +20,7 @@ class Cache
      */
     public static function loadClasses()
     {
-        DebugConsole::insert_initialize('Cache::loadClasses()', 'DZCP Cache-Core');
+        DebugConsole::insert_initialize('Cache::loadClasses()', 'DZCP Cache - Core');
 
         ## Include Classes ##
         $files = get_files(basePath . '/inc/additional-kernel/cache',false,true,array("php"));
@@ -172,7 +172,7 @@ class Cache
         if(self::$dummy_overwrite || self::$cacheType == 'dummy' || empty(self::$cacheType))
             return false;
 
-        return self::$cacheInstalled[self::$cacheType]['CacheType'] == 'mem' ? true : false;
+        return self::$cacheInstalled[self::$cacheType]['CacheType'] == 'mem' && self::$cacheType != 'mysql' ? true : false;
     }
 
     /**
@@ -210,8 +210,10 @@ class Cache
      *
      * @return boolean
      */
-    public static function set($key=null, $data=null, $ttl = 3600)
+    public static final function set($key, $data, $ttl = 3600)
     {
+        global $mysql_salt;
+        if(empty($data)) return false;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
             self::$dummy[$key] = $data;
@@ -228,7 +230,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'set | Keys: '.$key.' | '.$ttl);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'set',$key,$data,$ttl);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'set',$mysql_salt.'_'.$key,$data,$ttl);
         }
 
         return false;
@@ -241,6 +243,7 @@ class Cache
      */
     public static function set_binary($key=null, $binary=null, $original_file=false, $ttl = 0)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
             self::$dummy['bin_'.$key] = $binary;
@@ -257,7 +260,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'set_binary | Keys: '.$key.' | '.$original_file.' | '.$ttl);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'set_binary',$key,$binary,$original_file,$ttl);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'set_binary',$mysql_salt.'_'.$key,$binary,$original_file,$ttl);
         }
 
         return false;
@@ -270,6 +273,7 @@ class Cache
      */
     public static function get($key=null)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
             return self::$dummy[$key];
 
@@ -283,7 +287,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'get | Keys: '.$key);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'get',$key);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'get',$mysql_salt.'_'.$key);
         }
 
         return false;
@@ -296,6 +300,7 @@ class Cache
      */
     public static function get_binary($key=null)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
             return self::$dummy['bin_'.$key];
 
@@ -309,7 +314,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'get_binary | Keys: '.$key);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'get_binary',$key);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'get_binary',$mysql_salt.'_'.$key);
         }
 
         return false;
@@ -322,6 +327,7 @@ class Cache
      */
     public static function check($key=null)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
             return true;
 
@@ -338,7 +344,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'check | Keys: '.$key);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'check',$key);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'check',$mysql_salt.'_'.$key);
         }
 
         return false;
@@ -351,6 +357,7 @@ class Cache
      */
     public static function check_binary($key=null)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
             return true;
 
@@ -367,7 +374,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'check_binary | Keys: '.$key);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'check_binary',$key);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'check_binary',$mysql_salt.'_'.$key);
         }
 
         return false;
@@ -380,6 +387,7 @@ class Cache
      */
     public static function delete($key=null)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
             unset(self::$dummy[$key]);
@@ -396,7 +404,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'delete | Keys: '.$key);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'delete',$key);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'delete',$mysql_salt.'_'.$key);
         }
 
         return false;
@@ -409,6 +417,7 @@ class Cache
      */
     public static function delete_binary($key=null)
     {
+        global $mysql_salt;
         if(self::$dummy_overwrite || self::$cacheType == 'dummy')
         {
             unset(self::$dummy['bin_'.$key]);
@@ -425,7 +434,7 @@ class Cache
                 DebugConsole::insert_info('inc/cache.php', 'Call: '.$install['Class'].'::'.$install['CallTag'].'delete_binary | Keys: '.$key);
             }
 
-            return call_user_func($install['Class'].'::'.$install['CallTag'].'delete_binary',$key);
+            return call_user_func($install['Class'].'::'.$install['CallTag'].'delete_binary',$mysql_salt.'_'.$key);
         }
 
         return false;

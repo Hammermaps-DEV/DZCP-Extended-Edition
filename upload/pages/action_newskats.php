@@ -15,8 +15,8 @@ else
     {
         $infos = show(_upload_usergallery_info, array("userpicsize" => settings('upicsize')));
 
-        if(isset($_GET['edit'])) $action = "?action=newskats&amp;do=upload&edit=".$_GET['edit']."";
-        else $action = "?action=newskats&amp;do=upload";
+        if(isset($_GET['edit'])) $action = "?index=upload&amp;action=newskats&amp;do=upload&edit=".$_GET['edit']."";
+        else $action = "?index=upload&amp;action=newskats&amp;do=upload";
 
         $index = show($dir."/upload", array("uploadhead" => _upload_newskats_head,
                 "file" => _upload_file,
@@ -42,8 +42,8 @@ else
                 copy($tmpname, basePath."/inc/images/uploads/newskat/".$_FILES['file']['name']."");
                 @unlink($_FILES['file']['tmp_name']);
 
-                if(isset($_GET['edit'])) $index = info(_info_upload_success, "../admin/?admin=news&amp;do=edit&amp;id=".$_GET['edit']."");
-                else $index = info(_info_upload_success, "../admin/?admin=news&amp;do=add");
+                if(isset($_GET['edit'])) $index = info(_info_upload_success, "?index=admin&amp;admin=news&amp;do=edit&amp;id=".$_GET['edit']."");
+                else $index = info(_info_upload_success, "?index=admin&amp;admin=news&amp;do=add");
             }
         }
     } else {

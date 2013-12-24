@@ -11,4 +11,4 @@ if(_adminMenu != 'true') exit();
 $qry = db("DELETE FROM ".dba::get('dl_kat')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-$show = info(_dl_admin_deleted, "?admin=dlkat");
+$show = info(_dl_admin_deleted, "?index=admin&amp;admin=dlkat");

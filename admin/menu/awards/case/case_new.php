@@ -32,7 +32,7 @@ if($_POST)
                              `place`    = '".string::encode($place)."',
                              `prize`    = '".string::encode($prize)."'");
 
-        $show = info(_awards_admin_added, "?admin=awards");
+        $show = info(_awards_admin_added, "?index=admin&amp;admin=awards");
     }
 }
 

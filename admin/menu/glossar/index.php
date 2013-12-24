@@ -35,7 +35,7 @@ switch ($do)
         else
         {
             db("INSERT INTO ".dba::get('glossar')." SET `word` = '".string::encode($_POST['link'])."', `glossar` = '".string::encode($_POST['beschreibung'])."'");
-            $show = info(_admin_glossar_added,'?admin=glossar');
+            $show = info(_admin_glossar_added,'?index=admin&amp;admin=glossar');
         }
     break;
     case 'edit':
@@ -59,12 +59,12 @@ switch ($do)
         else
         {
             db("UPDATE ".dba::get('glossar')." SET `word`    = '".string::encode($_POST['link'])."', `glossar` = '".string::encode($_POST['beschreibung'])."' WHERE id = '".convert::ToInt($_GET['id'])."'");
-            $show = info(_admin_glossar_edited,'?admin=glossar');
+            $show = info(_admin_glossar_edited,'?index=admin&amp;admin=glossar');
         }
     break;
     case 'delete':
         $del = db("DELETE FROM ".dba::get('glossar')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_admin_glossar_deleted,'?admin=glossar');
+        $show = info(_admin_glossar_deleted,'?index=admin&amp;admin=glossar');
     break;
     default:
         $maxglossar = 20;
@@ -73,10 +73,10 @@ switch ($do)
         while($get = _fetch($qry))
         {
             $edit = show("page/button_edit_single", array("id" => $get['id'],
-                    "action" => "admin=glossar&amp;do=edit",
+                    "action" => "index=admin&amp;admin=glossar&amp;do=edit",
                     "title" => _button_title_edit));
             $delete = show("page/button_delete_single", array("id" => $get['id'],
-                    "action" => "admin=glossar&amp;do=delete",
+                    "action" => "index=admin&amp;admin=glossar&amp;do=delete",
                     "title" => _button_title_del,
                     "del" => _confirm_del_entry));
 
@@ -94,7 +94,7 @@ switch ($do)
                 "bez" => _glossar_erkl,
                 "show" => $show,
                 "cnt" => $entrys,
-                "nav" => nav($entrys,$maxglossar,"?admin=glossar"),
+                "nav" => nav($entrys,$maxglossar,"?index=admin&amp;admin=glossar"),
                 "add" => _admin_glossar_add
         ));
     break;

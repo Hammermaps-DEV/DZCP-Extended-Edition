@@ -12,14 +12,15 @@
 </tbody>
 </table>
 <table class="hperc" cellspacing="0">
-<form action="?action=do&amp;what=fightus" method="post" name="contact" onsubmit="return(DZCP.submitButton())">
+[error]
+<form action="?index=contact&amp;action=fightus" method="post" name="contact" onsubmit="return(DZCP.submitButton())">
 <tr>
   <td class="contentMainTop" colspan="2" align="center"><span class="fontBold">[lang_contact_fightus_partner]</span></td>
 </tr>
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_nick]: <span class="fontWichtig">*</span></span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="nick" class="inputField_dis"
+    <input type="text" name="nick" value="[nick]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
     onblur="this.className='inputField_dis';" />
   </td>
@@ -27,7 +28,7 @@
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_email]: <span class="fontWichtig">*</span></span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="email" class="inputField_dis"
+    <input type="text" name="email" value="[email]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
     onblur="this.className='inputField_dis';" />
   </td>
@@ -35,7 +36,7 @@
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_icq]:</span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="icq" class="inputField_dis"
+    <input type="text" name="icq" value="[icq]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
     onblur="this.className='inputField_dis';" />
   </td>
@@ -57,7 +58,7 @@
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_contact_fightus_clanname]: <span class="fontWichtig">*</span></span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="clan" class="inputField_dis"
+    <input type="text" name="clan" value="[clan]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
     onblur="this.className='inputField_dis';" />
   </td>
@@ -65,7 +66,7 @@
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_hp]:</span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="hp" class="inputField_dis"
+    <input type="text" name="hp" value="[hp]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
     onblur="this.className='inputField_dis';" />
   </td>
@@ -73,10 +74,10 @@
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_cw_xonx]:</span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="us" size="3" class="inputField_dis_small"
+    <input type="text" name="us" value="[us]" size="3" class="inputField_dis_small"
     onfocus="this.className='inputField_en_small';"
     onblur="this.className='inputField_dis_small';" /> :
-    <input type="text" name="to" size="3" class="inputField_dis_small"
+    <input type="text" name="to" value="[to]" size="3" class="inputField_dis_small"
     onfocus="this.className='inputField_en_small';"
     onblur="this.className='inputField_dis_small';" />
   </td>
@@ -84,7 +85,7 @@
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_fightus_maps]: <span class="fontWichtig">*</span></span></td>
   <td class="contentMainFirst" width="75%" align="center">
-    <input type="text" name="maps" class="inputField_dis"
+    <input type="text" name="maps" value="[maps]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
     onblur="this.className='inputField_dis';" />
   </td>
@@ -100,24 +101,41 @@
   <td class="contentMainFirst" align="center" width="75%">
     <textarea name="text" class="inputField_dis"
     onfocus="this.className='inputField_en';"
-    onblur="this.className='inputField_dis';" cols="8" rows="auto"></textarea>
+    onblur="this.className='inputField_dis';" cols="8" rows="auto">[text]</textarea>
   </td>
 </tr>
 <tr>
-   <td class="contentMainTop"><span class="fontBold">[lang_register_confirm]:</span></td>
-   <td class="contentMainFirst" align="center">
-     <table class="hperc" cellspacing="0">
-       <tr>
-         <td style="text-align:right"><img src="../antispam.php?secure=fightus&amp;num=5" alt="" class="icon" /></td>
-         <td>&nbsp;</td>
-         <td style="width:50%;vertical-align:middle">
-           <input class="inputField_dis_mid" type="text" name="secure"
-           onfocus="this.className='inputField_en_mid'"
-           onblur="this.className='inputField_dis_mid'" style="text-align:center" />
-        </td>
-      </tr>
-    </table>
-  </td>
+    <td class="contentMainTop"><span class="fontBold">[lang_register_confirm]:</span></td>
+    <td class="contentMainFirst">
+        <div align="center">
+            <table>
+                <tr>
+                    <td style="width:200;text-align:right;vertical-align:middle"><img src="inc/ajax.php?loader=securimage&sid=[sid]" alt="CAPTCHA Image" name="siimage" hspace="0" vspace="0" align="left" id="siimage" style="border: 1px solid #000; margin-right: 1px" /></td>
+                    <td style="border: 1px solid #000; width:30;vertical-align:middle">
+                    <div align="center">
+                    <table width="0" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+                        <span style="text-align:center;vertical-align:middle">
+                          <object data="inc/images/securimage/securimage_play.swf?bgcol=#ffffff&amp;icon_file=inc/images/securimage/audio_icon.png&amp;audio_file=inc/ajax.php?loader=securimage_audio" type="application/x-shockwave-flash" width="16" height="16">
+                            <param name="movie" value="inc/images/securimage/securimage_play.swf?bgcol=#ffffff&amp;icon_file=inc/images/securimage/audio_icon.png&amp;audio_file=inc/ajax.php?loader=securimage_audio" />
+                          </object>
+                        </span></td>
+                      </tr>
+                      <tr>
+                        <td><div align="left"><a tabindex="-1" style="border-style: none;" href="#" title="Refresh Image" onclick="document.getElementById('siimage').src = 'inc/ajax.php?loader=securimage&sid=' + Math.random(); this.blur(); return false"><img src="inc/images/securimage/refresh.png" alt="Reload Image" height="16" width="16" onclick="this.blur()" align="middle" border="0" /></a></div></td>
+                      </tr>
+                    </table></div>
+                    <span style="text-align:left;vertical-align:middle">                </span> </td>
+                    <td style="width:2%">&nbsp;</td>
+                    <td style="vertical-align:middle"><div align="left">
+                      <input type="text" class="inputField_dis_mid" name="secure" onfocus="this.className='inputField_en_mid'"
+               onblur="this.className='inputField_dis_mid'" size="18" maxlength="12" />
+                    </div></td>
+                  </tr>
+            </table>
+        </div>
+    </td>
 </tr>
 <tr>
   <td class="contentMainTop" colspan="2" align="center">[lang_contact_pflichtfeld]</td>

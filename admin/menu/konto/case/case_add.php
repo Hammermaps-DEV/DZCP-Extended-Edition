@@ -13,5 +13,5 @@ if(empty($_POST['kat']))
 else
 {
     db("INSERT INTO ".dba::get('c_kats')." SET `kat` = '".string::encode($_POST['kat'])."'");
-    $show = info(_clankasse_kat_added, "?admin=konto");
+    $show = info(_clankasse_kat_added, "?index=admin&amp;admin=konto");
 }

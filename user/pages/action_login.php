@@ -19,16 +19,19 @@ else
     {
         case 'yes':
             ## Prüfe ob der Secure Code aktiviert ist und richtig eingegeben wurde ##
-            if(settings('securelogin') && isset($_POST['secure']) && ($_POST['secure'] != $_SESSION['sec_login'] || empty($_SESSION['sec_login'])))
+            switch (isset($_GET['from']) ? $_GET['from'] : 'default')
             {
-                ## Der Secure Code ist falsch ##
-                $index = error(_error_invalid_regcode);
+                case 'menu': $securimage->namespace = 'menu_login'; break;
+                default: $securimage->namespace = 'default'; break;
             }
+
+            if(settings('securelogin') && isset($_POST['secure']) && !$securimage->check($_POST['secure']))
+                $index = error(captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode);
             else
             {
                 ## Username und Passwort prüfen ##
                 if(isset($_POST['pwd']) && isset($_POST['user']) && login($_POST['user'],$_POST['pwd'],isset($_POST['permanent']) ? true : false))
-                    header("Location: ?action=userlobby"); ## Zur Userlobby weiterleiten ##
+                    header("Location: ?index=user&action=userlobby"); ## Zur Userlobby weiterleiten ##
                 else
                 {
                     if(isset($_POST['user']))

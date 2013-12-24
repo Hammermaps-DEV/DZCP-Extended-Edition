@@ -6,11 +6,7 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#####################
-## Admin Menu-File ##
-#####################
-if(_adminMenu != 'true')
-    exit();
+if(_adminMenu != 'true') exit();
 
 $where = $where.': '._protocol;
 if(isset($_GET['do']) ? ($_GET['do'] == 'deletesingle' ? true : false) : false)
@@ -21,7 +17,7 @@ if(isset($_GET['do']) ? ($_GET['do'] == 'deletesingle' ? true : false) : false)
 elseif(isset($_GET['do']) ? ($_GET['do'] == 'delete' ? true : false) : false)
 {
     db("DELETE FROM ".dba::get('ipcheck')." WHERE time != 0");
-    $show = info(_protocol_deleted,'?admin=protocol');
+    $show = info(_protocol_deleted,'?index=admin&amp;admin=protocol');
 }
 else
 {
@@ -44,7 +40,7 @@ else
     {
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
         $date = date("d.m.y H:i", $get['time'])._uhr;
-        $delete = show("page/button_delete", array("id" => $get['id'], "action" => "admin=protocol&amp;do=deletesingle", "title" => _button_title_del));
+        $delete = show("page/button_delete", array("id" => $get['id'], "action" => "index=admin&amp;admin=protocol&amp;do=deletesingle", "title" => _button_title_del));
 
         if(preg_match("#\(#",$get['what']))
         {
@@ -95,10 +91,13 @@ else
                                                    "action" => $action));
     }
 
+    if(empty($show))
+        $show = show(_no_entrys_yet, array("colspan" => "3"));
+
     $sip = (!empty($_GET['sip']) ? "&amp;sip=".$_GET['sip'] : '');
     $show = show($dir."/protocol", array("show" => $show,
                                          "del" => _button_title_del_protocol,
                                          "value" => _button_value_search,
                                          "search" => $swhat,
-                                         "nav" => nav($entrys,$maxprot,"?admin=protocol".$sip)));
+                                         "nav" => nav($entrys,$maxprot,"?index=admin&amp;admin=protocol".$sip)));
 }

@@ -213,7 +213,7 @@ if(_adminMenu != 'true')
                     db("UPDATE ".dba::get('sponsoren')." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
           }
 
-          $show = info(_sponsor_added, "?admin=sponsors");
+          $show = info(_sponsor_added, "?index=admin&amp;admin=sponsors");
         }
       } elseif($_GET['do'] == "edit") {
 
@@ -550,23 +550,23 @@ if(_adminMenu != 'true')
                     db("UPDATE ".dba::get('sponsoren')." SET `xend` = '".$end3."' WHERE id = '".convert::ToInt($id)."'");
           }
 
-          $show = info(_sponsor_edited, "?admin=sponsors");
+          $show = info(_sponsor_edited, "?index=admin&amp;admin=sponsors");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".dba::get('sponsoren')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_sponsor_deleted, "?admin=sponsors");
+        $show = info(_sponsor_deleted, "?index=admin&amp;admin=sponsors");
       } else {
         $qry = db("SELECT * FROM ".dba::get('sponsoren')."
                    ORDER BY pos");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=sponsors&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=sponsors&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=sponsors&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=sponsors&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_link));
 

@@ -37,7 +37,7 @@ if(isset($_POST['ip']))
                                                `default_server` = ".(isset($_POST['defaults']) ? '1' : '0').",
                                                `show_navi` = 0");
 
-        $show = info(_config_ts_added,"?admin=teamspeak");
+        $show = info(_config_ts_added,"?index=admin&amp;admin=teamspeak");
     }
 }
 

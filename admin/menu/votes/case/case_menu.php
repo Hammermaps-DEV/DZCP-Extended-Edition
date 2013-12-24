@@ -5,7 +5,7 @@
  * @author: DZCP Developer Team || Hammermaps.de Developer Team
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
- 
+
 if(_adminMenu != 'true') exit();
 
         $qryv = db("SELECT intern FROM ".dba::get('votes')."
@@ -24,7 +24,7 @@ if(_adminMenu != 'true') exit();
             $qry = db("UPDATE ".dba::get('votes')."
                        SET menu = '0'");
 
-            header("Location: ?admin=votes");
+            header("Location: ?index=admin&admin=votes");
           } else {
             $qry = db("UPDATE ".dba::get('votes')."
                        SET menu = '0'");
@@ -33,6 +33,6 @@ if(_adminMenu != 'true') exit();
                        SET menu = '1'
                        WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-            header("Location: ?admin=votes");
+            header("Location: ?index=admin&admin=votes");
           }
         }

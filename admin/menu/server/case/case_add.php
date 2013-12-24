@@ -25,5 +25,5 @@ else
                    `custom_icon`= '".string::encode($_POST['custom_game_icon'])."',
                    `game`       = '".string::encode($_POST['status'])."'");
 
-    $show = info(_server_admin_added, "?admin=server");
+    $show = info(_server_admin_added, "?index=admin&amp;admin=server");
 }

@@ -17,5 +17,5 @@ if(($id = isset($_GET['id']) ? $_GET['id'] : false) != false)
     $akl_link_page = 'http://'.$httphost.'/user/?action=akl&do=activate';
     mailmgr::AddContent(string::decode(settings('eml_akl_register_subj')),show(string::decode(settings('eml_akl_register')), array("nick" => $get['user'], "link_page" => '<a href="'.$akl_link_page.'" target="_blank">'.$akl_link_page.'</a>', "guid" => $guid, "link" => '<a href="'.$akl_link.'" target="_blank">Link</a>')));
     mailmgr::AddAddress($get['email']);
-    $show = info(show(_admin_akl_resend,array('email' => $get['email'])), "?admin=activate_user", 4);
+    $show = info(show(_admin_akl_resend,array('email' => $get['email'])), "?index=admin&amp;admin=activate_user", 4);
 }

@@ -9,6 +9,7 @@
 class API_CORE
 {
     public static $addon_index = array();
+    public static $addon_indexes = array();
     public static $addon_index_xml = array();
     public static $addon_index_all = array();
     public static $MobileDevice = false;
@@ -20,7 +21,7 @@ class API_CORE
         /**
          *  Addons auflisten und Index zusammenstellen
          */
-        DebugConsole::insert_initialize('API_CORE::init()', 'DZCP API-Core'); //Debug Log
+        DebugConsole::insert_initialize('API_CORE::init()', 'DZCP API - Core'); //Debug Log
         global $tmpdir,$ajaxThumbgen;
         if(modapi_enabled && !$ajaxThumbgen)
         {
@@ -34,7 +35,8 @@ class API_CORE
                     $additional_languages_global = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/',false,true,array('php'));
                     $additional_languages = get_files(basePath.'/inc/additional-addons/'.$addon.'/languages/'.language::get_language().'/',false,true,array('php'));
                     $additional_tpl = get_files(basePath.'/inc/additional-addons/'.$addon.'/_templates_/',true); $addon_infos = array();
-                    $additional_pages = get_files(basePath.'/inc/additional-addons/'.$addon.'/',true,false,array(),false,array('_templates_','functions','languages'));
+                    $additional_pages = get_files(basePath.'/inc/additional-addons/'.$addon.'/',true,false,array(),false,array('_templates_','functions','languages','admin','inc'));
+                    self::$addon_indexes[$addon] = $additional_pages;
 
                     $additional_admin = array();
                     if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin') && file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu'))
@@ -113,6 +115,7 @@ class API_CORE
                     $addon_infos['additional_admin'] = (count($additional_admin) >= 1 && !empty($additional_admin) ? true : false);
                     unset($additional_admin);
 
+                    $addon_infos['addon'] = $addon;
                     self::$addon_index_all[$addon] = $addon_infos; //All Index
 
                     $sql = db("SELECT enable,installed FROM `".dba::get('addons')."` WHERE `dir` = '".string::encode($addon)."' LIMIT 1");
@@ -127,6 +130,9 @@ class API_CORE
 
                     self::$addon_index[$addon] = $addon_infos; // Runtime Index
                     self::$addon_index_xml[$addon] = $addon_xml_infos;
+
+                    if(file_exists($addon_infos['dir'].'global.php'))
+                        include_once($addon_infos['dir'].'global.php');
 
                     //Addon DB Cleanup
                     $sql_addons_clean = db("SELECT dir FROM `".dba::get('addons')."`");
@@ -192,7 +198,7 @@ class API_CORE
                              'require_index_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/index.php'), //For Old Menu
                              'require_header_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/header.php'),
                              'require_footer_file' => file_exists(basePath.'/inc/additional-addons/'.$addon.'/admin/menu/'.$dir.'/footer.php'),
-                             'addon_dir' => '../inc/additional-addons/'.$addon);
+                             'addon_dir' => 'inc/additional-addons/'.$addon);
             }
         }
 
@@ -507,6 +513,37 @@ class API_CORE
     }
 
     /**
+     * Sucht einen Seiten-Index inerhalb von Addons
+     *
+     * @param string
+     * @return string
+     */
+    public static function load_index_side($index='')
+    {
+        //Addon
+        if(count(self::$addon_indexes) >= 1)
+        {
+            foreach (self::$addon_indexes as $addon => $array)
+            {
+                if(array_var_exists($index,$array))
+                {
+                    if(file_exists(basePath.'/inc/additional-addons/'.$addon.'/'.$index.'/index.php'))
+                    {
+                        DebugConsole::insert_info('API_CORE::load_index_side()', 'Side "'.$index.'" loaded from Addon "'.$addon.'"');
+                        return basePath.'/inc/additional-addons/'.$addon.'/'.$index.'/index.php';
+                    }
+                }
+            }
+        }
+
+        //Main
+        if(file_exists(basePath."/".$index."/index.php"))
+            return basePath."/".$index."/index.php";
+
+        header('Location: '.startpage());
+    }
+
+    /**
      *  *RUN* Additional BBCODE
      *
      *  @return string
@@ -633,6 +670,7 @@ class API_CORE
 
 class addons_installer
 {
+    //Main
     public static $addon_installer_config = array();
     public static $addon_welcome_text = '';
     public static $addon_name = '';
@@ -653,7 +691,7 @@ class addons_installer
 
     // Sollen alle Installer verwendet werden
     public static $installer_use_sql_installer = true;
-    public static $installer_use_file_installer = true;
+    public static $installer_use_file_installer = false;
 
     public static $installer_welcome_text = '';
     public static $installer_finished_text = '';
@@ -698,7 +736,7 @@ class addons_installer
             break;
             case 'prepare':
                 if(installer::$installer_use_license && !isset($_POST['license_checkbox']) && !isset($_POST['auto']))
-                    header('Location: ../admin/?admin=addonsmgr');
+                    header('Location: ?index=admin&admin=addonsmgr');
 
                 $set_chmod_ftp = false; $next_link = false; $disabled = '';
                 $prepare_array_script = self::is_writable_array(); $script='';
@@ -739,10 +777,10 @@ class addons_installer
                 $index = show($dir.'prepare',array('disabled' => $disabled ,'success_status' => $success_status,'script' => $script, 'next' => self::next_link($next_link), 'addon' => self::$addon_name));
             break;
             case 'sql':
-                $addon_encrypt = base64_encode(encryptData(self::$addon_name));
+                $addon_encrypt = base64_encode(self::$addon_name);
                 $url = '../inc/ajax.php?loader=addon_installer&step=sql&addon='.$addon_encrypt;
                 $show = '<div id="installer"><div style="width:550px; 0;text-align:center"><br><br>Bitte warte einen Moment während die SQL-Installation ausgeführt wird<br>
-                    <br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                    <br /><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
                 <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'installer\',\''.$url.'\');</script></div><br><br>';
                 $index = show($dir.'sql',array('next' => self::next_link(false),'prozessbar' => $show));
 
@@ -751,7 +789,7 @@ class addons_installer
                 $addon_encrypt = base64_encode(encryptData(self::$addon_name));
                 $url = '../inc/ajax.php?loader=addon_installer&step=file&addon='.$addon_encrypt;
                 $show = '<div id="installer"><div style="width:550px; 0;text-align:center"><br><br>Bitte warte einen Moment während die File-Installation ausgeführt wird<br>
-                    <br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></div>
+                    <br /><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
                 <script language="javascript" type="text/javascript">DZCP.initPageDynLoader(\'installer\',\''.$url.'\');</script></div><br><br>';
                 $index = show($dir.'file',array('next' => self::next_link(false),'prozessbar' => $show));
             break;
@@ -763,7 +801,7 @@ class addons_installer
                 $index = show($dir.'finished',array('next' => self::next_link(true,false,false,'Zum '._config_addonsmgr),'finished_text' => empty(self::$installer_finished_text) ? _installer_finished : bbcode::parse_html(self::$installer_finished_text)));
             break;
             case 'header':
-                header('Location: ../admin/?admin=addonsmgr');
+                header('Location: ?index=admin&admin=addonsmgr');
             break;
             default: // welcome
                 $index = show($dir.'welcome',array('next' => self::next_link(true),'welcome_text' => bbcode::parse_html(installer::$installer_welcome_text)));
@@ -775,75 +813,81 @@ class addons_installer
 
     public static function run_sql_installer($addon)
     {
-        if(!modapi_enabled) return '';
-        $installer_status = array('error' => false, 'warn' => false, 'msg' => mysql_setup_created, 'nextlink' => true);
-        if(method_exists('installer', 'method_sql_backup'))
+        $addon_data = API_CORE::$addon_index_all[$addon];
+        if(!include_once($addon_data['dir'].'installer.php'))
+            $installer_status = array('error' => true, 'warn' => false, 'msg' => 'require_once:'.$addon_data['dir'].'installer.php', 'nextlink' => false);
+        else
         {
-            $status = installer::method_sql_backup();
-            if(!$status && !is_array($status))
+            if(!modapi_enabled) return '';
+            $installer_status = array('error' => false, 'warn' => false, 'msg' => mysql_setup_created, 'nextlink' => true);
+            if(method_exists('installer', 'method_sql_backup'))
             {
-                $installer_status['error'] = true;
-                $installer_status['warn'] = false;
-                $installer_status['nextlink'] = false;
-                $installer_status['msg'] = 'Feler';
-            }
-            else if($status && !is_array($status))
-            {
-                $installer_status['error'] = false;
-                $installer_status['warn'] = false;
-                $installer_status['nextlink'] = true;
-            }
-            else if(is_array($status))
-            {
-                $installer_status['nextlink'] = $status['nextlink'];
-                $installer_status['msg'] = $status['msg'];
-
-                switch($status['status'])
+                $status = installer::method_sql_backup();
+                if(!$status && !is_array($status))
                 {
-                    case 'error':
-                        $installer_status['error'] = true;
-                        $installer_status['warn'] = false;
-                    break;
-                    case 'warn':
-                        $installer_status['error'] = false;
-                        $installer_status['warn'] = true;
-                    break;
+                    $installer_status['error'] = true;
+                    $installer_status['warn'] = false;
+                    $installer_status['nextlink'] = false;
+                    $installer_status['msg'] = 'Feler';
+                }
+                else if($status && !is_array($status))
+                {
+                    $installer_status['error'] = false;
+                    $installer_status['warn'] = false;
+                    $installer_status['nextlink'] = true;
+                }
+                else if(is_array($status))
+                {
+                    $installer_status['nextlink'] = $status['nextlink'];
+                    $installer_status['msg'] = $status['msg'];
+
+                    switch($status['status'])
+                    {
+                        case 'error':
+                            $installer_status['error'] = true;
+                            $installer_status['warn'] = false;
+                        break;
+                        case 'warn':
+                            $installer_status['error'] = false;
+                            $installer_status['warn'] = true;
+                        break;
+                    }
                 }
             }
-        }
 
-        if(method_exists('installer', 'method_sql_install'))
-        {
-            $status = installer::method_sql_install();
-            if(!$status && !is_array($status))
+            if(method_exists('installer', 'method_sql_install'))
             {
-                $installer_status['error'] = true;
-                $installer_status['warn'] = false;
-                $installer_status['nextlink'] = false;
-                $installer_status['msg'] = 'Feler';
-            }
-            else if($status && !is_array($status))
-            {
-                $installer_status['error'] = false;
-                $installer_status['warn'] = false;
-                $installer_status['nextlink'] = true;
-            }
-            else if(is_array($status))
-            {
-                $installer_status['nextlink'] = $status['nextlink'];
-                if(!empty($installer_status['msg']) && !empty($status['msg'])) $installer_status['msg'] .= '<p>';
-                $installer_status['msg'] .= $status['msg'];
-
-                switch($status['status'])
+                $status = installer::method_sql_install();
+                if(!$status && !is_array($status))
                 {
-                    case 'error':
-                        $installer_status['error'] = true;
-                        $installer_status['warn'] = false;
-                    break;
-                    case 'warn':
-                        $installer_status['error'] = false;
-                        $installer_status['warn'] = true;
-                    break;
+                    $installer_status['error'] = true;
+                    $installer_status['warn'] = false;
+                    $installer_status['nextlink'] = false;
+                    $installer_status['msg'] = 'Feler';
+                }
+                else if($status && !is_array($status))
+                {
+                    $installer_status['error'] = false;
+                    $installer_status['warn'] = false;
+                    $installer_status['nextlink'] = true;
+                }
+                else if(is_array($status))
+                {
+                    $installer_status['nextlink'] = $status['nextlink'];
+                    if(!empty($installer_status['msg']) && !empty($status['msg'])) $installer_status['msg'] .= '<p>';
+                    $installer_status['msg'] .= $status['msg'];
+
+                    switch($status['status'])
+                    {
+                        case 'error':
+                            $installer_status['error'] = true;
+                            $installer_status['warn'] = false;
+                        break;
+                        case 'warn':
+                            $installer_status['error'] = false;
+                            $installer_status['warn'] = true;
+                        break;
+                    }
                 }
             }
         }
@@ -1006,10 +1050,10 @@ class addons_installer
         foreach(self::$installer_prepare_list as $file)
         {
             $what = "Ordner:&nbsp;";
-            if(is_file('../'.$file)) $what = "Datei:&nbsp;";
-            $_file = preg_replace("#\.\.#Uis", "", '../'.$file);
+            if(is_file($file)) $what = "Datei:&nbsp;";
+            $_file = preg_replace("#\.\.#Uis", "", $file);
 
-            if(is_writable('../'.$file))
+            if(is_writable($file))
                 $data[$i] = "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"90\"><font color='green'>"._installer_true."<b>".$what."</b></font></td><td><font color='green'>".$_file."</font></td></tr></table>";
             else
             {
@@ -1028,11 +1072,11 @@ class addons_installer
         $i=0; $return = array();
         foreach(self::$installer_prepare_list as $file)
         {
-            if(!is_writable('../'.$file))
+            if(!is_writable($file))
             {
                 $return[$i]['dir'] = true;
 
-                if(is_file('../'.$file))
+                if(is_file($file))
                     $return[$i]['dir'] = false;
 
                 $return[$i]['file'] = $file;

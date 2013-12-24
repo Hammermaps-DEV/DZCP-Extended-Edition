@@ -22,7 +22,7 @@ function slideshow()
                 $slideroverlay = '<div class="slideroverlay"><h2>'.bbcode::parse_html(wrap(string::decode($get['bez']))).'</h2><span>'.bbcode::parse_html(wrap(string::decode($get['desc']))).'</span></div>';
 
             $target = ($get['target'] == "1" ? ",1" : "");
-            $pic .= show("menu/slideshowbild", array("image" => "<img src=\"../inc/images/uploads/slideshow/".$get['id'].".jpg\" alt=\"\" />", "link" => "'".$get['url']."'".$target, "text" => $slideroverlay));
+            $pic .= show("menu/slideshowbild", array("image" => "<img src=\"inc/images/uploads/slideshow/".$get['id'].".jpg\" alt=\"\" />", "link" => "'".$get['url']."'".$target, "text" => $slideroverlay));
             $tabs .= '<a href="#" class="slidertabs" id="slider'.$get['id'].'"></a>';
         }
 

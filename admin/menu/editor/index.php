@@ -108,7 +108,7 @@ if(_adminMenu != 'true')
           $kat = preg_replace('/-(\d+)/','',$_POST['pos']);
           $pos = preg_replace("=nav_(.*?)-=","",$_POST['pos']);
 
-          $url = "../sites/?show=".$insert_id."";
+          $url = "?index=sites&show=".$insert_id."";
 
           $posi = db("UPDATE ".dba::get('navi')."
                       SET `pos` = pos+1
@@ -124,7 +124,7 @@ if(_adminMenu != 'true')
                           `editor`  = '".convert::ToInt($insert_id)."',
                           `wichtig` = '0'");
 
-          $show = info(_site_added, "?admin=editor");
+          $show = info(_site_added, "?index=admin&amp;admin=editor");
         }
       } elseif($_GET['do'] == "edit") {
         $qrys = db("SELECT * FROM ".dba::get('sites')."
@@ -233,7 +233,7 @@ if(_adminMenu != 'true')
           $kat = preg_replace('/-(\d+)/','',$_POST['pos']);
           $pos = preg_replace("=nav_(.*?)-=","",$_POST['pos']);
 
-          $url = "../sites/?show=".$_GET['id']."";
+          $url = "?index=sites&show=".$_GET['id']."";
 
           $posi = db("UPDATE ".dba::get('navi')."
                       SET `pos` = pos+1
@@ -246,28 +246,28 @@ if(_adminMenu != 'true')
                           `url`     = '".string::encode($url)."'
                       WHERE editor = '".convert::ToInt($_GET['id'])."'");
 
-          $show = info(_site_edited, "?admin=editor");
+          $show = info(_site_edited, "?index=admin&amp;admin=editor");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".dba::get('sites')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
         $qry = db("DELETE FROM ".dba::get('navi')."
                    WHERE editor = '".convert::ToInt($_GET['id'])."'");
-        $show = info(_editor_deleted, "?admin=editor");
+        $show = info(_editor_deleted, "?index=admin&amp;admin=editor");
       } else {
         $qry = db("SELECT * FROM ".dba::get('sites')."");
         while($get = _fetch($qry))
         {
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=editor&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=editor&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=editor&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=editor&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_site));
 
-          $show_ .= show($dir."/editor_show", array("name" => "<a href='../sites/?show=".$get['id']."'>".string::decode($get['titel'])."</a>",
+          $show_ .= show($dir."/editor_show", array("name" => "<a href='?index=sites&show=".$get['id']."'>".string::decode($get['titel'])."</a>",
                                                     "del" => $delete,
                                                     "edit" => $edit,
                                                     "class" => $class));

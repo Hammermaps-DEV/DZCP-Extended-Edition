@@ -13,7 +13,7 @@ else
             $nextlink = show("/msg/nextlink",array("ac" => 'action=mysql_setup_users', 'options' => 'disabled="disabled"')); $from = '<form action="" method="post" id="from"></from>';
             return '<table width="100%" cellpadding="3" cellspacing="1"><tr><td class="head">&raquo; Datenbank Installation</td>
                     </tr><tr><td class="head"><div id="mysql"><div style="width:100%;padding:10px 0;text-align:center"><p>Einen Moment bitte..<br>
-                    <br /><img src="../inc/images/ajax-loader-bar.gif" alt="" /></p></div><script language="JavaScript" type="text/javascript">DZCP.initDynLoader();</script></div></td></tr></table>'.$from.$nextlink;
+                    <br /><img src="inc/images/ajax-loader-bar.gif" alt="" /></p></div><script language="JavaScript" type="text/javascript">DZCP.initDynLoader();</script></div></td></tr></table>'.$from.$nextlink;
         }
         else
         {

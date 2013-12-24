@@ -5,7 +5,7 @@
  * @author: DZCP Developer Team || Hammermaps.de Developer Team
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
- 
+
 if(_adminMenu != 'true') exit();
 
           if(empty($_POST['question']) || empty($_POST['a1']) || empty($_POST['a2']))
@@ -116,5 +116,5 @@ if(_adminMenu != 'true') exit();
                            `sel`  = '".string::encode($_POST['a10'])."'");
           }
 
-          $show = info(_vote_admin_successful, "?admin=votes");
+          $show = info(_vote_admin_successful, "?index=admin&amp;admin=votes");
         }

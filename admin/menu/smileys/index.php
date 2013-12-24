@@ -45,7 +45,7 @@ switch($do)
                 if(move_uploaded_file($tmpname, basePath."/inc/images/smileys/".(isset($_POST['bbcode']) && !empty($_POST['bbcode']) ? $_POST['bbcode'] : $bbcode_name).".gif"))
                 {
                     @unlink($_FILES['smiley']['tmp_name']);
-                    $show = info(_smileys_added, "?admin=smileys");
+                    $show = info(_smileys_added, "?index=admin&amp;admin=smileys");
                 }
                 else
                     $show = error(_smileys_error_file);
@@ -53,19 +53,19 @@ switch($do)
         }
     break;
     case 'delete':
-        $show = info(_smileys_delete_error, "?admin=smileys");
+        $show = info(_smileys_delete_error, "?index=admin&amp;admin=smileys");
         if(isset($_GET['id']) && !empty($_GET['id']))
         {
             $name = preg_replace("#.gif#Uis","",$_GET['id']);
             if(file_exists(basePath."/inc/images/smileys/".$name.".gif"))
             {
                 @unlink(basePath."/inc/images/smileys/".$name.".gif");
-                $show = info(_smileys_deleted, "?admin=smileys");
+                $show = info(_smileys_deleted, "?index=admin&amp;admin=smileys");
             }
         }
     break;
     case 'edit':
-        $show = info(_smileys_edited_not_exist, "?admin=smileys");
+        $show = info(_smileys_edited_not_exist, "?index=admin&amp;admin=smileys");
         if(isset($_GET['id']) && !empty($_GET['id']))
         {
             $name = preg_replace("#.gif#Uis","",$_GET['id']);
@@ -87,10 +87,10 @@ switch($do)
                 if(file_exists($pfad.$_GET['id']))
                 {
                     @rename($pfad.$_GET['id'], $pfad.$_POST['bbcode'].".gif");
-                    $show = info(_smileys_edited, "?admin=smileys");
+                    $show = info(_smileys_edited, "?index=admin&amp;admin=smileys");
                 }
                 else
-                    $show = info(_smileys_edited_not_exist, "?admin=smileys");
+                    $show = info(_smileys_edited_not_exist, "?index=admin&amp;admin=smileys");
             }
             else
                 $show = error(_admin_smiley_exists);
@@ -103,10 +103,10 @@ switch($do)
             if($file != '^^.gif')
             {
                 $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
-                $smileys = "../inc/images/smileys/".$file;
+                $smileys = "inc/images/smileys/".$file;
                 $bbc = ":".preg_replace("=.gif=Uis","",$file).":";
-                $edit = show("page/button_edit_single", array("id" => $file, "action" => "admin=smileys&amp;do=edit", "title" => _button_title_edit));
-                $delete = show("page/button_delete_single", array("id" => $file, "action" => "admin=smileys&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_smiley));
+                $edit = show("page/button_edit_single", array("id" => $file, "action" => "index=admin&amp;admin=smileys&amp;do=edit", "title" => _button_title_edit));
+                $delete = show("page/button_delete_single", array("id" => $file, "action" => "index=admin&amp;admin=smileys&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_smiley));
                 $show_default .= show($dir."/smileys_show", array("bbcode" => $bbc, "smiley" => $smileys, "class" => $class, "del" => $delete, "edit" => $edit, "id" => $file));
             }
         }

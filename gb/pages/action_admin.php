@@ -34,7 +34,7 @@ else
                                 `reg`      = '".userid()."',
                                 `comment`  = '".string::encode($_POST['eintrag'])."',
                                 `ip`       = '".visitorIp()."'");
-                        $index = info(_gb_comment_added, "../gb/");
+                        $index = info(_gb_comment_added, "?index=gb");
                     }
                 }
 
@@ -66,7 +66,7 @@ else
             if(permission('gb'))
             {
                 db("UPDATE ".dba::get('gb')." SET `public` = '1' WHERE id = '".convert::ToInt($_GET['id'])."'");
-                header("Location: ../gb/");
+                header("Location: ?index=gb");
             }
             else
                 $index = error(_error_edit_post);
@@ -75,7 +75,7 @@ else
             if(permission('gb'))
             {
                 db("UPDATE ".dba::get('gb')." SET `public` = '0' WHERE id = '".convert::ToInt($_GET['id'])."'");
-                header("Location: ../gb/");
+                header("Location: ?index=gb");
             }
             else
                 $index = error(_error_edit_post);
@@ -86,7 +86,7 @@ else
             {
                 db("DELETE FROM ".dba::get('gb')." WHERE id = '".convert::ToInt($_GET['id'])."'");
                 db("DELETE FROM ".dba::get('gb_comments')." WHERE gbe = '".convert::ToInt($_GET['id'])."'");
-                $index = info(_gb_delete_successful, "../gb/");
+                $index = info(_gb_delete_successful, "?index=gb");
             }
             else
                 $index = error(_error_edit_post);
@@ -96,7 +96,7 @@ else
             if($get['reg'] == userid() && checkme() != "unlogged" || permission('gb'))
             {
                 db("DELETE FROM ".dba::get('gb_comments')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-                $index = info(_comment_deleted, "../gb/");
+                $index = info(_comment_deleted, "?index=gb");
             }
             else
                 $index = error(_error_edit_post);
@@ -132,7 +132,7 @@ else
                 $where = $where.': '._gb_edit_head;
                 $index = show($dir."/add", array("what" => _button_value_edit,
                                                  "reg" => $get['reg'],
-                                                 "whaturl" => "action=admin&amp;do=editgb&amp;id=".$get['id'],
+                                                 "whaturl" => "index=gb&amp;action=admin&amp;do=editgb&amp;id=".$get['id'],
                                                  "hphead" => _hp,
                                                  "ed" => "&edit=".$get['id']."&id=".$_GET['postid'],
                                                  "id" => $get['id'],
@@ -146,12 +146,13 @@ else
         case 'editgb':
             if(convert::ToInt($_POST['reg']) == userid() || permission('gb'))
             {
+                $addme = '';
                 if(!convert::ToInt($_POST['reg']))
                     $addme = "`nick` = '".string::encode($_POST['nick'])."', `email` = '".string::encode($_POST['email'])."', `hp` = '".string::encode($_POST['hp'])."',";
 
                 $editedby = show(_edited_by, array("autor" => autor(), "time" => date("d.m.Y H:i", time())._uhr));
                 db("UPDATE ".dba::get('gb')." SET ".$addme." `nachricht`  = '".string::encode($_POST['eintrag'])."', `reg` = '".convert::ToInt($_POST['reg'])."', `editby` = '".addslashes($editedby)."' WHERE id = '".convert::ToInt($_GET['id'])."'");
-                $index = info(_gb_edited, "../gb/");
+                $index = info(_gb_edited, "?index=gb");
             }
             else
                 $index = error(_error_edit_post);
@@ -169,7 +170,7 @@ else
                     `editby`   = '".addslashes($editedby)."'
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-                $index = info(_gb_comment_edited, "../gb/");
+                $index = info(_gb_comment_edited, "?index=gb");
             }
             else
                 $index = error(_error_edit_post);

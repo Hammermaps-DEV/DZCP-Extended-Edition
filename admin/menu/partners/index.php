@@ -35,7 +35,7 @@ if(_adminMenu != 'true')
                          `banner`   = '".string::encode(empty($_POST['textlink']) ? $_POST['banner'] : $_POST['textlink'])."',
                          `textlink` = '".convert::ToInt(empty($_POST['textlink']) ? 0 : 1)."'");
 
-          $show = info(_partners_added, "?admin=partners");
+          $show = info(_partners_added, "?index=admin&amp;admin=partners");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".dba::get('partners')."
@@ -70,29 +70,29 @@ if(_adminMenu != 'true')
                          `textlink` = '".convert::ToInt(empty($_POST['textlink']) ? 0 : 1)."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          $show = info(_partners_edited, "?admin=partners");
+          $show = info(_partners_edited, "?index=admin&amp;admin=partners");
         }
       } elseif($_GET['do'] == "delete") {
         $del = db("DELETE FROM ".dba::get('partners')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_partners_deleted,"?admin=partners");
+        $show = info(_partners_deleted,"?index=admin&amp;admin=partners");
       } else {
         $qry = db("SELECT * FROM ".dba::get('partners')."
                    ORDER BY id");
         while($get = _fetch($qry))
         {
           $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                        "action" => "admin=partners&amp;do=edit",
+                                                        "action" => "index=admin&amp;admin=partners&amp;do=edit",
                                                         "title" => _button_title_edit));
           $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                            "action" => "admin=partners&amp;do=delete",
+                                                            "action" => "index=admin&amp;admin=partners&amp;do=delete",
                                                             "title" => _button_title_del,
                                                             "del" => _confirm_del_entry));
 
           $color = 1;
           $rlink = str_replace('http://', '', string::decode($get['link']));
-          $button = '<img src="../banner/partners/'.string::decode($get['banner']).'" alt="'.$rlink.'" title="'.$rlink.'" />';
+          $button = '<img src="banner/partners/'.string::decode($get['banner']).'" alt="'.$rlink.'" title="'.$rlink.'" />';
           $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
           $show_ .= show($dir."/partners_show", array("class" => $class,
                                                       "button" => (empty($get['textlink']) ? $button : '<center>'._partnerbuttons_textlink.': <b>'.string::decode($get['banner']).'</b></center>'),

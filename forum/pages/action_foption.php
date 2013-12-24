@@ -24,6 +24,6 @@ else
                    WHERE user = '".userid()."'
                    AND fid = '".convert::ToInt($_GET['id'])."'");
         }
-        $index = info(_forum_fabo_do, "?action=showthread&amp;id=".$_GET['id']."");
+        $index = info(_forum_fabo_do, "?index=forum&amp;action=showthread&amp;id=".$_GET['id']."");
     }
 }

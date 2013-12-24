@@ -13,4 +13,4 @@ $cache_hash = md5($get['ip'].':'.$get['port'].'_'.$get['game']);
 Cache::delete('server_'.$cache_hash);
 
 db("DELETE FROM ".dba::get('server')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(show(_server_admin_deleted,array('host' => $get['name'])), "?admin=server");
+$show = info(show(_server_admin_deleted,array('host' => $get['name'])), "?index=admin&amp;admin=server");

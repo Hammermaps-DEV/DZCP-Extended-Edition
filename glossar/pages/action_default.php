@@ -32,7 +32,7 @@ else
     foreach ($bsta as $bst)
     {
         $bclass = ((((isset($_GET['bst']) && !empty($_GET['bst']) && strtolower($bst) == strtolower($_GET['bst'])) || (isset($_GET['bst']) && $_GET['bst'] == 'all' && $bst == _all)) || (empty($_GET['bst']) || !isset($_GET['bst'])) && $bst == _all) ? 'fontWichtig' : '');
-        $ret = ($bst == _all) ? '?bst=all' : "?bst=".$bst;
+        $ret = ($bst == _all) ? '?index=glossar&bst=all' : "?index=glossar&bst=".$bst;
         $abc .= "<a href=\"".$ret."\" title=\"".$bst."\"><span class=\"".$bclass."\">".$bst."</span></a> ";
     }
 

@@ -259,20 +259,20 @@ class bbcode
             {
                 $bbc = preg_replace("=.gif=Uis","",$file);
                 if(preg_match("=:".$bbc.":=Uis",self::$string) !== false)
-                    self::$string = preg_replace("=:".$bbc.":=Uis",'<img src="../inc/images/smileys/'.$bbc.'.gif" alt="'.$bbc.'" />', self::$string);
+                    self::$string = preg_replace("=:".$bbc.":=Uis",'<img src="inc/images/smileys/'.$bbc.'.gif" alt="'.$bbc.'" />', self::$string);
             }
         }
 
         $var = array("/\ :D/", "/\ :P/","/\ ;\)/", "/\ :\)/", "/\ :-\)/", "/\ :\(/", "/\ :-\(/","/\ ;-\)/","/\ ^^/");
-        $repl = array(' <img src="../inc/images/smileys/grin.gif" alt=":D" />',
-                      ' <img src="../inc/images/smileys/zunge.gif" alt=":P" />',
-                      ' <img src="../inc/images/smileys/zwinker.gif" alt="" />',
-                      ' <img src="../inc/images/smileys/smile.gif" alt="" />',
-                      ' <img src="../inc/images/smileys/smile.gif" alt="" />',
-                      ' <img src="../inc/images/smileys/traurig.gif" alt="" />',
-                      ' <img src="../inc/images/smileys/traurig.gif" alt="" />',
-                      ' <img src="../inc/images/smileys/zwinker.gif" alt="" />',
-                      ' <img src="../inc/images/smileys/^^.gif" alt="^^" />');
+        $repl = array(' <img src="inc/images/smileys/grin.gif" alt=":D" />',
+                      ' <img src="inc/images/smileys/zunge.gif" alt=":P" />',
+                      ' <img src="inc/images/smileys/zwinker.gif" alt="" />',
+                      ' <img src="inc/images/smileys/smile.gif" alt="" />',
+                      ' <img src="inc/images/smileys/smile.gif" alt="" />',
+                      ' <img src="inc/images/smileys/traurig.gif" alt="" />',
+                      ' <img src="inc/images/smileys/traurig.gif" alt="" />',
+                      ' <img src="inc/images/smileys/zwinker.gif" alt="" />',
+                      ' <img src="inc/images/smileys/^^.gif" alt="^^" />');
         self::$string = preg_replace($var,$repl, self::$string);
     }
 
@@ -297,7 +297,7 @@ class bbcode
             $desc = regexChars(self::$gl_desc[$g]);
             $info = 'onmouseover="DZCP.showInfo(\''.jsconvert($desc).'\')" onmouseout="DZCP.hideInfo()"';
             $w = regexChars(html_entity_decode(self::$gl_words[$g]));
-            $r = "<a class=\"glossar\" href=\"../glossar/?word=".self::$gl_words[$g]."\" ".$info.">".self::$gl_words[$g]."</a>";
+            $r = "<a class=\"glossar\" href=\"?index=glossar&word=".self::$gl_words[$g]."\" ".$info.">".self::$gl_words[$g]."</a>";
             $txt = str_ireplace('<tmp|'.$w.'|tmp>', $r, $txt);
         }
 

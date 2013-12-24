@@ -4,12 +4,12 @@
 <!--
     function setFile(elementId)
     {
-        var win = window.open('../inc/tinymce/plugins/ajaxfilemanager/ajaxfilemanager.php?editor=form&elementId='+elementId, 'ajaxFileImageManager', 'width=850,height=500');
+        var win = window.open('inc/tinymce/plugins/ajaxfilemanager/ajaxfilemanager.php?editor=form&elementId='+elementId, 'ajaxFileImageManager', 'width=850,height=500');
         return false;
     }
 //-->
 </script>
-<form enctype="multipart/form-data" name="dlformular" action="?admin=dladmin&amp;do=[do]" method="post" onsubmit="return(DZCP.submitButton())">
+<form enctype="multipart/form-data" name="dlformular" action="?index=admin&amp;admin=dladmin&amp;do=[do]" method="post" onsubmit="return(DZCP.submitButton())">
 <table class="hperc" cellspacing="0">
 <tr>
   <td class="contentHead" align="center" colspan="2"><span class="fontBold">[admin_head]</span></td>
@@ -50,7 +50,7 @@
           onblur="this.className='inputField_dis';" />
         </td>
         <td style="padding-left:3px">
-          <a id="dladmin" href="#" onclick="return setFile('url');"><img src="../inc/tinymce/themes/advanced/img/browse.png" alt="" /></a>
+          <a id="dladmin" href="#" onclick="return setFile('url');"><img src="inc/tinymce/themes/advanced/img/browse.png" alt="" /></a>
         </td>
       </tr>
     </table>

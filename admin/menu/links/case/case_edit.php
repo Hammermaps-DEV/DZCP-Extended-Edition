@@ -29,7 +29,7 @@ if(isset($_POST['link']))
                                                `beschreibung` = '".string::encode($_POST['beschreibung'])."'
                                            WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_link_edited, "?admin=links");
+        $show = info(_link_edited, "?index=admin&amp;admin=links");
     }
 }
 

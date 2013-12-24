@@ -12,7 +12,7 @@ $get = db("SELECT navi,game,id FROM ".dba::get('server')." WHERE id = '".convert
 if($get['game'] != 'nope')
 {
     db("UPDATE ".dba::get('server')." SET `navi` = '".($get['navi'] ? '0' : '1')."' WHERE id = '".$get['id']."'");
-    header("Location: ?admin=server");
+    header("Location: ?index=admin&admin=server");
 }
 else
     $show = error(_server_isnt_live);

@@ -11,9 +11,8 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    if(permission("clanwars")) {
+    if(permission("clanwars"))
         db("DELETE FROM ".dba::get('cw_player')." WHERE `cwid` = '".convert::ToInt($_GET['id'])."'");
-    }
 
-    $index = info(_cw_players_reset, '?action=details&id='.convert::ToInt($_GET['id']));
+    $index = info(_cw_players_reset, '?index=clanwars&amp;action=details&id='.convert::ToInt($_GET['id']));
 }

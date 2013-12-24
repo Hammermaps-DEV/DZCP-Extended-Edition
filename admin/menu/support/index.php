@@ -23,6 +23,7 @@ if(_adminMenu != 'true') exit();
     $support .= "DZCP Edition: "._edition."\r\n";
     $support .= "DZCP Datenbank: Rev. V".settings('db_version')."\r\n";
     $support .= "DZCP API: V".API::$version."\r\n";
+    $support .= "DZCP Template: ".$tmpdir."\r\n";
     $support .= "\r\n";
 
     if(count(API_CORE::$addon_index) >= 1)

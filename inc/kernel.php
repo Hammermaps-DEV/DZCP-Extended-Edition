@@ -286,21 +286,9 @@ function DNSToIp($address='')
  */
 function visitorIp()
 {
-    $TheIp=$_SERVER['REMOTE_ADDR'];
-    if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-        $TheIp = $_SERVER['HTTP_X_FORWARDED_FOR'];
-
-    if(isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']))
-        $TheIp = $_SERVER['HTTP_CLIENT_IP'];
-
-    if(isset($_SERVER['HTTP_FROM']) && !empty($_SERVER['HTTP_FROM']))
-        $TheIp = $_SERVER['HTTP_FROM'];
-
-    $TheIp_X = explode('.',$TheIp);
-    if(count($TheIp_X) == 4 && $TheIp_X[0]<=255 && $TheIp_X[1]<=255 && $TheIp_X[2]<=255 && $TheIp_X[3]<=255 && preg_match("!^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$!",$TheIp))
-        return trim($TheIp);
-
-    return '0.0.0.0';
+    //Move to 'inc/sessions.php'
+    global $session;
+    return $session->visitorIp();
 }
 
 /**
@@ -395,8 +383,8 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
         ## DZCP-Extended Edition START ##
         $template = $_SESSION['installer'] ? basePath."/_installer/html/".$tpl : basePath."/inc/_templates_/".$tmpdir."/".$tpl;
         $template_additional = $_SESSION['installer'] ? false : basePath."/inc/additional-tpl/".$tmpdir."/".$tpl;
-        $array['dir'] = $_SESSION['installer'] ? "html": '../inc/_templates_/'.$tmpdir;
-        $array['dir_img'] = $_SESSION['installer'] ? "html/img/": '../inc/_templates_/'.$tmpdir.'/images/';
+        $array['dir'] = $_SESSION['installer'] ? "html": 'inc/_templates_/'.$tmpdir;
+        $array['dir_img'] = $_SESSION['installer'] ? "html/img/": 'inc/_templates_/'.$tmpdir.'/images/';
         $array['dir_addon'] = $addon_dir;
         $array['tmpdir'] = $tmpdir;
 
@@ -742,53 +730,58 @@ function remote_filesize($url)
 {
     if(Cache::check('remote_filesize_'.md5($url)))
     {
-        $head = ""; $url_p = parse_url($url); $host = $url_p["host"];
-        if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$host))
+        $head = ""; $url_p = parse_url($url);
+        if(array_key_exists('host', $url_p))
         {
-            $ip=gethostbyname($host);
-            if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$ip)) return -1;
+            $host = $url_p["host"];
+            if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$host))
+            {
+                $ip=gethostbyname($host);
+                if(!preg_match("/[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*/",$ip)) return -1;
+            }
+
+            $port = (isset($url_p["port"]) ? $url_p["port"] : 80);
+
+            if(!$port) $port=80;
+            $path = $url_p["path"];
+
+            if(!ping_port($host,$port,1))
+                return 0;
+
+            $fp = fsockopen($host, $port, $errno, $errstr, 20);
+            fputs($fp, "HEAD "  . $url  . " HTTP/1.1\r\n");
+            fputs($fp, "HOST: " . $host . "\r\n");
+            fputs($fp, "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/1\r\n");
+            fputs($fp, "Connection: close\r\n\r\n");
+            $headers = "";
+            while (!feof($fp))
+            { $headers .= fgets ($fp, 128); }
+            fclose ($fp);
+
+            $return = -2;
+            $arr_headers = explode("\n", $headers);
+            foreach($arr_headers as $header)
+            {
+                $s1 = "HTTP/1.1"; $s2 = "Content-Length: "; $s3 = "Location: ";
+                if(substr(strtolower ($header), 0, strlen($s1)) == strtolower($s1)) $status = substr($header, strlen($s1));
+                if(substr(strtolower ($header), 0, strlen($s2)) == strtolower($s2)) $size   = substr($header, strlen($s2));
+                if(substr(strtolower ($header), 0, strlen($s3)) == strtolower($s3)) $newurl = substr($header, strlen($s3));
+            }
+
+            if(!isset($size) || empty($size)) return 0;
+            $return= (convert::ToInt($size) > 0 ? convert::ToInt($size) : $status);
+            if (convert::ToInt($status)==302 && strlen($newurl) > 0)
+                $return = remote_filesize($newurl);
+
+            Cache::set('remote_filesize_'.md5($url), $return, 28800); //Update alle 8h
+            return $return;
         }
-
-        $port = (isset($url_p["port"]) ? $url_p["port"] : 80);
-
-        if(!$port) $port=80;
-        $path = $url_p["path"];
-
-        if(!ping_port($host,$port,1))
+        else
             return 0;
-
-        $fp = fsockopen($host, $port, $errno, $errstr, 20);
-        fputs($fp, "HEAD "  . $url  . " HTTP/1.1\r\n");
-        fputs($fp, "HOST: " . $host . "\r\n");
-        fputs($fp, "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:18.0) Gecko/20100101 Firefox/1\r\n");
-        fputs($fp, "Connection: close\r\n\r\n");
-        $headers = "";
-        while (!feof($fp))
-        { $headers .= fgets ($fp, 128); }
-        fclose ($fp);
-
-        $return = -2;
-        $arr_headers = explode("\n", $headers);
-        foreach($arr_headers as $header)
-        {
-            $s1 = "HTTP/1.1"; $s2 = "Content-Length: "; $s3 = "Location: ";
-            if(substr(strtolower ($header), 0, strlen($s1)) == strtolower($s1)) $status = substr($header, strlen($s1));
-            if(substr(strtolower ($header), 0, strlen($s2)) == strtolower($s2)) $size   = substr($header, strlen($s2));
-            if(substr(strtolower ($header), 0, strlen($s3)) == strtolower($s3)) $newurl = substr($header, strlen($s3));
-        }
-
-        if(!isset($size) || empty($size)) return 0;
-        $return= (convert::ToInt($size) > 0 ? convert::ToInt($size) : $status);
-        if (convert::ToInt($status)==302 && strlen($newurl) > 0)
-            $return = remote_filesize($newurl);
-
-        Cache::set('remote_filesize_'.md5($url), $return, 28800); //Update alle 8h
-        return $return;
     }
 
     return Cache::get('remote_filesize_'.md5($url));
 }
-
 
 /**
  * Funktion um einen Binärstring zu Dekodieren.
@@ -835,6 +828,23 @@ final class RTBuffer
     { unset(self::$buffer[$tag]['data']); unset(self::$buffer[$tag]['ttl']); return true; } else return false; }
 }
 
+/**
+ * Gibt die Argumente für POST,GET und REQUEST zurück.
+ * @param string $tag
+ * @param string $type * post,get,req *
+ * @param string $null_default
+ * @return mixed
+ */
+function getArgs($tag,$null_default='',$type='post')
+{
+    switch ($type)
+    {
+        case 'post': return isset($_POST[$tag]) ? string::decode($_POST[$tag]) : $null_default; break;
+        case 'get': return isset($_GET[$tag]) ? string::decode($_GET[$tag]) : $null_default; break;
+        default: return isset($_REQUEST[$tag]) ? string::decode($_REQUEST[$tag]) : $null_default; break;
+    }
+}
+
 #############################################
 #################### XML ####################
 #############################################
@@ -859,7 +869,9 @@ class xml // Class by DZCP-Extended Edition
             }
 
             self::$xmlobj[$XMLTag]['xmlStream'] = file_get_contents(basePath . '/' . $XMLFile);
-            return self::LoadXMLStream($XMLTag);
+
+            if(strpos(self::$xmlobj[$XMLTag]['xmlStream'], 'not found') === false)
+                return self::LoadXMLStream($XMLTag);
         }
 
         return false;
@@ -872,10 +884,13 @@ class xml // Class by DZCP-Extended Edition
     {
         if(empty($XMLTag) || empty($XMLStream)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj)) return true;
-
         self::$xmlobj[$XMLTag]['xmlFile'] = '';
         self::$xmlobj[$XMLTag]['xmlStream'] = $XMLStream;
-        return self::LoadXMLStream($XMLTag);
+
+        if(strpos(self::$xmlobj[$XMLTag]['xmlStream'], 'not found') === false)
+            return self::LoadXMLStream($XMLTag);
+
+        return false;
     }
 
     /**
@@ -926,6 +941,7 @@ class xml // Class by DZCP-Extended Edition
         if(empty($XMLTag) || empty($xmlpath)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
+            if(!is_object(self::$xmlobj[$XMLTag]['objekt'])) return false;
             $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
             return ($xmlobj) ? $xmlobj[0] : false;
         }
@@ -943,6 +959,7 @@ class xml // Class by DZCP-Extended Edition
         if(empty($XMLTag) || empty($xmlpath) || empty($xmlnode)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
+            if(!is_object(self::$xmlobj[$XMLTag]['objekt'])) return false;
             $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
             $xmlobj[0]->{$xmlnode} = htmlspecialchars($xmlvalue);
             return true;
@@ -961,6 +978,7 @@ class xml // Class by DZCP-Extended Edition
         if(empty($XMLTag) || empty($xmlpath) || empty($xmlnode)) return false;
         if(array_key_exists($XMLTag,self::$xmlobj))
         {
+            if(!is_object(self::$xmlobj[$XMLTag]['objekt'])) return false;
              $xmlobj = self::$xmlobj[$XMLTag]['objekt']->xpath($xmlpath);
              $xmlobj2 = $xmlobj[0]->addChild($xmlnode, htmlspecialchars($text));
              foreach($attributes as $attr => $value)
@@ -1179,6 +1197,14 @@ class language
 
     public static function get_language()
     { return self::$language; }
+
+    public static function get_language_tag()
+    {
+        switch (self::$language) {
+            case 'deutsch': return 'de';
+            default: return 'en';
+        }
+    }
 
     public static function get_language_files()
     { return self::$language_files; }

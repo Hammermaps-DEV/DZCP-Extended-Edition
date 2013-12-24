@@ -6,8 +6,10 @@ if((isset($_GET['action']) ? $_GET['action'] : '') == 'mysql_setup_tb')
     $_SESSION['db_install'] = true;
 
 require_once(basePath."/inc/debugger.php");
-require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/config.php');
+require_once(basePath.'/inc/sessions.php');
+require_once(basePath.'/inc/secure.php');
+require_once(basePath.'/inc/_version.php');
 require_once(basePath.'/inc/database.php');
 require_once(basePath.'/inc/kernel.php');
 require_once(basePath.'/inc/additional-kernel/class.ftp.inc.php');
@@ -143,53 +145,6 @@ function steps()
     endswitch;
 
     return $lizenz.$type.$ftp.$prepare.$mysql.$db.$update.$adminacc.$done;
-}
-
-//-> Welche Datenbank Engine soll verwedet werden
-function get_db_engine($db_engine=0,$reverse=false)
-{
-    if(!$reverse)
-    {
-        switch ($db_engine)
-        {
-            case 1:
-                return 'ENGINE=MyISAM'; //MySQL MyISAM
-            break;
-            case 2:
-                return 'ENGINE=InnoDB'; //MySQL InnoDB
-            break;
-            case 3:
-                return 'ENGINE=ndbcluster'; //MySQL NDB Cluster
-            break;
-            case 4:
-                return 'ENGINE=Aria'; //MariaDB Aria
-            break;
-            default:
-                return ''; //Server Default
-            break;
-        }
-    }
-    else
-    {
-        switch ($db_engine)
-        {
-            case 'MyISAM':
-                return 1; //MySQL MyISAM
-            break;
-            case 'InnoDB':
-                return 2; //MySQL InnoDB
-            break;
-            case 'ndbcluster':
-                return 3; //MySQL NDB Cluster
-            break;
-            case 'Aria':
-                return 4; //MariaDB Aria
-            break;
-            default:
-                return 0; //Server Default
-            break;
-        }
-    }
 }
 
 //-> Erkennt welche Datenbank Engine verwendet wird
@@ -336,8 +291,8 @@ function write_sql_config()
 {
     $stream_sql = file_get_contents(basePath.'/_installer/system/sql_vorlage.txt');
     $stream_salt = file_get_contents(basePath.'/_installer/system/sql_salt_vorlage.txt');
-    $var = array("{prefix}", "{host}", "{user}" ,"{pass}" ,"{db}","{salt}");
-    $data = array($_SESSION['mysql_prefix'], $_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password'], $_SESSION['mysql_database'], $salt=mkpwd());
+    $var = array("{prefix}", "{host}", "{user}" ,"{pass}" ,"{db}","{salt}","{dbengine}");
+    $data = array($_SESSION['mysql_prefix'], $_SESSION['mysql_host'], $_SESSION['mysql_user'], $_SESSION['mysql_password'], $_SESSION['mysql_database'], $salt=mkpwd(), $_SESSION['mysql_dbengine']);
     $_SESSION['mysql_salt'] = $salt;
     file_put_contents(basePath.'/inc/mysql.php', str_replace($var, $data, $stream_sql));
     file_put_contents(basePath.'/inc/mysql_salt.php', str_replace($var, $data, $stream_salt));

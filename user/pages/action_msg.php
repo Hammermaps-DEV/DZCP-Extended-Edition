@@ -71,7 +71,7 @@ else
                 while($get = _fetch($qry))
                 {
                     db("UPDATE ".dba::get('msg')." SET `sendnews` = 3, `sendnewsuser` = '".userid()."', `readed`= 1 WHERE datum = '".convert::ToInt($_GET['datum'])."'");
-                    $index = info(_send_news_done, "?action=msg&do=show&id=".$get['id']."");
+                    $index = info(_send_news_done, "?index=user&amp;action=msg&do=show&id=".$get['id']."");
                 }
             }
         break;
@@ -151,7 +151,7 @@ else
                         `see` = '1'");
 
                 db("UPDATE ".dba::get('userstats')." SET `writtenmsg` = writtenmsg+1 WHERE user = ".userid());
-                $index = info(_msg_answer_done, "?action=msg");
+                $index = info(_msg_answer_done, "?index=user&amp;action=msg");
             }
         break;
         case 'delete':
@@ -170,7 +170,7 @@ else
                 }
             }
 
-            header("Location: ?action=msg");
+            header("Location: ?index=user&action=msg");
         break;
         case 'deletethis':
             $qry = db("SELECT id,see FROM ".dba::get('msg')." WHERE id = '".$msgID."'");
@@ -183,7 +183,7 @@ else
                     db("UPDATE ".dba::get('msg')." SET `see_u` = 1 WHERE id = ".$msgID);
             }
 
-            $index = info(_msg_deleted, "?action=msg");
+            $index = info(_msg_deleted, "?index=user&amp;action=msg");
         break;
         case 'deletesended':
             $qry = db("SELECT id,see_u FROM ".dba::get('msg')." WHERE von = '".userid()."' AND see = 1");
@@ -201,7 +201,7 @@ else
                 }
             }
 
-            header("Location: ?action=msg");
+            header("Location: ?index=user&action=msg");
         break;
         case 'new':
             $qry = db("SELECT id,nick FROM ".dba::get('users')." WHERE id != '".userid()."' AND `level` != '0' ORDER BY nick"); $users = '';
@@ -281,7 +281,7 @@ else
                   $to = ($_POST['buddys'] == "-" ? $_POST['users'] : $_POST['buddys']);
                   db("INSERT INTO ".dba::get('msg')." SET `datum` = '".time()."', `von` = '".userid()."', `an` = '".convert::ToInt($to)."', `titel` = '".string::encode($_POST['titel'])."', `nachricht` = '".string::encode($_POST['eintrag'])."', `see` = '1'");
                   db("UPDATE ".dba::get('userstats')." SET `writtenmsg` = writtenmsg+1 WHERE user = ".userid());
-                  $index = info(_msg_answer_done, "?action=msg");
+                  $index = info(_msg_answer_done, "?index=user&amp;action=msg");
               }
         break;
         default:

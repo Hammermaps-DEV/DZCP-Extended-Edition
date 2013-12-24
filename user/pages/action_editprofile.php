@@ -75,12 +75,12 @@ else
                 {
                     $newpwd = "`pwd` = '".($passwd=pass_hash($_POST['pwd'],($default_pwd_encoder = settings('default_pwd_encoder'))))."', `pwd_encoder` = ".$default_pwd_encoder.",";
                     $_SESSION['pwd'] = $passwd; unset($passwd);
-                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".userid()."");
+                    $index = info(_info_edit_profile_done, "?index=user&amp;action=user&amp;id=".userid()."");
                 }
                 else
                 {
                     $newpwd = "";
-                    $index = info(_info_edit_profile_done, "?action=user&amp;id=".userid()."");
+                    $index = info(_info_edit_profile_done, "?index=user&amp;action=user&amp;id=".userid()."");
                 }
 
                 $icq = preg_replace("=-=Uis","",$_POST['icq']);
@@ -98,11 +98,31 @@ else
                     } //while end
                 }
 
-                $get = db("SELECT user,xfire,steamurl FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
+                $get = db("SELECT user,xfire,steamurl,skype,xbox,psn,origin,bnet FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
 
                 // XFire Cleanup
                 if($get['xfire'] != convert::ToString(string::encode(trim($_POST['xfire']))))
                 { Cache::delete_binary('xfire_'.$get['user']); } //Delete XFire Cache
+
+                // Skype Cleanup
+                if($get['skype'] != convert::ToString(string::encode(trim($_POST['skype']))))
+                { Cache::delete_binary('skype_'.$get['user']); } //Delete Skype Cache
+
+                // Xbox Cleanup
+                if($get['xbox'] != convert::ToString(string::encode(trim($_POST['xbox']))))
+                { Cache::delete_binary('xbox_'.$get['user']); } //Delete Xbox Cache
+
+                // PSN Cleanup
+                if($get['psn'] != convert::ToString(string::encode(trim($_POST['psn']))))
+                { Cache::delete_binary('psn_'.$get['user']); } //Delete PSN Cache
+
+                // Origin Cleanup
+                if($get['origin'] != convert::ToString(string::encode(trim($_POST['origin']))))
+                { Cache::delete_binary('origin_'.$get['user']); } //Delete Origin Cache
+
+                // Battle.net Cleanup
+                if($get['bnet'] != convert::ToString(string::encode(trim($_POST['bnet']))))
+                { Cache::delete_binary('bnet_'.$get['user']); } //Delete Battle.net Cache
 
                 // Steam Cleanup
                 if($get['steamurl'] != convert::ToString(string::encode(trim($_POST['steam']))))
@@ -128,6 +148,11 @@ else
                                                  `hp`               = '".convert::ToString(links($_POST['hp']))."',
                                                  `icq`              = '".convert::ToInt($icq)."',
                                                  `xfire`            = '".string::encode(trim($_POST['xfire']))."',
+                                                 `skype`            = '".string::encode(trim($_POST['skype']))."',
+                                                 `xbox`             = '".string::encode(trim($_POST['xbox']))."',
+                                                 `psn`              = '".string::encode(trim($_POST['psn']))."',
+                                                 `origin`           = '".string::encode(trim($_POST['origin']))."',
+                                                 `bnet`             = '".string::encode(trim($_POST['bnet']))."',
                                                  `steamurl`         = '".string::encode(trim($_POST['steam']))."',
                                                  `signatur`         = '".string::encode($_POST['sig'])."',
                                                  `startpage`        = '".convert::ToInt($_POST['startpage'])."',
@@ -152,11 +177,18 @@ else
                                           WHERE id = ".userid());
 
             Cache::delete('private_news_rss_userid_'.$get['user']); //Delete RSS Cache
-            $index = info(_info_edit_rss_done, '../user/?action=editprofile&show=rss');
+            $index = info(_info_edit_rss_done, '?index=user&amp;action=editprofile&show=rss');
         break;
         case 'delete':
-            $getdel = db("SELECT id,nick,email,hp,user FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
-            Cache::delete('xfire_'.$getdel['user']);
+            $getdel = db("SELECT id,nick,email,hp,user,steamurl FROM ".dba::get('users')." WHERE id = '".userid()."'",false,true);
+            Cache::delete_binary('xfire_'.$getdel['user']); //Delete XFire Cache
+            Cache::delete_binary('skype_'.$getdel['user']); //Delete Skype Cache
+            Cache::delete_binary('xbox_'.$getdel['user']); //Delete Xbox Cache
+            Cache::delete_binary('psn_'.$getdel['user']); //Delete PSN Cache
+            Cache::delete_binary('origin_'.$getdel['user']); //Delete Origin Cache
+            Cache::delete_binary('bnet_'.$getdel['user']); //Delete Battle.net Cache
+            Cache::delete('steam_'.$getdel['steamurl']); //Delete Steam Cache
+            Cache::delete_binary('steam_pic_'.$getdel['steamurl']); //Delete Steam Avatar Cache
 
             db("UPDATE ".dba::get('f_threads')." SET `t_nick` = '".$getdel['nick']."', `t_email` = '".$getdel['email']."', `t_hp` = '".$getdel['hp']."', `t_reg` = '0' WHERE t_reg = '".$getdel['id']."'");
             db("UPDATE ".dba::get('f_posts')." SET `nick` = '".$getdel['nick']."', `email` = '".$getdel['email']."', `hp` = '".$getdel['hp']."', `reg` = '0' WHERE reg = '".$getdel['id']."'");
@@ -199,7 +231,7 @@ else
             }
 
             db("DELETE FROM ".dba::get('users')." WHERE id = '".$getdel['id']."'");
-            $index = info(_info_account_deletet, '../news/');
+            $index = info(_info_account_deletet, '?index=news');
         break;
         default: ## Profil editieren ##
             if($gallery_do == "delete")
@@ -213,7 +245,7 @@ else
                     } //while end
                 }
 
-                $index = info(_info_edit_gallery_done, "?action=editprofile&show=gallery");
+                $index = info(_info_edit_gallery_done, "?index=user&amp;action=editprofile&show=gallery");
             }
             else
             {
@@ -294,7 +326,7 @@ else
                                     { $startpage .= show(_select_field,array('value' => $get_startpage['id'], 'sel' => ($get_startpage['id'] == $get['startpage'] ? 'selected="selected"' : ''), 'what' => $get_startpage['name'])); }
                                 }
 
-                                $delete = (userid() == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'],"action" => "action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => _confirm_del_account)));
+                                $delete = (userid() == convert::ToInt($rootAdmin) ? _profil_del_admin : show("page/button_delete_account", array("id" => $get['id'], "action" => "index=user&amp;action=editprofile&amp;do=delete", "value" => _button_title_del_account, "del" => _confirm_del_account)));
                                 $show = show($dir."/edit_profil", array("country" => show_countrys($get['country']),
                                                                         "city" => string::decode($get['city']),
                                                                         "pnl" => $pnl,
@@ -317,6 +349,11 @@ else
                                                                         "icqnr" => $icq,
                                                                         "sig" => string::decode($get['signatur']),
                                                                         "xfire" => $get['xfire'],
+                                                                        "skype" => $get['skype'],
+                                                                        "xbox" => $get['xbox'],
+                                                                        "psn" => $get['psn'],
+                                                                        "origin" => $get['origin'],
+                                                                        "bnet" => $get['bnet'],
                                                                         "steam" => $get['steamurl'],
                                                                         "clan" => $clan,
                                                                         "pic" => $pic,

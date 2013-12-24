@@ -6,20 +6,19 @@ if(_adminMenu != 'true')
     exit();
 
     $where = $where.': '._admin_pos;
-      $qry = db("SELECT * FROM ".dba::get('pos')." ORDER BY pid");
+      $qry = db("SELECT * FROM ".dba::get('pos')." ORDER BY pid"); $color = 0;
       while($get = _fetch($qry))
       {
         $edit = show("page/button_edit_single", array("id" => $get['id'],
-                                                      "action" => "admin=positions&amp;do=edit",
+                                                      "action" => "index=admin&amp;admin=positions&amp;do=edit",
                                                       "title" => _button_title_edit));
         $delete = show("page/button_delete_single", array("id" => $get['id'],
-                                                          "action" => "admin=positions&amp;do=delete",
+                                                          "action" => "index=admin&amp;admin=positions&amp;do=delete",
                                                           "title" => _button_title_del,
                                                           "del" => _confirm_del_entry));
         $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
 
-        $show_ .= show($dir."/dlkats_show", array("gameicon" => $gameicon,
-                                                  "edit" => $edit,
+        $show_ .= show($dir."/dlkats_show", array("edit" => $edit,
                                                   "name" => string::decode($get['position']),
                                                   "class" => $class,
                                                   "delete" => $delete));
@@ -103,13 +102,13 @@ if(_adminMenu != 'true')
           }
     ////////////////////
 
-          $show = info(_pos_admin_edited, "?admin=positions");
+          $show = info(_pos_admin_edited, "?index=admin&amp;admin=positions");
         }
       } elseif($_GET['do'] == "delete") {
         db("DELETE FROM ".dba::get('pos')." WHERE id = '".convert::ToInt($_GET['id'])."'");
         db("DELETE FROM ".dba::get('permissions')." WHERE pos = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_pos_admin_deleted, "?admin=positions");
+        $show = info(_pos_admin_deleted, "?index=admin&amp;admin=positions");
 
       } elseif($_GET['do'] == "new") {
         $qry = db("SELECT * FROM ".dba::get('pos')."
@@ -140,13 +139,8 @@ if(_adminMenu != 'true')
           if($_POST['pos'] == "1" || "2") $sign = ">= ";
           else $sign = "> ";
 
-          $posi = db("UPDATE ".dba::get('pos')."
-                      SET `pid` = pid+1
-                      WHERE pid ".$sign." '".convert::ToInt($_POST['pos'])."'");
-
-          $qry = db("INSERT INTO ".dba::get('pos')."
-                     SET `pid`        = '".convert::ToInt($_POST['pos'])."',
-                         `position`  = '".string::encode($_POST['kat'])."'");
+          db("UPDATE ".dba::get('pos')." SET `pid` = pid+1 WHERE pid ".$sign." '".convert::ToInt($_POST['pos'])."'");
+          db("INSERT INTO ".dba::get('pos')." SET `pid` = '".convert::ToInt($_POST['pos'])."', `position`  = '".string::encode($_POST['kat'])."'");
           $posID = database::get_insert_id();
     // permissions
           foreach($_POST['perm'] AS $v => $k) $p .= "`".substr($v, 2)."` = '".convert::ToInt($k)."',";
@@ -163,6 +157,6 @@ if(_adminMenu != 'true')
           }
     ////////////////////
 
-          $show = info(_pos_admin_added, "?admin=positions");
+          $show = info(_pos_admin_added, "?index=admin&amp;admin=positions");
         }
       }

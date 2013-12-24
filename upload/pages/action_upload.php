@@ -13,7 +13,9 @@ else
     if(!permission("editsquads"))
     {
         $show = error(_error_wrong_permissions);
-    } else {
+    }
+    else
+    {
         $tmpname = $_FILES['file']['tmp_name'];
         $name = $_FILES['file']['name'];
         $type = $_FILES['file']['type'];
@@ -29,7 +31,7 @@ else
             copy($tmpname, basePath."/inc/images/gameicons/custom/".$_FILES['file']['name']);
             @unlink($_FILES['file']['tmp_name']);
 
-            $index = info(_info_upload_success, "../admin/?admin=squads&amp;do=add");
+            $index = info(_info_upload_success, "?index=admin&amp;admin=squads&amp;do=add");
         }
     }
 }

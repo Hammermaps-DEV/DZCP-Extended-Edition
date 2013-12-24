@@ -24,7 +24,7 @@ else
         $hp = isset($_POST['hp']) && !empty($_POST['hp']) ? $_POST['hp'] : '';
 
         if(!$fromUser && empty($sec_sendnews) || !$fromUser && ($secure != $sec_sendnews))
-            $error = show("errors/errortable", array("error" => _error_invalid_regcode));
+            $error = show("errors/errortable", array("error" => captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode));
         if( empty($text))
             $error = show("errors/errortable", array("error" => _error_empty_nachricht));
         else if(empty($titel))
@@ -55,7 +55,7 @@ else
                     db("INSERT INTO ".dba::get('msg')." SET `datum` = '".time()."', `von` = '".$von_nick."', `an` = '".convert::ToInt($get['id'])."', `titel` = '".string::encode($titel)."', `nachricht` = '".string::encode($text)."', `sendnews` = '".$sendnews."', `senduser` = '".$user."'");
             }
 
-            $index = info(_news_send_done, "../news/");
+            $index = info(_news_send_done, "?index=news");
         }
     }
 
@@ -64,6 +64,7 @@ else
         $form = show($dir."/send_form".($fromUser ? '2' : '1'), array(
                 "user" => ($fromUser ? autor() : ''),
                 "value" => _button_value_send,
+                "sid" => mkpwd(4),
                 "s_nick" => (isset($nick) && !empty($nick) ? $nick : ''),
                 "s_email" => (isset($email) && !empty($email) ? $email : ''),
                 "s_hp" => (isset($hp) && !empty($hp) ? $hp : ''),

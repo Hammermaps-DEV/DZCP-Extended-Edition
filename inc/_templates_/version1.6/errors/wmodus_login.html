@@ -1,18 +1,18 @@
 <tr>
   <td class="loginLeft"></td>
   <td>
-    <form name="login" action="../user/?action=login&amp;do=yes" method="post" onsubmit="return(DZCP.submitButton())">
+    <form name="login" action="?index=user&amp;action=login&amp;do=yes" method="post" onsubmit="return(DZCP.submitButton())">
     <table class="navContent">
       <tr>
         <td>
-          <input type="text" name="user" class="inputField_dis" 
+          <input type="text" name="user" class="inputField_dis"
           onblur="this.className='inputField_dis';if(this.value=='')this.value='Admin'" style="width:120px"
           onfocus="this.className='inputField_en';if(this.value=='Admin') this.value='';" value="Admin" />
         </td>
       </tr>
       <tr>
         <td>
-          <input type="password" name="pwd" class="inputField_dis" 
+          <input type="password" name="pwd" class="inputField_dis"
           onblur="this.className='inputField_dis';if(this.value=='')this.value='Password'" style="width:120px"
           onfocus="this.className='inputField_en';if(this.value=='Password') this.value='';" value="Password" />
         </td>

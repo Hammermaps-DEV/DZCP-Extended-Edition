@@ -5,7 +5,7 @@
  * @author: DZCP Developer Team || Hammermaps.de Developer Team
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
- 
+
 if(_adminMenu != 'true') exit();
 
         $qry = db("DELETE FROM ".dba::get('votes')."
@@ -18,4 +18,4 @@ if(_adminMenu != 'true') exit();
         $qry = db("DELETE FROM ".dba::get('ipcheck')."
                    WHERE what = '".$vid."'");
 
-        $show = info(_vote_admin_delete_successful, "?admin=votes");
+        $show = info(_vote_admin_delete_successful, "?index=admin&amp;admin=votes");

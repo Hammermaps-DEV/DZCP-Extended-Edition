@@ -15,7 +15,7 @@ else
 {
     header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
     $getkat = db("SELECT katimg FROM ".dba::get('newskat')." WHERE id = '".(isset($_POST['kat']) ? convert::ToInt($_POST['kat']) : 0)."'",false,true);
-    $artikelimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
+    $artikelimage = 'inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
     if($get['custom_image'])
     {
         foreach($picformat AS $end)
@@ -25,7 +25,7 @@ else
         }
 
         if(file_exists(basePath.'/inc/images/uploads/news/'.$get['id'].'.'.$end))
-            $artikelimage = '../inc/images/uploads/news/'.$get['id'].'.'.$end;
+            $artikelimage = 'inc/images/uploads/news/'.$get['id'].'.'.$end;
     }
 
     $links1 = (isset($_POST['url1']) && !empty($_POST['url1']) ? show(_news_link, array("link" => string::decode($_POST['link1']), "url" => links($_POST['url1']))) : '');

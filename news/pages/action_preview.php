@@ -19,7 +19,7 @@ else
     $links3 = (isset($_POST['url3']) && !empty($_POST['url3']) ? show(_news_link, array("link" => string::decode($_POST['link3']), "url" => links($_POST['url3']))) : '');
     $links = (!empty($links1) || !empty($links2) || !empty($links3) ? show(_news_links, array("link1" => $links1, "link2" => $links2, "link3" => $links3, "rel" => _related_links)) : '');
 
-    $newsimage = '../inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
+    $newsimage = 'inc/images/uploads/newskat/'.string::decode($getkat['katimg']);
     if($get['custom_image'] && isset($_GET['id']))
     {
         foreach($picformat AS $end)
@@ -29,7 +29,7 @@ else
         }
 
         if(file_exists(basePath.'/inc/images/uploads/news/'.$_GET['id'].'.'.$end))
-            $newsimage = '../inc/images/uploads/news/'.$_GET['id'].'.'.$end;
+            $newsimage = 'inc/images/uploads/news/'.$_GET['id'].'.'.$end;
     }
 
     $index = show($dir."/news_show", array("titel" => isset($_POST['titel']) ? string::decode($_POST['titel']) : '',

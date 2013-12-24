@@ -52,7 +52,7 @@ else
                                 //Updater
                                 if($_SESSION['type'] == 1)
                                 {
-                                    $_SESSION['mysql_dbengine'] = get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], dba::get('settings')),true);
+                                    $_SESSION['mysql_dbengine'] = dba::get_db_engine(mysqlTableEngine($con, $_SESSION['mysql_database'], dba::get('settings')),true);
                                     $dbe_selected0 = ($_SESSION['mysql_dbengine'] == 0 ? 'selected="selected"' : '');
                                     $dbe_selected1 = ($_SESSION['mysql_dbengine'] == 1 ? 'selected="selected"' : '');
                                     $dbe_selected2 = ($_SESSION['mysql_dbengine'] == 2 ? 'selected="selected"' : '');

@@ -33,7 +33,7 @@ else
                     }
 
                     if(!isset($_GET['ajax']))
-                        $index = info(_vote_successful, "?id=".$id."");
+                        $index = info(_vote_successful, "?index=votes&amp;id=".$id."");
                 }
                 else
                 {
@@ -52,7 +52,7 @@ else
                         wire_ipcheck("vid(".$id.")");
 
                         if(!isset($_GET['ajax']))
-                            $index = info(_vote_successful, "?id=".$id."");
+                            $index = info(_vote_successful, "?index=votes&amp;id=".$id."");
                     }
 
                     $cookie = (userid() != 0 ? userid() : "voted");
@@ -90,7 +90,7 @@ else
                     wire_ipcheck("vid(".convert::ToInt($get['id']).")");
 
                     if(!isset($_GET['fajax']))
-                        $index = info(_vote_successful, "forum/?action=showthread&amp;kid=".$_POST['kid']."&amp;id=".$_POST['fid']."");
+                        $index = info(_vote_successful, "?index=forum&amp;action=showthread&amp;kid=".$_POST['kid']."&amp;id=".$_POST['fid']."");
                 }
 
                 $cookie = (userid() != 0 ? userid() : 'voted');

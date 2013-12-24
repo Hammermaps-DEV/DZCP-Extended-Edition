@@ -22,4 +22,4 @@ foreach ($img_ext as $ext)
 }
 
 db("DELETE FROM ".dba::get('sponsoren')." WHERE id = '".convert::ToInt($_GET['id'])."'");
-$show = info(_sponsor_deleted, "?admin=sponsors");
+$show = info(_sponsor_deleted, "?index=admin&amp;admin=sponsors");

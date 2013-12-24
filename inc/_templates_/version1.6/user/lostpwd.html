@@ -3,7 +3,7 @@
 </tr>
 <tr>
 <td>
-<form name="lostpwd" action="?action=lostpwd&amp;do=sended" method="post" onsubmit="return(DZCP.submitButton())">
+<form name="lostpwd" action="?index=user&amp;action=lostpwd&amp;do=sended" method="post" onsubmit="return(DZCP.submitButton())">
 <table class="hperc" cellspacing="1">
 <tr>
   <td class="contentMainTop" width="25%"><span class="fontBold">[lang_loginname]:</span></td>
@@ -21,15 +21,15 @@
     onblur="this.className='inputField_dis';" required/>
   </td>
 </tr>
-<tr> 
+<tr>
   <td class="contentMainTop"><span class="fontBold">[lang_register_confirm]:</span></td>
   <td class="contentMainFirst" align="center">
     <table class="hperc" cellspacing="0">
       <tr>
-        <td style="text-align:right"><img src="../antispam.php?secure=lostpwd&amp;num=5" alt="" class="icon" /></td>
+        <td style="text-align:right"><img src="antispam.php?secure=lostpwd&amp;num=5" alt="" class="icon" /></td>
         <td style="width:2%">&nbsp;</td>
         <td style="width:50%" style="vertical-align:absmiddle">
-          <input class="inputField_dis_mid" type="text" name="secure" 
+          <input class="inputField_dis_mid" type="text" name="secure"
           onfocus="this.className='inputField_en_mid'"
           onblur="this.className='inputField_dis_mid'" style="text-align:center" required/>
         </td>
@@ -38,7 +38,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[value]" class="submit" /></td>  
+  <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[value]" class="submit" /></td>
 </tr>
 </table>
 </form>

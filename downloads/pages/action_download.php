@@ -37,7 +37,7 @@ else
                                 if(userid() != 0)
                                     $toCheck = empty($_POST['comment']);
                                 else
-                                    $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                                    $toCheck = empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['comment']) || !check_email($_POST['email']) || !$securimage->check($_POST['secure']);
 
                                 if($toCheck)
                                 {
@@ -48,8 +48,8 @@ else
                                     }
                                     else
                                     {
-                                        if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir]))
-                                            $error = show("errors/errortable", array("error" => _error_invalid_regcode));
+                                        if(!$securimage->check($_POST['secure']))
+                                            $error = show("errors/errortable", array("error" => captcha_mathematic ? _error_invalid_regcode_mathematic : _error_invalid_regcode));
                                         else if(empty($_POST['nick']))
                                             $error = show("errors/errortable", array("error" => _empty_nick));
                                         else if(empty($_POST['email']))
@@ -76,7 +76,7 @@ else
                                            `ip`       = '".visitorIp()."'");
 
                                     wire_ipcheck("dlid(".$dl_id.")");
-                                    $index = info(_comment_added, "?action=download&amp;id=".$dl_id."");
+                                    $index = info(_comment_added, "?index=downloads&amp;action=download&amp;id=".$dl_id."");
                                 }
                             }
                             else
@@ -103,8 +103,9 @@ else
                                 "hphead" => _hp,
                                 "form" => $form,
                                 "preview" => _preview,
-                                "prevurl" => '../downloads/?action=compreview&amp;do=edit&amp;id='.$dl_id.'&amp;cid='.$_GET['cid'],
-                                "action" => '?action=download&amp;do=editcom&amp;id='.$dl_id.'&amp;cid='.$_GET['cid'],
+                                "sid" => mkpwd(4),
+                                "prevurl" => '?index=downloads&action=compreview&do=edit&id='.$dl_id.'&amp;cid='.$_GET['cid'],
+                                "action" => '?index=downloads&amp;action=download&amp;do=editcom&amp;id='.$dl_id.'&amp;cid='.$_GET['cid'],
                                 "ip" => _iplog_info,
                                 "id" => $dl_id,
                                 "what" => _button_value_edit,
@@ -129,7 +130,7 @@ else
                                `editby`   = '".addslashes($editedby)."'
                            WHERE id = '".convert::ToInt($_GET['cid'])."'");
 
-                        $index = info(_comment_edited, "?action=download&amp;id=".$dl_id."");
+                        $index = info(_comment_edited, "?index=downloads&amp;action=download&amp;id=".$dl_id."");
                     }
                     else
                         $index = error(_error_edit_post);
@@ -139,7 +140,7 @@ else
                     if($get['reg'] == userid() || permission('downloads'))
                     {
                         db("DELETE FROM ".dba::get('dl_comments')." WHERE id = '".convert::ToInt($_GET['cid'])."'");
-                        $index = info(_comment_deleted, "?action=download&amp;id=".$dl_id."");
+                        $index = info(_comment_deleted, "?index=downloads&amp;action=download&amp;id=".$dl_id."");
                     }
                     else
                         $index = error(_error_wrong_permissions);
@@ -181,8 +182,8 @@ else
                     $edit = ""; $delete = ""; $hp = ""; $email = ""; $onoff = "";
                     if((checkme() != 'unlogged' && $getc['reg'] == userid()) || permission("downloads"))
                     {
-                        $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "action=download&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
-                        $delete = show("page/button_delete_single", array("id" => $dl_id, "action" => "action=download&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
+                        $edit = show("page/button_edit_single", array("id" => $get['id'], "action" => "index=downloads&amp;action=download&amp;do=edit&amp;cid=".$getc['id'], "title" => _button_title_edit));
+                        $delete = show("page/button_delete_single", array("id" => $dl_id, "action" => "index=downloads&amp;action=download&amp;do=delete&amp;cid=".$getc['id'], "title" => _button_title_del, "del" => _confirm_del_entry));
                     }
 
                     if(!$getc['reg'])
@@ -234,8 +235,9 @@ else
                                                                 "preview" => _preview,
                                                                 "sec" => $dir,
                                                                 "security" => _register_confirm,
-                                                                "action" => '?action=download&amp;do=add&amp;id='.$dl_id,
-                                                                "prevurl" => '../downloads/?action=compreview&id='.$dl_id,
+                                                                "sid" => mkpwd(4),
+                                                                "action" => '?index=downloads&amp;action=download&amp;do=add&amp;id='.$dl_id,
+                                                                "prevurl" => '?index=downloads&action=compreview&id='.$dl_id,
                                                                 "postemail" => (isset($_POST['email']) && !empty($error) ? $_POST['email'] : ''),
                                                                 "posthp" => (isset($_POST['hp']) && !empty($error) ? $_POST['hp'] : ''),
                                                                 "postnick" => (isset($_POST['nick']) && !empty($error) ? string::decode($_POST['nick']) : ''),
@@ -244,7 +246,7 @@ else
                     }
                 }
 
-                $seiten = nav($entrys,$downloadcomconfig['m_comments'],"?action=download&amp;id=".$dl_id."");
+                $seiten = nav($entrys,$downloadcomconfig['m_comments'],"?index=downloads&amp;action=download&amp;id=".$dl_id."");
                 $showmore = show($dir."/comments",array("head" => _comments_head, "show" => $comments, "seiten" => $seiten, "icq" => "", "add" => $add));
             }
             else

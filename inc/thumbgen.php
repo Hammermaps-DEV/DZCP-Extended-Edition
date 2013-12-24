@@ -75,7 +75,7 @@ function thumbgen($filename,$width,$height)
 
             $bin=$imagick->getimage();
 
-            if(cache_thumbgen)
+            if(cache_thumbgen && strpos($filename, 'offline') === false)
                 @Cache::set_binary('thumbgen_file_'.$filename.'_'.$neueBreite.'_'.$neueHoehe.'_'.$type, $bin, 'inc/images/'.$filename);
 
             $imagick->clear(); unset($imagick);

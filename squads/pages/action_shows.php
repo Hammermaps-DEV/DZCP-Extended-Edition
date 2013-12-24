@@ -11,8 +11,8 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    if(!empty($_GET['showsquad'])) header('Location: ?action=shows&id='.convert::ToInt($_GET['showsquad']));
-    else if(!empty($_GET['show'])) header('Location: ?action=shows&id='.convert::ToInt($_GET['show']));
+    if(!empty($_GET['showsquad'])) header('Location: ?index=squads&amp;action=shows&id='.convert::ToInt($_GET['showsquad']));
+    else if(!empty($_GET['show'])) header('Location: ?index=squads&amp;action=shows&id='.convert::ToInt($_GET['show']));
 
     $get = _fetch(db("SELECT * FROM ".dba::get('squads')." WHERE `id` = '".convert::ToInt($_GET['id'])."'"));
     $qrym = db("SELECT s1.user,s1.squad,s2.id,s2.nick,s2.icq,s2.email,s2.xfire,s2.rlname,
@@ -72,7 +72,7 @@ else
         if(file_exists(basePath.'/inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end))
         {
             $style = 'padding:0;';
-            $squad = '<img src="../inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.string::decode($get['name']).'" />';
+            $squad = '<img src="inc/images/uploads/squads/'.convert::ToInt($get['id']).'.'.$end.'" alt="'.string::decode($get['name']).'" />';
             break;
         }
     }

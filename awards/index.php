@@ -6,28 +6,20 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-#########################
-## OUTPUT BUFFER START ##
-#########################
-include("../inc/buffer.php");
-
-##############
-## INCLUDES ##
-##############
-include(basePath."/inc/debugger.php");
-include(basePath."/inc/config.php");
-include(basePath."/inc/common.php");
+if(!defined('IS_DZCP'))
+{
+    include("../inc/buffer.php");
+    include(basePath."/inc/debugger.php");
+    include(basePath."/inc/config.php");
+    include(basePath."/inc/common.php");
+    header('Location: ../'.startpage('awards'));
+}
 
 ##############
 ## SETTINGS ##
 ##############
 $dir = "awards";
 $where = _site_awards;
-$index = "";
-
-##############
-## SECTIONS ##
-##############
 
 #########################
 ## Action Loader START ##
@@ -41,16 +33,3 @@ $index = '<div style="text-align:center; color:#FF0000;"><b>Sry, This page is no
 #######################
 ## Action Loader END ##
 #######################
-
-##############
-## SETTINGS ##
-##############
-$title = $pagetitle." - ".convert::ToString($where);
-$time_end = generatetime();
-$time = round($time_end - $time_start,4);
-page($index, $title, $where, $time);
-
-#######################
-## OUTPUT BUFFER END ##
-#######################
-gz_output();

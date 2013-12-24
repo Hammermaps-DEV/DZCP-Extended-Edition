@@ -34,7 +34,7 @@ if(_adminMenu != 'true')
                          `banner`       = '".string::encode($_POST['banner'])."',
                          `beschreibung` = '".string::encode($_POST['beschreibung'])."'");
 
-          $show = info(_linkus_added, "?admin=linkus");
+          $show = info(_linkus_added, "?index=admin&amp;admin=linkus");
         }
       } elseif($_GET['do'] == "edit") {
         $qry = db("SELECT * FROM ".dba::get('linkus')."
@@ -67,13 +67,13 @@ if(_adminMenu != 'true')
                          `beschreibung` = '".string::encode($_POST['beschreibung'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          $show = info(_linkus_edited, "?admin=linkus");
+          $show = info(_linkus_edited, "?index=admin&amp;admin=linkus");
         }
       } elseif($_GET['do'] == "delete") {
         $qry = db("DELETE FROM ".dba::get('linkus')."
                    WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $show = info(_linkus_deleted, "?admin=linkus");
+        $show = info(_linkus_deleted, "?index=admin&amp;admin=linkus");
       } else {
         $qry = db("SELECT * FROM ".dba::get('linkus')."
                    ORDER BY banner DESC");
@@ -86,10 +86,10 @@ if(_adminMenu != 'true')
                                                    "banner" => string::decode($get['text'])));
 
           $edit = show("page/button_edit", array("id" => $get['id'],
-                                                 "action" => "admin=linkus&amp;do=edit",
+                                                 "action" => "index=admin&amp;admin=linkus&amp;do=edit",
                                                  "title" => _button_title_edit));
           $delete = show("page/button_delete", array("id" => $get['id'],
-                                                     "action" => "admin=linkus&amp;do=delete",
+                                                     "action" => "index=admin&amp;admin=linkus&amp;do=delete",
                                                      "title" => _button_title_del));
 
           $show_ .= show($dir."/linkus_show", array("class" => $class,

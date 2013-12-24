@@ -14,5 +14,5 @@ if(($id = isset($_GET['id']) ? $_GET['id'] : false) != false)
     db("DELETE FROM ".dba::get('permissions')." WHERE user = ".convert::ToInt($id));
     db("DELETE FROM ".dba::get('userstats')." WHERE user = ".convert::ToInt($id));
     db("DELETE FROM ".dba::get('rss')." WHERE userid = ".convert::ToInt($id));
-    $show = info(_user_deleted, "?admin=activate_user", 4);
+    $show = info(_user_deleted, "?index=admin&amp;admin=activate_user", 4);
 }

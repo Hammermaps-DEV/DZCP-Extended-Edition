@@ -10,13 +10,13 @@ if(_adminMenu != 'true') exit();
 
 if(empty($_POST['download']) || empty($_POST['url']))
 {
-	if(empty($_POST['download'])) $show = error(_downloads_empty_download);
-	elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
+    if(empty($_POST['download'])) $show = error(_downloads_empty_download);
+    elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
 } else {
-	if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
-	else                                    $dl = string::encode($_POST['url']);
+    if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
+    else                                    $dl = string::encode($_POST['url']);
 
-	$qry = db("UPDATE ".dba::get('downloads')."
+    $qry = db("UPDATE ".dba::get('downloads')."
                      SET `download`     = '".string::encode($_POST['download'])."',
                          `url`          = '".$dl."',
                          `comments`     = '".convert::ToInt($_POST['comments'])."',
@@ -25,5 +25,5 @@ if(empty($_POST['download']) || empty($_POST['url']))
                          `kat`          = '".convert::ToInt($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-	$show = info(_downloads_edited, "?admin=dladmin");
+    $show = info(_downloads_edited, "?index=admin&amp;admin=dladmin");
 }

@@ -136,7 +136,7 @@ if(!empty($do))
         mailmgr::AddContent(string::decode(settings('eml_reg_subj')),show(string::decode(settings('eml_reg')), array("user" => string::decode($username), "pwd" => $mkpwd)));
         mailmgr::AddAddress($email);
 
-        $show = info(_uderadd_info, "../admin/");
+        $show = info(_uderadd_info, "?index=admin");
     }
 }
 

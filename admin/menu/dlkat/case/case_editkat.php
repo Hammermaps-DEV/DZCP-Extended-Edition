@@ -10,12 +10,12 @@ if(_adminMenu != 'true') exit();
 
 if(empty($_POST['kat']))
 {
-	$show = error(_dl_empty_kat);
+    $show = error(_dl_empty_kat);
 } else {
-	$qry = db("UPDATE ".dba::get('dl_kat')."
+    $qry = db("UPDATE ".dba::get('dl_kat')."
                      SET `name` = '".string::encode($_POST['kat'])."'
                      WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-	$show = info(_dl_admin_edited, "?admin=dlkat");
+    $show = info(_dl_admin_edited, "?index=admin&amp;admin=dlkat");
 }
 

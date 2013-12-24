@@ -7,23 +7,34 @@
  */
 
 ## Added for DZCP 1.0 Extended Edition ##
-define('_holder',"['[link]','?admin=[name]','background-image:url(menu/[name]/icon.[end]);'],\n");
-define('_holder_addons',"['[link]','?admin=[name]','background-image:url(../[pdir]/icon.[end]);'],\n");
-define('_teamspeak_default_icon_yes', '<a href="?admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="../inc/images/default_server_yes.png" alt="" class="icon" /></a>');
-define('_teamspeak_default_icon_no', '<a href="?admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="../inc/images/default_server_no.png" alt="" class="icon" /></a>');
-define('_teamspeak_default_icon_yes_no', '<img src="../inc/images/default_server_yesno.png" alt="" class="icon" />');
-define('_teamspeak_menu_icon_yes', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_no.gif" alt="" class="icon" /></a>');
-define('_teamspeak_menu_icon_no', '<a href="?admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_yes.gif" alt="" class="icon" /></a>');
-define('_ipban_menu_icon_enable', '<a href="[action]" title="[lang_ipban_disable]" rel="[info]" class="confirm"><img src="../inc/images/admin_lock_closed.jpg" alt="" class="icon" /></a>');
-define('_ipban_menu_icon_disable', '<a href="[action]" title="[lang_ipban_enable]" rel="[info]" class="confirm"><img src="../inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
-define('_news_img', '<img src="../inc/images/uploads/news/[img]" alt="" />');
-define('_emailicon_blank', '<img src="../inc/images/email.gif" alt="" class="icon" />');
+define('_holder',"['[link]','?index=admin&amp;admin=[name]','background-image:url(admin/menu/[name]/icon.[end]);'],\n");
+define('_holder_addons',"['[link]','?index=admin&amp;admin=[name]','background-image:url([pdir]/icon.[end]);'],\n");
+define('_teamspeak_default_icon_yes', '<a href="?index=admin&amp;admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="inc/images/default_server_yes.png" alt="" class="icon" /></a>');
+define('_teamspeak_default_icon_no', '<a href="?index=admin&amp;admin=teamspeak&amp;do=default_server&amp;id=[id]"><img src="inc/images/default_server_no.png" alt="" class="icon" /></a>');
+define('_teamspeak_default_icon_yes_no', '<img src="inc/images/default_server_yesno.png" alt="" class="icon" />');
+define('_teamspeak_menu_icon_yes', '<a href="?index=admin&amp;admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="inc/images/server_no.gif" alt="" class="icon" /></a>');
+define('_teamspeak_menu_icon_no', '<a href="?index=admin&amp;admin=teamspeak&amp;do=menu&amp;id=[id]"><img src="inc/images/server_yes.gif" alt="" class="icon" /></a>');
+define('_ipban_menu_icon_enable', '<a href="[action]" title="[lang_ipban_disable]" rel="[info]" class="confirm"><img src="inc/images/admin_lock_closed.jpg" alt="" class="icon" /></a>');
+define('_ipban_menu_icon_disable', '<a href="[action]" title="[lang_ipban_enable]" rel="[info]" class="confirm"><img src="inc/images/admin_lock_open.jpg" alt="" class="icon" /></a>');
+define('_news_img', '<img src="inc/images/uploads/news/[img]" alt="" />');
+define('_emailicon_blank', '<img src="inc/images/email.gif" alt="" class="icon" />');
 define('_installer_step', '<tr><td class="contentMainTop"><span class="fontBold">[text]</span></td></tr>');
 define('_installer_step_enabled', '<font class="installer_enabled">&raquo; [step]</font>');
 define('_installer_step_disabled', '<font class="installer_disabled"><li>[step]</li></font>');
-define('_installer_true', '<img src="../inc/images/true.gif" border="0" alt="" vspace="0" align="center"> ');
-define('_installer_false', '<img src="../inc/images/false.gif" border="0" alt="" vspace="0" align="center"> ');
-define('_installer_next_link', '<form action="index.php?installer&addon=[addon]&step=[step]#viewcontent" method="post" id="from"><div align="right"><input id="installer_next" [disable] type="submit" value="[value]" class="button submit" name="send" /></div></form>');
+define('_installer_true', '<img src="inc/images/true.gif" border="0" alt="" vspace="0" align="center"> ');
+define('_installer_false', '<img src="inc/images/false.gif" border="0" alt="" vspace="0" align="center"> ');
+define('_installer_next_link', '<form action="?index=admin&amp;installer&addon=[addon]&step=[step]#viewcontent" method="post" id="from"><div align="right"><input id="installer_next" [disable] type="submit" value="[value]" class="button submit" name="send" /></div></form>');
+
+## Added for DZCP 1.6 ##
+define('_xboxicon', '<img src="inc/images/xbox.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=http://www.xboxlc.com/cards/sig/newblack/[id].jpg /></td></tr>\')" onmouseout="DZCP.hideInfo()" />');
+define('_xboxicon_blank', '<img src="inc/images/xbox.png" height="20" width="20" alt="" class="icon" />');
+define('_psnicon', '<img src="inc/images/psn.png" alt="" height="20" width="20" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=http://mypsn.eu.playstation.com/psn/profile/[id].png /></td></tr>\')" onmouseout="DZCP.hideInfo()" />');
+define('_psnicon_blank', '<img src="inc/images/psn.png" height="20" width="20" alt="" class="icon" />');
+define('_xboxpic', '<img src="http://avatar.xboxlive.com/avatar/[id]/avatar-body.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=http://www.xboxlc.com/cards/newblack/[id].jpg /></td></tr>\')" onmouseout="DZCP.hideInfo()" />');
+define('_originicon', '<img src="inc/images/origin.png" height="20" width="20" alt="" class="icon" />');
+define('_originicon_blank', '<img src="inc/images/origin.png" height="20" width="20" alt="" class="icon" />');
+define('_battleneticon', '<img src="inc/images/battlenet.png" height="20" width="20" alt="" class="icon" />');
+define('_battleneticon_blank', '<img src="inc/images/battlenet.png" height="20" width="20" alt="" class="icon" />');
 
 ## Added for DZCP 1.5.2 ##
 define('_dropdown_date_ts', '<select id="t_[nr]" name="t_[nr]" class="dropdown">[day]</select> <select id="m_[nr]" name="m_[nr]" class="dropdown">[month]</select> <select id="j_[nr]" name="j_[nr]" class="dropdown">[year]</select>');
@@ -47,132 +58,138 @@ define('_profil_custom_url', '
   <td class="contentMainFirst" align="center"><a href="[value]" target="_blank" class="icon" />[value]</a></td>
 </tr>');
 define('_awards_event', '<a href="[url]" target="_blank">[event]</a>');
-define('_sponsors_bannerlink', '<a href="../sponsors/?action=link&amp;id=[id]" target="_blank" title="[title]"><img src="[banner]" alt="" /></a>');
-define('_next_event_link', '[datum] - <a class="navLastReg" href="../kalender/?action=show&amp;time=[timestamp]">[event]</a>');
+define('_sponsors_bannerlink', '<a href="?index=sponsors&amp;action=link&amp;id=[id]" target="_blank" title="[title]"><img src="[banner]" alt="" /></a>');
+define('_next_event_link', '[datum] - <a class="navLastReg" href="?index=kalender&amp;action=show&amp;time=[timestamp]">[event]</a>');
 define('_user_link_blank', '[nick]');
 define('_dropdown_date2', '<select id="tag" name="tag" class="dropdown">[tag]</select> <select id="monat" name="monat" class="dropdown">[monat]</select> <select id="jahr" name="jahr" class="dropdown">[jahr]</select>');
 
 ## Added for DZCP 1.4 ##
-define('_buddys_yesicon', '<img src="../inc/images/buddys_yes.gif" alt="" class="icon" />');
-define('_buddys_noicon', '<img src="../inc/images/buddys_no.gif" alt="" class="icon" />');
-define('_closedicon_votes', '<img src="../inc/images/closed_votes.gif" alt="" class="icon" />');
-define('_icqstatus_forum', '<img src="../inc/images/forum_icq.gif" alt="" title="[uin]" class="icon" />');
-define('_hpicon_forum', '<a href="[hp]" target="_blank"><img src="../inc/images/forum_hp.gif" alt="" title="[hp]" class="icon" /></a>');
-define('_emailicon_forum', '<a href="mailto:[email]"><img src="../inc/images/forum_email.gif" alt="" title="[email]" class="icon" /></a>');
-define('_server_menu_icon_yesno', '<img src="../inc/images/server_yesno.gif" alt="" class="icon" />');
-define('_forum_pn_preview', '<img src="../inc/images/forum_pn.gif" alt="" class="icon" style="cursor:pointer" />');
-define('_forum_zitat_preview', '<img src="../inc/images/zitat.gif" alt="" class="icon" style="cursor:pointer" />');
+define('_buddys_yesicon', '<img src="inc/images/buddys_yes.gif" alt="" class="icon" />');
+define('_buddys_noicon', '<img src="inc/images/buddys_no.gif" alt="" class="icon" />');
+define('_closedicon_votes', '<img src="inc/images/closed_votes.gif" alt="" class="icon" />');
+define('_icqstatus_forum', '<img src="inc/images/forum_icq.gif" alt="" title="[uin]" class="icon" />');
+define('_hpicon_forum', '<a href="[hp]" target="_blank"><img src="inc/images/forum_hp.gif" alt="" title="[hp]" class="icon" /></a>');
+define('_emailicon_forum', '<a href="mailto:[email]"><img src="inc/images/forum_email.gif" alt="" title="[email]" class="icon" /></a>');
+define('_server_menu_icon_yesno', '<img src="inc/images/server_yesno.gif" alt="" class="icon" />');
+define('_forum_pn_preview', '<img src="inc/images/forum_pn.gif" alt="" class="icon" style="cursor:pointer" />');
+define('_forum_zitat_preview', '<img src="inc/images/zitat.gif" alt="" class="icon" style="cursor:pointer" />');
 define('_user_link_preview', '[country] <a class="[class]" href="javascript:void(0)">[nick]</a>');
-define('_xfireicon', '<a target="_blank" href="http://profile.xfire.com/[username]"><img height="20" width="20" src="../inc/images/xfire.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=[img] /></td></tr>\')" onmouseout="DZCP.hideInfo()" /></a>');
-define('_steamicon', '<a target="_blank" href="[profile_url]"><img height="20" width="20" src="../inc/images/steam.png" alt="" class="icon"/ onmouseover="DZCP.showSteamBox(\'[username]\',\'[avatar_url]\',\'[text1]\',\'[text2]\',[status])" onmouseout="DZCP.hideInfo()" /></a>');
+define('_xfireicon', '<a target="_blank" href="http://profile.xfire.com/[username]"><img height="20" width="20" src="inc/images/xfire.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=[img] /></td></tr>\')" onmouseout="DZCP.hideInfo()" /></a>');
+define('_steamicon', '<a target="_blank" href="[profile_url]"><img height="20" width="20" src="inc/images/steam.png" alt="" class="icon"/ onmouseover="DZCP.showSteamBox(\'[username]\',\'[avatar_url]\',\'[text1]\',\'[text2]\',[status])" onmouseout="DZCP.hideInfo()" /></a>');
+define('_skypeicon', '<a href="skype:[username]?chat"><img src=[img] alt="" class="icon" /></a>');
 
 ## Added for DZCP 1.4 ##
-define('_gal_newicon', '<a href="?admin=gallery&amp;do=new&amp;id=[id]"><img src="../inc/images/new.gif" alt="" title="[titel]" class="icon" /></a>');
-define('_downloads_link', '<a href="?action=download&amp;id=[id]" style="display:block" title="[titel]"><img src="../inc/images/download.gif" alt="" class="icon" /> [download]</a>');
-define('_forum_thread_search_link', '[sticky] <a href="../forum/?action=showthread&amp;id=[id]&amp;hl=[hl]">[topic]</a> [closed]');
+define('_gal_newicon', '<a href="?index=admin&amp;admin=gallery&amp;do=new&amp;id=[id]"><img src="inc/images/new.gif" alt="" title="[titel]" class="icon" /></a>');
+define('_downloads_link', '<a href="?index=downloads&amp;action=download&amp;id=[id]" style="display:block" title="[titel]"><img src="inc/images/download.gif" alt="" class="icon" /> [download]</a>');
+define('_forum_thread_search_link', '[sticky] <a href="?index=forum&amp;action=showthread&amp;id=[id]&amp;hl=[hl]">[topic]</a>');
 define('_dropdown_time', '<select id="h" name="h" class="dropdown">[hour]</select> <select id="min" name="min" class="dropdown">[minute]</select>[uhr]');
-define('_server_menu_icon_yes', '<a href="?admin=server&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_no.gif" alt="" class="icon" /></a>');
-define('_server_menu_icon_no', '<a href="?admin=server&amp;do=menu&amp;id=[id]"><img src="../inc/images/server_yes.gif" alt="" class="icon" /></a>');
+define('_server_menu_icon_yes', '<a href="?index=admin&amp;admin=server&amp;do=menu&amp;id=[id]"><img src="inc/images/server_no.gif" alt="" class="icon" /></a>');
+define('_server_menu_icon_no', '<a href="?index=admin&amp;admin=server&amp;do=menu&amp;id=[id]"><img src="inc/images/server_yes.gif" alt="" class="icon" /></a>');
 
 ## Allgemein ##
-define('_user_link', '[country] <a class="[class]" href="../user/?action=user&amp;id=[id][get]">[nick]</a>');
+define('_user_link', '[country] <a class="[class]" href="?index=user&amp;action=user&amp;id=[id][get]">[nick]</a>');
 define('_user_link_noreg', '<a class="[class]" href="mailto:[email]">[nick]</a>');
 define('_link_mailto', '<a href="mailto:[email]">[nick]</a>');
-define('_userava_link', '<img src="../inc/images/uploads/useravatare/[id].[endung]" width="[width]" height="[height]" alt="" />');
-define('_no_userava', '<img src="../inc/images/noavatar.gif" width="[width]" height="[height]" alt="" />');
-define('_userpic_link', '<img src="../inc/images/uploads/userpics/[id].[endung]" width="[width]" height="[height]" alt="" />');
-define('_no_userpic', '<img src="../inc/images/nopic.gif" width="[width]" height="[height]" alt="" />');
+define('_userava_link', '<img src="inc/images/uploads/useravatare/[id].[endung]" width="[width]" height="[height]" alt="" />');
+define('_no_userava', '<img src="inc/images/noavatar.gif" width="[width]" height="[height]" alt="" />');
+define('_userpic_link', '<img src="inc/images/uploads/userpics/[id].[endung]" width="[width]" height="[height]" alt="" />');
+define('_no_userpic', '<img src="inc/images/nopic.gif" width="[width]" height="[height]" alt="" />');
 
 ## Icons ##
-define('_closedicon', '<img src="../inc/images/closed.png" alt="" class="icon" />');
-define('_openicon', '<img src="../inc/images/open.png" alt="" class="icon" />');
+define('_closedicon', '<img src="inc/images/closed.png" alt="" class="icon" />');
+define('_openicon', '<img src="inc/images/open.png" alt="" class="icon" />');
 define('_icqstatus', '<img src="http://web.icq.com/whitepages/online?icq=[uin]&amp;img=5" alt="" title="[uin]" class="icon" />');
-define('_hpicon', '<a href="[hp]" target="_blank"><img src="../inc/images/hp.gif" alt="" title="[hp]" class="icon" /></a>');
+define('_hpicon', '<a href="[hp]" target="_blank"><img src="inc/images/hp.gif" alt="" title="[hp]" class="icon" /></a>');
 define('_email_mailto', '<a href="mailto:[email]">[email]</a>');
-define('_emailicon', '<a href="mailto:[email]"><img src="../inc/images/email.gif" alt="" title="[email]" class="icon" /></a>');
-define('_emailicon_non_mailto', '<a href="[email]"><img src="../inc/images/email.gif" alt="" title="" class="icon" /></a>');
-define('_xfireicon_blank', '<img height="20" width="20" src="../inc/images/xfire.png" alt="" class="icon" />');
-define('_steamicon_blank', '<img height="20" width="20" src="../inc/images/steam.png" alt="" class="icon" />');
-define('_skypeicon_blank', '<img height="20" width="20" src="../inc/images/skype.png" alt="" class="icon" />');
-define('_hpicon_blank', '<img src="../inc/images/hp.gif" alt="" class="icon" />');
-define('_topicon', '<img src="../inc/images/top.gif" alt="" class="icon" />');
-define('_icqicon_blank', '<img src="../inc/images/icq.png" alt="" class="icon" />');
-define('_mficon_blank', '<img src="../inc/images/female_male.png" alt="" class="icon" />');
-define('_maleicon', '<img src="../inc/images/male.png" alt="" class="icon" />');
-define('_femaleicon', '<img src="../inc/images/female.png" alt="" class="icon" />');
-define('_yesno', '<img src="../inc/images/yesno.gif" alt="" class="icon" />');
-define('_cw_stats_won_icon', '<img src="../inc/images/won.gif" alt="" class="icon" />');
-define('_cw_stats_lost_icon', '<img src="../inc/images/lost.gif" alt="" class="icon" />');
-define('_cw_stats_draw_icon', '<img src="../inc/images/draw.gif" alt="" class="icon" />');
-define('_yesicon', '<img src="../inc/images/yes.gif" alt="" class="icon" />');
-define('_noicon', '<img src="../inc/images/no.gif" alt="" class="icon" />');
-define('_newicon', '<img src="../inc/images/forum_newpost.gif" alt="" class="icon" />');
-define('_deleteicon_blank', '<img alt="" src="../inc/images/delete.png" class="icon" />');
-define('_buddys_delete', '<a href="?action=buddys&amp;do=delete&amp;id=[id]"><img src="../inc/images/delete.png" alt="" class="icon" /></a>');
-define('_editicon_blank', '<img alt="" src="../inc/images/edit.png" class="icon" />');
-define('_addbuddyicon', '<a href="../user/?action=buddys&amp;do=addbuddy&amp;id=[id]"><img alt="" src="../inc/images/add.gif" class="icon" /></a>');
-define('_gameicon', '<img alt="" src="../inc/images/gameicons/custom/[icon]" height="16" width="16" class="icon" />');
-define('_gallery_editicon', '<a href="../upload/?action=usergallery&amp;do=edit&gid=[id]"><img alt="" src="../inc/images/edit.png" title="Edit" class="icon" /></a>');
-define('_admin_ck_edit', '<a href="?action=admin&amp;do=paycheck&amp;id=[id]"><img src="../inc/images/edit.png" alt="" title="Edit" class="icon" /></a>');
-define('_msg_delete_sended', '<a href="?action=msg&amp;do=deletesended&amp;id=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
-define('_gallery_deleteicon', '<a href="?action=editprofile&gallery=delete&gid=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
-define('_delete', '<a href="?action=msg&amp;do=deletethis&amp;id=[id]"><img alt="" src="../inc/images/delete.png" title="Delete" class="icon" /></a>');
+define('_emailicon', '<a href="mailto:[email]"><img src="inc/images/email.gif" alt="" title="[email]" class="icon" /></a>');
+define('_emailicon_non_mailto', '<a href="[email]"><img src="inc/images/email.gif" alt="" class="icon" /></a>');
+define('_xfireicon_blank', '<img height="20" width="20" src="inc/images/xfire.png" alt="" class="icon" />');
+define('_steamicon_blank', '<img height="20" width="20" src="inc/images/steam.png" alt="" class="icon" />');
+define('_skypeicon_blank', '<img height="20" width="20" src="inc/images/skype.png" alt="" class="icon" />');
+define('_hpicon_blank', '<img src="inc/images/hp.gif" alt="" class="icon" />');
+define('_topicon', '<img src="inc/images/top.gif" alt="" class="icon" />');
+define('_icqicon_blank', '<img src="inc/images/icq.png" alt="" class="icon" />');
+define('_mficon_blank', '<img src="inc/images/female_male.png" alt="" class="icon" />');
+define('_maleicon', '<img src="inc/images/male.png" alt="" class="icon" />');
+define('_femaleicon', '<img src="inc/images/female.png" alt="" class="icon" />');
+define('_yesno', '<img src="inc/images/yesno.gif" alt="" class="icon" />');
+define('_cw_stats_won_icon', '<img src="inc/images/won.gif" alt="" class="icon" />');
+define('_cw_stats_lost_icon', '<img src="inc/images/lost.gif" alt="" class="icon" />');
+define('_cw_stats_draw_icon', '<img src="inc/images/draw.gif" alt="" class="icon" />');
+define('_yesicon', '<img src="inc/images/yes.gif" alt="" class="icon" />');
+define('_noicon', '<img src="inc/images/no.gif" alt="" class="icon" />');
+define('_newicon', '<img src="[dir]/images/forum/forum_unread.gif" alt="" class="icon" />');
+define('_readedicon', '<img src="[dir]/images/forum/forum_read.gif" alt="" class="icon" />');
+define('_readedicon_lock', '<img src="[dir]/images/forum/forum_read_locked.gif" alt="" class="icon" />');
+define('_newicon_lock', '<img src="[dir]/images/forum/forum_unread_locked.gif" alt="" class="icon" />');
+define('_newicon_sub', '<img src="[dir]/images/forum/forum_unread_subforum.gif" alt="" class="icon" />');
+define('_readedicon_sub', '<img src="[dir]/images/forum/forum_read_subforum.gif" alt="" class="icon" />');
+define('_deleteicon_blank', '<img alt="" src="inc/images/delete.png" class="icon" />');
+define('_buddys_delete', '<a href="?index=user&amp;action=buddys&amp;do=delete&amp;id=[id]"><img src="inc/images/delete.png" alt="" class="icon" /></a>');
+define('_editicon_blank', '<img alt="" src="inc/images/edit.png" class="icon" />');
+define('_addbuddyicon', '<a href="?index=user&amp;action=buddys&amp;do=addbuddy&amp;id=[id]"><img alt="" src="inc/images/add.gif" class="icon" /></a>');
+define('_gameicon', '<img alt="" src="inc/images/gameicons/custom/[icon]" height="16" width="16" class="icon" />');
+define('_gallery_editicon', '<a href="?index=upload&amp;?action=usergallery&amp;do=edit&gid=[id]"><img alt="" src="inc/images/edit.png" title="Edit" class="icon" /></a>');
+define('_admin_ck_edit', '<a href="?index=clankasse&amp;action=admin&amp;do=paycheck&amp;id=[id]"><img src="inc/images/edit.png" alt="" title="Edit" class="icon" /></a>');
+define('_msg_delete_sended', '<a href="?index=user&amp;action=msg&amp;do=deletesended&amp;id=[id]"><img alt="" src="inc/images/delete.png" title="Delete" class="icon" /></a>');
+define('_gallery_deleteicon', '<a href="?index=user&amp;action=editprofile&gallery=delete&gid=[id]"><img alt="" src="inc/images/delete.png" title="Delete" class="icon" /></a>');
+define('_delete', '<a href="?index=user&amp;action=msg&amp;do=deletethis&amp;id=[id]"><img alt="" src="inc/images/delete.png" title="Delete" class="icon" /></a>');
 
 ## News ##
-define('_news_kat', '<img src="../inc/images/uploads/newskat/[img]" alt="" />');
-define('_news_klapplink', '<br /><a href="javascript:DZCP.toggle(\'[id]\')"><img src="../inc/images/[which].gif" id="img[id]" alt="" class="icon" /> [klapplink]</a>');
+define('_news_kat', '<img src="inc/images/uploads/newskat/[img]" alt="" />');
+define('_news_klapplink', '<br /><a href="javascript:DZCP.toggle(\'[id]\')"><img src="inc/images/[which].gif" id="img[id]" alt="" class="icon" /> [klapplink]</a>');
 define('_news_links', '<span class="fontItalic">[rel]</span><br />[link1] [link2] [link3]');
 define('_artikel_links', '<span class="fontItalic">[rel]</span><br />[link1] [link2] [link3]');
 define('_news_link', '<span class="fontBold">&raquo;</span> <a href="[url]" target="_blank">[link]</a> ');
-define('_news_show_link', '<a href="../news/?action=show&amp;id=[id]">[titel]</a>');
+define('_news_show_link', '<a href="?index=news&amp;action=show&amp;id=[id]">[titel]</a>');
 define('_news_com', '#');
 
 ## Artikel ##
 define('_artikel_link', '<span class="fontBold">&raquo;</span> <a href="[url]" target="_blank">[link]</a> ');
 
 ## Forum ##
-define('_forum_thread_link', '[global] [sticky] <a href="?action=showthread&amp;kid=[kid]&amp;id=[id]">[topic]</a> [closed] <a href="?action=showthread&amp;id=[id]&amp;page=[page]#p[lpid]">&raquo;</a>');
-define('_forum_dowhat_add_thread', 'addthread&amp;kid=[kid]');
-define('_forum_add_lastpost', '?action=showthread&amp;id=[tid]&amp;page=[page]#p[id]');
-define('_forum_dowhat_add_post', 'addpost&amp;kid=[kid]&amp;id=[id]');
-define('_forum_dowhat_edit_thread', 'editthread&amp;id=[id]');
-define('_forum_dowhat_edit_post', 'editpost&amp;id=[id]');
+define('_forum_thread_link', '[global] [sticky] <a href="?index=forum&amp;action=showthread&amp;kid=[kid]&amp;id=[id]">[topic]</a><a href="?action=showthread&amp;id=[id]&amp;page=[page]#p[lpid]">&raquo;</a>');
+define('_forum_dowhat_add_thread', 'addthread&amp;kid=[kid]&amp;index=forum');
+define('_forum_add_lastpost', '?index=forum&amp;action=showthread&amp;id=[tid]&amp;page=[page]#p[id]');
+define('_forum_dowhat_add_post', 'addpost&amp;kid=[kid]&amp;id=[id]&amp;index=forum');
+define('_forum_dowhat_edit_thread', 'editthread&amp;id=[id]&amp;index=forum');
+define('_forum_dowhat_edit_post', 'editpost&amp;id=[id]&amp;index=forum');
 define('_forum_select_field_kat', '<option value="[value]" class="dropdownKat">[what]</option> [skat]');
 define('_forum_select_field_skat', '<option value="[value]">-> [what]</option>');
 
 ## Gästebuch ##
-define('_gb_commenticon', '<a href="?action=admin&amp;do=addcomment&amp;id=[id]"><img src="../inc/images/comment.gif" alt="" title="[title]" class="icon" /></a>');
+define('_gb_commenticon', '<a href="?index=gb&amp;action=admin&amp;do=addcomment&amp;id=[id]"><img src="inc/images/comment.gif" alt="" title="[title]" class="icon" /></a>');
 
 ## DropDownmenu-Datum/Zeit ##
 define('_dropdown_date', '<select id="t" name="t" class="dropdown">[day]</select> <select id="m" name="m" class="dropdown">[month]</select> <select id="j" name="j" class="dropdown">[year]</select>');
 
 ## Umfragen ##
-define('_votes_titel', '<a href="javascript:DZCP.toggle(\'[vid]\')"><img src="../inc/images/[icon].gif" alt="" id="img[vid]" class="icon" />[intern][titel]</a>');
+define('_votes_titel', '<a href="javascript:DZCP.toggle(\'[vid]\')"><img src="inc/images/[icon].gif" alt="" id="img[vid]" class="icon" />[intern][titel]</a>');
 define('_votes_balken', '<div style="width:[width]%" class="statsBalkenShader"></div>');
 
 ## Downloads ##
 define('_downloads_files_exists', '<option value="[dl]" [sel]>[dl]</option>');
 
 ## Links ##
-define('_links_textlink', '<center><a href="?action=link&amp;id=[id]" target="_blank">[text]</a></center>');
-define('_links_bannerlink', '<center><a href="?action=link&amp;id=[id]" target="_blank"><img src="[banner]" alt="" /></a></center>');
+define('_links_textlink', '<center><a href="?index=links&amp;action=link&amp;id=[id]" target="_blank">[text]</a></center>');
+define('_links_bannerlink', '<center><a href="?index=links&amp;action=link&amp;id=[id]" target="_blank"><img src="[banner]" alt="" /></a></center>');
 
 ## Squads ##
 define('_member_squad_squadlink', '<a href="javascript:DZCP.toggle(\'[id]\')">[squad]</a>');
 
 ## Clanwars ##
-define('_cw_details_squad', '[img] [game] - <a href="../squads/?showsquad=[id]">[name]</a>');
+define('_cw_details_squad', '[img] [game] - <a href="?index=squads&amp;showsquad=[id]">[name]</a>');
 define('_cw_details_server', '<a href="hlsw://[serverip]">[servername] - [serverip]</a>');
 define('_cw_no_results', '<td class="contentMainFirst"></td><td class="contentMainFirst" colspan="2"></td>');
 define('_cw_add_select_field_squads', '<option value="[id]"> [name]</option>');
 define('_cw_edit_select_field_squads', '<option value="[id]" [sel]> [name]</option>');
-define('_cw_show_details', '<a href="?action=details&amp;id=[id]"><img src="../inc/images/details.gif" alt="" class="icon" /></a>');
+define('_cw_show_details', '<a href="?index=clanwars&amp;action=details&amp;id=[id]"><img src="inc/images/details.gif" alt="" class="icon" /></a>');
 define('_cw_legende', '<tr><td class="[class]" align="center" width="1%">[img]</td><td class="[class]" colspan="10">[game]</td></tr>');
 
 ## Awards ##
-define('_awards_erster_img', '<img src="../inc/images/1st.gif" alt="" class="icon" /> (1)');
-define('_awards_zweiter_img', '<img src="../inc/images/2nd.gif" alt="" class="icon" /> (2)');
-define('_awards_dritter_img', '<img src="../inc/images/3rd.gif" alt="" class="icon" /> (3)');
+define('_awards_erster_img', '<img src="inc/images/1st.gif" alt="" class="icon" /> (1)');
+define('_awards_zweiter_img', '<img src="inc/images/2nd.gif" alt="" class="icon" /> (2)');
+define('_awards_dritter_img', '<img src="inc/images/3rd.gif" alt="" class="icon" /> (3)');
 define('_awards_admin_add_select_field_squads', '<option value="[id]"> [name]</option>');
 define('_awards_admin_edit_select_field_squads', '<option value="[id]" [sel]> [name]</option>');
 define('_awards_legende', '<tr><td class="[class]" align="center" width="1%">[img]</td><td class="[class]" colspan="6">[game]</td></tr>');
@@ -187,12 +204,12 @@ define('_linkus_admin', '<a href="?action=admin&amp;do=new">[new]</a>');
 ## Admin ##
 define('_news_edit_link', "editnews&amp;id=[id]");
 define('_artikel_edit_link', 'edit&amp;id=[id]');
-define('_config_forum_kats_titel', '<a href="?admin=forum&amp;show=subkats&amp;id=[id]" style="display:block">[kat]</a>');
-define('_config_newskats_img', '<img src="../inc/images/uploads/newskat/[img]" alt="" />');
-define('_config_neskats_katbild_upload', '<a href="../upload/?action=newskats">upload</a>');
-define('_config_neskats_katbild_upload_edit', '<a href="../upload/?action=newskats&amp;edit=[id]">upload</a>');
+define('_config_forum_kats_titel', '<a href="?index=admin&amp;admin=forum&amp;show=subkats&amp;id=[id]" style="display:block">[kat]</a>');
+define('_config_newskats_img', '<img src="inc/images/uploads/newskat/[img]" alt="" />');
+define('_config_neskats_katbild_upload', '<a href="?index=upload&amp;action=newskats">upload</a>');
+define('_config_neskats_katbild_upload_edit', '<a href="?index=upload&amp;action=newskats&amp;edit=[id]">upload</a>');
 define('_config_newskats_editid', 'editnewskat&amp;id=[id]');
-define('_member_admin_icon_upload', '<a href="../upload/">upload</a>');
+define('_member_admin_icon_upload', '<a href="?index=upload">upload</a>');
 define('_checkfield_squads', '
 <tr>
   <td><input class="checkbox" type="checkbox" id="squad_[id]" name="squad[id]" value="[id]" [check] /><label for="squad_[id]"> [squad]</label></td>
@@ -371,7 +388,7 @@ define('_profil_custom', '
 define('_profil_custom_mail', '
 <tr>
   <td class="contentMainTop" width="20%"><span class="fontBold">[name]:</span></td>
-  <td class="contentMainFirst" align="center"><img src="../inc/images/mailto.gif" alt="" class="icon" /> <a href="mailto:[value]">[value]</a></td>
+  <td class="contentMainFirst" align="center"><img src="inc/images/mailto.gif" alt="" class="icon" /> <a href="mailto:[value]">[value]</a></td>
 </tr>');
 
 ## Userprofil bearbeiten ##
@@ -381,32 +398,32 @@ define('_profil_head_cont', '
 </tr>');
 
 ## User ##
-define('_msg_in_title', '<a href="?action=msg&amp;do=show&amp;id=[id]">[titel]</a>');
-define('_msg_out_title', '<a href="?action=msg&amp;do=showsended&amp;id=[id]">[titel]</a>');
+define('_msg_in_title', '<a href="?index=user&amp;action=msg&amp;do=show&amp;id=[id]">[titel]</a>');
+define('_msg_out_title', '<a href="?index=user&amp;action=msg&amp;do=showsended&amp;id=[id]">[titel]</a>');
 define('_to_buddys', '<option value="[id]" [selected="selected"]>[nick]</option>');
 define('_to_users', '<option value="[id]" [selected="selected"]>[nick]</option>');
 define('_to_squads', '<option value="[id]" [sel]>-> [name]</option>');
-define('_gallery_pic_link', '<img src="../inc/images/uploads/usergallery/[user]_[img]" alt="" />');
-define('_gallery_edit_unlink', '../inc/images/uploads/usergallery/[user]_[img]');
-define('_user_new_forum', '&nbsp;&nbsp;<a href="../forum/?action=showthread&amp;id=[tid]&amp;page=[page]#p[lp]">[intern][wichtig]<span class="fontWichtig">[cnt]</span> [post] [nthread] <span class="fontWichtig">[thread]</span></a><br />');
-define('_user_new_gb', '&nbsp;&nbsp;<a href="../gb/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_users', '&nbsp;&nbsp;<a href="?action=userlist&amp;show=newreg"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_membergb', '&nbsp;&nbsp;<a href="?action=user&amp;id=[id]&amp;show=gb"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_news', '&nbsp;&nbsp;<a href="../news/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_clanwar', '&nbsp;&nbsp;<a href="../clanwars/?action=details&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_votes', '&nbsp;&nbsp;<a href="../votes/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_awards', '&nbsp;&nbsp;<a href="../awards/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
-define('_user_new_rankings', '&nbsp;&nbsp;<a href="../rankings/"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_gallery_pic_link', '<img src="inc/images/uploads/usergallery/[user]_[img]" alt="" />');
+define('_gallery_edit_unlink', 'inc/images/uploads/usergallery/[user]_[img]');
+define('_user_new_forum', '&nbsp;&nbsp;<a href="?index=forum&amp;action=showthread&amp;id=[tid]&amp;page=[page]#p[lp]">[intern][wichtig]<span class="fontWichtig">[cnt]</span> [post] [nthread] <span class="fontWichtig">[thread]</span></a><br />');
+define('_user_new_gb', '&nbsp;&nbsp;<a href="?index=gb"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_users', '&nbsp;&nbsp;<a href="?index=user&amp;action=userlist&amp;show=newreg"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_membergb', '&nbsp;&nbsp;<a href="?index=user&amp;action=user&amp;id=[id]&amp;show=gb"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_news', '&nbsp;&nbsp;<a href="?index=news"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_clanwar', '&nbsp;&nbsp;<a href="?index=clanwars&amp;action=details&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_votes', '&nbsp;&nbsp;<a href="?index=votes"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_awards', '&nbsp;&nbsp;<a href="?index=awards"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_rankings', '&nbsp;&nbsp;<a href="?index=rankings"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
 define('_select_field', '<option value="[value]" [sel]> [what]</option>');
-define('_user_new_gallery', '&nbsp;&nbsp;<a href="../gallery/[action]"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_gallery', '&nbsp;&nbsp;<a href="?index=gallery&amp;[action]"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
 
 ## Userlobby Artikel Comments ##
-define('_user_new_artc', '&nbsp;&nbsp;<a href="../artikel/?action=show&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
+define('_user_new_artc', '&nbsp;&nbsp;<a href="?index=artikel&amp;action=show&amp;id=[id]#lastcomment"><span class="fontWichtig">[cnt]</span> [eintrag]</a><br />');
 
 ## Sonstiges ##
-define('_klapptext_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/collapse.gif" alt="" class="icon" /></a>');
-define('_klapptext_dont_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/expand.gif" alt="" class="icon" /></a>');
-define('_klapptext_show_link', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/expand.gif" alt="" class="icon" />[link]</a>');
-define('_klapptext_server_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/[moreicon].gif" alt="" class="icon" />[link]</a>');
-define('_klapptext_no_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="../inc/images/[moreicon].gif" alt="" class="icon [class_ext]" /></a>');
+define('_klapptext_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="inc/images/collapse.gif" alt="" class="icon" /></a>');
+define('_klapptext_dont_show', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="inc/images/expand.gif" alt="" class="icon" /></a>');
+define('_klapptext_show_link', '<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="inc/images/expand.gif" alt="" class="icon" />[link]</a>');
+define('_klapptext_server_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="inc/images/[moreicon].gif" alt="" class="icon" />[link]</a>');
+define('_klapptext_no_link','<a href="javascript:DZCP.toggle(\'[id]\')"><img id="img[id]" src="inc/images/[moreicon].gif" alt="" class="icon [class_ext]" /></a>');
 define('_select_field_fightus', '<option value="[id]">[squad] ([game])</option>');

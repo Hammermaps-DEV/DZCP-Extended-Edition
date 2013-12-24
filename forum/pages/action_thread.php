@@ -121,6 +121,7 @@ else
                                           "emailhead" => _email,
                                           "form" => $form,
                                           "reg" => $get['t_reg'],
+                                            "sid" => mkpwd(4),
                                           "id" => "",
                                           "security" => _register_confirm,
                                           "preview" => _preview,
@@ -151,7 +152,7 @@ else
       {
         $toCheck = empty($_POST['eintrag']);
       } else {
-        $toCheck = empty($_POST['topic']) || empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+        $toCheck = empty($_POST['topic']) || empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !$securimage->check($_POST['secure']);
       }
 
       if($toCheck)
@@ -162,7 +163,7 @@ else
           $form = show("page/editor_regged", array("nick" => autor($get['t_reg'])));
 
         } else {
-          if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
+          if(!$securimage->check($_POST['secure'])) $error = _error_invalid_regcode;
           elseif(empty($_POST['topic'])) $error = _empty_topic;
             elseif(empty($_POST['nick'])) $error = _empty_nick;
             elseif(empty($_POST['email'])) $error = _empty_email;
@@ -240,7 +241,8 @@ else
                                             "form" => $form,
                                             "reg" => $_POST['reg'],
                                             "preview" => _preview,
-                                                "emailhead" => _email,
+                                              "sid" => mkpwd(4),
+                                            "emailhead" => _email,
                                                 "id" => "",
                                             "security" => _register_confirm,
                                             "what" => _button_value_edit,
@@ -443,7 +445,7 @@ else
         }
       }
 
-        $index = info(_forum_editthread_successful, "?action=showthread&amp;id=".$gett['id']."");
+        $index = info(_forum_editthread_successful, "?index=forum&amp;action=showthread&amp;id=".$gett['id']."");
 
       }
     } else $index = error(_error_wrong_permissions);
@@ -543,7 +545,7 @@ else
             if(userid() != 0)
                 $toCheck = empty($_POST['eintrag']) || empty($_POST['topic']);
             else
-                $toCheck = empty($_POST['topic']) || empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || $_POST['secure'] != $_SESSION['sec_'.$dir] || empty($_SESSION['sec_'.$dir]);
+                $toCheck = empty($_POST['topic']) || empty($_POST['nick']) || empty($_POST['email']) || empty($_POST['eintrag']) || !check_email($_POST['email']) || !$securimage->check($_POST['secure']);
             if($toCheck)
             {
                 if(userid() != 0)
@@ -551,7 +553,7 @@ else
                     if(empty($_POST['eintrag'])) $error = _empty_eintrag;
                     elseif(empty($_POST['topic'])) $error = _empty_topic;
                 } else {
-                    if(($_POST['secure'] != $_SESSION['sec_'.$dir]) || empty($_SESSION['sec_'.$dir])) $error = _error_invalid_regcode;
+                    if(!$securimage->check($_POST['secure'])) $error = _error_invalid_regcode;
                     elseif(empty($_POST['topic'])) $error = _empty_topic;
                     elseif(empty($_POST['nick'])) $error = _empty_nick;
                     elseif(empty($_POST['email'])) $error = _empty_email;
@@ -754,7 +756,7 @@ else
                                             SET `forumposts` = forumposts+1
                                             WHERE `user`       = '".userid()."'");
 
-                $index = info(_forum_newthread_successful, "?action=showthread&amp;id=".$thisFID."#p1");
+                $index = info(_forum_newthread_successful, "?index=forum&amp;action=showthread&amp;id=".$thisFID."#p1");
             }
         }
   }

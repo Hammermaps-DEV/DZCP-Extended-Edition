@@ -18,7 +18,7 @@ function cw_result_details($punkte, $gpunkte)
 }
 
 function img_cw($folder="", $img="")
-{ return "<a href=\"../".$folder."_".$img."\" data-lightbox=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"../inc/ajax.php?loader=thumbgen&file=uploads/".$folder."_".$img."\" alt=\"\" /></a>"; }
+{ return "<a href=\"../".$folder."_".$img."\" data-lightbox=\"lightbox[cw_".convert::ToInt($folder)."]\"><img src=\"inc/ajax.php?loader=thumbgen&file=uploads/".$folder."_".$img."\" alt=\"\" /></a>"; }
 
 function cw_screenshots($cwid=0)
 {
@@ -36,7 +36,7 @@ function cw_screenshots($cwid=0)
             foreach ($screen as $file)
             {
                 $td1 .= '<td class="contentMainFirst" align="center" width="25%"><span class="fontBold">'._cw_screenshot.' '.$scree_count.'</span></td>';
-                $td2 .= '<td class="contentMainSecond" align="center" width="25%"><a href="../inc/images/uploads/clanwars/'.$file.'" data-lightbox="cw_pic"><img src="../inc/ajax.php?loader=thumbgen&width=160&height=120&file=uploads/clanwars/'.$file.'" alt="" /></a></td>';
+                $td2 .= '<td class="contentMainSecond" align="center" width="25%"><a href="inc/images/uploads/clanwars/'.$file.'" data-lightbox="cw_pic"><img src="inc/ajax.php?loader=thumbgen&width=160&height=120&file=uploads/clanwars/'.$file.'" alt="" /></a></td>';
                 $scree_count++;
             }
 

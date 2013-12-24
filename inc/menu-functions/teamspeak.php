@@ -21,7 +21,7 @@ function teamspeak()
     if(!$ajaxJob)
     {
         return "<div id=\"navTeamspeakServer\">
-        <div style=\"width:100%;padding:10px 0;text-align:center\"><img src=\"../inc/images/ajax_loading.gif\" alt=\"\" /></div>
+        <div style=\"width:100%;padding:10px 0;text-align:center\"><img src=\"inc/images/ajax_loading.gif\" alt=\"\" /></div>
         <script language=\"javascript\" type=\"text/javascript\">DZCP.initDynLoader('navTeamspeakServer','teamspeak','');</script></div>";
     }
     else

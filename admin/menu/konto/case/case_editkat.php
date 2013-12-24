@@ -13,5 +13,5 @@ if(empty($_POST['kat']))
 else
 {
     db("UPDATE ".dba::get('c_kats')." SET `kat` = '".string::encode($_POST['kat'])."' WHERE id = '".convert::ToInt($_GET['id'])."'");
-    $show = info(_clankasse_kat_edited, "?admin=konto");
+    $show = info(_clankasse_kat_edited, "?index=admin&amp;admin=konto");
 }

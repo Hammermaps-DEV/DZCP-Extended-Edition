@@ -10,14 +10,14 @@ if(_adminMenu != 'true') exit();
 
 if(empty($_POST['download']) || empty($_POST['url']))
 {
-	if(empty($_POST['download'])) $show = error(_downloads_empty_download);
-	elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
+    if(empty($_POST['download'])) $show = error(_downloads_empty_download);
+    elseif(empty($_POST['url']))  $show = error(_downloads_empty_url);
 } else {
 
-	if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
-	else                                    $dl = string::encode($_POST['url']);
+    if(preg_match("#^www#i",$_POST['url'])) $dl = links($_POST['url']);
+    else                                    $dl = string::encode($_POST['url']);
 
-	$qry = db("INSERT INTO ".dba::get('downloads')."
+    $qry = db("INSERT INTO ".dba::get('downloads')."
                      SET `download`     = '".string::encode($_POST['download'])."',
                          `url`          = '".$dl."',
                          `date`         = '".time()."',
@@ -25,5 +25,5 @@ if(empty($_POST['download']) || empty($_POST['url']))
                          `beschreibung` = '".string::encode($_POST['beschreibung'])."',
                          `kat`          = '".convert::ToInt($_POST['kat'])."'");
 
-	$show = info(_downloads_added, "?admin=dladmin");
+    $show = info(_downloads_added, "?index=admin&amp;admin=dladmin");
 }

@@ -195,8 +195,8 @@ else
     }
 
     $index = show($dir."/forum_posts_show", array("nick" => cleanautor($pUId, '', $_POST['nick'], $_POST['email']),
-                                                  "postnr" => "#".($i+($page-1)*$maxfposts),
-                                                  "p" => ($i+($page-1)*$maxfposts),
+                                                  "postnr" => "#".($i+($page-1)*settings('m_fposts')),
+                                                  "p" => ($i+($page-1)*settings('m_fposts')),
                                                   "class" => 'class="commentsRight"',
                                                   "text" => bbcode::parse_html($_POST['eintrag']).$editedby,
                                                   "pn" => $pn,

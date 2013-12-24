@@ -28,7 +28,7 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
         }
 
         $info = ' onmouseover="DZCP.showInfo(\''.$infoBday.'\')" onmouseout="DZCP.hideInfo()"';
-        $bdays = '<a href="../user/?action=userlist&amp;show=bday&amp;time='.$datum.'"'.$info.'><img src="../inc/images/bday.gif" alt="" /></a>';
+        $bdays = '<a href="?index=user&amp;action=userlist&amp;show=bday&amp;time='.$datum.'"'.$info.'><img src="inc/images/bday.gif" alt="" /></a>';
         unset($qry,$bday_count,$get,$p_tag,$infoBday,$i_bday,$info);
     }
 
@@ -41,12 +41,12 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
         {
             $get_squad_icon = db("SELECT icon FROM `".dba::get('squads')."` WHERE `id` = '".$get['squad_id']."' LIMIT 1",false,true);
             $p_tag = ($cw_count >= 2 && $i_cw != $cw_count ? '<p>' : '');
-            $test = '<img align="absmiddle" src="../inc/images/gameicons/'.string::decode($get_squad_icon['icon']).'" alt="" /> ';
+            $test = '<img align="absmiddle" src="inc/images/gameicons/'.string::decode($get_squad_icon['icon']).'" alt="" /> ';
             $infoCW .= jsconvert($test._kal_cw.string::decode($get['gegner']).$p_tag); $i_cw++;
         }
 
         $info = ' onmouseover="DZCP.showInfo(\''.$infoCW.'\')" onmouseout="DZCP.hideInfo()"';
-        $cws = '<a href="../clanwars/?action=kalender&amp;time='.$datum.'"'.$info.'><img src="../inc/images/cw.gif" alt="" /></a>';
+        $cws = '<a href="?index=clanwars&amp;action=kalender&amp;time='.$datum.'"'.$info.'><img src="inc/images/cw.gif" alt="" /></a>';
         unset($qry,$cw_count,$get,$p_tag,$infoCW,$i_cw,$info);
     }
 
@@ -62,7 +62,7 @@ function kalender_show_events($i=0,$monat=0,$jahr=0,$datum=0)
         }
 
         $info = ' onmouseover="DZCP.showInfo(\''.$infoEvent.'\')" onmouseout="DZCP.hideInfo()"';
-        $event = '<a href="?action=show&amp;time='.$datum.'"'.$info.'><img src="../inc/images/event.png" alt="" /></a>';
+        $event = '<a href="?index=kalender&amp;action=show&amp;time='.$datum.'"'.$info.'><img src="inc/images/event.png" alt="" /></a>';
         unset($qry,$event_count,$get,$p_tag,$infoEvent,$i_event,$info);
     }
 

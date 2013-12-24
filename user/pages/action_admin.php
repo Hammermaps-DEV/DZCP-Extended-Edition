@@ -50,7 +50,7 @@ else
                     else
                     {
                         $msg = show(_admin_user_get_identy, array("nick" => autor($_GET['id'])));
-                        $index = info($msg, "?action=user&amp;id=".convert::ToInt($_GET['id'])."");
+                        $index = info($msg, "?index=user&amp;action=user&amp;id=".convert::ToInt($_GET['id'])."");
 
                         ## Ereignis in den Adminlog schreiben ##
                         wire_ipcheck("ident(".userid()."_".convert::ToInt($_GET['id']).")");
@@ -170,7 +170,7 @@ else
                         wire_ipcheck("upduser(".userid()."_".$edituser.")");
                     }
 
-                    $index = info(_admin_user_edited, "?action=admin&amp;edit=".$edituser);
+                    $index = info(_admin_user_edited, "?index=user&amp;action=admin&amp;edit=".$edituser);
                 break;
                 case 'updateme':
                     // Squads Update
@@ -187,7 +187,7 @@ else
                             db("INSERT INTO ".dba::get('userpos')." SET `user` = '".userid()."', `posi`   = '".convert::ToInt($_POST['sqpos'.$getsq['id']])."', `squad`  = '".convert::ToInt($getsq['id'])."'");
                     }
 
-                    $index = info(_admin_user_edited, "?action=admin&amp;edit=".userid()."");
+                    $index = info(_admin_user_edited, "?index=user&amp;action=admin&amp;edit=".userid()."");
                 break;
                 case 'delete':
                     $index = show(_user_delete_verify, array("user" => autor(convert::ToInt($_GET['id'])), "id" => convert::ToInt($_GET['id'])));
@@ -248,7 +248,7 @@ else
                             }
 
                             db("DELETE FROM ".dba::get('users')." WHERE id = '".$getdel['id']."'");
-                            $index = info(_user_deleted, "?action=userlist");
+                            $index = info(_user_deleted, "?index=user&amp;action=userlist");
                         }
                     }
                 break;

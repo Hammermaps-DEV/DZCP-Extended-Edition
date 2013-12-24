@@ -25,8 +25,8 @@ else
             $edit = ''; $delete = '';
             if(permission("links"))
             {
-                $edit = show("page/button_edit", array("id" => $get['id'], "action" => "action=admin&amp;do=edit", "title" => _button_title_edit));
-                $delete = show("page/button_delete", array("id" => $get['id'], "action" => "action=admin&amp;do=delete", "title" => _button_title_del));
+                $edit = show("page/button_edit", array("id" => $get['id'], "action" => "index=linkus&amp;action=admin&amp;do=edit", "title" => _button_title_edit));
+                $delete = show("page/button_delete", array("id" => $get['id'], "action" => "index=linkus&amp;action=admin&amp;do=delete", "title" => _button_title_del));
             }
 
             $show .= show($dir."/linkus_show", array("class" => $class,

@@ -45,7 +45,7 @@ if(_adminMenu != 'true') exit();
                                 SET `pos`       = '".convert::ToInt($pos)."',
                                         `kat`       = '".string::encode($kat)."',
                                         `name`      = '".string::encode($_POST['squad'])."',
-                                        `url`       = '../squads/?action=shows&amp;id=".$insert_id."',
+                                        `url`       = '?index=squads&amp;action=shows&amp;id=".$insert_id."',
                                         `shown`     = '1',
                                         `type`      = '2'");
                     }
@@ -80,5 +80,5 @@ if(_adminMenu != 'true') exit();
             }
           }
 
-          $show = info(_admin_squad_add_successful, "?admin=squads");
+          $show = info(_admin_squad_add_successful, "?index=admin&amp;admin=squads");
         }
