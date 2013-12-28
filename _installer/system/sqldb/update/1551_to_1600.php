@@ -222,6 +222,7 @@ function install_155x_1600_update()
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_username', `value` = '', `default` = '', `length` = '150', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'teamrow', `value` = '3', `default` = '3', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'tmpdir', `value` = 'version1.6', `default` = 'version1.6', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'tmpdir_mobile', `value` = 'mobile1.6', `default` = 'mobile1.6', `length` = '50', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'upicsize', `value` = '100', `default` = '100', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'urls_linked', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'use_akl', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);

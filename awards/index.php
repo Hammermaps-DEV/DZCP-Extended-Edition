@@ -24,12 +24,9 @@ $where = _site_awards;
 #########################
 ## Action Loader START ##
 #########################
-/*
 $IncludeAction=include_action($dir,'default');
 $page=$IncludeAction['page']; $do=$IncludeAction['do']; $addon_dir=$IncludeAction['dir'];
 $IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $IncludeAction['msg'];
-*/
-$index = '<div style="text-align:center; color:#FF0000;"><b>Sry, This page is not available, massive MySQL errors!<p>This Side is on TODO list^^</b></div>';
 #######################
 ## Action Loader END ##
 #######################

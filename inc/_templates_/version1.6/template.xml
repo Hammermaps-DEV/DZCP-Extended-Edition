@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<template>
+	<Name>Standard</Name>
+	<autor>eSport-Designs</autor>
+	<autor_url>http://www.esport-designs.de/</autor_url>
+	<autor_mail>info@esport-designs.de</autor_mail>
+	<version>1.0</version>
+	<UseMobile>true</UseMobile>
+	<OnlyMobile>false</OnlyMobile>
+</template>

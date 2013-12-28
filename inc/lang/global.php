@@ -74,9 +74,11 @@ define('_server_menu_icon_yesno', '<img src="inc/images/server_yesno.gif" alt=""
 define('_forum_pn_preview', '<img src="inc/images/forum_pn.gif" alt="" class="icon" style="cursor:pointer" />');
 define('_forum_zitat_preview', '<img src="inc/images/zitat.gif" alt="" class="icon" style="cursor:pointer" />');
 define('_user_link_preview', '[country] <a class="[class]" href="javascript:void(0)">[nick]</a>');
-define('_xfireicon', '<a target="_blank" href="http://profile.xfire.com/[username]"><img height="20" width="20" src="inc/images/xfire.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=[img] /></td></tr>\')" onmouseout="DZCP.hideInfo()" /></a>');
-define('_steamicon', '<a target="_blank" href="[profile_url]"><img height="20" width="20" src="inc/images/steam.png" alt="" class="icon"/ onmouseover="DZCP.showSteamBox(\'[username]\',\'[avatar_url]\',\'[text1]\',\'[text2]\',[status])" onmouseout="DZCP.hideInfo()" /></a>');
-define('_skypeicon', '<a href="skype:[username]?chat"><img src=[img] alt="" class="icon" /></a>');
+define('_xfireicon', '<a target="_blank" href="http://profile.xfire.com/[username]"><img height="20" width="20" src="inc/images/xfire.png" alt="" class="icon" onmouseover="DZCP.showInfo(\'<tr><td><img src=[img] /></td></tr>\')" onmouseout="DZCP.hideInfo()" /> [username]</a>');
+define('_steamicon', '<a target="_blank" href="[profile_url]"><img height="20" width="20" src="inc/images/steam.png" alt="" class="icon" onmouseover="DZCP.showSteamBox(\'[username]\',\'[avatar_url]\',\'[text1]\',\'[text2]\',[status])" onmouseout="DZCP.hideInfo()" /> [username]</a>');
+define('_skypeicon', '<a href="skype:[username]?chat"><img src=[img] alt="" class="icon" /> [username]</a>');
+define('_steamicon_nouser', '<a target="_blank" href="[profile_url]"><img height="20" width="20" src="inc/images/steam.png" alt="" class="icon" onmouseover="DZCP.showSteamBox(\'[username]\',\'[avatar_url]\',\'[text1]\',\'[text2]\',[status])" onmouseout="DZCP.hideInfo()" /></a>');
+define('_skypeicon_nouser', '<a href="skype:[username]?chat"><img src=[img] alt="" class="icon" /></a>');
 
 ## Added for DZCP 1.4 ##
 define('_gal_newicon', '<a href="?index=admin&amp;admin=gallery&amp;do=new&amp;id=[id]"><img src="inc/images/new.gif" alt="" title="[titel]" class="icon" /></a>');

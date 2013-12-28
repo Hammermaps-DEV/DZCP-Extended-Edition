@@ -305,6 +305,7 @@ else
                                 "sex" => $sex,
                                 "icq" => $icq,
                                 "icqnr" => $icqnr,
+                                "skype_name" => string::decode($get['skype']),
                                 "skype" => $skype,
                                 "xbox" => $xbox,
                                 "psn" => $psn,

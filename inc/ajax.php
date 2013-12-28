@@ -83,10 +83,12 @@ function xfire($username='')
 function steam($steam_url='')
 {
     if(empty($steam_url) || !steam_enable) return '-';
-    if(Cache::check('steam_'.$steam_url))
+    if(Cache::check('steam_'.$steam_url) || !steam_infos_cache)
     {
         $steam_data = SteamAPI::getUserInfos($steam_url);
-        Cache::set('steam_'.$steam_url, $steam_data, steam_refresh);
+
+        if(steam_infos_cache)
+            Cache::set('steam_'.$steam_url, $steam_data, steam_refresh);
     }
     else
         $steam_data = Cache::get('steam_'.$steam_url);
@@ -113,7 +115,7 @@ function steam($steam_url='')
         default: $status_set = '0'; $text_1 = $steam_data['user']['runnedSteamAPI'] ? show(_steam_offline,array('time' => get_elapsed_time($steam_data['user']['lastlogoff'],time(),1))) : _steam_offline_simple; $text_2 = ''; break;
     }
 
-    return show(_steamicon,array('profile_url' => $steam_data['user']['profile_url'],'username' => $steam_data['user']['nickname'],'avatar_url' => $steam_data['user']['avatarIcon_url'],
+    return show((isset($_GET['list']) ? _steamicon_nouser : _steamicon),array('profile_url' => $steam_data['user']['profile_url'],'username' => $steam_data['user']['nickname'],'avatar_url' => $steam_data['user']['avatarIcon_url'],
                                  'text1' => $text_1,'text2' => $text_2,'status' => $status_set));
 }
 
@@ -127,24 +129,22 @@ function skype($username='')
         if(Cache::check_binary('skype_'.$username))
         {
             if(!$img_skype = fileExists(Skype::get_status($username,true,true,'smallicon')))
-                return show(_skypeicon,array('username' => $username, 'img' => Skype::get_status($username,true,true,'smallicon')));
+                return show((isset($_GET['list']) ? _skypeicon_nouser : _skypeicon),array('username' => $username, 'img' => Skype::get_status($username,true,true,'smallicon')));
 
             Cache::set_binary('skype_'.$username, $img_skype, '', skype_refresh);
-            return show(_skypeicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_skype)));
+            return show((isset($_GET['list']) ? _skypeicon_nouser : _skypeicon),array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode($img_skype)));
         }
         else
-            return show(_skypeicon,array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary('skype_'.$username))));
+            return show((isset($_GET['list']) ? _skypeicon_nouser : _skypeicon),array('username' => $username, 'img' => 'data:image/png;base64,'.base64_encode(Cache::get_binary('skype_'.$username))));
     }
 
-    return show(_skypeicon,array('username' => $username, 'img' => Skype::get_status($username,true,true,'smallicon')));
+    return show((isset($_GET['list']) ? _skypeicon_nouser : _skypeicon),array('username' => $username, 'img' => Skype::get_status($username,true,true,'smallicon')));
 }
 
 ## SETTINGS ##
 $dir = "sites";
 
 ## SECTIONS ##
-header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
-
 //Hack for Audio Securimage
 $mod = isset($_GET['loader']) ? $_GET['loader'] : 'old_func';
 $mod_exp = @explode('@', $mod);
@@ -153,6 +153,9 @@ if(count($mod_exp) >= 2 && $mod_exp[0] == 'securimage_audio')
     $audio_namespace = $mod_exp[1];
     $mod = $mod_exp[0];
 }
+
+if($mod != 'securimage' && $mod != 'securimage_audio' && $mod != 'thumbgen')
+    header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
 
 switch($mod):
     case 'menu':

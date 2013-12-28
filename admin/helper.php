@@ -60,3 +60,30 @@ function show_dzcp_version()
 
     return $return;
 }
+
+//Profilfelderverwaltung
+function show_profil_links($kid)
+{
+    global $dir;
+    $qry = db("SELECT * FROM ".dba::get('profile')." WHERE kid = '".$kid."' ORDER BY name"); $color = 0; $show = '';
+    while($get = _fetch($qry))
+    {
+        $shown = ($get['shown'] == 1)
+        ? '<a href="?index=admin&amp;admin=profile&amp;do=shown&amp;id='.$get['id'].'&amp;what=unset"><img src="inc/images/yes.gif" alt="" title="'._non_public.'" /></a>'
+                : '<a href="?index=admin&amp;admin=profile&amp;do=shown&amp;id='.$get['id'].'&amp;what=set"><img src="inc/images/no.gif" alt="" title="'._public.'" /></a>';
+
+        if($get['type'] == "1")
+            $type = _profile_type_1;
+        else if($get['type'] == "2")
+            $type = _profile_type_2;
+        else if($get['type'] == "3")
+            $type = _profile_type_3;
+
+        $class = ($color % 2) ? "contentMainSecond" : "contentMainFirst"; $color++;
+        $edit = show("page/button_edit_single", array("id" => $get['id'],"action" => "index=admin&amp;admin=profile&amp;do=edit","title" => _button_title_edit));
+        $delete = show("page/button_delete_single", array("id" => $get['id'],"action" => "index=admin&amp;admin=profile&amp;do=delete", "title" => _button_title_del, "del" => _confirm_del_profil));
+        $show .= show($dir."/profil_show", array("class" => $class,"name" => string::decode($get['name']), "type" => $type, "shown" => $shown, "edit" => $edit, "del" => $delete));
+    }
+
+    return $show;
+}

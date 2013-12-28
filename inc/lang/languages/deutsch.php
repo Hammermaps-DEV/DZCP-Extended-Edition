@@ -103,6 +103,8 @@ define('_welcome', 'Willkommen');
 define('_successful', 'Erfolgreich');
 define('_warn', 'Hinweis');
 define('_newskats_katbild_akt', 'Aktuelles Katbild');
+define('_ftopics_autor', 'Autor');
+define('_ftopics_kat', 'Kategorie');
 
 //Startpage
 define('_profil_startpage', 'Startseite');
@@ -597,7 +599,7 @@ define('_msg_answer', '
     </form>');
 define('_user_new_erase', '<form method="get" action="" onsubmit="DZCP.submitButton()"><input type="hidden" name="action" value="erase" /><input id="contentSubmit" type="submit" name="submit" class="submit" value="tempor&auml;re Neuerungen l&ouml;schen" /></form>');
 define('_profile_add', '<form action="" method="get" onsubmit="return(DZCP.submitButton())">
-      <input type="hidden" name="index" value="user" />
+      <input type="hidden" name="index" value="admin" />
       <input type="hidden" name="admin" value="profile" />
       <input type="hidden" name="do" value="add" />
       <input id="contentSubmit" type="submit" class="submit" value="Neues Profilfeld hinzuf&uuml;gen" />
@@ -742,7 +744,7 @@ define('_confirm_del_galpic', 'Soll dieses Bild wirklich geloescht werden');
 define('_confirm_del_gallery', 'Soll diese Galerie wirklich geloescht werden');
 define('_confirm_del_entry', 'Soll dieser Eintrag wirklich geloescht werden');
 define('_confirm_del_navi', 'Soll dieser Link wirklich geloescht werden');
-define('_confirm_del_profil', 'Soll dieses Profilfeld wirklich geloescht werden? \n Alle Usereingaben f&uuml;r dieses Feld gehen dabei verloren!');
+define('_confirm_del_profil', 'Soll dieses Profilfeld wirklich geloescht werden? <p><b>Alle Usereingaben f&uuml;r dieses Feld gehen dabei verloren!</b>');
 define('_confirm_del_smiley', 'Soll dieser Smiley wirklich geloescht werden');
 define('_confirm_del_kat', 'Soll diese Kategorie wirklich geloescht werden');
 define('_confirm_del_news', 'Soll diese News wirklich geloescht werden');

@@ -22,8 +22,15 @@ if(_adminMenu != 'true') exit();
     $support .= "DZCP Build: "._build."\r\n";
     $support .= "DZCP Edition: "._edition."\r\n";
     $support .= "DZCP Datenbank: Rev. V".settings('db_version')."\r\n";
-    $support .= "DZCP API: V".API::$version."\r\n";
     $support .= "DZCP Template: ".$tmpdir."\r\n";
+    $support .= "\r\n";
+    $support .= "#####################\r\n";
+    $support .= "DZCP API \r\n";
+    $support .= "#####################\r\n";
+    $support .= "DZCP API: ".(modapi_enabled ? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "DZCP API: V".API::$version." - ".API::$time."\r\n";
+    $support .= "DZCP API Events: ".(modapi_events_enabled ? 'Aktiviert' : 'Deaktiviert')."\r\n";
+    $support .= "DZCP API Events: V".API_EVENTS::$version." - ".API_EVENTS::$time."\r\n";
     $support .= "\r\n";
 
     if(count(API_CORE::$addon_index) >= 1)
@@ -42,6 +49,29 @@ if(_adminMenu != 'true') exit();
             $support .= "===========================\r\n\r\n";
         }
     }
+
+    $files_templates = get_files(basePath.'/inc/_templates_/',true,false);
+    if(count($files_templates) >= 1)
+    {
+        $support .= "#####################\r\n";
+        $support .= "DZCP Templates \r\n";
+        $support .= "#####################\r\n";
+        foreach($files_templates as $template)
+        {
+            $template_array = convert::objectToArray(xml::getXMLvalue('template_'.$template,'/template'));
+            $support .= "===========================\r\n";
+            $support .= "Ordner: ".$template."\r\n";
+            $support .= "Name: ".$template_array['Name']."\r\n";
+            $support .= "Autor: ".$template_array['autor']."\r\n";
+            $support .= "Homepage: ".$template_array['autor_url']."\r\n";
+            $support .= "E-Mail: ".$template_array['autor_mail']."\r\n";
+            $support .= "Version: ".$template_array['version']."\r\n";
+            $support .= "Mobile Support: ".(xml::bool($template_array['UseMobile']) ? 'Ja' : 'Nein')."\r\n";
+            $support .= "Nur Mobile: ".(xml::bool($template_array['OnlyMobile']) ? 'Ja' : 'Nein')."\r\n";
+            $support .= "===========================\r\n\r\n";
+        }
+    }
+    unset($files_templates,$template_array);
 
     $support .= "#####################\r\n";
     $support .= "Domain & User\r\n";

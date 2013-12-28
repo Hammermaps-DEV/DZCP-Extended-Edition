@@ -1,12 +1,13 @@
+[error]
 <tr>
 <td>
-<form name="profil" method="post" action="?index=admin&amp;admin=profile&amp;do=editprofil&amp;id=[id]" onsubmit="return(DZCP.submitButton())">
+<form name="profil" method="post" action="?index=admin&amp;admin=profile&amp;do=edit&amp;id=[id]" onsubmit="return(DZCP.submitButton())">
 <table class="hperc" cellspacing="1">
 <tr>
-  <td class="contentHead" colspan="2" align="center"><span class="fontBold">[head]</span></td>
+  <td class="contentHead" colspan="2" align="center"><span class="fontBold">[lang_profile_edit_head]</span></td>
 </tr>
 <tr>
-  <td class="contentMainTop"><span class="fontBold">[name]:</span></td>
+  <td class="contentMainTop"><span class="fontBold">[lang_profile_name]:</span></td>
   <td class="contentMainFirst" align="center">
     <input type="text" name="name" value="[p_name]" class="inputField_dis"
     onfocus="this.className='inputField_en';"
@@ -14,7 +15,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop"><span class="fontBold">[kat]:</span></td>
+  <td class="contentMainTop"><span class="fontBold">[lang_profile_kat]:</span></td>
   <td class="contentMainFirst" align="center">
     <select name="kat" class="dropdown">
       [form_kat]
@@ -22,7 +23,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop"><span class="fontBold">[type]:</span></td>
+  <td class="contentMainTop"><span class="fontBold">[lang_profile_type]:</span></td>
   <td class="contentMainFirst" align="center">
     <select name="type" class="dropdown">
       [form_type]
@@ -30,7 +31,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentMainTop"><span class="fontBold">[shown]:</span></td>
+  <td class="contentMainTop"><span class="fontBold">[lang_profile_shown]:</span></td>
   <td class="contentMainFirst" align="center">
     <select name="shown" class="dropdown">
           [form_shown]
@@ -38,7 +39,7 @@
   </td>
 </tr>
 <tr>
-  <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[value]" class="submit" /></td>
+  <td class="contentBottom" colspan="2"><input id="contentSubmit" type="submit" value="[lang_button_value_edit]" class="submit" /></td>
 </tr>
 </table>
 </form>

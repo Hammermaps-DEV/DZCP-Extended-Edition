@@ -261,6 +261,9 @@ function login($username='',$pwd='',$permanent=false)
         ## Reset CMS Protect ##
         cms_protect::reset_login_search();
 
+        ## API ##
+        API_EVENTS::onLogin($get['id'],$get['user'],$get['language'],$permanent);
+
         ## Ereignis in den Adminlog schreiben ##
         wire_ipcheck("login(".$get['id'].")");
         return true;
@@ -299,7 +302,10 @@ function update_user_status_preview()
 function logout()
 {
     if(userid() != 0)
+    {
+        API_EVENTS::onLogout(userid()); ## API ##
         db("UPDATE ".dba::get('users')." SET online = '0', sessid = '', pkey = '' WHERE id = '".userid()."'");
+    }
 
     cookie::clear();
     cookie::save();
@@ -402,19 +408,63 @@ function checkme($userid_set=0)
 if(!$ajaxThumbgen)
 {
     //-> Templateswitch
+    $set_default_template = false;
     $files = get_files(basePath.'/inc/_templates_/',true,false);
-    if(cookie::get('tmpdir') != false)
-        $tmpdir = (file_exists(basePath."/inc/_templates_/".cookie::get('tmpdir')."/index.html") ? cookie::get('tmpdir') : $files[0]);
-    else
-        $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $files[0]);
+    if(count($files) >= 1)
+    {
+        foreach ($files as $dir)
+        {
+            if(file_exists(basePath.'/inc/_templates_/'.$dir.'/template.xml'))
+            {
+                xml::openXMLfile('template_'.$dir, 'inc/_templates_/'.$dir.'/template.xml',true);
+                if(!$set_default_template)
+                {
+                    $template_array = convert::objectToArray(xml::getXMLvalue('template_'.$dir,'/template'));
+                    if(!xml::bool($template_array['OnlyMobile']))
+                    {
+                        if(cookie::get('tmpdir') != false)
+                        {
+                            $tmpdir = (file_exists(basePath."/inc/_templates_/".cookie::get('tmpdir')."/index.html") ? cookie::get('tmpdir') : $dir);
+                            $sdir = (file_exists(basePath."/inc/_templates_/".cookie::get('tmpdir')."/index.html") ? cookie::get('tmpdir') : $dir);
+                        }
+                        else
+                            $tmpdir = (file_exists(basePath."/inc/_templates_/".$sdir."/index.html") ? $sdir : $dir);
 
+                        $set_default_template = true;
+                    }
+                }
+            }
+        }
+    }
+    else die('Es ist kein Template Installiert!');
+
+    $files = null; $set_default_template = null;
     $designpath = 'inc/_templates_/'.$tmpdir;
     $addon_dir = ''; // Addon dir
+    $mobile_template = false;
 
     //-> Languagefiles einlesen *Run
     //-> API & RSS call after Templateswitch & Language
     API_CORE::init();
     rss_feed::init();
+
+    //Mobile Template Weiche
+    if(cookie::get('tmpdir') != false)
+    {
+        if(API_CORE::$MobileDevice && file_exists(basePath.'/inc/_templates_/'.settings('tmpdir_mobile').'/template.xml'))
+        {
+            $template_array = convert::objectToArray(xml::getXMLvalue('template_'.string::decode(settings('tmpdir_mobile')),'/template'));
+            if(xml::bool($template_array['UseMobile']) || xml::bool($template_array['OnlyMobile']))
+            {
+                $tmpdir = string::decode(settings('tmpdir_mobile')); $sdir = $tmpdir;
+                $designpath = 'inc/_templates_/'.$tmpdir;
+            }
+        }
+    }
+
+    $template_array = convert::objectToArray(xml::getXMLvalue('template_'.$sdir,'/template'));
+    if(xml::bool($template_array['OnlyMobile']))
+        $mobile_template = true;
 
     //-> BBOCDE
     bbcode::init();
@@ -435,6 +485,8 @@ if(!$ajaxThumbgen)
 
     //CMS Protect
     cms_protect::detect_login_search_run();
+
+    unset($template_array);
 }
 
 //-> User bearbeiten, Level Menu
@@ -1912,7 +1964,7 @@ class javascript
 //-> Ausgabe des Indextemplates
 function page($index,$title,$where,$time,$index_templ=false)
 {
-    global $userip,$tmpdir,$AjaxLoad_blacklist;
+    global $userip,$tmpdir,$AjaxLoad_blacklist,$mobile_template;
     global $designpath,$cp_color,$rootAdmin,$clanname;
 
     // installer vorhanden?
@@ -1964,8 +2016,12 @@ function page($index,$title,$where,$time,$index_templ=false)
             $tmpldir=''; $tmps = get_files(basePath.'/inc/_templates_/',true,false);
             foreach($tmps as $tmp)
             {
-                $selt = ($tmpdir == $tmp ? 'selected="selected"' : '');
-                $tmpldir .= show(_select_field, array("value" => "?index=user&amp;action=switch&amp;set=".$tmp,  "what" => $tmp,  "sel" => $selt));
+                $template_array = convert::objectToArray(xml::getXMLvalue('template_'.$tmp,'/template'));
+                if(is_debug || (API_CORE::$MobileDevice && (xml::bool($template_array['UseMobile']) || xml::bool($template_array['OnlyMobile']))) || !API_CORE::$MobileDevice && !xml::bool($template_array['OnlyMobile']))
+                {
+                    $selt = ($tmpdir == $tmp ? 'selected="selected"' : '');
+                    $tmpldir .= show(_select_field, array("value" => "?index=user&amp;action=switch&amp;set=".$tmp,  "what" => string::decode($template_array['Name']),  "sel" => $selt));
+                }
             }
 
             Cache::set('template_menu',$tmpldir,5);
@@ -2063,7 +2119,7 @@ function page($index,$title,$where,$time,$index_templ=false)
         xml::save(); // XML Datenbank speichern
 
         if(save_debug_console) DebugConsole::save_log();
-        echo (is_debug && show_debug_console ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr); //index output
+        echo (is_debug && show_debug_console && !$mobile_template ? DebugConsole::show_logs() : '') . show((($index_templ != false ? file_exists(basePath."/inc/_templates_/".$tmpdir."/".$index_templ.".html") : false) ? $index_templ : 'index') , $arr); //index output
     }
 }
 

@@ -146,10 +146,15 @@ class API_CORE
                     }
                 }
             }
-        }
 
-        //Core Sort
-        self::core_sort();
+            //Core Sort
+            self::core_sort();
+        }
+        else if(!modapi_enabled)
+            DebugConsole::insert_info('API_CORE::init()', 'DZCP - API is disabled'); //Debug Log
+
+        if(!modapi_events_enabled)
+            DebugConsole::insert_info('API_CORE::init()', 'DZCP - API Events is disabled'); //Debug Log
 
         /**
          *  Mobilgeräte erkennen
@@ -238,6 +243,7 @@ class API_CORE
      */
     public static function load_additional_admin_functions($menu='',$addon=false,$addon_dir='')
     {
+        if(!modapi_enabled) return false;
         $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/functions' : basePath.'/admin/menu/'.$menu.'/functions');
         if(is_dir($dir))
         {
@@ -261,6 +267,7 @@ class API_CORE
      */
     public static function load_additional_admin_languages($menu='',$addon=false,$addon_dir='')
     {
+        if(!modapi_enabled) return false;
         $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/languages' : basePath.'/admin/menu/'.$menu.'/languages');
         if(is_dir($dir))
         {
@@ -288,6 +295,7 @@ class API_CORE
      */
     public static function load_admin_case_dir($menu='',$addon=false,$addon_dir='')
     {
+        if(!modapi_enabled) return false;
         $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/case' : basePath.'/admin/menu/'.$menu.'/case');
         if(is_dir($dir)) return $dir; return false;
     }
@@ -521,7 +529,7 @@ class API_CORE
     public static function load_index_side($index='')
     {
         //Addon
-        if(count(self::$addon_indexes) >= 1)
+        if(modapi_enabled && count(self::$addon_indexes) >= 1)
         {
             foreach (self::$addon_indexes as $addon => $array)
             {
@@ -566,7 +574,7 @@ class API_CORE
      *  @return string
      */
     public static function add_additional_bbcode($bbcode=array(),$rep=array())
-    { self::$bbcode_index[] = array('code' => $bbcode, 'rep' => $rep); }
+    { if(modapi_enabled) self::$bbcode_index[] = array('code' => $bbcode, 'rep' => $rep); }
 
     /**
      * Sortiert HM-DZCP-Core an erste Stelle
@@ -595,6 +603,7 @@ class API_CORE
      */
     public static function create_settings($key='',$var='',$default='',$length=50,$int=false)
     {
+        if(!modapi_enabled) return false;
         if(empty($key) || empty($var) || !$length || !is_bool($int))
             return false;
 
@@ -615,6 +624,7 @@ class API_CORE
      */
     public static function reset_settings($key='')
     {
+        if(!modapi_enabled) return false;
         if(empty($key) || !settings::is_exists('addons_'.$key))
             return false;
 
@@ -631,6 +641,7 @@ class API_CORE
      */
     public static function remove_settings($key='')
     {
+        if(!modapi_enabled) return false;
         if(empty($key) || !settings::is_exists('addons_'.$key))
             return false;
 
@@ -645,6 +656,7 @@ class API_CORE
      */
     public static function get_settings($keys='')
     {
+        if(!modapi_enabled) return false;
         if(is_array($keys))
         {
             if(empty($keys) || !count($keys))
@@ -1098,5 +1110,63 @@ class addons_installer
             return show($dir.'/msg/msg_warn',array("warn" => _warn, "msg" => $stg));
         else
             return show($dir.'/msg/msg_successful',array("successful" => _successful, "msg" => $stg));
+    }
+
+    /*
+     * STEAM API
+     */
+    public static function steamcommunity($custom_profile_url='',$get='user')
+    {
+        if(!modapi_enabled) return false;
+        if($get != 'user' && $get != 'games')
+        if(empty($custom_profile_url)) return false;
+        $cache = 'steam_api_'.$custom_profile_url.'_'.$get;
+        if(!Cache::check($cache)) return Cache::get($cache);
+        if(!($steam = SteamAPI::getUserInfos($custom_profile_url))) //user,games
+            return false;
+
+        if(!array_key_exists('games', $steam) && $get == 'games') return false;
+        Cache::set($cache,$steam[$get],($get == 'games' ? steam_infos_refresh : steam_infos_game_refresh));
+        return $steam[$get];
+    }
+
+    /*
+     * XBox Live
+     */
+    public static function xbox_data($input0='',$input1='',$mode='profile')
+    {
+        if(!modapi_enabled) return false;
+        $cache_tag = 'xbox_api_'.$input0.'_'.$input1.'_'.$mode; $ttl = 0;
+        if(!Cache::check($cache_tag) && xbox_infos_cache) return Cache::get($cache_tag);
+
+        switch($mode)
+        {
+            case 'achievements':
+                $call = xbox_live::get_acheivements($input0,$input1);
+                $ttl = xbox_infos_acheivements_refresh;
+            break;
+            case 'search':
+                $call = xbox_live::marketplace_search($input0);
+            break;
+            case 'friends':
+                $call = xbox_live::get_friends($input0);
+                $ttl = xbox_infos_friends_refresh;
+            break;
+            case 'games':
+                $call = xbox_live::get_games($input0);
+                $ttl = xbox_infos_games_refresh;
+            break;
+            default:
+            case 'profile':
+                $call = xbox_live::get_profile($input0);
+                $ttl = xbox_infos_profile_refresh;
+            break;
+        }
+
+        if(!$call || empty($call)) return false;
+        if($mode !=  'search' && xbox_infos_cache)
+            Cache::set($cache_tag, $call, $ttl);
+
+        return $call;
     }
 }

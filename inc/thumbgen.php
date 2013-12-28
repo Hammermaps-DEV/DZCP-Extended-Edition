@@ -8,12 +8,8 @@
 
 function thumbgen($filename,$width,$height)
 {
-    if(!isset($filename) || empty($filename) || !extension_loaded('gd'))
-        die();
-
-    if(!file_exists(basePath.'/inc/images/'.$filename))
-        die();
-
+    if(!isset($filename) || empty($filename) || !extension_loaded('gd')) die();
+    if(!file_exists(basePath.'/inc/images/'.$filename)) die();
     list($breite, $hoehe, $type) = getimagesize(basePath.'/inc/images/'.$filename);
     $neueBreite = empty($width) || $width <= 1 ? $breite : convert::ToInt($width);
     $neueHoehe = empty($height) || $height <= 1 ? $hoehe*$neueBreite/$breite : convert::ToInt($height);

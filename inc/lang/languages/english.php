@@ -99,6 +99,8 @@ define('_admin_eml_config_ext', 'Mail-Erweiterung');
 define('_admin_bezeichnung' , 'Description');
 define('_members_admin_squad', 'Members');
 define('_newskats_katbild_akt', 'Aktuelles Katbild');
+define('_ftopics_autor', 'Autor');
+define('_ftopics_kat', 'Category');
 
 //Startpage
 define('_profil_startpage', 'Startseite');
@@ -567,7 +569,7 @@ define('_msg_answer' , '
 define('_user_new_erase' , '<form method="get" action="" onsubmit="DZCP.submitButton()"><input type="hidden" name="action" value="erase" /><input id="contentSubmit" type="submit" name="submit" class="submit" value="Mark all as readed" /></form>');
 define('_target' , 'New window');
 define('_profile_add' , '<form action="" method="get" onsubmit="return(DZCP.submitButton())">
-      <input type="hidden" name="index" value="user" />
+      <input type="hidden" name="index" value="admin" />
       <input type="hidden" name="admin" value="profile" />
       <input type="hidden" name="do" value="add" />
       <input id="contentSubmit" type="submit" class="submit" value="Insert profile field" />

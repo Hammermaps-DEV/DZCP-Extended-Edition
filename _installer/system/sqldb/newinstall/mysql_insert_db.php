@@ -178,6 +178,7 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'smtp_username', `value` = '', `default` = '', `length` = '150', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'teamrow', `value` = '3', `default` = '3', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'tmpdir', `value` = 'version1.6', `default` = 'version1.6', `length` = '50', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'tmpdir_mobile', `value` = 'mobile1.6', `default` = 'mobile1.6', `length` = '50', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'upicsize', `value` = '100', `default` = '100', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'urls_linked', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'use_akl', `value` = '1', `default` = '1', `length` = '1', `type` = 'int';",false,false,true);
@@ -346,7 +347,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Server =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('server')."` SET `game` = 'ns2', `shown` = 1, `navi` = 1, `name` = 'Hammermaps.de Community Server#1', `ip` = '176.9.114.124', `port` = 1100, `pwd` = '', `qport` = 1101, `custom_icon` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('server')."` SET `game` = 'bf3', `shown` = 1, `navi` = 1, `name` = '[WBKS] Gaming#01 - Metro - NoRules {3000T/NoobMagnet/AllWeapon}', `ip` = '176.57.184.20', `port` = 25300, `pwd` = '', `qport` = 47200, `custom_icon` = '';",false,false,true);
     db("INSERT INTO `".dba::get('server')."` SET `game` = 'css', `shown` = 1, `navi` = 1, `name` = 'KpyTou css-server #1.NoSteam[RUS][FastAWP][HLstatsX][v1765266]', `ip` = '77.108.242.105', `port` = 27015, `pwd` = '', `qport` = 27015, `custom_icon` = '';",false,false,true);
 
     //===============================================================
@@ -358,7 +359,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Shoutbox ===================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'deV!L', `email` = 'webmaster@dzcp.de', `text` = 'Viel Gl&uuml;ck und Erfolg mit eurem Clan!', `ip` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'deV!L', `email` = 'webmaster@dzcp.de', `text` = 'Viel Gl&Atilde;&frac14;ck und Erfolg mit eurem Clan!', `ip` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'deV!L', `email` = 'godkiller_nt@hammermaps.de', `text` = 'Viel Spa&Atilde;Ÿ mit der DZCP - Extended Edition!', `ip` = '';",false,false,true);
 
     //===============================================================
     //-> Squads =====================================================
@@ -405,7 +407,7 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('votes')."` SET `datum` = ".time().", `titel` = 'Wie findet ihr unsere Seite?', `intern` = 0, `menu` = 1, `closed` = 0, `von` = 1, `forum` = 0;",false,false,true);
 
     //===============================================================
-    //-> Vote M�glichkeit ===========================================
+    //-> Vote Möglichkeit ===========================================
     //===============================================================
     db("INSERT INTO `".dba::get('vote_results')."` SET `vid` = 1, `what` = 'a1', `sel` = 'Gut', `stimmen` = 0;",false,false,true);
     db("INSERT INTO `".dba::get('vote_results')."` SET `vid` = 1, `what` = 'a2', `sel` = 'Schlecht', `stimmen` = 0;",false,false,true);

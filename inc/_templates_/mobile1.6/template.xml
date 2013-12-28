@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<template>
+	<Name>Mobile</Name>
+	<autor>Hammermaps.de</autor>
+	<autor_url>http://www.hammermaps.de/</autor_url>
+	<autor_mail>support@hammermaps.de</autor_mail>
+	<version>1.0</version>
+	<UseMobile>true</UseMobile>
+	<OnlyMobile>true</OnlyMobile>
+</template>

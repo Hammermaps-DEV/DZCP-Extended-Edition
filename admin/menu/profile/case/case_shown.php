@@ -8,15 +8,9 @@
 
 if(_adminMenu != 'true') exit();
 
+if($_GET['what'] == 'set')
+    db("UPDATE ".dba::get('profile')." SET `shown` = '1' WHERE id = '".convert::ToInt($_GET['id'])."'");
+else
+    db("UPDATE ".dba::get('profile')." SET `shown` = '0' WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-          if($_GET['what'] == 'set')
-        {
-          $upd = db("UPDATE ".dba::get('profile')."
-                     SET `shown` = '1'
-                     WHERE id = '".convert::ToInt($_GET['id'])."'");
-        } elseif($_GET['what'] == 'unset') {
-          $upd = db("UPDATE ".dba::get('profile')."
-                     SET `shown` = '0'
-                     WHERE id = '".convert::ToInt($_GET['id'])."'");
-        }
-        header("Location: ?admin=profile");
+header("Location: ?index=admin&admin=profile");

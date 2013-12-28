@@ -8,22 +8,34 @@
 
 if(_adminMenu != 'true') exit();
 
-        $qry = db("SELECT * FROM ".dba::get('profile')."
-                   WHERE id = '".convert::ToInt($_GET['id'])."'");
-        $get = _fetch($qry);
+$error = '';
+if(isset($_POST['name']))
+{
+    if(empty($_POST['name']))
+        $error = _profil_no_name;
+    else if($_POST['kat']=="lazy")
+        $error = _profil_no_kat;
+    elseif($_POST['type']=="lazy")
+        $error = _profil_no_type;
+    else
+    {
+        $name = preg_replace("#[[:punct:]]|[[:space:]]#Uis", "", $_POST['name']);
+        db("UPDATE ".dba::get('profile')." SET `name`  = '".string::encode($name)."',
+                                               `kid`   = '".convert::ToInt($_POST['kat'])."',
+                                               `type`  = '".convert::ToInt($_POST['type'])."',
+                                               `shown` = '".convert::ToInt($_POST['shown'])."'
+                                           WHERE id = '".convert::ToInt($_GET['id'])."'");
 
-        $shown = str_replace("<option value='".$get['shown']."'>", "<option selected=\"selected\" value='".$get['shown']."'>", _profile_shown_dropdown);
-          $kat = str_replace("<option value='".$get['kid']."'>", "<option selected=\"selected\" value='".$get['kid']."'>", _profile_kat_dropdown);
-          $type = str_replace("<option value='".$get['type']."'>", "<option selected=\"selected\" value='".$get['type']."'>", _profile_type_dropdown);
+        $show = info(_profile_edited,"?index=admin&amp;admin=profile");
+    }
+}
 
-        $show = show($dir."/form_profil_edit", array("name" => _profile_name,
-                                                                             "p_name" => string::decode($get['name']),
-                                                                             "kat" => _profile_kat,
-                                                                             "type" => _profile_type,
-                                                                             "id" => $_GET['id'],
-                                                     "value" => _button_value_edit,
-                                                                             "shown" => _profile_shown,
-                                                                             "form_shown" => $shown,
-                                                                             "form_kat" => $kat,
-                                                                             "form_type" => $type,
-                                                     "head" => _profile_edit_head));
+if(empty($show))
+{
+    $get = db("SELECT * FROM ".dba::get('profile')." WHERE id = '".convert::ToInt($_GET['id'])."'",false,true);
+    $shown = str_replace("<option value='".$get['shown']."'>", "<option selected=\"selected\" value='".$get['shown']."'>", _profile_shown_dropdown);
+    $kat = str_replace("<option value='".$get['kid']."'>", "<option selected=\"selected\" value='".$get['kid']."'>", _profile_kat_dropdown);
+    $type = str_replace("<option value='".$get['type']."'>", "<option selected=\"selected\" value='".$get['type']."'>", _profile_type_dropdown);
+
+    $show = show($dir."/form_profil_edit", array("error" => (!empty($error) ? show("errors/errortable", array("error" => $error)) : ""), "p_name" => string::decode($get['name']), "id" => $_GET['id'], "form_shown" => $shown, "form_kat" => $kat, "form_type" => $type));
+}

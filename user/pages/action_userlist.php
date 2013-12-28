@@ -68,43 +68,43 @@ else
             if(!empty($get['xfire']) && xfire_enable)
             $xfire = '<div id="infoXfire_'.md5(string::decode($get['xfire'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.md5(string::decode($get['xfire'])).'","xfire","&username='.string::decode($get['xfire']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXfire_'.md5(string::decode($get['xfire'])).'","xfire","&username='.string::decode($get['xfire']).'&list=true");</script></div>';
 
             $steam = '-';
             if(!empty($get['steamurl']) && steam_enable)
             $steam = '<div id="infoSteam_'.md5(string::decode($get['steamurl'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSteam_'.md5(string::decode($get['steamurl'])).'","steam","&steamid='.string::decode($get['steamurl']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSteam_'.md5(string::decode($get['steamurl'])).'","steam","&steamid='.string::decode($get['steamurl']).'&list=true");</script></div>';
 
             $skype = '-';
             if(!empty($get['skype']) && skype_enable)
                 $skype = '<div id="infoSkype_'.md5(string::decode($get['skype'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSkype_'.md5(string::decode($get['skype'])).'","skype","&username='.string::decode($get['skype']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoSkype_'.md5(string::decode($get['skype'])).'","skype","&username='.string::decode($get['skype']).'&list=true");</script></div>';
 
             $xbox = '-';
             if(!empty($get['xbox']) && xbox_enable)
                 $xbox = '<div id="infoXbox_'.md5(string::decode($get['xbox'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXbox_'.md5(string::decode($get['xbox'])).'","xbox","&xboxid='.string::decode($get['xbox']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoXbox_'.md5(string::decode($get['xbox'])).'","xbox","&xboxid='.string::decode($get['xbox']).'&list=true");</script></div>';
 
             $psn = '-';
             if(!empty($get['psn']) && psn_enable)
                 $psn = '<div id="infoPSN_'.md5(string::decode($get['psn'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoPSN_'.md5(string::decode($get['psn'])).'","psn","&psnid='.string::decode($get['psn']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoPSN_'.md5(string::decode($get['psn'])).'","psn","&psnid='.string::decode($get['psn']).'&list=true");</script></div>';
 
             $origin = '-';
             if(!empty($get['origin']) && origin_enable)
                 $origin = '<div id="infoOrigin_'.md5(string::decode($get['origin'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoOrigin_'.md5(string::decode($get['origin'])).'","origin","&originid='.string::decode($get['origin']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoOrigin_'.md5(string::decode($get['origin'])).'","origin","&originid='.string::decode($get['origin']).'&list=true");</script></div>';
 
             $bnet = '-';
             if(!empty($get['bnet']) && bnet_enable)
                 $bnet = '<div id="infoBnet_'.md5(string::decode($get['bnet'])).'">
             <div style="width:100%;text-align:center"><img src="inc/images/ajax-loader-mini.gif" alt="" /></div>
-            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoBnet_'.md5(string::decode($get['bnet'])).'","bnet","&bnetid='.string::decode($get['bnet']).'");</script></div>';
+            <script language="javascript" type="text/javascript">DZCP.initDynLoader("infoBnet_'.md5(string::decode($get['bnet'])).'","bnet","&bnetid='.string::decode($get['bnet']).'&list=true");</script></div>';
 
             $userliste .= show($dir."/userliste_show", array("nick" => autor($get['id'],'','',10),
                                                              "level" => getrank($get['id']),

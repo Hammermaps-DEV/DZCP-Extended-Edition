@@ -8,12 +8,14 @@
 
 class API extends API_CORE
 {
-    public static $version = '1.0';
+    public static $version = '0.1';
+    public static $time = '27.12.2013';
 
     /**
-     *  Ist ein bestimmtes Addon installiert
+     * DZCP API
+     * Ist ein bestimmtes Addon installiert
      *
-     *  @return boolean
+     * @return boolean
      */
     public final static function is_addon_exists($addon)
     {
@@ -27,9 +29,10 @@ class API extends API_CORE
     }
 
     /**
-     *  Ist die richtige Version des Addons installiert
+     * DZCP API
+     * Ist die richtige Version des Addons installiert
      *
-     *  @return boolean
+     * @return boolean
      */
     public final static function is_addon_version($addon,$version)
     {
@@ -46,17 +49,19 @@ class API extends API_CORE
     }
 
     /**
-     *  Gibt Informationen über das Addon zurück
+     * DZCP API
+     * Gibt Informationen über das Addon zurück
      *
-     *  @return String
+     * @return String
      */
     public final static function get_addon_info($addon)
     { return self::$addon_index[$addon]; }
 
     /**
-     *  Gibt beliebige Informationen aus der addon.xml zurück
+     * DZCP API
+     * Gibt beliebige Informationen aus der addon.xml zurück
      *
-     *  @return String
+     * @return String
      */
     public final static function get_addon_xml_custom_info($addon,$info)
     {
@@ -65,14 +70,16 @@ class API extends API_CORE
     }
 
     /**
-     *  Ist verwendetes Gerät ein Mobilgerät
+     * DZCP API
+     * Ist verwendetes Gerät ein Mobilgerät
      *
-     *  @return boolean
+     * @return boolean
      */
     public final static function is_mobile()
     { return self::$MobileDevice; }
 
     /**
+     * DZCP API
      * Gibt die Mobile_Detect Klasse zurück für weitere Verwendung.
      * Info: https://github.com/serbanghita/Mobile-Detect
      *
@@ -82,6 +89,7 @@ class API extends API_CORE
     { return self::$MobileClass; }
 
     /**
+     * DZCP API
      * Setzt einen neuen Verweis einer Tabelle auf einen Tag.
      * set_dba_sqltb('test', 'test_tabelle'); entspricht der Tabelle 'dzcp_test_tabelle'
      *
@@ -93,6 +101,7 @@ class API extends API_CORE
     { return dba::set($tag, 'addons_'.$table); }
 
     /**
+     * DZCP API
      * Setzt einen neuen Verweis einer Tabelle auf einen Tag, *array()
      * set_dba_sqltb_array(array(array('test' => 'test_tabelle'),array('dl123' => 'downloads123')));
      *
@@ -103,6 +112,7 @@ class API extends API_CORE
     { return dba::set_array($array); }
 
     /**
+     * DZCP API
      * Gibt einen Verweis zurück für die Verwendung in SQL.
      * get_dba_sqltb('test');
      *
@@ -119,6 +129,7 @@ class API extends API_CORE
     { return dba::get($tag); }
 
     /**
+     * DZCP API
      * Ersetzt eine bestehende Tabellen Definition.
      *
      * @param string $tag
@@ -129,6 +140,7 @@ class API extends API_CORE
     { return dba::replace($tag, 'addons_'.$new_table); }
 
     /**
+     * DZCP API
      * Fügt neue BBCodes mit HTML Ersatz ein. *preg_replace*
      * add_bbcode_rep(array('#\[test\](.*?)\[\/test\]#Uis','#\[test2\](.*?)\[\/test2\]#Uis'),
      *                array('<test_html>$1</test_html>',   '<test2_html>$1</test2_html>')));
@@ -141,6 +153,7 @@ class API extends API_CORE
     { return self::add_additional_bbcode($bbcode,$html_replacement); }
 
     /**
+     * DZCP API
      * Codiert Strings und Texte in UTF8.
      * Schreiben von Werten in die Datenbank.
      *
@@ -151,7 +164,7 @@ class API extends API_CORE
     { return string::encode($txt); }
 
     /**
-     *
+     * DZCP API
      * Decodiert Strings und Texte von UTF8.
      * Auslesen von Werten aus der Datenbank.
      *
@@ -162,6 +175,7 @@ class API extends API_CORE
     { return string::decode($txt); }
 
     /**
+     * DZCP API
      * Legt eine neue Einstellung in der dzcp_settings Datenbank an.
      * Anwendung:
      * add_settings('hallo','hihi','huhu',4,false);
@@ -189,6 +203,7 @@ class API extends API_CORE
     { return self::create_settings($key,$var,$default,$length,$is_int); }
 
     /**
+     * DZCP API
      * Zurücksetzen eines Werts mit dem Standard Wert, sofern er gesetzt wurde.
      *
      * @param string $key
@@ -198,6 +213,7 @@ class API extends API_CORE
     { return self::reset_settings($key); }
 
     /**
+     * DZCP API
      * Löscht eine Einstellung aus der dzcp_settings Datenbank.
      *
      * @param string $key
@@ -207,6 +223,7 @@ class API extends API_CORE
     { return self::remove_settings($key); }
 
     /**
+     * DZCP API
      * Löscht einzelne Einstellungen aus der dzcp_settings Datenbank.
      *
      * @param string $key
@@ -214,4 +231,58 @@ class API extends API_CORE
      */
     public static function get_setting($key='')
     { return self::get_settings($key); }
+
+    /**
+     * STEAM API
+     * Gibt eine Liste der Steam Games eines Users zurück.
+     *
+     * @param string $custom_profile_url
+     * @return boolean/array
+     */
+    public static function steam_get_games($custom_profile_url='')
+    { return self::steamcommunity($custom_profile_url,'games'); }
+
+    /**
+     * STEAM API
+     * Gibt Informationen eines Steam Users zurück.
+     *
+     * @param string $custom_profile_url
+     * @return boolean/array
+     */
+    public static function steam_get_user($custom_profile_url='')
+    { return self::steamcommunity($custom_profile_url,'user'); }
+
+    /**
+     * XBox API
+     * Gibt Informationen eines XBox Users zurück.
+     *
+     * @param string $username
+     * @param string $get * friends, games or profile *
+     * @return boolean/array
+     */
+    public static function xbox_infos($username='',$get='profile')
+    {
+        if($get == 'search' || $get == 'achievements') return false;
+        return self::xbox_data($username,'',$get);
+    }
+
+    /**
+     * XBox API
+     * Sucht etwas im Live! Marketplace
+     * @param string $search
+     * @return boolean/array
+     */
+    public static function xbox_search($search='')
+    { return self::xbox_data($search,'','search'); }
+
+    /**
+     * XBox API
+     * Gibt die achievements eines Users für GameID: X zurück.
+     *
+     * @param string $username
+     * @param int/string $gameid
+     * @return boolean/array
+     */
+    public static function xbox_achievements($username='',$gameid='')
+    { return self::xbox_data($username,$gameid,'achievements'); }
 }

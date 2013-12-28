@@ -10,6 +10,8 @@
 //-> DZCP Settings Start
 #########################################
 
+date_default_timezone_set("Europe/Berlin"); //Zeitzone
+
 define('is_debug', false); // Schaltet den Debug Modus ein, zeigt alle Fehler und Notices etc.
 define('cache_in_debug', true); // Entscheidet ob im Debug, Seiten gecached werden können
 define('show_debug_console', true); //Zeigt die Debug Console
@@ -29,7 +31,9 @@ define('xfire_refresh', (10*60)); // Wann soll das Profilbild aktualisiert werde
 define('glossar_enabled', true); // Schaltet die Glossar Funktion bei Wörtern an oder aus
 define('AjaxLoad', true); // Menüs per Ajax laden
 
-define('modapi_enabled', true); // DZCP ModAPI erlauben
+define('modapi_enabled', true); // DZCP Addons-API erlauben
+define('modapi_events_enabled', true); // DZCP Addons-API Events ausführen
+
 define('allow_additional', true); // additional functions,etc erlauben
 define('cache_thumbgen', true); // zwischenspeichern der Thumbgen generierten Bildern
 define('use_curl', true); // Verwendet die CURL PHP Erweiterung, anstelle von file_get_contents() für externe Zugriffe, wenn vorhanden.
@@ -45,14 +49,23 @@ define('steam_avatar_cache', true); // Steam Useravatare für schnellen Zugriff s
 define('steam_avatar_refresh', (10*60)); // Wann soll das Avatarbild aktualisiert werden
 define('steam_refresh', (5*60)); // Wann soll der Steam Status in der Userliste aktualisiert werden
 define('steam_api_refresh', 30); // Wann sollen die Daten der Steam API aktualisiert werden * Online / Offline / In-Game Status
+define('steam_infos_cache', true); //Sollen die Profil Daten zwischen gespeichert werden, * Cache Use
 define('steam_infos_refresh', (60*60)); // Wann sollen die Profil Daten aktualisiert werden * Steam User-Profil * 1 Mal in der Stunde
+define('steam_infos_game_refresh', (60*60)); // Wann sollen die Profil Daten aktualisiert werden * Steam User-Profil * 1 Mal in der Stunde
 
 //Skype
 define('skype_enable', true);
 define('skype_preloader', true);
 define('skype_refresh', (5*60));
 
+//XBox
 define('xbox_enable', true);
+define('xbox_infos_cache', true); //Sollen die Profil Daten zwischen gespeichert werden?
+define('xbox_infos_acheivements_refresh', (60*60));
+define('xbox_infos_friends_refresh', (60*60));
+define('xbox_infos_games_refresh', (60*60));
+define('xbox_infos_profile_refresh', (60*60));
+
 define('psn_enable', true);
 define('origin_enable', true);
 define('bnet_enable', true);
@@ -78,14 +91,14 @@ define('check_msg_email', (5*60)); // Wann soll überprüft werden, ob ein User ei
 define('shoutbox_refresh', (10)); // Wann soll die Shoutbox aktualisiert werden *
 
 /*
- * DZCP - Extended Protect
+ * DZCP - Extended Protect * Bug! *
  * Diese Einstellungen regeln wann eine IP automatisch gesperrt wird, um die Sicherheit des CMS und der User zu gewährleisten.
  */
 define('max_protect_users', 5); //Die Maximale Anzahl der Usernamen die während der Zeit des "max_protect_cache_time" verwendet werden dürfen.
 define('max_protect_time_diff', 0.5); //Die Zeit die vergehen muss, zwischen jedem einzelnen Login versuch.
 define('max_protect_cache_time', 60); //Die Zeit die der Index im Cache verbleibt.
 
-define('use_dzcp_protect', true); //Ob DZCP - Extended Protect verwendet werden soll. * DEV *
+define('use_dzcp_protect', false); //Ob DZCP - Extended Protect verwendet werden soll. * DEV *
 define('use_protect_block_timer', true); //User blockieren die zu oft in kürzester Zeit versuchen sich anzumelden. "max_protect_time_diff"
 define('use_protect_block_user', true); //User blockieren die versuchen Usernamen zu erraten. "max_protect_users" abhängig von "max_protect_cache_time"
 
