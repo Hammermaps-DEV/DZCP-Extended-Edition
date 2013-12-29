@@ -59,7 +59,7 @@ function install_mysql_insert($db_infos)
 
     //FTP Zugang
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_hostname', `value` = '".string::encode($_SESSION['ftp_host'])."', `default` = 'localhost', `length` = '100', `type` = 'string';",false,false,true);
-    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_port', `value` = '".$_SESSION['ftp_port']."', `default` = '".$_SESSION['ftp_port']."', `length` = '5', `type` = 'int';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_port', `value` = '".convert::ToInt($_SESSION['ftp_port'])."', `default` = '".$_SESSION['ftp_port']."', `length` = '5', `type` = 'int';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_password', `value` = '".(!empty($_SESSION['ftp_pwd']) ? encryptData($_SESSION['ftp_pwd']) : '')."', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_path', `value` = '".string::encode($_SESSION['ftp_pfad'])."', `default` = '/', `length` = '200', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_username', `value` = '".string::encode($_SESSION['ftp_user'])."', `default` = '".string::encode($_SESSION['ftp_user'])."', `length` = '100', `type` = 'string';",false,false,true);
@@ -347,8 +347,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Server =====================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('server')."` SET `game` = 'bf3', `shown` = 1, `navi` = 1, `name` = '[WBKS] Gaming#01 - Metro - NoRules {3000T/NoobMagnet/AllWeapon}', `ip` = '176.57.184.20', `port` = 25300, `pwd` = '', `qport` = 47200, `custom_icon` = '';",false,false,true);
-    db("INSERT INTO `".dba::get('server')."` SET `game` = 'css', `shown` = 1, `navi` = 1, `name` = 'KpyTou css-server #1.NoSteam[RUS][FastAWP][HLstatsX][v1765266]', `ip` = '77.108.242.105', `port` = 27015, `pwd` = '', `qport` = 27015, `custom_icon` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('server')."` SET `game` = 'bf3', `shown` = 1, `navi` = 1, `name` = '".string::encode('[WBKS] Gaming#01 - Metro - NoRules {3000T/NoobMagnet/AllWeapon}')."', `ip` = '176.57.184.20', `port` = 25300, `pwd` = '', `qport` = 47200, `custom_icon` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('server')."` SET `game` = 'css', `shown` = 1, `navi` = 1, `name` = '".string::encode('KpyTou css-server #1.NoSteam[RUS][FastAWP][HLstatsX][v1765266]')."', `ip` = '77.108.242.105', `port` = 27015, `pwd` = '', `qport` = 27015, `custom_icon` = '';",false,false,true);
 
     //===============================================================
     //-> Startseite =================================================
@@ -359,8 +359,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Shoutbox ===================================================
     //===============================================================
-    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'deV!L', `email` = 'webmaster@dzcp.de', `text` = 'Viel Gl&Atilde;&frac14;ck und Erfolg mit eurem Clan!', `ip` = '';",false,false,true);
-    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'deV!L', `email` = 'godkiller_nt@hammermaps.de', `text` = 'Viel Spa&Atilde;Ÿ mit der DZCP - Extended Edition!', `ip` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'deV!L', `email` = 'webmaster@dzcp.de', `text` = '".string::encode('Viel Gl&uuml;ck und Erfolg mit eurem Clan!')."', `ip` = '';",false,false,true);
+    db("INSERT INTO `".dba::get('shout')."` SET `datum` = '".time()."', `nick` = 'Godkiller_NT', `email` = 'godkiller_nt@hammermaps.de', `text` = '".string::encode('Viel Spa&szlig; mit der DZCP - Extended Edition')."', `ip` = '';",false,false,true);
 
     //===============================================================
     //-> Squads =====================================================
@@ -407,7 +407,7 @@ function install_mysql_insert($db_infos)
     db("INSERT INTO `".dba::get('votes')."` SET `datum` = ".time().", `titel` = 'Wie findet ihr unsere Seite?', `intern` = 0, `menu` = 1, `closed` = 0, `von` = 1, `forum` = 0;",false,false,true);
 
     //===============================================================
-    //-> Vote Möglichkeit ===========================================
+    //-> Vote MÃ¶glichkeit ===========================================
     //===============================================================
     db("INSERT INTO `".dba::get('vote_results')."` SET `vid` = 1, `what` = 'a1', `sel` = 'Gut', `stimmen` = 0;",false,false,true);
     db("INSERT INTO `".dba::get('vote_results')."` SET `vid` = 1, `what` = 'a2', `sel` = 'Schlecht', `stimmen` = 0;",false,false,true);

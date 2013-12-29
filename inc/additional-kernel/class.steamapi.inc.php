@@ -6,7 +6,7 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-class SteamAPI extends client_api_communicate
+class SteamAPI
 {
     static private $api_key = ''; //See http://steamcommunity.com/dev/apikey/
     static private $api_host = 'http://api.steampowered.com';
@@ -127,7 +127,7 @@ class SteamAPI extends client_api_communicate
             self::$send_data_api['format'] = 'xml';
             self::$send_data_api['key'] = self::$api_key;
             self::$send_data_api['steamids'] = self::$user_data['steamID'];
-            if(!($xml_stream = self::send_custom(self::$api_host.'/'.$interface.'/'.$method.'/'.$version.'/?'.http_build_query(self::$send_data_api))))
+            if(!($xml_stream = client_api_communicate::send_custom(self::$api_host.'/'.$interface.'/'.$method.'/'.$version.'/?'.http_build_query(self::$send_data_api))))
             {
                 DebugConsole::insert_error('SteamAPI::get_api()', 'No connection to the API interface');
                 return false;
@@ -160,7 +160,7 @@ class SteamAPI extends client_api_communicate
         $zone_url = !empty($zone) ? $zone.'/' : ''; $zone_tag = !empty($zone) ? $zone.'_' : 'profile';
         if(Cache::check('steam_community_'.$zone_tag.self::$profile_url) || true)
         {
-            if(!($xml_stream = self::send_custom(self::$api_com.'/id/'.self::$profile_url.'/'.$zone_url.'?xml=1')))
+            if(!($xml_stream = client_api_communicate::send_custom(self::$api_com.'/id/'.self::$profile_url.'/'.$zone_url.'?xml=1')))
             {
                 DebugConsole::insert_error('SteamAPI::get_steamcommunity()', 'No connection to the community interface!');
                 DebugConsole::insert_warning('SteamAPI::get_steamcommunity()', 'URL: '.self::$api_com.'/id/'.self::$profile_url.'/'.$zone_url.'?xml=1');

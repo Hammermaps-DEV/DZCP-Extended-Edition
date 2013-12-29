@@ -9,7 +9,7 @@
 ## Error Reporting ##
 if(!defined('DEBUG_LOADER'))
     exit('<b>Die Debug-Console wurde nicht included oder wurde nicht geladen!<p>
-    Bitte prüfen Sie ob jede index.php einen "include(basePath."/inc/debugger.php");" Eintrag hat.</b>');
+    Bitte prÃ¼fen Sie ob jede index.php einen "include(basePath."/inc/debugger.php");" Eintrag hat.</b>');
 
 error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
@@ -41,6 +41,15 @@ if(!$ajaxThumbgen)
 }
 
 require_once(basePath.'/inc/kernel.php');
+
+## Detect ZendFramework ##
+$zend_loader = false;
+if(ZendFramework())
+{
+    require_once("Zend/Loader/Autoloader.php");
+    $zend_loader = Zend_Loader_Autoloader::getInstance();
+    $zend_loader->setFallbackAutoloader(true);
+}
 
 if (is_php('5.4.0'))
     @ini_set('magic_quotes_runtime', false);
@@ -97,7 +106,7 @@ if(!$ajaxThumbgen)
     spl_autoload_register(array('GameQ', 'auto_load'));
 }
 
-// -> Prüft ob die IP gesperrt und gültig ist
+// -> PrÃ¼ft ob die IP gesperrt und gÃ¼ltig ist
 function check_ip()
 {
     global $ajaxThumbgen,$ajaxJob;
@@ -119,12 +128,12 @@ function check_ip()
         unset($banned_ip,$banned_ip_sql);
         sfs::check(); //SFS Update
         if(sfs::is_spammer())
-            die('Deine IP-Adresse ist auf <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a> gesperrt, die IP wurde zu oft für Spam Angriffe auf Webseiten verwendet.<p>
+            die('Deine IP-Adresse ist auf <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a> gesperrt, die IP wurde zu oft fÃ¼r Spam Angriffe auf Webseiten verwendet.<p>
                  Your IP address is known on <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a>, your IP has been used for spam attacks on websites.');
     }
 }
 
-// IP Prüfung
+// IP PrÃ¼fung
 check_ip();
 
 //-> Auslesen der Cookies und automatisch anmelden
@@ -633,14 +642,14 @@ function update_counter()
 }
 
 /**
- * Gibt die vergangene zeit zwischen $timestamp und $aktuell als lesbaren string zurück.
+ * Gibt die vergangene zeit zwischen $timestamp und $aktuell als lesbaren string zurÃ¼ck.
  * bsp: 3 Wochen, 4 Tage, 5 Sekunden
  * @param int $timestamp * der timestamp der ersten zeit-marke.
  * @param int $aktuell * der timestamp der zweiten zeit-marke. * aktuelle zeit *
  * @param int $anzahl_einheiten * wie viele einheiten sollen maximal angezeigt werden
  * @param boolean $zeige_leere_einheiten * sollen einheiten, die den wert 0 haben, angezeigt werden?
  * @param array $zeige_einheiten * zeige nur angegebene einheiten. jahre werden zb in sekunden umgerechnet
- * @param string $standard * falls der timestamp 0 oder ungültig ist, gebe diesen string zurück
+ * @param string $standard * falls der timestamp 0 oder ungÃ¼ltig ist, gebe diesen string zurÃ¼ck
  * @return string
  */
 function get_elapsed_time( $timestamp, $aktuell = null, $anzahl_einheiten = null, $zeige_leere_einheiten = null, $zeige_einheiten = null, $standard = null )
@@ -973,13 +982,13 @@ function error($error = '', $back = '1', $show_back = true)
     return show("errors/".($show_back ? "error" : "error2"), array("error" => $error, "back" => $back));
 }
 
-//-> EMail wird auf korrekten Syntax überprüft
+//-> EMail wird auf korrekten Syntax Ã¼berprÃ¼ft
 function check_email($email)
 {
     return preg_match('#^[a-z0-9.!\#$%&\'*+-/=?^_`{|}~]+@([0-9.]+|([^\s\'"<>@,;]+\.+[a-z]{2,6}))$#si', $email);
 }
 
-//-> EMail wird auf Trashmail Server überprüft
+//-> EMail wird auf Trashmail Server Ã¼berprÃ¼ft
 function check_email_trash_mail($email)
 {
     if(empty($email)) return false;
@@ -1181,7 +1190,7 @@ function rawautor($uid)
     return rawflag($get['country'])." ".jsconvert(string::decode($get['nick']));
 }
 
-//-> Nickausgabe ohne Profillink oder Emaillink für das ForenAbo
+//-> Nickausgabe ohne Profillink oder Emaillink fÃ¼r das ForenAbo
 function fabo_autor($uid,$show=_user_link_fabo)
 {
     if(!$uid = ($uid != 0 ? convert::ToInt($uid) : userid()))
@@ -1741,7 +1750,7 @@ function getBoardPermissions($checkID = 0, $pos = 0)
     return $i_forum;
 }
 
-//-> Startseite für User abrufen
+//-> Startseite fÃ¼r User abrufen
 function startpage($page='',$level=false)
 {
     if(empty($page) && cookie::get('id') != false && cookie::get('pkey') != false && !($startpageID = data(userid(), 'startpage')))
@@ -1762,7 +1771,7 @@ function startpage($page='',$level=false)
     return (!empty($page) ? $page : '?index=news');
 }
 
-// Prüft ob die Seite in der Navigation als Intern eingestellt ist.
+// PrÃ¼ft ob die Seite in der Navigation als Intern eingestellt ist.
 function check_internal_url()
 {
     if(checkme() != "unlogged")
@@ -1790,7 +1799,7 @@ function check_internal_url()
         return false;
 }
 
-// Prüft die ausgelagerten Seiten für Zugriff
+// PrÃ¼ft die ausgelagerten Seiten fÃ¼r Zugriff
 function include_action($page_dir='',$default='default')
 {
     $do = convert::ToString((getArgs('do',false,'get') ? htmlentities(strtolower(getArgs('do','','get'))) : htmlentities(strtolower(getArgs('do','','post')))));
@@ -1847,7 +1856,7 @@ function count_clicks($side_tag='',$clickedID=0,$update=true)
 }
 
 /**
- * Löscht angelegte Thumbgen Files
+ * LÃ¶scht angelegte Thumbgen Files
  **/
 function thumbgen_delete($filename,$width='100',$height='')
 {

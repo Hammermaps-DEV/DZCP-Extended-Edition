@@ -6,7 +6,7 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-class Skype extends client_api_communicate
+class Skype
 {
      public static function get_status($username, $image = false, $icon = false, $imgType = 'smallicon' )
      {
@@ -41,7 +41,7 @@ class Skype extends client_api_communicate
             * 6     INVISIBLE               The user is Invisible or appears Offline
             * 7     SKYPE ME                The user is in Skype Me mode
             ****************************************/
-            $data = self::send_custom("http://mystatus.skype.com/".$username.".xml");
+            $data = client_api_communicate::send_custom("http://mystatus.skype.com/".$username.".xml");
             if($data)
             {
                 preg_match('/xml:lang="'.((language::get_language()=='deutsch') ? 'de':'en').'">(.*)</', $data, $match);

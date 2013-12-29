@@ -4,31 +4,31 @@ $versions[3] = array('update_id' => 3, 3 => '1.5.5.x', "version_list" => 'v1.5.5
 //Update von V1.5.5.x auf V1.6.0.0 DZCP-Extended Edition
 function install_155x_1600_update()
 {
-    db("ALTER TABLE `".dba::get('f_threads')."` CHANGE `edited` `edited` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('users')."` CHANGE `whereami` `whereami` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('users')."` CHANGE `hlswid` `xfire` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
+    db("ALTER TABLE `".dba::get('f_threads')."` CHANGE `edited` `edited` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` CHANGE `whereami` `whereami` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` CHANGE `hlswid` `xfire` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('downloads')."` ADD `last_dl` INT( 20 ) NOT NULL DEFAULT '0' AFTER `date`",false,false,true);
-    db("ALTER TABLE `".dba::get('gb')."` CHANGE `hp` `hp` VARCHAR(130) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('gb')."` CHANGE `hp` `hp` VARCHAR(130) CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('msg')."` CHANGE `see_u` `see_u` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".dba::get('msg')."` CHANGE `page` `page` INT( 1 ) NOT NULL DEFAULT '0'",false,false,true);
-    db("ALTER TABLE `".dba::get('away')."` CHANGE `lastedit` `lastedit` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('newskat')."` CHANGE `katimg` `katimg` VARCHAR( 100 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
-    db("ALTER TABLE `".dba::get('newskat')."` CHANGE `kategorie` `kategorie` VARCHAR( 60 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
-    db("ALTER TABLE `".dba::get('server')."` CHANGE `name` `name` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('away')."` CHANGE `lastedit` `lastedit` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('newskat')."` CHANGE `katimg` `katimg` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",false,false,true);
+    db("ALTER TABLE `".dba::get('newskat')."` CHANGE `kategorie` `kategorie` VARCHAR( 60 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",false,false,true);
+    db("ALTER TABLE `".dba::get('server')."` CHANGE `name` `name` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('server')."` DROP `bl_file`, DROP `bl_path`, DROP `ftp_pwd`, DROP `ftp_login`, DROP `ftp_host`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `pkey` VARCHAR( 50 ) NOT NULL DEFAULT '' AFTER `sessid`;",false,false,true);
     db("ALTER TABLE `".dba::get('navi')."` ADD `extended_perm` varchar(50) DEFAULT NULL AFTER `editor`;",false,false,true);
-    db("ALTER TABLE `".dba::get('newscomments')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('acomments')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('cw_comments')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('gb')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
-    db("ALTER TABLE `".dba::get('usergb')."` CHANGE `editby` `editby` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('newscomments')."` CHANGE `editby` `editby` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('acomments')."` CHANGE `editby` `editby` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('cw_comments')."` CHANGE `editby` `editby` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('gb')."` CHANGE `editby` `editby` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('usergb')."` CHANGE `editby` `editby` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('usergb')."` ADD INDEX ( `user` );",false,false,true);
-    db("ALTER TABLE `".dba::get('users')."` CHANGE `gmaps_koord` `gmaps_koord` VARCHAR( 255 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT ''",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` CHANGE `gmaps_koord` `gmaps_koord` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `pwd_encoder` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pwd`;",false,false,true);
     db("ALTER TABLE `".dba::get('artikel')."` ADD `viewed` INT( 11 ) NOT NULL DEFAULT '0' AFTER `url3`;",false,false,true);
     db("ALTER TABLE `".dba::get('downloads')."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '0' AFTER `last_dl`;",false,false,true);
-    db("ALTER TABLE `".dba::get('f_posts')."` CHANGE `edited` `edited` TEXT CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL",false,false,true);
+    db("ALTER TABLE `".dba::get('f_posts')."` CHANGE `edited` `edited` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL",false,false,true);
     db("ALTER TABLE `".dba::get('rankings')."` CHANGE `lastranking` `lastranking` INT( 10 ) NOT NULL DEFAULT '0'",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `profile_access` INT( 1 ) NOT NULL DEFAULT '0' AFTER `pnmail`;",false,false,true);
     db("ALTER TABLE `".dba::get('news')."` ADD `comments` INT( 1 ) NOT NULL DEFAULT '1' AFTER `timeshift`;",false,false,true);
@@ -42,8 +42,8 @@ function install_155x_1600_update()
     db("ALTER TABLE `".dba::get('artikel')."` ADD `custom_image` INT( 1 ) NOT NULL DEFAULT '0' AFTER `comments`;",false,false,true);
     db("ALTER TABLE `".dba::get('navi')."` ADD `title` VARCHAR( 249 ) NOT NULL DEFAULT '' AFTER `name`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `startpage` INT( 5 ) NOT NULL DEFAULT '0' AFTER `rss_key`;",false,false,true);
-    db("ALTER TABLE `".dba::get('links')."` CHANGE `text` `blink` VARCHAR( 249 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
-    db("ALTER TABLE `".dba::get('users')."` CHANGE `steamid` `steamurl` VARCHAR( 200 ) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT '';",false,false,true);
+    db("ALTER TABLE `".dba::get('links')."` CHANGE `text` `blink` VARCHAR( 249 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';",false,false,true);
+    db("ALTER TABLE `".dba::get('users')."` CHANGE `steamid` `steamurl` VARCHAR( 200 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';",false,false,true);
     db("ALTER TABLE `".dba::get('pos')."` CHANGE `nletter` `nletter` INT( 1 ) NOT NULL DEFAULT '0';",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `skype` VARCHAR( 100 ) NOT NULL DEFAULT '' AFTER `icq`;",false,false,true);
     db("ALTER TABLE `".dba::get('users')."` ADD `xbox` VARCHAR( 100 ) NOT NULL DEFAULT '' AFTER `skype`;",false,false,true);
@@ -81,7 +81,7 @@ function install_155x_1600_update()
         `type` varchar(20) NOT NULL DEFAULT 'int' COMMENT 'int/string',
         PRIMARY KEY (`id`),
         UNIQUE KEY `key` (`key`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //E-Mail Templates
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'eml_akl_register', `value` = '".string::encode(emlv('eml_akl_register'))."', `default` = '".string::encode(emlv('eml_akl_register'))."', `length` = '0', `type` = 'string';",false,false,true);
@@ -273,7 +273,7 @@ function install_155x_1600_update()
       `stream_hash` varchar(60) NOT NULL DEFAULT '',
       `original_file` varchar(255) NOT NULL DEFAULT '',
       PRIMARY KEY (`qry`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Click IP Counter ===========================================
@@ -288,7 +288,7 @@ function install_155x_1600_update()
     `time` int(20) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `ip` (`ip`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     // Ersetze Permissions Tabelle
     $qry = db("SELECT * FROM `".dba::get('permissions')."`");
@@ -386,7 +386,7 @@ function install_155x_1600_update()
       `votesadmin` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`),
       KEY `user` (`user`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     // Permissions Datensatz einspielen
     if(count($cache_array_sql) >= 1)
@@ -427,7 +427,7 @@ function install_155x_1600_update()
       PRIMARY KEY (`id`),
       UNIQUE KEY `id` (`id`),
       KEY `user` (`user`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     // Furm Access Datensatz einspielen
     if(count($cache_array_sql) >= 1)
@@ -461,7 +461,7 @@ function install_155x_1600_update()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Gästebuchkommentare ========================================
@@ -479,7 +479,7 @@ function install_155x_1600_update()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     // Gallery Bilder verschieben
     $files = get_files(basePath."/gallery/images/",false,true);
@@ -536,7 +536,7 @@ function install_155x_1600_update()
       `show_downloads` int(1) NOT NULL DEFAULT '1',
       `show_downloads_max` int(11) NOT NULL DEFAULT '2',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //RSS Feed Config anlegen
     $qry = db("SELECT id FROM `".dba::get('users')."`");
@@ -563,7 +563,7 @@ function install_155x_1600_update()
       `default_server` int(1) NOT NULL DEFAULT '0',
       `show_navi` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Teamspeak Update ===========================================
@@ -589,7 +589,7 @@ function install_155x_1600_update()
         PRIMARY KEY (`id`),
         UNIQUE KEY `id` (`id`),
         KEY `ip` (`ip`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Slideshow ==================================================
@@ -604,7 +604,7 @@ function install_155x_1600_update()
     `url` varchar(200) NOT NULL DEFAULT '',
     `target` int(11) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Startseite =================================================
@@ -616,7 +616,7 @@ function install_155x_1600_update()
         `url` varchar(200) NOT NULL,
         `level` int(1) NOT NULL DEFAULT '1',
         PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'News', `url` => 'news/', `level` = 1;",false,false,true);
     db("INSERT INTO `".dba::get('startpage')."` SET `name` = 'Forum', `url` => 'forum/', `level` = 1;",false,false,true);
@@ -631,7 +631,7 @@ function install_155x_1600_update()
     `installed` int(1) NOT NULL DEFAULT '0',
     `enable` int(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Captcha ====================================================
@@ -645,7 +645,7 @@ function install_155x_1600_update()
        `created` int(11) NOT NULL,
        PRIMARY KEY (`id`,`namespace`),
        KEY `created` (`created`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Sessions ===================================================
@@ -657,7 +657,11 @@ function install_155x_1600_update()
         `data` text NOT NULL,
         `session_key` char(128) NOT NULL,
         PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
+
+    $tblist = database::list_tables();
+    foreach ($tblist as $tb)
+    { db('ALTER TABLE `'.$tb.'` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci PAGE_CHECKSUM =0;'); }
 
     return true;
 }

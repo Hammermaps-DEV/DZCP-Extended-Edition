@@ -6,7 +6,7 @@
  * @link: http://www.dzcp.de || http://www.hammermaps.de
  */
 
-class xbox_live extends client_api_communicate
+class xbox_live
 {
     static private $api_host = 'http://xboxleaders.com';
     static private $api_data = array();
@@ -151,7 +151,7 @@ class xbox_live extends client_api_communicate
         }
 
         unset(self::$send_data_api['apitype']);
-        if(!($json_stream = self::send_custom(self::$api_host.'/api/'.$apitype.'.json?'.http_build_query(self::$send_data_api))))
+        if(!($json_stream = client_api_communicate::send_custom(self::$api_host.'/api/'.$apitype.'.json?'.http_build_query(self::$send_data_api))))
         {
             DebugConsole::insert_error('xbox_live::get_datas()', 'No connection to the API interface');
             return false;

@@ -249,7 +249,10 @@ function ping_port($address='',$port=0000,$timeout=2,$udp=false)
         return false;
 
     $errstr = NULL; $errno = NULL;
-    if($fp = @fsockopen(($udp ? "udp://".DNSToIp($address) : DNSToIp($address)), $port, $errno, $errstr, $timeout))
+    if(!$ip = DNSToIp($address))
+        return false;
+
+    if($fp = @fsockopen(($udp ? "udp://".$ip : $ip), $port, $errno, $errstr, $timeout))
     {
         unset($ip,$port,$errno,$errstr,$timeout);
         @fclose($fp);
@@ -268,7 +271,9 @@ function DNSToIp($address='')
 {
     if(!preg_match('#^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$#', $address))
     {
-        $result = gethostbyname($address);
+        if(!($result = gethostbyname($address)))
+            return false;
+
         if ($result === $address)
             $result = false;
     }
@@ -1269,6 +1274,18 @@ function decryptData($crypttext='',$salt='')
     $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
     $decrypttext = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, (empty($salt) ? $mysql_salt : $salt), $crypttext, MCRYPT_MODE_ECB, $iv);
     return trim($decrypttext);
+}
+
+/**
+ * Erkennt ob das ZendFramework vorhanden ist
+ *
+ * @return boolean
+ */
+function ZendFramework()
+{
+    if($zendLoaderPresent = @fopen('Zend/Loader/Autoloader.php', 'r', true))
+    { @fclose($zendLoaderPresent); return true; }
+    return false;
 }
 
 /**

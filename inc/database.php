@@ -621,7 +621,7 @@ class dba
                 continue;
             }
 
-            if($dba_key == 'host' || $dba_key == 'user' || $dba_key == 'pass' || $dba_key == 'db' || $dba_key == 'prefix')
+            if($dba_key == 'host' || $dba_key == 'user' || $dba_key == 'pass' || $dba_key == 'prefix')
                 continue;
 
             self::$dba[$dba_key] = $db_array['prefix'].$dba_val; // Add prefix
@@ -917,9 +917,7 @@ class string
      * @param string $txt
      */
     public static function encode($txt='')
-    {
-        return stripcslashes(spChars(convert::ToHTML($txt)));
-    }
+    { return utf8_encode(stripcslashes(spChars(convert::ToHTML($txt)))); }
 
     /**
      * Decodiert UTF8 Text in das aktuelle Charset der Seite.
@@ -927,9 +925,7 @@ class string
      * @param utf8 string $txt
      */
     public static function decode($txt='')
-    {
-        return trim(stripslashes(spChars(html_entity_decode($txt, ENT_COMPAT, 'iso-8859-1'),true)));
-    }
+    { return trim(stripslashes(spChars(html_entity_decode(utf8_decode($txt), ENT_COMPAT, 'iso-8859-1'),true))); }
 }
 
 #############################################

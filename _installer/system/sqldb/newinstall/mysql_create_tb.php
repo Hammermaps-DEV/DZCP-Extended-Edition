@@ -24,7 +24,7 @@ function install_mysql_create()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Addons =====================================================
@@ -36,7 +36,7 @@ function install_mysql_create()
     `installed` int(1) NOT NULL DEFAULT '0',
     `enable` int(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Artikel ====================================================
@@ -60,7 +60,7 @@ function install_mysql_create()
       `comments` int(1) NOT NULL DEFAULT '1',
       `custom_image` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Awards =====================================================
@@ -76,7 +76,7 @@ function install_mysql_create()
       `prize` text NOT NULL,
       `url` text NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Away =======================================================
@@ -92,7 +92,7 @@ function install_mysql_create()
       `date` text NOT NULL,
       `lastedit` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Buddys =====================================================
@@ -103,7 +103,7 @@ function install_mysql_create()
       `user` int(5) NOT NULL DEFAULT '0',
       `buddy` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Cache ======================================================
@@ -118,7 +118,7 @@ function install_mysql_create()
       `stream_hash` varchar(60) NOT NULL DEFAULT '',
       `original_file` varchar(255) NOT NULL DEFAULT '',
       PRIMARY KEY (`qry`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Captcha ====================================================
@@ -132,7 +132,7 @@ function install_mysql_create()
        `created` int(11) NOT NULL,
        PRIMARY KEY (`id`,`namespace`),
        KEY `created` (`created`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Clankasse ==================================================
@@ -146,7 +146,7 @@ function install_mysql_create()
       `pm` int(1) NOT NULL DEFAULT '0',
       `betrag` varchar(10) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Clankassenkategorien =======================================
@@ -156,7 +156,7 @@ function install_mysql_create()
       `id` int(5) NOT NULL AUTO_INCREMENT,
       `kat` varchar(30) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Clankassenzahlungen ========================================
@@ -167,7 +167,7 @@ function install_mysql_create()
       `user` int(5) NOT NULL DEFAULT '0',
       `payed` varchar(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Clanwars ===================================================
@@ -196,7 +196,7 @@ function install_mysql_create()
       `bericht` text,
       `top` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Clanwarplayers =============================================
@@ -207,7 +207,7 @@ function install_mysql_create()
       `member` int(5) NOT NULL DEFAULT '0',
       `status` int(5) NOT NULL DEFAULT '0',
       KEY `cwid` (`cwid`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Click IP Counter ===========================================
@@ -222,7 +222,7 @@ function install_mysql_create()
     `time` int(20) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`),
     KEY `ip` (`ip`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Clanwarkommentare ==========================================
@@ -240,7 +240,7 @@ function install_mysql_create()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Counter ====================================================
@@ -252,7 +252,7 @@ function install_mysql_create()
       `today` varchar(50) NOT NULL DEFAULT '0',
       `maxonline` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Counter IPs ================================================
@@ -263,7 +263,7 @@ function install_mysql_create()
       `ip` varchar(30) NOT NULL DEFAULT '0',
       `datum` int(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Counter whoison ============================================
@@ -277,7 +277,7 @@ function install_mysql_create()
       `login` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`),
       UNIQUE KEY `ip` (`ip`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Downloads ==================================================
@@ -294,7 +294,7 @@ function install_mysql_create()
       `last_dl` int(20) NOT NULL DEFAULT '0',
       `comments` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Downloadkategorien =========================================
@@ -304,7 +304,7 @@ function install_mysql_create()
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `name` varchar(249) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Downloadkommentare =========================================
@@ -322,7 +322,7 @@ function install_mysql_create()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Events (Kalender) ==========================================
@@ -334,7 +334,7 @@ function install_mysql_create()
       `title` varchar(30) NOT NULL DEFAULT '',
       `event` text NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Forum: Access ==============================================
@@ -348,7 +348,7 @@ function install_mysql_create()
       PRIMARY KEY (`id`),
       UNIQUE KEY `id` (`id`),
       KEY `user` (`user`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Forum: Kategorien ==========================================
@@ -360,7 +360,7 @@ function install_mysql_create()
       `name` varchar(50) NOT NULL DEFAULT '',
       `intern` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Forumposts =================================================
@@ -381,7 +381,7 @@ function install_mysql_create()
       PRIMARY KEY (`id`),
       KEY `sid` (`sid`),
       KEY `date` (`date`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Forumthreads ===============================================
@@ -412,7 +412,7 @@ function install_mysql_create()
       KEY `lp` (`lp`),
       KEY `topic` (`topic`),
       KEY `first` (`first`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;",false,false,true);
 
     //===============================================================
     //-> Forum Unterkategorien ======================================
@@ -425,7 +425,7 @@ function install_mysql_create()
       `subtopic` varchar(150) NOT NULL DEFAULT '',
       `pos` int(5) NOT NULL DEFAULT 1,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Forum ABO ==================================================
@@ -437,7 +437,7 @@ function install_mysql_create()
       `datum` int(20) NOT NULL,
       `user` int(5) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Galerie ====================================================
@@ -449,7 +449,7 @@ function install_mysql_create()
       `kat` varchar(200) NOT NULL DEFAULT '',
       `beschreibung` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Gaestebuch =================================================
@@ -467,7 +467,7 @@ function install_mysql_create()
       `editby` text,
       `public` int(1) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Gästebuchkommentare ========================================
@@ -485,7 +485,7 @@ function install_mysql_create()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8;",false,false,true);
 
     //===============================================================
     //-> Glossar ====================================================
@@ -496,7 +496,7 @@ function install_mysql_create()
       `word` varchar(200) NOT NULL,
       `glossar` text NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Ipcheck & Admin Log ========================================
@@ -508,7 +508,7 @@ function install_mysql_create()
       `what` varchar(40) NOT NULL DEFAULT '',
       `time` int(20) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> IP-Ban & Spam Blocker ======================================
@@ -524,7 +524,7 @@ function install_mysql_create()
         PRIMARY KEY (`id`),
         UNIQUE KEY `id` (`id`),
         KEY `ip` (`ip`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Links ======================================================
@@ -538,7 +538,7 @@ function install_mysql_create()
       `beschreibung` text,
       `hits` int(50) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> LinkUs =====================================================
@@ -551,7 +551,7 @@ function install_mysql_create()
       `banner` int(1) NOT NULL DEFAULT '0',
       `beschreibung` varchar(249) DEFAULT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Nachrichten ================================================
@@ -573,7 +573,7 @@ function install_mysql_create()
       `senduser` varchar(255) NOT NULL DEFAULT '',
       `sendnewsuser` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Navigation =================================================
@@ -594,7 +594,7 @@ function install_mysql_create()
       `editor` int(10) NOT NULL DEFAULT '0',
       `extended_perm` varchar(50) DEFAULT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Navigation Kategorien ======================================
@@ -606,7 +606,7 @@ function install_mysql_create()
       `placeholder` varchar(200) NOT NULL,
       `level` int(2) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> News =======================================================
@@ -635,7 +635,7 @@ function install_mysql_create()
       `comments` int(1) NOT NULL DEFAULT '1',
       `custom_image` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Newskategorien =============================================
@@ -646,7 +646,7 @@ function install_mysql_create()
       `katimg` varchar(100) NOT NULL DEFAULT '',
       `kategorie` varchar(60) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Newskommentare =============================================
@@ -664,7 +664,7 @@ function install_mysql_create()
       `ip` varchar(50) NOT NULL DEFAULT '',
       `editby` text,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Partnerbuttons =============================================
@@ -676,7 +676,7 @@ function install_mysql_create()
       `banner` varchar(100) NOT NULL DEFAULT '',
       `textlink` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Rechte =====================================================
@@ -729,7 +729,7 @@ function install_mysql_create()
       `votesadmin` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`),
       KEY `user` (`user`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Positionen =================================================
@@ -741,7 +741,7 @@ function install_mysql_create()
       `position` varchar(30) NOT NULL DEFAULT '',
       `nletter` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Profilfelder ===============================================
@@ -755,7 +755,7 @@ function install_mysql_create()
       `type` int(5) NOT NULL DEFAULT '1',
       `shown` int(5) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Rankings ===================================================
@@ -770,7 +770,7 @@ function install_mysql_create()
       `url` varchar(249) NOT NULL DEFAULT '',
       `postdate` int(20) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> RSS Feeds ==================================================
@@ -788,7 +788,7 @@ function install_mysql_create()
       `show_downloads` int(1) NOT NULL DEFAULT '1',
       `show_downloads_max` int(11) NOT NULL DEFAULT '2',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Server =====================================================
@@ -806,7 +806,7 @@ function install_mysql_create()
     `qport` varchar(10) NOT NULL DEFAULT '',
     `custom_icon` varchar(30) NOT NULL DEFAULT '',
     PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Settings ===================================================
@@ -821,7 +821,7 @@ function install_mysql_create()
         `type` varchar(20) NOT NULL DEFAULT 'int' COMMENT 'int/string',
         PRIMARY KEY (`id`),
         UNIQUE KEY `key` (`key`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Sessions ===================================================
@@ -833,7 +833,7 @@ function install_mysql_create()
         `data` text NOT NULL,
         `session_key` char(128) NOT NULL,
         PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Shoutbox ===================================================
@@ -847,7 +847,7 @@ function install_mysql_create()
       `text` text NOT NULL,
       `ip` varchar(50) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Seiten =====================================================
@@ -859,7 +859,7 @@ function install_mysql_create()
       `text` text NOT NULL,
       `html` int(1) NOT NULL,
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Slideshow ==================================================
@@ -874,7 +874,7 @@ function install_mysql_create()
     `url` varchar(200) NOT NULL DEFAULT '',
     `target` int(1) NOT NULL DEFAULT '0',
     PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Sponsoren ==================================================
@@ -897,7 +897,7 @@ function install_mysql_create()
       `pos` int(5) NOT NULL,
       `hits` int(50) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Startseite =================================================
@@ -909,7 +909,7 @@ function install_mysql_create()
         `url` varchar(200) NOT NULL,
         `level` int(1) NOT NULL DEFAULT '1',
         PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Squads =====================================================
@@ -927,7 +927,7 @@ function install_mysql_create()
       `beschreibung` text,
       `team_show` int(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Squadusers =================================================
@@ -939,7 +939,7 @@ function install_mysql_create()
       `squad` int(2) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`),
       KEY `user` (`user`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Teamspeak ==================================================
@@ -958,7 +958,7 @@ function install_mysql_create()
       `default_server` int(1) NOT NULL DEFAULT '0',
       `show_navi` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Usergallery ================================================
@@ -970,7 +970,7 @@ function install_mysql_create()
       `beschreibung` text,
       `pic` varchar(200) NOT NULL DEFAULT '',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> UserGB =====================================================
@@ -989,7 +989,7 @@ function install_mysql_create()
       `editby` text,
       PRIMARY KEY (`id`),
       KEY `user` (`user`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Userposis ==================================================
@@ -1001,7 +1001,7 @@ function install_mysql_create()
       `posi` int(5) NOT NULL DEFAULT '0',
       `squad` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Users ======================================================
@@ -1085,7 +1085,7 @@ function install_mysql_create()
       `startpage` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`),
       UNIQUE KEY `id` (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Userstats ==================================================
@@ -1104,7 +1104,7 @@ function install_mysql_create()
       `cws` int(5) NOT NULL DEFAULT '0',
       `akl` int(5) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Votes ======================================================
@@ -1120,7 +1120,7 @@ function install_mysql_create()
       `von` int(10) NOT NULL DEFAULT '0',
       `forum` int(1) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 
     //===============================================================
     //-> Vote Möglichkeit ==========================================
@@ -1133,5 +1133,5 @@ function install_mysql_create()
       `sel` varchar(80) NOT NULL DEFAULT '',
       `stimmen` int(5) NOT NULL DEFAULT '0',
       PRIMARY KEY (`id`)
-    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;",false,false,true);
+    ) ".dba::get_db_engine($_SESSION['mysql_dbengine'])." DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;",false,false,true);
 }
