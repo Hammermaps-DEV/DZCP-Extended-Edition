@@ -395,9 +395,9 @@ function show($tpl="", $array=array(), $array_lang_constant=array(), $array_bloc
 
         if($template_additional != false && file_exists($template_additional.".html"))
             $tpl = file_get_contents($template_additional.".html");
-        else if($template_additional != false && !file_exists($template_additional.".html") && ($tpli=API_CORE::load_additional_tpl($tpl)))
+        else if(allow_additional && $template_additional != false && !file_exists($template_additional.".html") && ($tpli=API_CORE::load_additional_tpl($tpl)))
             $tpl = $tpli;
-        else if(allow_additional && file_exists($template.".html") && !file_exists($template_additional.".html"))
+        else if(file_exists($template.".html") && !file_exists($template_additional.".html"))
             $tpl = file_get_contents($template.".html");
         ## DZCP-Extended Edition END ##
 
@@ -1283,6 +1283,7 @@ function decryptData($crypttext='',$salt='')
  */
 function ZendFramework()
 {
+    if(!zend_support) return false;
     if($zendLoaderPresent = @fopen('Zend/Loader/Autoloader.php', 'r', true))
     { @fclose($zendLoaderPresent); return true; }
     return false;

@@ -50,7 +50,9 @@ class Cache
     {
         if(!array_key_exists($typeShort, self::$cacheInstalled))
         {
-            if(empty($install['Required']) || extension_loaded($install['Required']))
+            if(!zend_support && ($typeShort == 'zenddisk' || $typeShort == 'shm'))
+                self::$dummy_overwrite = true;
+            else if(empty($install['Required']) || extension_loaded($install['Required']))
             {
                 if(show_cache_debug)
                     DebugConsole::insert_loaded('inc/additional-kernel/cache/class_'.$install['Class'].'.php', $install['TypeName']);

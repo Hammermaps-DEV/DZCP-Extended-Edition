@@ -295,7 +295,6 @@ class API_CORE
      */
     public static function load_admin_case_dir($menu='',$addon=false,$addon_dir='')
     {
-        if(!modapi_enabled) return false;
         $dir = ($addon ? basePath.'/inc/additional-addons/'.$addon_dir.'/admin/menu/'.$menu.'/case' : basePath.'/admin/menu/'.$menu.'/case');
         if(is_dir($dir)) return $dir; return false;
     }

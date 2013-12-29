@@ -34,6 +34,7 @@ define('AjaxLoad', true); // Menüs per Ajax laden
 define('modapi_enabled', true); // DZCP Addons-API erlauben
 define('modapi_events_enabled', true); // DZCP Addons-API Events ausführen
 
+define('zend_support', false); // Zend Framework Support
 define('allow_additional', true); // additional functions,etc erlauben
 define('cache_thumbgen', true); // zwischenspeichern der Thumbgen generierten Bildern
 define('use_curl', true); // Verwendet die CURL PHP Erweiterung, anstelle von file_get_contents() für externe Zugriffe, wenn vorhanden.
