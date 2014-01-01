@@ -17,20 +17,23 @@
  */
 
 /**
- * DayZ Standalone Protocol Class
- *
- * @author Austin Bischoff <austin@codebeard.com>
- * Note that this is not DayZ Mod but a standalone game in Steam
- */
-class GameQ_Protocols_Dayz extends GameQ_Protocols_Source
+* Starbound Protocol Class
+*
+* Unable to test if player information is returned. Also appears the challenge procedure
+* is ignored.
+*
+* @author Austin Bischoff <austin@codebeard.com>
+*/
+class GameQ_Protocols_Starbound extends GameQ_Protocols_Source
 {
     //Game or Mod
-    protected $name = "dayz";
-    protected $name_long = "DayZ Standalone";
-    protected $name_short = "DayZ";
+    protected $name = "starbound";
+    protected $name_long = "Starbound";
+    protected $name_short = "Starbound";
+    protected $port = 21025;
 
     //Basic Game
-    protected $basic_game_dir = 'dayz';
+    protected $basic_game_dir = 'starbound';
 
     //Settings
     protected $goldsource = false;

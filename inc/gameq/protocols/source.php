@@ -89,6 +89,7 @@ class GameQ_Protocols_Source extends GameQ_Protocols
     protected $basic_game_long = '';
     protected $basic_game_short = '';
     protected $basic_game_dir = '';
+    protected $join_link = "steam://connect/%s:%d/";
 
     /**
      * Define the Source engine type.  By default it is assumed to be Source

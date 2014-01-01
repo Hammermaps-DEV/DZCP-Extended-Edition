@@ -35,7 +35,7 @@
  */
 final class GameQ
 {
-    const VERSION = '2.0.1.2';
+    const VERSION = '2.0.2.1';
     protected static $options = array('debug' => FALSE, 'timeout' => 3, 'filters' => array(), 'stream_timeout' => 400000, 'write_wait' => 500);
     protected static $debug = false;
     protected static $timeout = 3;
@@ -587,6 +587,9 @@ final class GameQ
         $read = $sockets;
         $write = NULL;
         $except = NULL;
+
+        if(empty($read))
+            return $responses;
 
         // This is when it should stop
         $time_stop = microtime(true) + self::$timeout;

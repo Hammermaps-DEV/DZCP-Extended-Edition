@@ -17,20 +17,21 @@
  */
 
 /**
- * DayZ Standalone Protocol Class
- *
- * @author Austin Bischoff <austin@codebeard.com>
- * Note that this is not DayZ Mod but a standalone game in Steam
- */
-class GameQ_Protocols_Dayz extends GameQ_Protocols_Source
+* Rust Protocol Class
+*
+* Seems to respond to A2S but no rules, unsure if players is complete
+*
+* @author Austin Bischoff <austin@codebeard.com>
+*/
+class GameQ_Protocols_Rust extends GameQ_Protocols_Source
 {
     //Game or Mod
-    protected $name = "dayz";
-    protected $name_long = "DayZ Standalone";
-    protected $name_short = "DayZ";
+    protected $name = "rust";
+    protected $name_long = "Rust";
+    protected $name_short = "Rust";
 
     //Basic Game
-    protected $basic_game_dir = 'dayz';
+    protected $basic_game_dir = 'rust';
 
     //Settings
     protected $goldsource = false;

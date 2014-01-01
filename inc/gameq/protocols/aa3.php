@@ -31,6 +31,7 @@ class GameQ_Protocols_Aa3 extends GameQ_Protocols_Source
 
     //Basic Game
     protected $basic_game_dir = 'aa3game';
+    protected $link_join = "aa3://%s:%d/";
 
     //Settings
     protected $goldsource = false;
