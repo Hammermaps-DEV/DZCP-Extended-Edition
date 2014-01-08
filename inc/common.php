@@ -51,7 +51,7 @@ if(ZendFramework())
     $zend_loader->setFallbackAutoloader(true);
 }
 
-if (is_php('5.4.0'))
+if(is_php('5.4.0'))
     @ini_set('magic_quotes_runtime', false);
 
 if(!$ajaxThumbgen)
@@ -126,10 +126,13 @@ function check_ip()
         }
 
         unset($banned_ip,$banned_ip_sql);
-        sfs::check(); //SFS Update
-        if(sfs::is_spammer())
-            die('Deine IP-Adresse ist auf <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a> gesperrt, die IP wurde zu oft für Spam Angriffe auf Webseiten verwendet.<p>
-                 Your IP address is known on <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a>, your IP has been used for spam attacks on websites.');
+        if(fsockopen_support())
+        {
+            sfs::check(); //SFS Update
+            if(sfs::is_spammer())
+                die('Deine IP-Adresse ist auf <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a> gesperrt, die IP wurde zu oft für Spam Angriffe auf Webseiten verwendet.<p>
+                     Your IP address is known on <a href="http://www.stopforumspam.com/" target="_blank">http://www.stopforumspam.com/</a>, your IP has been used for spam attacks on websites.');
+        }
     }
 }
 
@@ -482,12 +485,15 @@ if(!$ajaxThumbgen)
     mailmgr::init();
 
     //FTP
-    FTP::init();
-    FTP::set('host',settings('ftp_hostname'));
-    FTP::set('port',settings('ftp_port'));
-    FTP::set('pass',decryptData(settings('ftp_password')));
-    FTP::set('user',settings('ftp_username'));
-    FTP::set('ssl',settings('ftp_ssl'));
+    if(allow_ftp_support)
+    {
+        FTP::init();
+        FTP::set('host',settings('ftp_hostname'));
+        FTP::set('port',settings('ftp_port'));
+        FTP::set('pass',decryptData(settings('ftp_password')));
+        FTP::set('user',settings('ftp_username'));
+        FTP::set('ssl',settings('ftp_ssl'));
+    }
 
     //SteamAPI
     SteamAPI::set('apikey',settings('steam_api_key'));
@@ -810,8 +816,8 @@ function cw_result($punkte, $gpunkte)
         return '<span class="CwWon">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/won.gif" alt="" class="icon" />';
     else if($punkte < $gpunkte)
         return '<span class="CwLost">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/lost.gif" alt="" class="icon" />';
-    else
-        return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/draw.gif" alt="" class="icon" />';
+
+    return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span> <img src="inc/images/draw.gif" alt="" class="icon" />';
 }
 
 function cw_result_pic($punkte, $gpunkte)
@@ -820,8 +826,8 @@ function cw_result_pic($punkte, $gpunkte)
         return '<img src="inc/images/won.gif" alt="" class="icon" />';
     else if($punkte < $gpunkte)
         return '<img src="inc/images/lost.gif" alt="" class="icon" />';
-    else
-        return '<img src="inc/images/draw.gif" alt="" class="icon" />';
+
+    return '<img src="inc/images/draw.gif" alt="" class="icon" />';
 }
 
 //-> Funktion um bei Clanwars Endergebnisse auszuwerten ohne bild
@@ -831,8 +837,8 @@ function cw_result_nopic($punkte, $gpunkte)
         return '<span class="CwWon">'.$punkte.':'.$gpunkte.'</span>';
     else if($punkte < $gpunkte)
         return '<span class="CwLost">'.$punkte.':'.$gpunkte.'</span>';
-    else
-        return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span>';
+
+    return '<span class="CwDraw">'.$punkte.':'.$gpunkte.'</span>';
 }
 
 //-> Funktion um bei Clanwars Endergebnisse auszuwerten ohne bild und ohne farbe
@@ -842,8 +848,8 @@ function cw_result_nopic_nocolor($punkte, $gpunkte)
         return $punkte.':'.$gpunkte;
     else if($punkte < $gpunkte)
         return $punkte.':'.$gpunkte;
-    else
-        return $punkte.':'.$gpunkte;
+
+    return $punkte.':'.$gpunkte;
 }
 
 //-> Flaggen ausgeben
@@ -1795,8 +1801,8 @@ function check_internal_url()
         if($get['internal'])
             return true;
     }
-    else
-        return false;
+
+    return false;
 }
 
 // Prüft die ausgelagerten Seiten für Zugriff
@@ -1984,7 +1990,7 @@ function page($index,$title,$where,$time,$index_templ=false)
     if(checkme() == 'banned')
     {
         logout();
-        header("Location: ?index=user&action=login");
+        header("Location: ?index=news");
     }
 
     //Send E-Mail

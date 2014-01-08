@@ -35,10 +35,16 @@ if(!admin_perms($_SESSION['id']))
 else
 {
     define('_adminMenu', true);
+    $installer_output = '';
 
     //Addons Installer
-    $installer = (isset($_GET['installer']) && addons_installer::init()); $installer_output = '';
-    if($installer) $installer_output = installer::installer_output();
+    if(modapi_enabled)
+    {
+        $installer = (isset($_GET['installer']) && addons_installer::init());
+
+        if($installer)
+            $installer_output = installer::installer_output();
+    }
 
     if(!empty($installer_output) && $installer)
         $index = $installer_output;

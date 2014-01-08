@@ -223,13 +223,7 @@ function fileExists($url,$timeout=2)
  **/
 function fsockopen_support()
 {
-    if(!function_exists('fsockopen'))
-        return false;
-
-    if(!function_exists("fopen"))
-        return false;
-
-    if(ini_get('allow_url_fopen') != 1)
+    if(!function_exists('fsockopen') || !function_exists("fopen") || !allow_fsockopen)
         return false;
 
     if(strpos(ini_get('disable_functions'),'fsockopen') || strpos(ini_get('disable_functions'),'file_get_contents') || strpos(ini_get('disable_functions'),'fopen'))

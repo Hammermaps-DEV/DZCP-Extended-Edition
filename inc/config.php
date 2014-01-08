@@ -34,6 +34,8 @@ define('AjaxLoad', true); // Menüs per Ajax laden
 define('modapi_enabled', true); // DZCP Addons-API erlauben
 define('modapi_events_enabled', true); // DZCP Addons-API Events ausführen
 
+define('allow_ftp_support', true); // DZCP eigener FTP Support
+define('allow_fsockopen', true); // fsockopen support
 define('zend_support', false); // Zend Framework Support
 define('allow_additional', true); // additional functions,etc erlauben
 define('cache_thumbgen', true); // zwischenspeichern der Thumbgen generierten Bildern
