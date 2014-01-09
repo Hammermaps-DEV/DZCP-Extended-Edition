@@ -490,7 +490,7 @@ if(!$ajaxThumbgen)
         FTP::init();
         FTP::set('host',settings('ftp_hostname'));
         FTP::set('port',settings('ftp_port'));
-        FTP::set('pass',decryptData(settings('ftp_password')));
+        FTP::set('pass',decryptData(hextobin(settings('ftp_password'))));
         FTP::set('user',settings('ftp_username'));
         FTP::set('ssl',settings('ftp_ssl'));
     }
