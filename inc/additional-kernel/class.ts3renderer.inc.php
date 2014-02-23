@@ -511,13 +511,21 @@ class TS3Renderer
     {
         if(Cache::check('ts3_dns_'.$dns))
         {
-            if(!ping_port($dns,41144,1))
+            $tsdnsIP = $dns; $tsdnsPort = 41144;
+            $result = dns_get_record("_tsdns._tcp.".$dns, DNS_ALL); //Check of TSDNS Record
+            if(count($result) >= 1)
+            {
+                $tsdnsIP = $result[0]['target'];
+                $tsdnsPort = $result[0]['port'];
+            }
+
+            if(!ping_port($tsdnsIP,$tsdnsPort))
                 return false;
 
             if(show_teamspeak_debug && show_debug_console)
                 DebugConsole::insert_initialize('TS3Renderer::tsdns()', 'Connect to TS3 - DNS Server on "'.$dns.':41144"');
 
-            if($fp = @fsockopen($dns, 41144, $errnum, $errstr, 2))
+            if($fp = @fsockopen($tsdnsIP, $tsdnsPort, $errnum, $errstr, 2))
             {
                 if(show_teamspeak_debug && show_debug_console)
                     DebugConsole::insert_info('TS3Renderer::tsdns()', 'Connected TS3 - DNS Server "'.$dns.':41144"');
