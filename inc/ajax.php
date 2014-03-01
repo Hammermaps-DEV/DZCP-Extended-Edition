@@ -17,6 +17,14 @@ if(isset($_GET['loader']) && $_GET['loader'] == 'thumbgen')
     error_reporting(0);
 }
 
+
+$sql_configs = array("default" => array("driver" => "mysql", "db" => "", "db_host" => "", "db_user" => "", "db_pw" => "", "sql_prefix" => "", "sql_engine" => 0));
+if(file_exists(basePath."/inc/mysql.php") && file_exists(basePath."/inc/mysql_salt.php"))
+{
+    require_once(basePath."/inc/mysql.php");
+    require_once(basePath."/inc/mysql_salt.php");
+}
+
 //Settings
 $ajaxJob = true;
 $ajaxThumbgen = ((isset($_GET['loader']) ? $_GET['loader'] : false) == 'thumbgen' ? true : false);

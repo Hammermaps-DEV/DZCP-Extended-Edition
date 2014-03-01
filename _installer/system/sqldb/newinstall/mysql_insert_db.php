@@ -188,8 +188,8 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Teamspeak ==================================================
     //===============================================================
-    db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'ts.revoplay.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 0, `show_navi` = 0;",false,false,true);
-    db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'ts.hammermaps.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 1, `show_navi` = 1;",false,false,true);
+    db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'revoplay.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 0, `show_navi` = 0;",false,false,true);
+    db("INSERT INTO ".dba::get('ts')." SET `host_ip_dns` = 'hammermaps.de', `server_port` = 9987, `query_port` = 10011, `customicon` = 1, `showchannel` = 0, `default_server` = 1, `show_navi` = 1;",false,false,true);
 
     //===============================================================
     //-> Forum: Kategorien ==========================================
