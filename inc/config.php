@@ -140,6 +140,13 @@ define('sessions_memcache_port', 11211);
 define('runtime_buffer', true);
 
 /*
+ * Speichert bestimmte PHP Daten im Cache zwischen.
+* Sollte nur verwendet werden, wenn APC oder Memchache verwendet wird.
+*/
+define('file_to_cache', true);
+define('file_to_cache_refresh', (90*60));
+
+/*
  * Bitte vor der Aktivierung der Persistent Connections lesen:
  * http://php.net/manual/de/features.persistent-connections.php
  * Beschleunigt die mySQL-Abfragen
@@ -170,6 +177,7 @@ define('allow_os_shell', false);
 ## Downloads Filesize Extended END ##
 
 define('server_show_empty_players', false); //Alle Spieler anzeigen, die deren Namen nicht angezeigt werden können, User werden sonst entfernt.
+define('cache_md5_file_check', true); //Prüft ob eine PHP Datei verändert wurde und aktualisiert den Cache automatisch.
 
 #########################################
 //-> DZCP Settings Ende

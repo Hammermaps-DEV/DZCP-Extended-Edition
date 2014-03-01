@@ -25,3 +25,4 @@ dzcp_extended.PHPEditProject
 .settings/*
 .buildpath
 .project
+*.bak
