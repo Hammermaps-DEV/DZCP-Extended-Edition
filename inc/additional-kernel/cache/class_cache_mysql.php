@@ -59,7 +59,7 @@ class cache_mysql extends Cache
         $key = 'bin_'.$key;
         if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
-        $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $data = bin2hex($binary);
+        $file_hash = $original_file && !empty($original_file) && cache_md5_file_check ? md5_file(basePath.'/'.$original_file) : false; $data = bin2hex($binary);
         if(db("SELECT qry FROM `".dba::get('cache')."` WHERE `qry` = '".md5($key)."' LIMIT 1", true))
         {
             if(db("UPDATE `".dba::get('cache')."` SET `data` = '".$data."', `timestamp` = '".time()."', `cacheTime` = '".$ttl."', `array` = '0', `stream_hash` = '".$file_hash."', `original_file` = '".$original_file."' WHERE `qry` = '".md5($key)."'"))
@@ -157,11 +157,13 @@ class cache_mysql extends Cache
         if(empty($GetCache['stream_hash']) && !empty($GetCache['original_file']))
             return true;
 
-        if(!empty($GetCache['original_file']) && !file_exists(basePath.'/'.$GetCache['original_file']))
-            return true;
+        if(cache_md5_file_check)
+            if(!empty($GetCache['original_file']) && !file_exists(basePath.'/'.$GetCache['original_file']))
+                return true;
 
-        if(!empty($GetCache['original_file']) && convert::ToString(md5_file(basePath.'/'.$GetCache['original_file'])) != $GetCache['stream_hash'])
-            return true;
+        if(cache_md5_file_check)
+            if(!empty($GetCache['original_file']) && convert::ToString(md5_file(basePath.'/'.$GetCache['original_file'])) != $GetCache['stream_hash'])
+                return true;
 
         if(!isset($GetCache['cacheTime']))
             return true;

@@ -45,7 +45,7 @@ class cache_apc extends Cache
         if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $key = 'bin_'.$key;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
-        $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : false; $binary = bin2hex($binary);
+        $file_hash = $original_file && !empty($original_file) && cache_md5_file_check ? md5_file(basePath.'/'.$original_file) : false; $binary = bin2hex($binary);
         self::control_set($key,$ttl,array('stream_hash' => $file_hash, 'original_file' => $original_file));
         return (apc_store(md5($key), $binary, $ttl) === true ? true : false);
     }
@@ -90,11 +90,13 @@ class cache_apc extends Cache
         if(empty($control['stream_hash']) && !empty($control['original_file']))
             return true;
 
-        if(!empty($control['original_file']) && !file_exists(basePath.'/'.$control['original_file']))
-            return true;
+        if(cache_md5_file_check)
+            if(!empty($control['original_file']) && !file_exists(basePath.'/'.$control['original_file']))
+                return true;
 
-        if(!empty($control['original_file']) && convert::ToString(md5_file(basePath.'/'.$control['original_file'])) != $control['stream_hash'])
-            return true;
+        if(cache_md5_file_check)
+            if(!empty($control['original_file']) && convert::ToString(md5_file(basePath.'/'.$control['original_file'])) != $control['stream_hash'])
+                return true;
 
         return false;
     }

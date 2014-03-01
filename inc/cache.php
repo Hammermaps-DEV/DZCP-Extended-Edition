@@ -468,4 +468,59 @@ class Cache
             return call_user_func($install['Class'].'::'.$install['CallTag'].'clean');
         }
     }
+
+    /**
+     * Speichert die PHP Dateien in den Cache
+     * @param path to file $file_path
+     * @param boolean $nocache
+     * @return boolean|multitype:array
+     */
+    public static function file_to_cache($file_path='',$nocache=false)
+    {
+        if(self::is_mem() && self::get_cache_support() && !$nocache && file_to_cache)
+        {
+            $hash = md5('ftc_'.$file_path);
+            if(!self::check_binary($hash))
+            {
+                if(show_cache_debug)
+                {
+                    DebugConsole::insert_info('inc/cache.php', 'Get from FTC Cache');
+                    DebugConsole::insert_info('inc/cache.php', 'FTC Cache: '.$file_path);
+                }
+
+                $cache = self::get_binary($hash);
+                if(empty($cache))
+                {
+                    if(!file_exists($file_path))
+                        return false;
+
+                    $data_steam = file_get_contents($file_path);
+                    $data_steam = str_replace(array('<?php','<?','?>'), '', $data_steam);
+                    $file_path = str_replace(basePath, '', $file_path);
+                    self::set_binary($hash,$data_steam,$file_path,file_to_cache_refresh);
+                    return array('use_eval' => true, 'eval' => $data_steam);
+                }
+
+                return array('use_eval' => true, 'eval' => $cache);
+            }
+
+            if(show_cache_debug)
+            {
+                DebugConsole::insert_info('inc/cache.php', 'Rebuild FTC Cache');
+                DebugConsole::insert_info('inc/cache.php', 'FTC Cache: '.$file_path);
+            }
+
+            if(!file_exists($file_path))
+                return false;
+
+            $data_steam = file_get_contents($file_path);
+            $data_steam = str_replace(array('<?php','<?','?>'), '', $data_steam);
+            $file_path = str_replace(basePath, '', $file_path);
+            $file_path = substr($file_path,1);
+            self::set_binary($hash,$data_steam,$file_path,file_to_cache_refresh);
+            return array('use_eval' => true, 'eval' => $data_steam);
+        }
+
+        return false;
+    }
 }

@@ -26,7 +26,7 @@ $where = _site_member;
 #########################
 $IncludeAction=include_action($dir,'default');
 $page=$IncludeAction['page']; $do=$IncludeAction['do']; $addon_dir=$IncludeAction['dir'];
-$IncludeAction['include'] ? require_once $IncludeAction['file'] : $index = $IncludeAction['msg'];
+$IncludeAction['include'] ? (($fcache = Cache::file_to_cache($IncludeAction['file'])) && $fcache['use_eval'] ? eval($fcache['eval']) : require_once($IncludeAction['file'])) : $index = $IncludeAction['msg'];
 #######################
 ## Action Loader END ##
 #######################

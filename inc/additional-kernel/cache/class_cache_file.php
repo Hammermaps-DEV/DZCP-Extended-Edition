@@ -81,7 +81,7 @@ class cache_file extends Cache
 
         if((empty($ttl) && $ttl != 0) || !is_int($ttl)) $ttl = 5;
         $original_file = (!$original_file || empty($original_file) ? '' : $original_file);
-        $file_hash = $original_file && !empty($original_file) ? md5_file(basePath.'/'.$original_file) : '';
+        $file_hash = $original_file && !empty($original_file) && cache_md5_file_check ? md5_file(basePath.'/'.$original_file) : '';
         $file_hash_check = convert::ToString(xml::getXMLvalue('cache_index_binary', '/cache_index_binary/file[@hash="'.$hash.'"]/stream_hash'));
 
         if(!empty($file_hash_check))
@@ -148,11 +148,13 @@ class cache_file extends Cache
         if(empty($original_file) && empty($file_hash) && !$ttl && !file_exists(self::$_file))
             return true;
 
-        if(!empty($original_file) && !file_exists(basePath.'/'.$original_file))
-            return true;
+        if(cache_md5_file_check)
+            if(!empty($original_file) && !file_exists(basePath.'/'.$original_file))
+                return true;
 
-        if(!empty($original_file) && convert::ToString(md5_file(basePath.'/'.$original_file)) != $file_hash)
-            return true;
+        if(cache_md5_file_check)
+            if(!empty($original_file) && convert::ToString(md5_file(basePath.'/'.$original_file)) != $file_hash)
+                return true;
 
         if(!file_exists(self::$_file))
             return true;
