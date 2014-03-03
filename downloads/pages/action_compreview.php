@@ -77,5 +77,5 @@ else
                                               "ip" => visitorIp()._ip_only_for_admins));
 
     update_user_status_preview();
-    exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
+    exit(convert::UTF8('<table class="mainContent" cellspacing="1">'.$index.'</table>'));
 }

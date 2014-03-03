@@ -130,7 +130,7 @@ else
                                                "vote" => $vote,
                                              "f_abo" => "",
                                              "show" => $show));
-    echo '<table class="mainContent" cellspacing="1" style="margin-top:17px">'.$index.'</table>';
+    echo utf8_encode('<table class="mainContent" cellspacing="1" style="margin-top:17px">'.$index.'</table>');
     exit;
   } else {
     if($_GET['do'] == 'editpost')
@@ -215,6 +215,6 @@ else
                                                   "p" => ""));
 
     update_user_status_preview();
-    exit('<table class="mainContent" cellspacing="1" style="margin-top:17px">'.$index.'</table>');
+    exit(convert::UTF8('<table class="mainContent" cellspacing="1" style="margin-top:17px">'.$index.'</table>'));
   }
 }

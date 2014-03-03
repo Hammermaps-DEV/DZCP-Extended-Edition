@@ -16,6 +16,6 @@ else
     $index = show($dir."/sites", array("titel" => string::decode($_POST['titel']),
             "inhalt" => $inhalt));
 
-    echo '<table class="mainContent" cellspacing="1"'.$index.'</table>';
+    echo convert::UTF8('<table class="mainContent" cellspacing="1"'.$index.'</table>');
     exit;
 }

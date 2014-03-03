@@ -162,21 +162,6 @@
                 image : url + '/images/vimeo.gif'
             });
 
-        // XFire Video
-            ed.addCommand('mceXFire', function() {
-                ed.windowManager.open({
-                    file : url + '/xfire.php',
-                    width : 500 + parseInt(ed.getLang('dzcp.delta_width', 0)),
-                    height : 120 + parseInt(ed.getLang('dzcp.delta_height', 0)),
-                    inline : 1, resizable : 1, scrollbars : 1
-                }, { plugin_url : url });
-            });
-
-            ed.addButton('xfire', {
-                title : 'dzcp.xfire', cmd : 'mceXFire',
-                image : url + '/images/xfire.gif'
-            });
-
         // DivX
             ed.addCommand('mceDivX', function() {
                 ed.windowManager.open({

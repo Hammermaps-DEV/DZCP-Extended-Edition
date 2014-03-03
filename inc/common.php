@@ -11,17 +11,17 @@ if(!defined('DEBUG_LOADER'))
     exit('<b>Die Debug-Console wurde nicht included oder wurde nicht geladen!<p>
     Bitte prüfen Sie ob jede index.php einen "include(basePath."/inc/debugger.php");" Eintrag hat.</b>');
 
-error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-
 if(is_debug)
 {
+    error_reporting(E_ALL ^ E_DEPRECATED);
     ini_set('display_errors', 1);
-    error_reporting(E_ALL);
     DebugConsole::initCon();
 
     if(show_debug_console)
         set_error_handler('dzcp_error_handler');
 }
+else
+    error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
 ## AjaxJob ##
 $ajaxJob = (!isset($ajaxJob) ? false : $ajaxJob);
@@ -862,10 +862,10 @@ function flag($code,$tinymce=false)
         foreach($picformat AS $end)
         {
             if(file_exists(basePath.'/inc/images/flaggen/'.$code.'.'.$end))
-                return'<img src="../../../inc/images/flaggen/'.$code.'.'.$end.'" alt="" style="vertical-align:middle" />';
+                return'<img src="../../../../inc/images/flaggen/'.$code.'.'.$end.'" alt="" style="vertical-align:middle" />';
         }
 
-        return '<img src="../../../inc/images/flaggen/nocountry.gif" alt="" style="vertical-align:middle" />';
+        return '<img src="../../../../inc/images/flaggen/nocountry.gif" alt="" style="vertical-align:middle" />';
     }
     else
     {

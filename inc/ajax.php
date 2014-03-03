@@ -164,15 +164,17 @@ if(count($mod_exp) >= 2 && $mod_exp[0] == 'securimage_audio')
 
 if($mod != 'securimage' && $mod != 'securimage_audio' && $mod != 'thumbgen')
     header("Content-Type: text/xml; charset=".(!defined('_charset') ? 'iso-8859-1' : _charset));
+else if(isset($_GET['mod']) && ( $_GET['mod'] == 'server' || $_GET['mod'] == 'teamspeak' ))
+    header("Content-type: application/x-www-form-urlencoded;charset=utf-8"); //for TS & Gameserver works better
 
 switch($mod):
     case 'menu':
         switch (isset($_GET['mod']) ? $_GET['mod'] : ''):
             case 'server';
-                die('<table class="hperc" cellspacing="0">'.server(convert::ToInt($_GET['serverID'])).'</table>');
+                die(convert::UTF8('<table class="hperc" cellspacing="0">'.server(convert::ToInt($_GET['serverID'])).'</table>'));
             break;
             case 'teamspeak';
-                die('<table class="hperc" cellspacing="0">'.teamspeak().'</table>');
+                die(convert::UTF8('<table class="hperc" cellspacing="0">'.teamspeak().'</table>'));
             break;
             case 'xfire';
                 die(xfire(string::decode($_GET['username'])));

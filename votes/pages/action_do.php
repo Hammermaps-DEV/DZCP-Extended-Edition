@@ -64,7 +64,7 @@ else
             {
                 header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
                 include(basePath.'/inc/menu-functions/vote.php');
-                exit('<table class="navContent" cellspacing="0">'.vote(true).'</table>');
+                exit(convert::UTF8('<table class="navContent" cellspacing="0">'.vote(true).'</table>'));
             }
         break;
 
@@ -101,7 +101,7 @@ else
             {
                 include_once(basePath.'/inc/menu-functions/fvote.php');
                 header("Content-type: application/x-www-form-urlencoded;charset=utf-8");
-                echo fvote(convert::ToInt($_GET['id']), true);
+                echo convert::UTF8(fvote(convert::ToInt($_GET['id']), true));
                 exit();
             }
         break;

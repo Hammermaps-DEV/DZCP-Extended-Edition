@@ -9,6 +9,7 @@
 class bbcode
 {
     private static $string = '';
+    private static $vid_count = 0;
     private static $gl_words = array();
     private static $gl_desc = array();
     private static $use_glossar = true;
@@ -101,37 +102,32 @@ class bbcode
       "[/align]");
 
     private static $vid_search = array(
-      "/\[googlevideo\](.*?)\[\/googlevideo\]/",
-      "/\[myvideo\](.*?)\[\/myvideo\]/",
-      "/\[youtube\]http\:\/\/www.youtube.com\/watch\?v\=(.*)\[\/youtube\]/",
-      "/\[divx\](.*?)\[\/divx\]/",
-      "/\[vimeo\]([0-9]{0,})\[\/vimeo\]/",
-      "/\[xfire\](.*?)\[\/xfire\]/",
-      "/\[golem\](.*?)\[\/golem\]/");
+            "/\[googlevideo\](.*?)\[\/googlevideo\]/",
+            "/\[myvideo\](.*?)\[\/myvideo\]/",
+            "/\[youtube\]http\:\/\/www.youtube.com\/watch\?v\=(.*)\[\/youtube\]/",
+            "/\[divx\](.*?)\[\/divx\]/",
+            "/\[vimeo\]([0-9]{0,})\[\/vimeo\]/",
+            "/\[golem\](.*?)\[\/golem\]/");
 
     private static $vid_replace = array(
-      "<embed id=VideoPlayback src=http://video.google.de/googleplayer.swf?docid=-$1&hl=de&fs=true style=width:425px;height:344px allowFullScreen=true allowScriptAccess=always type=application/x-shockwave-flash> </embed>",
+            "<embed id=VideoPlayback src=http://video.google.de/googleplayer.swf?docid=-$1&hl=de&fs=true style=width:425px;height:344px allowFullScreen=true allowScriptAccess=always type=application/x-shockwave-flash> </embed>",
 
-      "<object wmode=\"opaque\" style=\"width: 425px; height: 344px;\" type=\"application/x-shockwave-flash\" data=\"http://www.myvideo.de/movie/$1\"> </param>
+            "<object wmode=\"opaque\" style=\"width: 425px; height: 344px;\" type=\"application/x-shockwave-flash\" data=\"http://www.myvideo.de/movie/$1\"> </param>
       <param name=\"wmode\" value=\"opaque\">
       <param name=\"movie\" value=\"http://www.myvideo.de/movie/$1\"><param name=\"AllowFullscreen\" value=\"true\"></object>",
 
-      "<object width=\"425\" height=\"344\" wmode=\"opaque\"><param name=\"movie\" value=\"http://www.youtube.com/v/$1&hl=de_DE&fs=1&color1=0x3a3a3a&color2=0x999999&border=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param>
+            "<object width=\"425\" height=\"344\" wmode=\"opaque\"><param name=\"movie\" value=\"http://www.youtube.com/v/$1&hl=de_DE&fs=1&color1=0x3a3a3a&color2=0x999999&border=0\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"allowscriptaccess\" value=\"always\"></param>
       <param name=\"wmode\" value=\"opaque\"><embed src=\"http://www.youtube.com/v/$1&hl=de_DE&fs=1&color1=0x3a3a3a&color2=0x999999&border=0\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"425\" height=\"344\"></embed></object>",
 
-      "<object classid=\"clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616\" width=\"425\" height=\"344\" wmode=\"opaque\" codebase=\"http://go.divx.com/plugin/DivXBrowserPlugin.cab\">
+            "<object classid=\"clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616\" width=\"425\" height=\"344\" wmode=\"opaque\" codebase=\"http://go.divx.com/plugin/DivXBrowserPlugin.cab\">
       <param name=\"custommode\" value=\"none\" /><param name=\"autoPlay\" value=\"false\" /><param name=\"src\" value=\"$1\" />
       <embed type=\"video/divx\" src=\"$1\" custommode=\"none\" width=\"425\" height=\"344\" autoPlay=\"false\" pluginspage=\"http://go.divx.com/plugin/download/\"></embed></object>",
 
-      "<object width=\"425\" height=\"344\" wmode=\"opaque\"><param name=\"allowfullscreen\" value=\"true\" /></param>
+            "<object width=\"425\" height=\"344\" wmode=\"opaque\"><param name=\"allowfullscreen\" value=\"true\" /></param>
       <param name=\"wmode\" value=\"opaque\">
-      <param name=\"allowscriptaccess\" value=\"always\" /><param name=\"movie\" value=\"http://www.vimeo.com/moogaloop.swf?clip_id=\\1&server=www.vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1\" /><embed src=\"http://www.vimeo.com/moogaloop.swf?clip_id=\\1&server=www.vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"425\" height=\"344\"></embed></object>",
+      <param name=\"allowscriptaccess\" value=\"always\" /><param name=\"movie\" value=\"http://www.vimeo.com/moogaloop.swf?clip_id=$1&server=www.vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1\" /><embed src=\"http://www.vimeo.com/moogaloop.swf?clip_id=\\1&server=www.vimeo.com&show_title=1&show_byline=1&show_portrait=0&color=&fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"425\" height=\"344\"></embed></object>",
 
-      "<object width=\"425\" height=\"344\" wmode=\"opaque\"></param>
-      <param name=\"wmode\" value=\"opaque\">
-      <embed src=\"http://media.xfire.com/swf/embedplayer.swf\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"always\" allowfullscreen=\"true\" width=\"425\" height=\"344\" flashvars=\"videoid=\\1\"></embed></object>",
-
-      "<object width=\"480\" height=\"270\" wmode=\"opaque\"></param>
+            "<object width=\"480\" height=\"270\" wmode=\"opaque\"></param>
       <param name=\"wmode\" value=\"opaque\">
       <param name=\"movie\" value=\"http://video.golem.de/player/videoplayer.swf?id=$1&autoPl=false\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"AllowScriptAccess\" value=\"always\"><embed src=\"http://video.golem.de/player/videoplayer.swf?id=$1&autoPl=false\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" AllowScriptAccess=\"always\" width=\"480\" height=\"270\"></embed></object>");
 
@@ -196,7 +192,7 @@ class bbcode
         if(count($words) >= 1)
         {
             foreach($words as $word)
-            { self::$string = preg_replace("#".$word."#i", str_repeat("*", strlen($word)), self::$string); }
+            { self::$string = preg_replace_callback("#".$word."#i",create_function('$matches','return str_repeat("*", strlen($matches[0]));'),self::$string); }
         }
     }
 
@@ -308,6 +304,22 @@ class bbcode
     private static function bbcodetolow($founds)
     { return "[".strtolower($founds[1])."]".trim($founds[2])."[/".strtolower($founds[3])."]"; }
 
+    public static function search_vid()
+    {
+        self::$vid_count = 0;
+        foreach (self::$vid_search as $search)
+        {
+            self::$string = preg_replace_callback($search,"self::callback_vid",self::$string);
+            self::$vid_count++;
+        }
+    }
+
+    private static function callback_vid($matches)
+    {
+        $htmlCode = self::$vid_replace[self::$vid_count];
+        return str_replace('$1', $matches[1], $htmlCode);
+    }
+
     /**
      * Führt den allgemeinen BBCode aus.
      *
@@ -335,8 +347,8 @@ class bbcode
         if(settings('urls_linked') && !$nolinks)
             self::make_clickable();
 
-        self::$string = preg_replace('/\[url\=([^(http)].+?)\](.*?)\[\/url\]/i', '[url=http://$1]$2[/url]', self::$string);
-        self::$string = preg_replace('/\[url\]([^(http)].+?)\[\/url\]/i', '[url=http://$1]$1[/url]', self::$string);
+        self::$string = preg_replace_callback('/\[url\=([^(http)].+?)\](.*?)\[\/url\]/i',create_function('$matches','return \'[url=http://\'.$matches[1].\']\'.$matches[2].\'[/url]\';'),self::$string);
+        self::$string = preg_replace_callback('/\[url\]([^(http)].+?)\[\/url\]/i',create_function('$matches','return \'[url=http://\'.$matches[1].\']\'.$matches[1].\'[/url]\';'),self::$string);
 
         // Add line breaks
         self::$string = nl2br(self::$string);
@@ -348,8 +360,8 @@ class bbcode
         self::$string = preg_replace(self::$simple_search, self::$simple_replace, self::$string);
         self::$string = API_CORE::run_additional_bbcode(self::$string,false);
 
-        // Parse Players
-        self::$string = preg_replace(self::$vid_search,self::$vid_replace,self::$string);
+        // Parse Movie Players
+        self::search_vid();
 
         // Parse Smileys
         self::make_smileys();
@@ -363,6 +375,22 @@ class bbcode
 
         return preg_replace('/\[list\=(disc|circle|square|decimal|decimal-leading-zero|lower-roman|upper-roman|lower-greek|lower-alpha|lower-latin|upper-alpha|upper-latin|hebrew|armenian|georgian|cjk-ideographic|hiragana|katakana|hiragana-iroha|katakana-iroha|none)\](.*?)\[\/list\]/sie',
                 '"<ol style=\"list-style-type: $1;\">\n".self::process_list_items("$2")."\n</ol>"', self::$string);
+    }
+
+    public static function search_lineBreaks()
+    {
+        self::$lineBreaks_count = 0;
+        foreach (self::$lineBreaks_search as $search)
+        {
+            self::$string = preg_replace_callback($search,"self::callback_lineBreaks",self::$string);
+            self::$lineBreaks_count++;
+        }
+    }
+
+    private static function callback_lineBreaks($matches)
+    {
+        $htmlCode = self::$lineBreaks_replace[self::$lineBreaks_count];
+        return str_replace('$1', $matches[1], $htmlCode);
     }
 
     /**

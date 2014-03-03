@@ -97,7 +97,7 @@ else
         { $display = "show"; $moreicon = "collapse"; } else { $display = "none"; $moreicon = "expand"; }
         $klapp = show(_klapptext_server_link, array("link" => empty($results['ts3']['virtualserver_name']) ? 'Error on this V-Server!' : $results['ts3']['virtualserver_name'], "id" => $get['id'], "moreicon" => $moreicon));
         $index = show($dir."/servers", array("id" => $get['id'], "user" => $users, "display" => $display, "klapp" => $klapp, "uchannels" => TS3Renderer::render(true), "info" => bbcode::parse_ts3(TS3Renderer::welcome()), "userstats" => $userstats));
-        if($no_ajax) return $index; else { if(use_html5_worker) header("Content-Type: text/html; charset=utf-8"); die($index); }
+        if($no_ajax) return $index; else { if(use_html5_worker) header("Content-Type: text/html; charset=utf-8"); die(convert::UTF8($index)); }
     }
 
     if(isset($_GET['sID'])) teamspeak_show();

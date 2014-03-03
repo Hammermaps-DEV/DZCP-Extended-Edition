@@ -7,10 +7,6 @@
  */
 
 if (!defined('IS_DZCP')) exit();
-
-##############
-## Vorschau ##
-##############
 if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
@@ -65,5 +61,5 @@ else
                                               "ip" => $posted_ip));
 
     update_user_status_preview();
-    exit('<table class="mainContent" cellspacing="1">'.$index.'</table>');
+    exit(convert::UTF8('<table class="mainContent" cellspacing="1">'.$index.'</table>'));
 }

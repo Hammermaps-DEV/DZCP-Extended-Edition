@@ -17,7 +17,7 @@ function sponsors()
         {
             while($get = _fetch($qry))
             {
-                $banner = show(_sponsors_bannerlink, array("id" => $get['id'], "title" => htmlspecialchars(str_replace('http://', '', string::decode($get['link']))), "banner" => (empty($get['xlink']) ? "../banner/sponsors/box_".$get['id'].".".$get['xend'] : string::decode($get['xlink']))));
+                $banner = show(_sponsors_bannerlink, array("id" => $get['id'], "title" => htmlspecialchars(str_replace('http://', '', string::decode($get['link']))), "banner" => (empty($get['xlink']) ? "banner/sponsors/box_".$get['id'].".".$get['xend'] : string::decode($get['xlink']))));
                 $sponsors .= show("menu/sponsors", array("banner" => $banner));
             }
 
