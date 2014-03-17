@@ -14,6 +14,7 @@ define('show_teamspeak_debug', false);
 define('show_api_communicate_debug', false);
 define('show_cms_protect_debug', false);
 define('show_sessions_debug', false);
+define('show_deprecation_debug', false);
 
 define('debug_all_sql_querys', false);
 
@@ -238,6 +239,10 @@ function dzcp_error_handler($code, $msg, $file, $line, $context)
         case E_USER_NOTICE:
             DebugConsole::insert_log("<b>HINWEIS:' ".$file." '</b>", $msg, false, "", $line);
         break;
+        case E_DEPRECATED:
+            if(show_deprecation_debug)
+                DebugConsole::insert_log("<b>VERALTET:' ".$file." '</b>", $msg, false, "", $line);
+            break;
         default:
             DebugConsole::insert_log("Unbekannt:' ".$file." ' [".$code."]", $msg, false, "", $line);
         break;
