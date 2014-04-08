@@ -11,7 +11,7 @@ if (_version < '1.0')
     $index = _version_for_page_outofdate;
 else
 {
-    if($_GET['do'] == "edit")
+    if($do == "edit")
     {
         $qry = db("SELECT * FROM ".dba::get('f_posts')."
                WHERE id = '".convert::ToInt($_GET['id'])."'");

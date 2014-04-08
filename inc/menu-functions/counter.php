@@ -53,14 +53,43 @@ function counter()
 
                 $info = 'onmouseover="DZCP.showInfo(\''._online_head.'\', \''.$kats.'\', \''.$text.'\')" onmouseout="DZCP.hideInfo()"';
             }
+			
+            //Downloads
+            $qry = db("SELECT url,download,hits FROM ".dba::get('downloads')); $down_hits = 0;
+			if(($down_files = _rows($qryyday))) {
+				while($get = _fetch($qry))
+				{ $down_hits += $get['hits']; }
+			}
+
+            //Clanwars
+            if(cnt(dba::get('cw'), " WHERE datum < ".time()."") != "0")
+            {
+                $won_stats = cnt(dba::get('cw'), " WHERE punkte > gpunkte");
+                $lost_stats = cnt(dba::get('cw'), " WHERE punkte < gpunkte");
+                $draw_stats = cnt(dba::get('cw'), " WHERE datum < ".time()." && punkte = gpunkte");
+                $played_stats = cnt(dba::get('cw'), " WHERE datum < ".time()."");
+
+                $won_stats_percent = @round($won_stats*100/$played_stats, 1);
+                $lost_stats_percent = @round($lost_stats*100/$played_stats, 1);
+                $draw_stats_percent = @round($draw_stats*100/$played_stats, 1);
+            }
 
             $counter = show("menu/counter", array("v_today" => $v_today,
                                                   "v_yesterday" => $yDay,
                                                   "v_all" => $getstats['allvisitors'],
                                                   "v_perday" => round($getstats['avgvisitors'], 2),
                                                   "v_max" => $getstats['maxvisitors'],
-                                                  "g_online" => abs(online_guests($where)-$online_reg),
-                                                  "u_online" => abs($online_reg),
+												  "v_files" => $down_files,
+                                                  "v_hits" => $down_hits,
+                                                  "v_played" => $played_stats,
+                                                  "v_won" => $won_stats." (".$won_stats_percent."%)",
+                                                  "v_draw" => $draw_stats." (".$draw_stats_percent."%)",
+                                                  "v_lost" => $lost_stats." (".$lost_stats_percent."%)",
+                                                  "v_threads" => convert::ToString(cnt(dba::get('f_threads'))),
+                                                  "v_posts" => convert::ToString(cnt(dba::get('f_posts'))),
+                                                  "v_gb_all" => convert::ToString(cnt(dba::get('gb'))),
+                                                  "g_online" => convert::ToString(abs(online_guests($where)-$online_reg)),
+                                                  "u_online" => convert::ToString(abs($online_reg)),
                                                   "info" => $info,
                                                   "v_online" => $getstats['maxonline']));
 

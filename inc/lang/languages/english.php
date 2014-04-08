@@ -101,6 +101,13 @@ define('_members_admin_squad', 'Members');
 define('_newskats_katbild_akt', 'Aktuelles Katbild');
 define('_ftopics_autor', 'Autor');
 define('_ftopics_kat', 'Category');
+define('_community_head', 'Community');
+
+//Statistik
+define('_stats_cw_played_stats', 'Played');
+define('_stats_cw_won_stats', 'Won');
+define('_stats_cw_draw_stats', 'Draw');
+define('_stats_cw_lost_stats', 'Lost');
 
 //Startpage
 define('_profil_startpage', 'Startseite');

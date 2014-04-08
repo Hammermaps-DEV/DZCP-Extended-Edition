@@ -376,44 +376,42 @@ function checkme($userid_set=0)
     if(!$userid = ($userid_set != 0 ? convert::ToInt($userid_set) : userid()))
         return "unlogged";
 
-    $qry = "SELECT level FROM ".dba::get('users')." WHERE id = ".convert::ToInt($userid)." AND pwd = '".$_SESSION['pwd']."' AND ip = '".$_SESSION['ip']."'";
-    $hash = md5($qry);
-
+    $qry = "SELECT level FROM ".dba::get('users')." WHERE id = ".convert::ToInt($userid)." AND pwd = '".$_SESSION['pwd']."' AND ip = '".$_SESSION['ip']."';";
     if(Cache::is_mem())
     {
         //MEM
-        if(Cache::check($hash))
+        if(Cache::check('checkme_'.$userid))
         {
             $qry = db($qry);
             if(_rows($qry))
             {
                 $get = _fetch($qry);
-                Cache::set($hash,$get['level'],2);
+                Cache::set('checkme_'.$userid,$get['level'],2);
                 return $get['level'];
             }
             else
                 return "unlogged";
         }
         else
-            return Cache::get($hash);
+            return Cache::get('checkme_'.$userid);
     }
     else
     {
         //RTBuffer
-        if(RTBuffer::check($hash))
+        if(RTBuffer::check('checkme_'.$userid))
         {
             $qry = db($qry);
             if(_rows($qry))
             {
                 $get = _fetch($qry);
-                RTBuffer::set($hash,$get['level']);
+                RTBuffer::set('checkme_'.$userid,$get['level']);
                 return $get['level'];
             }
             else
                 return "unlogged";
         }
         else
-            return RTBuffer::get($hash);
+            return RTBuffer::get('checkme_'.$userid);
     }
 }
 
