@@ -21,7 +21,7 @@ function l_artikel()
             while($get = _fetch($qry))
             {
                 $getkat = db("SELECT kategorie FROM ".dba::get('newskat')." WHERE id = '".$get['kat']."'",false,true);
-                $text = strip_tags($get['text']);
+                $text = strip_tags(string::decode($get['text']));
                 $info = ($allowHover == 1 ? 'onmouseover="DZCP.showInfo(\''.jsconvert(string::decode($get['titel'])).'\', \''._datum.';'._autor.';'._news_admin_kat.';'._comments_head.'\', \''.date("d.m.Y H:i", $get['datum'])._uhr.';'.fabo_autor($get['autor']).';'.jsconvert(string::decode($getkat['kategorie'])).';'.cnt(dba::get('acomments'),"WHERE artikel = '".$get['id']."'").'\')" onmouseout="DZCP.hideInfo()"' : '');
                 $l_articles .= show("menu/last_artikel", array("id" => $get['id'], "titel" => string::decode(cut($get['titel'],$lartikelconfig['l_lartikel'])), "text" => cut(bbcode::parse_html($text),260), "datum" => date("d.m.Y", $get['datum']), "info" => $info));
             }
