@@ -265,7 +265,6 @@ class database
     {
         if(!$_SESSION['installer'] || $_SESSION['db_install']) //For Installer
         {
-            echo $sql_query.'<p>';
             if($log || debug_all_sql_querys) DebugConsole::wire_log('debug', 9, 'SQL_Query', $sql_query);
             if(!(self::$sql_query = mysqli_query(self::$mysqli, $sql_query)))
                 DebugConsole::sql_error_handler($sql_query);
