@@ -59,9 +59,9 @@ else
                     $edit = "";
                 }
 
-                $ftxt = hl($getp['text'], $_GET['hl']);
-                if($_GET['hl']) $text = bbcode::parse_html($ftxt['text']);
-                else $text = bbcode::parse_html($getp['text']);
+                $ftxt = hl(string::decode($getp['text']), $_GET['hl']);
+                if($_GET['hl']) $text = bbcode::parse_html(string::decode($ftxt['text']));
+                else $text = bbcode::parse_html(string::decode($getp['text']));
 
                 $posted_ip = checkme() == 4 ? $getp['ip'] : _logged;
                 $titel = show(_eintrag_titel_forum, array("postid" => $i+($page-1)*settings('m_fposts'),
@@ -149,7 +149,7 @@ else
                 $userposts = show(_forum_user_posts, array("posts" => userstats($get['t_reg'], "forumposts")));
             }
 
-            $zitat = show("page/button_zitat", array("id" => $_GET['id'], "action" => "index=forum&amp;action=post&amp;do=add&amp;kid=".$getw['kid']."&amp;zitatt=".$get['id'], "title" => _button_title_zitat));
+            $zitat = show("page/button_zitat", array("id" => $_GET['id'], "action" => "index=forum&amp;action=post&amp;do=add&amp;kid=".$getw['kid']."&amp;zitat_t=".$get['id'], "title" => _button_title_zitat));
             $add = $get['closed'] ? show("page/button_closed") : show(_forum_addpost, array("id" => $_GET['id'], "kid" => $getw['kid']));
             $nav = nav($entrys,settings('m_fposts'),"?index=forum&amp;action=showthread&amp;id=".$_GET['id'].$hL);
 
@@ -202,8 +202,8 @@ else
                         "sticky" => $sticky));
             }
 
-            $ftxt = hl($get['t_text'], isset($_GET['hl']) ? $_GET['hl'] : '');
-            $text = isset($_GET['hl']) ? bbcode::parse_html($ftxt['text']) : bbcode::parse_html($get['t_text']);
+            $ftxt = hl(string::decode($get['t_text']), isset($_GET['hl']) ? $_GET['hl'] : '');
+            $text = isset($_GET['hl']) ? bbcode::parse_html(string::decode($ftxt['text'])) : bbcode::parse_html(string::decode($get['t_text']));
             $posted_ip = checkme() == "4" ? $get['ip'] : _logged;
             $titel = show(_eintrag_titel_forum, array("postid" => "1",
                     "datum" => date("d.m.Y", $get['t_date']),
@@ -266,35 +266,35 @@ else
 
             $title = string::decode($getw['topic']).' - '.$title;
             $index = show($dir."/forum_posts", array("head" => _forum_head,
-                    "where" => $wheres,
-                    "admin" => $admin,
-                    "nick" => $nick,
-                    "threadhead" => string::decode($getw['topic']),
-                    "titel" => $titel,
-                    "postnr" => "1",
-                    "class" => $ftxt['class'],
-                    "pn" => $pn,
-                    "icq" => $icq,
-                    "hp" => $hp,
-                    "email" => $email,
-                    "posts" => $userposts,
-                    "text" => $text,
-                    "status" => getrank($get['t_reg']),
-                    "avatar" => useravatar($get['t_reg']),
-                    "edited" => $get['edited'],
-                    "signatur" => $sig,
-                    "date" => _posted_by.date("d.m.y H:i", $get['t_date'])._uhr,
-                    "zitat" => $zitat,
-                    "onoff" => $onoff,
-                    "ip" => $posted_ip,
-                    "top" => _topicon,
-                    "lpost" => $lpost,
-                    "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1,
-                    "add" => $add,
-                    "nav" => $nav,
-                    "vote" => $vote,
-                    "f_abo" => $f_abo,
-                    "show" => $show));
+                                                     "where" => $wheres,
+                                                     "admin" => $admin,
+                                                     "nick" => $nick,
+                                                     "threadhead" => string::decode($getw['topic']),
+                                                     "titel" => $titel,
+                                                     "postnr" => "1",
+                                                     "class" => $ftxt['class'],
+                                                     "pn" => $pn,
+                                                     "icq" => $icq,
+                                                     "hp" => $hp,
+                                                     "email" => $email,
+                                                     "posts" => $userposts,
+                                                     "text" => $text,
+                                                     "status" => getrank($get['t_reg']),
+                                                     "avatar" => useravatar($get['t_reg']),
+                                                     "edited" => $get['edited'],
+                                                     "signatur" => $sig,
+                                                     "date" => _posted_by.date("d.m.y H:i", $get['t_date'])._uhr,
+                                                     "zitat" => $zitat,
+                                                     "onoff" => $onoff,
+                                                     "ip" => $posted_ip,
+                                                     "top" => _topicon,
+                                                     "lpost" => $lpost,
+                                                     "lp" => cnt(dba::get('f_posts'), " WHERE sid = '".convert::ToInt($_GET['id'])."'")+1,
+                                                     "add" => $add,
+                                                     "nav" => $nav,
+                                                     "vote" => $vote,
+                                                     "f_abo" => $f_abo,
+                                                     "show" => $show));
         }
     }
     else

@@ -137,7 +137,7 @@ else
                                           "posthp" => $get['t_hp'],
                                           "admin" => $admin,
                                           "vote" => $vote,
-                                          "posteintrag" => bbcode::parse_html($get['t_text'])));
+                                          "posteintrag" => bbcode::parse_html(string::decode($get['t_text']))));
     } else {
       $index = error(_error_wrong_permissions);
     }
