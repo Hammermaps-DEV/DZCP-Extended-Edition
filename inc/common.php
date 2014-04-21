@@ -488,7 +488,7 @@ if(!$ajaxThumbgen)
         FTP::init();
         FTP::set('host',settings('ftp_hostname'));
         FTP::set('port',settings('ftp_port'));
-        FTP::set('pass',decryptData(hextobin(settings('ftp_password'))));
+        FTP::set('pass',session::decrypt(hextobin(settings('ftp_password'))));
         FTP::set('user',settings('ftp_username'));
         FTP::set('ssl',settings('ftp_ssl'));
     }
@@ -1145,6 +1145,9 @@ function cleanautor($uid, $class="", $nick="", $email="", $cut="")
             $get = RTBuffer::get($hash);
     }
 
+    if(is_object($get) && !is_array($get))
+        $get = convert::objectToArray($get);
+
     return show(_user_link_preview, array("id" => $uid, "country" => flag($get['country']), "class" => $class, "nick" => string::decode($get['nick'])));
 }
 
@@ -1190,6 +1193,9 @@ function rawautor($uid)
         else
             $get = convert::objectToArray(RTBuffer::get($hash));
     }
+
+    if(is_object($get) && !is_array($get))
+        $get = convert::objectToArray($get);
 
     return rawflag($get['country'])." ".jsconvert(string::decode($get['nick']));
 }
@@ -1237,6 +1243,9 @@ function fabo_autor($uid,$show=_user_link_fabo)
         else
             $get = convert::objectToArray(RTBuffer::get($hash));
     }
+
+    if(is_object($get) && !is_array($get))
+        $get = convert::objectToArray($get);
 
     return show($show, array("nick" => string::decode($get['nick'])));
 }
@@ -1975,10 +1984,10 @@ class javascript
 }
 
 //-> Ausgabe des Indextemplates
-function page($index,$title,$where,$time,$index_templ=false)
+function page($index,$title,$where,$index_templ=false)
 {
     global $userip,$tmpdir,$AjaxLoad_blacklist,$mobile_template;
-    global $designpath,$cp_color,$rootAdmin,$clanname;
+    global $designpath,$cp_color,$rootAdmin,$clanname,$time_start;
 
     // installer vorhanden?
     if(file_exists(basePath."/_installer") && checkme() == 4 && !is_debug)
@@ -1993,6 +2002,9 @@ function page($index,$title,$where,$time,$index_templ=false)
 
     //Send E-Mail
     mailmgr::Send();
+
+    //Timer END
+    $time = round(generatetime() - $time_start, 4);
 
     // JS-Dateine einbinden
     javascript::add_array(array('dialog_button_00' => _yes, 'dialog_button_01' => _no, 'maxW' => settings('maxwidth'), 'lng' => (language::get_language()=='deutsch') ? 'de':'en', 'domain' => settings('i_domain'),
