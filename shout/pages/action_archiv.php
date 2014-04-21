@@ -33,7 +33,7 @@ else
 
         $show .= show($dir."/shout_part", array("nick" => $nick,
                 "datum" => date("j.m.Y H:i", $get['datum'])._uhr,
-                "text" => bbcode::parse_html($get['text']),
+                "text" => bbcode::parse_html(string::decode($get['text'])),
                 "class" => $class,
                 "del" => $del,
                 "ip" => $posted_ip,

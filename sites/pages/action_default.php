@@ -25,7 +25,7 @@ else
         {
             $where = string::decode($get['titel']);
             $title = $pagetitle." - ".$where."";
-            $inhalt = bbcode::parse_html($get['text']);
+            $inhalt = bbcode::parse_html(string::decode($get['text']));
             $index = show($dir."/sites", array("titel" => string::decode($get['titel']), "inhalt" => $inhalt));
         }
     }
