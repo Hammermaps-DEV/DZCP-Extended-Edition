@@ -120,7 +120,7 @@ textarea,
 
 table.mainContent td, div#brackets, div#infoInnerLayer,
 .tile_box, .navServerPic, .ServerPic, .contentHead,
-.newsImage, .gallerie_pic, .emph, .warn, .done, .error, td.navHead.box, .info {
+.newsImage, .gallerie_pic, .emph, .warn, .done, .error, td.navHead.box, .info, td.navKalToday, td.navKalEvent {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -711,9 +711,19 @@ td.navKalHead span, td.navKalHead a {
 }
 
 td.navKalToday {
-  border: 1px solid #000;
+  border: 1px solid #2372fa;
+  font-weight: bold;
+  font-style: italic;
+  text-align: center;
+  color: #2372fa;
 }
 
+td.navKalEvent {
+  border: 1px solid #FF0000;
+  font-weight: bold;
+  font-style: italic;
+  text-align: center;
+}
 /*---------------------------------------------
 Attributes of the counter-box
 -----------------------------------------------
