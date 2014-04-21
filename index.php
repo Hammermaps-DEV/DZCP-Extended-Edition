@@ -46,9 +46,7 @@ else
 if(empty($title))
     $title = $pagetitle." - ".convert::ToString($where);
 
-$time_end = generatetime();
-$time = round($time_end - $time_start,4);
-page($index, $title, $where, $time);
+page($index, $title, $where);
 
 #######################
 ## OUTPUT BUFFER END ##
