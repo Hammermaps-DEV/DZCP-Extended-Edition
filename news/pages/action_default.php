@@ -66,7 +66,7 @@ else
                                                           "intern" => ($get['intern'] == 1 ? _votes_intern : ''),
                                                           "klapp" => $klapp,
                                                           "more" => bbcode::parse_html($get['klapptext']),
-                                                          "text" => bbcode::parse_html($get['text']),
+                                                          "text" => bbcode::parse_html(string::decode($get['text'])),
                                                           "datum" => date("d.m.y H:i", $get['datum'])._uhr,
                                                           "links" => $links,
                                                           "autor" => autor($get['autor'])));
@@ -121,7 +121,7 @@ else
                                                               "intern" => ($get['intern'] == 1 ? _votes_intern : ''),
                                                               "klapp" => $klapp,
                                                               "more" => bbcode::parse_html($get['klapptext'],false),
-                                                              "text" => bbcode::parse_html($get['text'],false),
+                                                              "text" => bbcode::parse_html(string::decode($get['text']),false),
                                                               "datum" => date("d.m.y H:i", $get['datum'])._uhr,
                                                               "links" => $links,
                                                               "autor" => autor($get['autor'])));
