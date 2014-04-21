@@ -108,9 +108,12 @@ function kalender($month="",$year="")
               } elseif($datum == $today) {
                 $data .= show("menu/kal_day", array("day" => $day,
                                                     "id" => "navKalToday"));
+              } else if($event == "set" || $cws == "set" || $bdays == "set") {
+                $data .= show("menu/kal_day", array("day" => $day,
+                                                    "id" => "navKalEvent"));
               } else {
                 $data .= show("menu/kal_day", array("day" => $day,
-                                                    "id" => "navKalDays"));
+                                                    "id" => "box navKalDays"));
               }
               $i++;
             }
