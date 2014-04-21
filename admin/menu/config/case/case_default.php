@@ -130,7 +130,7 @@ $show = show($dir."/form_config", array( "cache_select"          => Cache::GetCo
                                          "pagetitel"             => string::decode(settings::get('pagetitel')),
                                          "smtp_host"             => string::decode(settings::get('smtp_hostname')),
                                          "smtp_username"         => string::decode(settings::get('smtp_username')),
-                                         "smtp_pass"             => decryptData(settings::get('smtp_password')),
+                                         "smtp_pass"             => session::decrypt(settings::get('smtp_password')),
                                          "smtp_port"             => convert::ToInt(settings::get('smtp_port')),
                                          "sendmail_path"         => string::decode(settings::get('sendmail_path')),
                                          "smtp_tls_ssl"          => $smtp_secure_options,

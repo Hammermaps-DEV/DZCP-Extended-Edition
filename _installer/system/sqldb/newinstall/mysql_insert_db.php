@@ -1,4 +1,11 @@
 <?php
+/**
+ * <DZCP-Extended Edition>
+ * @package: DZCP-Extended Edition
+ * @author: DZCP Developer Team || Hammermaps.de Developer Team
+ * @link: http://www.dzcp.de || http://www.hammermaps.de
+ */
+
 //===============================================================
 //Insert DZCP-Database MySQL Installer
 //===============================================================
@@ -60,7 +67,7 @@ function install_mysql_insert($db_infos)
     //FTP Zugang
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_hostname', `value` = '".string::encode($_SESSION['ftp_host'])."', `default` = 'localhost', `length` = '100', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_port', `value` = '".convert::ToInt($_SESSION['ftp_port'])."', `default` = '".$_SESSION['ftp_port']."', `length` = '5', `type` = 'int';",false,false,true);
-    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_password', `value` = '".(!empty($_SESSION['ftp_pwd']) ? bin2hex(encryptData($_SESSION['ftp_pwd'])) : '')."', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
+    db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_password', `value` = '".(!empty($_SESSION['ftp_pwd']) ? bin2hex(session::encryptData($_SESSION['ftp_pwd'])) : '')."', `default` = '', `length` = '100', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_path', `value` = '".string::encode($_SESSION['ftp_pfad'])."', `default` = '/', `length` = '200', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_username', `value` = '".string::encode($_SESSION['ftp_user'])."', `default` = '".string::encode($_SESSION['ftp_user'])."', `length` = '100', `type` = 'string';",false,false,true);
     db("INSERT INTO `".dba::get('settings')."` SET `key` = 'ftp_ssl', `value` = '".convert::ToString($_SESSION['ftp_ssl'])."', `default` = '".convert::ToString($_SESSION['ftp_ssl'])."', `length` = '1', `type` = 'int';",false,false,true);
@@ -207,7 +214,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Forum: Threads =============================================
     //===============================================================
-    db("INSERT INTO ".dba::get('f_threads')." SET `kid` = 1, `t_date` = ".(time() - 9000).", `topic` = 'Testeintrag', `t_reg` = 1, `t_text` = '<p>Testeintrag</p>', `first` = 1, `lp` = ".time().", `ip` = '".visitorIp()."'",false,false,true);
+    db("INSERT INTO ".dba::get('f_threads')." SET `kid` = 1, `t_date` = ".(time() - 9000).", `topic` = 'Testeintrag', `t_reg` = 1, `t_text` = '".string::encode("<p>Testeintrag</p>")."', `first` = 1, `lp` = ".time().", `ip` = '".visitorIp()."'",false,false,true);
 
     //===============================================================
     //-> Galerie ====================================================
@@ -375,7 +382,7 @@ function install_mysql_insert($db_infos)
     //===============================================================
     //-> Userstats ==================================================
     //===============================================================
-    db("INSERT INTO ".dba::get('userstats')." SET `user` = 1, `logins` = 0, `writtenmsg` = 0, `lastvisit` = 0, `hits` = 0, `votes` = 0, `profilhits` = 0, `forumposts` = 0, `cws` = 0;",false,false,true);
+    db("INSERT INTO ".dba::get('userstats')." SET `user` = 1, `logins` = 0, `writtenmsg` = 0, `lastvisit` = 0, `hits` = 0, `votes` = 0, `profilhits` = 0, `forumposts` = 1, `cws` = 0;",false,false,true);
 
     //===============================================================
     //-> Users ======================================================

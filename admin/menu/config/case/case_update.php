@@ -117,7 +117,7 @@ if(isset($_POST))
         if(settings::changed(($key='persinfo'),($var=convert::ToInt($_POST['persinfo'])))) settings::set($key,$var);
         if(settings::changed(($key='wmodus'),($var=convert::ToInt($_POST['wmodus'])))) settings::set($key,$var);
         if(settings::changed(($key='mail_extension'),($var=string::encode($_POST['mail_extension'])))) settings::set($key,$var);
-        if(settings::changed(($key='smtp_password'),($var=encryptData($_POST['smtp_pass'])))) settings::set($key,$var);
+        if(settings::changed(($key='smtp_password'),($var=session::encryptData($_POST['smtp_pass'])))) settings::set($key,$var);
         if(settings::changed(($key='smtp_port'),($var=convert::ToInt($_POST['smtp_port'])))) settings::set($key,$var);
         if(settings::changed(($key='smtp_hostname'),($var=string::encode($_POST['smtp_host'])))) settings::set($key,$var);
         if(settings::changed(($key='smtp_username'),($var=string::encode($_POST['smtp_username'])))) settings::set($key,$var);
