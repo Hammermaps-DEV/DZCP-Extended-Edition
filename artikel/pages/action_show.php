@@ -264,7 +264,7 @@ else
                                                     "artikelimage" => $artikelimage,
                                                     "showmore" => $showmore,
                                                     "icq" => "",
-                                                    "text" => bbcode::parse_html($get['text']),
+                                                    "text" => bbcode::parse_html(string::decode($get['text'])),
                                                     "datum" => date("j.m.y H:i", convert::ToInt($get['datum']))._uhr,
                                                     "links" => $links,
                                                     "autor" => autor($get['autor']) ));

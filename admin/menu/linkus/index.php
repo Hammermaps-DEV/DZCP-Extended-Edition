@@ -50,7 +50,7 @@ if(_adminMenu != 'true')
                                                 "llink" => $get['url'],
                                                 "lbeschreibung" => string::decode($get['beschreibung']),
                                                 "btext" => _linkus_text,
-                                                "ltext" => $get['text'],
+                                                "ltext" => string::decode($get['text']),
                                                 "what" => _button_value_edit,
                                                 "do" => "editlink&amp;id=".$_GET['id'].""));
       } elseif($_GET['do'] == "editlink") {
