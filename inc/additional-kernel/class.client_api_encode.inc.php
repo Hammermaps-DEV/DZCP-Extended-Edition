@@ -93,7 +93,7 @@ final class client_api_encode
     private static final function encode_crypt()
     {
         if(empty(self::$json_stream)) return false;
-        self::$mcrypt_string = self::$options['encode_crypt'] ? encryptData(self::$json_stream,self::$crypt_key) : self::$json_stream;
+        self::$mcrypt_string = self::$options['encode_crypt'] ? session::encryptData(self::$json_stream,self::$crypt_key) : self::$json_stream;
         return (empty(self::$mcrypt_string) || !self::$mcrypt_string ? false : true);
     }
 

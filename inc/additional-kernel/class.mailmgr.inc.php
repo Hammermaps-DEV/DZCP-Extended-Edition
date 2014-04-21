@@ -18,7 +18,7 @@ final class mailmgr
         self::$options = settings(array('smtp_hostname','smtp_port','smtp_username','smtp_password','smtp_tls_ssl','sendmail_path','mail_extension'));
         self::$options['smtp_hostname'] = string::decode(self::$options['smtp_hostname']);
         self::$options['smtp_username'] = string::decode(self::$options['smtp_username']);
-        self::$options['smtp_password'] = decryptData(self::$options['smtp_password']);
+        self::$options['smtp_password'] = session::decrypt(self::$options['smtp_password']);
         self::$options['sendmail_path'] = string::decode(self::$options['sendmail_path']);
         self::$options['mail_extension'] = string::decode(self::$options['mail_extension']);
         self::$options['mail_from'] = check_email(string::decode(settings('mailfrom'))) ? string::decode(settings('mailfrom')) : 'postmaster@localhost.de';

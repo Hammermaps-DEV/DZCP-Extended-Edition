@@ -101,7 +101,7 @@ final class client_api_decode
     private static final function decode_crypt()
     {
         if(empty(self::$mcrypt_string)) return false;
-        self::$json_stream = self::$options['decode_crypt'] ? decryptData(self::$mcrypt_string,self::$crypt_key) : self::$mcrypt_string;
+        self::$json_stream = self::$options['decode_crypt'] ? session::decrypt(self::$mcrypt_string,self::$crypt_key) : self::$mcrypt_string;
         return (empty(self::$json_stream) ? false : true);
     }
 
