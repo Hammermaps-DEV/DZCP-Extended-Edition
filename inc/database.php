@@ -785,13 +785,14 @@ class settings
      * @param string $var
      * @return boolean
      */
-    public final static function set($what='',$var='')
+    public final static function set($what='',$var='', $default=true)
     {
         $what = strtolower($what);
         if(self::is_exists($what))
         {
             if(self::changed($what,$var))
             {
+                $var = empty($var) && $default ? self::get_default($what) : $var;
                 $data = self::$index[$what];
                 $data['value'] = ($data['length'] >= 1 ? cut($var,((int)$data['length']),false) : $var);
                 self::$index[$what] = $data;
@@ -811,6 +812,9 @@ class settings
      */
     public final static function changed($what='',$var='')
     {
+        if(debug_config_reset)
+            return true;
+
         $what = strtolower($what);
         if(self::is_exists($what))
         {
