@@ -425,7 +425,7 @@ else
                 {
                     $lp = cnt(dba::get('f_posts'), " WHERE sid = '".$getft['id']."'");
                     $qryp = db("SELECT text FROM ".dba::get('f_posts')." WHERE kid = '".$getft['kid']."' AND sid = '".$getft['id']."' ORDER BY date DESC LIMIT 1");
-                    if(_rows($qryp)) { $getp = _fetch($qryp); $text = strip_tags($getp['text']); } else $text = strip_tags($getft['t_text']);
+                    if(_rows($qryp)) { $getp = _fetch($qryp); $text = strip_tags(string::decode($getp['text'])); } else $text = strip_tags(string::decode($getft['t_text']));
                     $intern = ($getft['intern'] ? '<span class="fontWichtig">'._internal.':</span> ' : '');
                     $wichtig = ($getft['sticky'] ? '<span class="fontWichtig">'._sticky.':</span> ' : '');
                     $ftopics .= show($dir."/userlobby_forum", array("id" => $getft['id'],
