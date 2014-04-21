@@ -31,7 +31,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item(string::decode('News-Intern: '.$get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],$get['text'],string::decode($get_user['nick']),
+                rss_feed::add_item(string::decode('News-Intern: '.$get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],string::decode($get['text']),string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'] : ''),date("r", $get['datum']));
             }
         }
@@ -43,7 +43,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item('News: '.string::decode($get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],$get['text'],string::decode($get_user['nick']),
+                rss_feed::add_item('News: '.string::decode($get['titel']),'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'],string::decode($get['text']),string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/news/?action=show&id='.$get['id'] : ''),date("r", $get['datum']));
             }
         }
@@ -55,7 +55,7 @@ if(isset($_GET['key']) || !empty($_GET['key']))
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item('Artikel: '.string::decode($get['titel']),'http://'.$host.$pfad.'/artikel/?action=show&id='.$get['id'],$get['text'],string::decode($get_user['nick']),
+                rss_feed::add_item('Artikel: '.string::decode($get['titel']),'http://'.$host.$pfad.'/artikel/?action=show&id='.$get['id'],string::decode($get['text']),string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/artikel/?action=show&id='.$get['id'] : ''),date("r", $get['datum']));
             }
         }
@@ -92,7 +92,7 @@ else
             while($get = _fetch($qry))
             {
                 $get_user = db("SELECT nick FROM ".dba::get('users')." WHERE id = '".$get['autor']."'",false,true);
-                rss_feed::add_item(string::decode($get['titel']),'http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'],$get['text'],string::decode($get_user['nick']),
+                rss_feed::add_item(string::decode($get['titel']),'http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'],string::decode($get['text']),string::decode($get_user['nick']),
                 ($get['comments'] ? 'http://'.$host.$pfad.'/news/?action=show&amp;id='.$get['id'] : ''),date("r", $get['datum']));
             }
 
