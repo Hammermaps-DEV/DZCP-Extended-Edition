@@ -802,7 +802,7 @@ class addons_installer
 
             break;
             case 'file':
-                $addon_encrypt = base64_encode(session::encryptData(self::$addon_name));
+                $addon_encrypt = base64_encode(session::encrypt(self::$addon_name));
                 $url = '../inc/ajax.php?loader=addon_installer&step=file&addon='.$addon_encrypt;
                 $show = '<div id="installer"><div style="width:550px; 0;text-align:center"><br><br>Bitte warte einen Moment während die File-Installation ausgeführt wird<br>
                     <br /><img src="inc/images/ajax-loader-bar.gif" alt="" /></div>
