@@ -1251,25 +1251,6 @@ class language
     }
 }
 
-function encryptData($text='',$salt='')
-{
-    global $mysql_salt;
-    if(empty($text)) return $text;
-    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-    return mcrypt_encrypt(MCRYPT_RIJNDAEL_256, (empty($salt) ? $mysql_salt : $salt), $text, MCRYPT_MODE_ECB, $iv);
-}
-
-function decryptData($crypttext='',$salt='')
-{
-    global $mysql_salt;
-    if(empty($crypttext)) return $crypttext;
-    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-    $decrypttext = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, (empty($salt) ? $mysql_salt : $salt), $crypttext, MCRYPT_MODE_ECB, $iv);
-    return trim($decrypttext);
-}
-
 /**
  * Erkennt ob das ZendFramework vorhanden ist
  *
