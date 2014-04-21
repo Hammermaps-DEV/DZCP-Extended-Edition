@@ -453,23 +453,33 @@ class session
         return false;
     }
 
-    private function encrypt($data, $key)
+    public static function encrypt($data, $key='')
     {
         global $mysql_salt;
+        if(function_exists('base64_encode')) {
         $key = substr(hash('sha256', $mysql_salt.$key.$mysql_salt), 0, 32);
         $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
         $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
         $encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $data, MCRYPT_MODE_ECB, $iv));
+        }
+        else
+            $encrypted = base64_encode($data);
+
         return $encrypted;
     }
 
-    private function decrypt($data, $key)
+    public static function decrypt($data, $key='')
     {
         global $mysql_salt;
-        $key = substr(hash('sha256', $mysql_salt.$key.$mysql_salt), 0, 32);
-        $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, base64_decode($data), MCRYPT_MODE_ECB, $iv);
+        if(function_exists('mcrypt_decrypt')) {
+            $key = substr(hash('sha256', $mysql_salt.$key.$mysql_salt), 0, 32);
+            $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+            $decrypted = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, base64_decode($data), MCRYPT_MODE_ECB, $iv);
+        }
+        else
+            $decrypted = base64_decode($data);
+
         return $decrypted;
     }
 
