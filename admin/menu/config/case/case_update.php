@@ -80,6 +80,7 @@ if(isset($_POST))
         if(settings::changed(($key='news_feed'),($var=convert::ToInt($_POST['feed'])))) settings::set($key,$var);
         if(settings::changed(($key='use_akl'),($var=convert::ToInt($_POST['akl'])))) settings::set($key,$var);
         if(settings::changed(($key='clanname'),($var=string::encode($_POST['clanname'])))) settings::set($key,$var);
+        if(settings::changed(($key='default_pwd_encoder'),($var=string::encode($_POST['pwd_encoder'])))) settings::set($key,$var);
         if(settings::changed(($key='pagetitel'),($var=string::encode($_POST['pagetitel'])))) settings::set($key,$var);
         if(settings::changed(($key='badwords'),($var=string::encode($_POST['badwords'])))) settings::set($key,$var);
         if(settings::changed(($key='gmaps_who'),($var=convert::ToInt($_POST['gmaps_who'])))) settings::set($key,$var);
