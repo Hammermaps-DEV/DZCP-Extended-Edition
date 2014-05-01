@@ -21,12 +21,12 @@ class rss_feed
 
     public static function init()
     {
-        global $clanname,$pagetitle;
+        global $clanname,$pagetitle,$clanmail;
         self::$basic_config_array['charset'] = _charset;
         self::$basic_config_array['pagetitle'] = convert::ToHTML($clanname);
         self::$basic_config_array['pagelink'] = 'http://'.$_SERVER['HTTP_HOST'].'/';
         self::$basic_config_array['pagedesc'] = convert::ToHTML($pagetitle);
-        self::$basic_config_array['pagemailmaster'] = '';
+        self::$basic_config_array['pagemailmaster'] = $clanmail;
         self::$basic_config_array['ttl'] = 120;
     }
 
@@ -42,16 +42,16 @@ class rss_feed
         $basic_image_array['height'] = $imgHeight;
     }
 
-    public static function add_item($title,$link,$desc,$author='',$comments_url='',$pubdate='')
+    public static function add_item($title,$link,$desc,$author='',$comments_url='',$pubdate='',$category='')
     {
         self::$basic_item_array[] = array('title' => $title,'link' => $link,'desc' => $desc,'author' => $author,
-        'comments_url' => $comments_url,'pubdate' => $pubdate);
+        'comments_url' => $comments_url,'pubdate' => $pubdate,'category' => $category);
     }
 
-    public static function gen_rss()
+    public static function gen_rss($lastbuild='')
     {
         self::rss_xml_image();
-        self::rss_xml_channel();
+        self::rss_xml_channel($lastbuild); 
         self::rss_xml_item();
         self::rss_xml_syntax();
     }
@@ -70,7 +70,6 @@ class rss_feed
         {
             foreach(array('title') as $key) // Convert to HTML
             { self::$basic_image_array[$key] = htmlentities(self::$basic_image_array[$key], ENT_QUOTES, self::$basic_config_array['charset']); }
-
             self::$xml_image .= '<image>'."\r\n";
             self::$xml_image .= '<width>'.convert::ToString((self::$basic_image_array['width'] > 144 ? 144 : self::$basic_image_array['width'])).'</width>'."\r\n"; // Max. 144
             self::$xml_image .= '<height>'.convert::ToString((self::$basic_image_array['height'] > 400 ? 400 : self::$basic_image_array['height'])).'</height>'."\r\n"; // Max. 400
@@ -81,15 +80,15 @@ class rss_feed
         }
     }
 
-    private static function rss_xml_channel()
+    private static function rss_xml_channel($lastbuild='')
     {
         foreach(array('pagedesc','pagemailmaster','link') as $key) // Convert to HTML
         { self::$basic_config_array[$key] = htmlentities(self::$basic_config_array[$key], ENT_QUOTES, self::$basic_config_array['charset']); }
-
+        
         self::$xml_channel .= '<title>'.self::$basic_config_array['pagetitle'].'</title>'."\r\n";
         self::$xml_channel .= '<link>'.self::$basic_config_array['pagelink'].'</link>'."\r\n";
         self::$xml_channel .= '<description>'.self::$basic_config_array['pagedesc'].'</description>'."\r\n";
-        self::$xml_channel .= '<lastBuildDate>'.date("H:i:s - j.n.Y").'</lastBuildDate>'."\r\n";
+        self::$xml_channel .= '<lastBuildDate>'.(empty($lastbuild) ? date("H:i:s - j.n.Y") : date("H:i:s - j.n.Y",$lastbuild) ).'</lastBuildDate>'."\r\n";
         self::$xml_channel .= '<webMaster>'.self::$basic_config_array['pagemailmaster'].'</webMaster>'."\r\n";
         self::$xml_channel .= '<ttl>'.convert::ToString(self::$basic_config_array['ttl']).'</ttl>'.(!empty(self::$xml_image) ? "\r\n" : '');
         self::$xml_channel .= (!empty(self::$xml_image) ? self::$xml_image : '');
@@ -104,22 +103,22 @@ class rss_feed
                 if(empty($item['title']) || empty($item['link']) || empty($item['desc']))
                     continue;
 
-                foreach(array('desc','author','comments_url','link',) as $key) // Convert to HTML
-                { $item[$key] = substr(strip_tags(substr(string::decode($item[$key]), 0, 400)), 0, 300); }
-
                 self::$xml_item .= '<item>'."\r\n";
-                self::$xml_item .= '<title>'.$item['title'].'</title>'."\r\n";
+                self::$xml_item .= '<title>'.convert::ToTXT($item['title']).'</title>'."\r\n";
                 self::$xml_item .= '<link>'.convert::ToHTML($item['link']).'</link>'."\r\n";
-                self::$xml_item .= '<description>'.$item['desc'].'</description>'."\r\n";
+                self::$xml_item .= '<description>'.convert::ToHTML($item['desc']).'</description>'."\r\n";
 
                 if(array_key_exists('author', $item) && !empty($item['author']))
-                    self::$xml_item .= '<author>'.$item['author'].'</author>'."\r\n";
+                    self::$xml_item .= '<author>'.convert::ToTXT($item['author']).'</author>'."\r\n";
 
                 if(array_key_exists('comments_url', $item) && !empty($item['comments_url']))
                     self::$xml_item .= '<comments>'.convert::ToHTML($item['comments_url']).'</comments>'."\r\n";
 
                 if(array_key_exists('pubdate', $item) && !empty($item['pubdate']))
-                    self::$xml_item .= '<pubDate>'.$item['pubdate'].'</pubDate>'."\r\n";
+                    self::$xml_item .= '<pubDate>'.convert::ToTXT($item['pubdate']).'</pubDate>'."\r\n";
+                    
+                if(array_key_exists('category', $item) && !empty($item['category']))
+                    self::$xml_item .= '<category>'.convert::ToTXT($item['category']).'</category>'."\r\n";    
 
                 self::$xml_item .= '</item>';
             }

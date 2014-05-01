@@ -959,7 +959,17 @@ class convert
 
     public static final function ToHTML($input)
     { return htmlentities($input, ENT_COMPAT, _charset); }
+    
+    public static final function ToTXT($input)
+    { return substr(strip_tags(substr(string::decode($input), 0, 400)), 0, 300); }
+    
+    public static final function STRIP_HTML($input)
+    {return htmlentities ( strip_tags($input) ,ENT_COMPAT , _charset , false );}
 
     public static final function objectToArray($d)
     { return json_decode(json_encode($d, JSON_FORCE_OBJECT), true); }
+    
+    public static final function ToRAW($input)
+    { foreach (get_html_translation_table(HTML_ENTITIES,ENT_QUOTES) as $key => $value) {$input = str_replace($value,$key,$input);}
+      return $input;}
 }
