@@ -1,4 +1,6 @@
 <IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteRule ^inc/ajax/thumbgen/(.*)_(.*)_(.*)_(.*).(jpg|gif|png)$ inc/ajax.php?loader=thumbgen&width=$2&height=$3&time=$4&file=$1.$5
+RewriteRule ^rss.xml$ rss.php
+RewriteRule ^rss_(.*).xml$ rss.php?key=$1
 </IfModule>
